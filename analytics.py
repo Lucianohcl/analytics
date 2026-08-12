@@ -112,7 +112,7 @@ table.dre tr:hover td{background:#F9FAFB!important;}
 /* modo escuro via filtro CSS (inverte a tela inteira; imagens/graficos
    sao invertidos de volta pra nao ficar com cor estranha) */
 html{filter:invert(1) hue-rotate(180deg);}
-img, iframe, .js-plotly-plot{filter:invert(1) hue-rotate(180deg);}
+img, iframe{filter:invert(1) hue-rotate(180deg);}
 .wc-hero{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:16px;
   padding:36px 40px;margin-bottom:26px;box-shadow:0 4px 14px rgba(0,0,0,.15);
   text-align:center;border:3px solid #A9762F;}
@@ -10821,7 +10821,7 @@ elif pg=="gestao_estoque":
     # Renderizar header com score
     _header_placeholder.markdown(f'''<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);
       border-radius:14px;padding:22px 32px;margin-bottom:4px;box-shadow:0 4px 14px rgba(0,0,0,.12);
-      display:flex;align-items:center;justify-content:space-between">
+      display:flex;align-items:center;justify-content:space-between;filter:invert(1) hue-rotate(180deg)">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="background:#9FE1CB;border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px">📦</div>
         <div>
