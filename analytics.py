@@ -102,6 +102,12 @@ table.dre td.neu{color:#9CA3AF!important;}
 .mc-val.neg{color:#DC2626!important;}
 .mc-val.neu{color:#6B7280!important;}
 table.dre tr:hover td{background:#F9FAFB!important;}
+
+/* esconde a barra de ferramentas do Plotly (camera/zoom) em telas pequenas,
+   pra nao sobrepor o titulo dos graficos no celular */
+@media (max-width: 600px){
+  .js-plotly-plot .modebar{ display:none !important; }
+}
 .wc-hero{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:16px;
   padding:36px 40px;margin-bottom:26px;box-shadow:0 4px 14px rgba(0,0,0,.15);
   text-align:center;border:3px solid #A9762F;}
