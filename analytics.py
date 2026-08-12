@@ -51,7 +51,8 @@ st.set_page_config(
 
 st.markdown("""<style>
 .stApp{background:#FFFCF7;}
-section[data-testid="stSidebar"]{background:linear-gradient(180deg,#0F6E56 0%,#085041 100%)!important;}
+section[data-testid="stSidebar"]{background:linear-gradient(180deg,#0F6E56 0%,#085041 100%)!important;
+  border-right:6px solid #A9762F!important;box-shadow:2px 0 10px rgba(169,118,47,.35)!important;}
 section[data-testid="stSidebar"] button{background:rgba(255,255,255,.06)!important;
   color:#F2EDE1!important;border:1px solid rgba(169,118,47,.35)!important;}
 section[data-testid="stSidebar"] button:hover{background:rgba(169,118,47,.25)!important;
@@ -3202,7 +3203,7 @@ if pg=="boas_vindas":
             logo_b64 = base64.b64encode(f.read()).decode()
         st.markdown(f'''<div style="text-align:center;margin-bottom:16px">
           <img src="data:image/png;base64,{logo_b64}" style="max-height:110px;
-            border:8px solid #A9762F;border-radius:14px;padding:6px 10px;
+            border:6px solid #A9762F;border-radius:14px;padding:6px 10px;
             box-shadow:0 2px 10px rgba(169,118,47,.35)"/>
         </div>''',unsafe_allow_html=True)
     if st.session_state.get("cid"):
