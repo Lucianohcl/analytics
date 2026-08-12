@@ -108,7 +108,8 @@ table.dre tr:hover td{background:#F9FAFB!important;}
 .wc-hero h1{font-family:Georgia,serif;font-weight:600;color:#fff;font-size:1.5rem;margin:0 0 8px;}
 .wc-hero p{color:#9FE1CB;font-size:.92rem;letter-spacing:.01em;margin:0;}
 .wc-back{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:16px;
-  padding:48px 40px;text-align:center;margin-bottom:26px;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+  padding:48px 40px;text-align:center;margin-bottom:26px;box-shadow:0 4px 14px rgba(0,0,0,.15);
+  border:3px solid #A9762F;}
 .wc-back-emoji{font-size:2.6rem;margin-bottom:12px;}
 .wc-back h2{font-family:Georgia,serif;font-weight:600;color:#fff;font-size:1.5rem;margin:0 0 8px;}
 .wc-back p{color:#9FE1CB;font-size:.92rem;margin:0;}
