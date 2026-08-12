@@ -108,6 +108,11 @@ table.dre tr:hover td{background:#F9FAFB!important;}
 @media (max-width: 600px){
   .js-plotly-plot .modebar{ display:none !important; }
 }
+
+/* modo escuro via filtro CSS (inverte a tela inteira; imagens/graficos
+   sao invertidos de volta pra nao ficar com cor estranha) */
+html{filter:invert(1) hue-rotate(180deg);}
+img, iframe, .js-plotly-plot{filter:invert(1) hue-rotate(180deg);}
 .wc-hero{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:16px;
   padding:36px 40px;margin-bottom:26px;box-shadow:0 4px 14px rgba(0,0,0,.15);
   text-align:center;border:3px solid #A9762F;}
