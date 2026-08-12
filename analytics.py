@@ -3200,7 +3200,11 @@ if pg=="boas_vindas":
     if os.path.exists(logo_path):
         with open(logo_path, "rb") as f:
             logo_b64 = base64.b64encode(f.read()).decode()
-        st.markdown(f'<div style="text-align:center;margin-bottom:12px"><img src="data:image/png;base64,{logo_b64}" style="max-height:75px"/></div>',unsafe_allow_html=True)
+        st.markdown(f'''<div style="text-align:center;margin-bottom:16px">
+          <img src="data:image/png;base64,{logo_b64}" style="max-height:110px;
+            border:8px solid #A9762F;border-radius:14px;padding:6px 10px;
+            box-shadow:0 2px 10px rgba(169,118,47,.35)"/>
+        </div>''',unsafe_allow_html=True)
     if st.session_state.get("cid"):
         _cli_bv=load_cli(st.session_state.cid)
         _nome_bv=_cli_bv.get("nome","sua empresa") if _cli_bv else "sua empresa"
