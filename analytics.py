@@ -3553,7 +3553,7 @@ elif pg=="importar":
     if not st.session_state.api_key:
         st.markdown('<div class="al-w">⚠️ Configure a API Key em <b>⚙️ Configurações</b> primeiro.</div>',unsafe_allow_html=True)
     p2=load_cli(st.session_state.cid)
-    st.markdown(f'<div class="al-i">👤 <b>{p2["nome"] if p2 else "?"}</b> — Importe um arquivo por vez (DRE, Balanço, Fluxo) para máxima precisão.</div>',unsafe_allow_html=True)
+    st.markdown(f'<div class="al-i">👤 <b>{p2["nome"] if p2 else "?"}</b></div>',unsafe_allow_html=True)
     arqs=st.file_uploader("Selecione o(s) arquivo(s)",type=["pdf","xlsx","xls","xlsm","csv"],accept_multiple_files=True)
     senha_import_dados=None
     if arqs:
