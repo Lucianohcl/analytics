@@ -104,7 +104,7 @@ table.dre td.neu{color:#9CA3AF!important;}
 table.dre tr:hover td{background:#F9FAFB!important;}
 .wc-hero{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:16px;
   padding:36px 40px;margin-bottom:26px;box-shadow:0 4px 14px rgba(0,0,0,.15);
-  text-align:center;border:2px solid #A9762F;}
+  text-align:center;border:3px solid #A9762F;}
 .wc-hero h1{font-family:Georgia,serif;font-weight:600;color:#fff;font-size:1.5rem;margin:0 0 8px;}
 .wc-hero p{color:#9FE1CB;font-size:.92rem;letter-spacing:.01em;margin:0;}
 .wc-back{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:16px;
@@ -3052,7 +3052,7 @@ with st.sidebar:
         <div style="padding:10px 0 14px;text-align:center">
           <img src="data:image/png;base64,{logo_b64}"
             style="width:100%;max-width:190px;margin-bottom:4px;
-            border:4px solid #A9762F;border-radius:10px;padding:4px"/>
+            border:2px solid #A9762F;border-radius:10px;padding:4px"/>
           <div style="color:#484F58;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;margin-top:2px">
             Analytics BI
           </div>
