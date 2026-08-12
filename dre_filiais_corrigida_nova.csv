@@ -1,0 +1,3070 @@
+﻿Ano;Mês;Conta;Valor;Filial
+2024;Abril;Aluguel;-75532,2;Loja Centro
+2024;Abril;Aluguel;-46553,19;Loja Norte
+2024;Abril;Aluguel;-57689,91;Loja Sul
+2024;Abril;CMV;-3498823,41;Loja Centro
+2024;Abril;CMV;-2285464,21;Loja Norte
+2024;Abril;CMV;-2693401,96;Loja Sul
+2024;Abril;CSLL;-61805,5;Loja Centro
+2024;Abril;CSLL;-40237,11;Loja Norte
+2024;Abril;CSLL;-48152,98;Loja Sul
+2024;Abril;Comissões;-155733,33;Loja Centro
+2024;Abril;Comissões;-98802,82;Loja Norte
+2024;Abril;Comissões;-120500,81;Loja Sul
+2024;Abril;Contabilidade;-18595,28;Loja Centro
+2024;Abril;Contabilidade;-11956,72;Loja Norte
+2024;Abril;Contabilidade;-14480,56;Loja Sul
+2024;Abril;Depreciação;-62360,49;Loja Centro
+2024;Abril;Depreciação;-39611,29;Loja Norte
+2024;Abril;Depreciação;-48050,55;Loja Sul
+2024;Abril;Descontos Concedidos;-31064,55;Loja Centro
+2024;Abril;Descontos Concedidos;-20125,02;Loja Norte
+2024;Abril;Descontos Concedidos;-23890,01;Loja Sul
+2024;Abril;Despesas Financeiras;-25114,91;Loja Centro
+2024;Abril;Despesas Financeiras;-15561,59;Loja Norte
+2024;Abril;Despesas Financeiras;-19263,38;Loja Sul
+2024;Abril;Devoluções;-62421,81;Loja Centro
+2024;Abril;Devoluções;-39736,39;Loja Norte
+2024;Abril;Devoluções;-47878,31;Loja Sul
+2024;Abril;Energia Elétrica;-24909,62;Loja Centro
+2024;Abril;Energia Elétrica;-15853,79;Loja Norte
+2024;Abril;Energia Elétrica;-19250,97;Loja Sul
+2024;Abril;Fretes de Produção;-124131,19;Loja Centro
+2024;Abril;Fretes de Produção;-79313,02;Loja Norte
+2024;Abril;Fretes de Produção;-96685,73;Loja Sul
+2024;Abril;IRPJ;-186511,9;Loja Centro
+2024;Abril;IRPJ;-119354,25;Loja Norte
+2024;Abril;IRPJ;-144357,73;Loja Sul
+2024;Abril;Impostos sobre Vendas;-741336,47;Loja Centro
+2024;Abril;Impostos sobre Vendas;-484289,02;Loja Norte
+2024;Abril;Impostos sobre Vendas;-577008,07;Loja Sul
+2024;Abril;Internet e Telefonia;-12451;Loja Centro
+2024;Abril;Internet e Telefonia;-7914,27;Loja Norte
+2024;Abril;Internet e Telefonia;-9640,33;Loja Sul
+2024;Abril;Juros Ativos;6141,23;Loja Centro
+2024;Abril;Juros Ativos;4147,88;Loja Norte
+2024;Abril;Juros Ativos;4728,57;Loja Sul
+2024;Abril;Juros Bancários;-12421,43;Loja Centro
+2024;Abril;Juros Bancários;-7912,8;Loja Norte
+2024;Abril;Juros Bancários;-9674,63;Loja Sul
+2024;Abril;Manutenção;-12409,25;Loja Centro
+2024;Abril;Manutenção;-7969,19;Loja Norte
+2024;Abril;Manutenção;-9641,79;Loja Sul
+2024;Abril;Marketing e Publicidade;-125603,92;Loja Centro
+2024;Abril;Marketing e Publicidade;-79090,12;Loja Norte
+2024;Abril;Marketing e Publicidade;-95222,83;Loja Sul
+2024;Abril;Materiais e Insumos;-309450,24;Loja Centro
+2024;Abril;Materiais e Insumos;-199670,18;Loja Norte
+2024;Abril;Materiais e Insumos;-241547,07;Loja Sul
+2024;Abril;Material de Escritório;-6240,62;Loja Centro
+2024;Abril;Material de Escritório;-3955,81;Loja Norte
+2024;Abril;Material de Escritório;-4804,23;Loja Sul
+2024;Abril;Mão de Obra Direta;-496717,21;Loja Centro
+2024;Abril;Mão de Obra Direta;-317761,04;Loja Norte
+2024;Abril;Mão de Obra Direta;-386107,21;Loja Sul
+2024;Abril;Outras Receitas Operacionais;60677,24;Loja Centro
+2024;Abril;Outras Receitas Operacionais;41597,71;Loja Norte
+2024;Abril;Outras Receitas Operacionais;48011,87;Loja Sul
+2024;Abril;Pró-Labore;-93736,02;Loja Centro
+2024;Abril;Pró-Labore;-59409,15;Loja Norte
+2024;Abril;Pró-Labore;-71863,68;Loja Sul
+2024;Abril;Receita de Serviços;426196,04;Loja Centro
+2024;Abril;Receita de Serviços;289068,32;Loja Norte
+2024;Abril;Receita de Serviços;336207,42;Loja Sul
+2024;Abril;Receita de Vendas;5669593,47;Loja Centro
+2024;Abril;Receita de Vendas;3730971,93;Loja Norte
+2024;Abril;Receita de Vendas;4398986,79;Loja Sul
+2024;Abril;Receitas Financeiras;18382,15;Loja Centro
+2024;Abril;Receitas Financeiras;12405,16;Loja Norte
+2024;Abril;Receitas Financeiras;14264,76;Loja Sul
+2024;Abril;Salários Administrativos;-310853,82;Loja Centro
+2024;Abril;Salários Administrativos;-199153,6;Loja Norte
+2024;Abril;Salários Administrativos;-240405,07;Loja Sul
+2024;Abril;Salários Comerciais;-249798,17;Loja Centro
+2024;Abril;Salários Comerciais;-156643,44;Loja Norte
+2024;Abril;Salários Comerciais;-193296,04;Loja Sul
+2024;Abril;Seguros;-12422,08;Loja Centro
+2024;Abril;Seguros;-7862,58;Loja Norte
+2024;Abril;Seguros;-9715,75;Loja Sul
+2024;Abril;Sistemas e Licenças;-24669,31;Loja Centro
+2024;Abril;Sistemas e Licenças;-15808,57;Loja Norte
+2024;Abril;Sistemas e Licenças;-19557,03;Loja Sul
+2024;Abril;Tarifas Bancárias;-3104;Loja Centro
+2024;Abril;Tarifas Bancárias;-1976,73;Loja Norte
+2024;Abril;Tarifas Bancárias;-2421,46;Loja Sul
+2024;Abril;Treinamentos;-6260,41;Loja Centro
+2024;Abril;Treinamentos;-3925,27;Loja Norte
+2024;Abril;Treinamentos;-4807,39;Loja Sul
+2024;Abril;Viagens Comerciais;-30969,29;Loja Centro
+2024;Abril;Viagens Comerciais;-19876,86;Loja Norte
+2024;Abril;Viagens Comerciais;-24202,39;Loja Sul
+2024;Agosto;Aluguel;-65694,85;Loja Centro
+2024;Agosto;Aluguel;-41018,43;Loja Norte
+2024;Agosto;Aluguel;-50939,83;Loja Sul
+2024;Agosto;CMV;-3077699,58;Loja Centro
+2024;Agosto;CMV;-1998436,31;Loja Norte
+2024;Agosto;CMV;-2391889,52;Loja Sul
+2024;Agosto;CSLL;-54658,65;Loja Centro
+2024;Agosto;CSLL;-34184,19;Loja Norte
+2024;Agosto;CSLL;-42545,42;Loja Sul
+2024;Agosto;Comissões;-137043,42;Loja Centro
+2024;Agosto;Comissões;-84206,6;Loja Norte
+2024;Agosto;Comissões;-106980,95;Loja Sul
+2024;Agosto;Contabilidade;-16437,36;Loja Centro
+2024;Agosto;Contabilidade;-10244,61;Loja Norte
+2024;Agosto;Contabilidade;-12728,05;Loja Sul
+2024;Agosto;Depreciação;-54698,25;Loja Centro
+2024;Agosto;Depreciação;-34180,75;Loja Norte
+2024;Agosto;Depreciação;-42503,86;Loja Sul
+2024;Agosto;Descontos Concedidos;-27204,34;Loja Centro
+2024;Agosto;Descontos Concedidos;-16993;Loja Norte
+2024;Agosto;Descontos Concedidos;-21497,14;Loja Sul
+2024;Agosto;Despesas Financeiras;-21846,66;Loja Centro
+2024;Agosto;Despesas Financeiras;-13616,72;Loja Norte
+2024;Agosto;Despesas Financeiras;-17085,58;Loja Sul
+2024;Agosto;Devoluções;-54952,48;Loja Centro
+2024;Agosto;Devoluções;-33535,18;Loja Norte
+2024;Agosto;Devoluções;-42765,28;Loja Sul
+2024;Agosto;Energia Elétrica;-21874,97;Loja Centro
+2024;Agosto;Energia Elétrica;-13760,21;Loja Norte
+2024;Agosto;Energia Elétrica;-16932,22;Loja Sul
+2024;Agosto;Fretes de Produção;-109055,49;Loja Centro
+2024;Agosto;Fretes de Produção;-68077,97;Loja Norte
+2024;Agosto;Fretes de Produção;-85631,56;Loja Sul
+2024;Agosto;IRPJ;-164471,28;Loja Centro
+2024;Agosto;IRPJ;-102157,91;Loja Norte
+2024;Agosto;IRPJ;-127415,15;Loja Sul
+2024;Agosto;Impostos sobre Vendas;-656955,16;Loja Centro
+2024;Agosto;Impostos sobre Vendas;-413322,13;Loja Norte
+2024;Agosto;Impostos sobre Vendas;-506730,92;Loja Sul
+2024;Agosto;Internet e Telefonia;-10985,5;Loja Centro
+2024;Agosto;Internet e Telefonia;-6788,37;Loja Norte
+2024;Agosto;Internet e Telefonia;-8489,59;Loja Sul
+2024;Agosto;Juros Ativos;5425,58;Loja Centro
+2024;Agosto;Juros Ativos;3559,75;Loja Norte
+2024;Agosto;Juros Ativos;4232,02;Loja Sul
+2024;Agosto;Juros Bancários;-10946,27;Loja Centro
+2024;Agosto;Juros Bancários;-6800,39;Loja Norte
+2024;Agosto;Juros Bancários;-8523,46;Loja Sul
+2024;Agosto;Manutenção;-10931,29;Loja Centro
+2024;Agosto;Manutenção;-6793,28;Loja Norte
+2024;Agosto;Manutenção;-8546,12;Loja Sul
+2024;Agosto;Marketing e Publicidade;-109429,99;Loja Centro
+2024;Agosto;Marketing e Publicidade;-69152,05;Loja Norte
+2024;Agosto;Marketing e Publicidade;-84300,96;Loja Sul
+2024;Agosto;Materiais e Insumos;-272176,98;Loja Centro
+2024;Agosto;Materiais e Insumos;-171208,41;Loja Norte
+2024;Agosto;Materiais e Insumos;-213738,29;Loja Sul
+2024;Agosto;Material de Escritório;-5450,75;Loja Centro
+2024;Agosto;Material de Escritório;-3407,43;Loja Norte
+2024;Agosto;Material de Escritório;-4281,06;Loja Sul
+2024;Agosto;Mão de Obra Direta;-438684,87;Loja Centro
+2024;Agosto;Mão de Obra Direta;-270117,83;Loja Norte
+2024;Agosto;Mão de Obra Direta;-341618,52;Loja Sul
+2024;Agosto;Outras Receitas Operacionais;53840,46;Loja Centro
+2024;Agosto;Outras Receitas Operacionais;35683,34;Loja Norte
+2024;Agosto;Outras Receitas Operacionais;42711,67;Loja Sul
+2024;Agosto;Pró-Labore;-82552,04;Loja Centro
+2024;Agosto;Pró-Labore;-51082,76;Loja Norte
+2024;Agosto;Pró-Labore;-63348,69;Loja Sul
+2024;Agosto;Receita de Serviços;380065,87;Loja Centro
+2024;Agosto;Receita de Serviços;251056,63;Loja Norte
+2024;Agosto;Receita de Serviços;294329,87;Loja Sul
+2024;Agosto;Receita de Vendas;4988089,97;Loja Centro
+2024;Agosto;Receita de Vendas;3265359,47;Loja Norte
+2024;Agosto;Receita de Vendas;3905277,11;Loja Sul
+2024;Agosto;Receitas Financeiras;16256,77;Loja Centro
+2024;Agosto;Receitas Financeiras;10774,91;Loja Norte
+2024;Agosto;Receitas Financeiras;12636,82;Loja Sul
+2024;Agosto;Salários Administrativos;-272533,72;Loja Centro
+2024;Agosto;Salários Administrativos;-172030,1;Loja Norte
+2024;Agosto;Salários Administrativos;-212641,48;Loja Sul
+2024;Agosto;Salários Comerciais;-218253,64;Loja Centro
+2024;Agosto;Salários Comerciais;-140365,18;Loja Norte
+2024;Agosto;Salários Comerciais;-167536,49;Loja Sul
+2024;Agosto;Seguros;-10962,93;Loja Centro
+2024;Agosto;Seguros;-6927,44;Loja Norte
+2024;Agosto;Seguros;-8397,12;Loja Sul
+2024;Agosto;Sistemas e Licenças;-21859,43;Loja Centro
+2024;Agosto;Sistemas e Licenças;-13651,06;Loja Norte
+2024;Agosto;Sistemas e Licenças;-17042,36;Loja Sul
+2024;Agosto;Tarifas Bancárias;-2746,56;Loja Centro
+2024;Agosto;Tarifas Bancárias;-1712,3;Loja Norte
+2024;Agosto;Tarifas Bancárias;-2109,46;Loja Sul
+2024;Agosto;Treinamentos;-5466,11;Loja Centro
+2024;Agosto;Treinamentos;-3395,9;Loja Norte
+2024;Agosto;Treinamentos;-4273,58;Loja Sul
+2024;Agosto;Viagens Comerciais;-27397,88;Loja Centro
+2024;Agosto;Viagens Comerciais;-16963,32;Loja Norte
+2024;Agosto;Viagens Comerciais;-21304,92;Loja Sul
+2024;Dezembro;Aluguel;-107918,77;Loja Centro
+2024;Dezembro;Aluguel;-66474,19;Loja Norte
+2024;Dezembro;Aluguel;-84031,64;Loja Sul
+2024;Dezembro;CMV;-5162028,42;Loja Centro
+2024;Dezembro;CMV;-3330123,83;Loja Norte
+2024;Dezembro;CMV;-3989186,74;Loja Sul
+2024;Dezembro;CSLL;-89679,29;Loja Centro
+2024;Dezembro;CSLL;-55622,79;Loja Norte
+2024;Dezembro;CSLL;-70113,03;Loja Sul
+2024;Dezembro;Comissões;-226215,99;Loja Centro
+2024;Dezembro;Comissões;-136428,72;Loja Norte
+2024;Dezembro;Comissões;-175291,8;Loja Sul
+2024;Dezembro;Contabilidade;-27124,15;Loja Centro
+2024;Dezembro;Contabilidade;-16573,19;Loja Norte
+2024;Dezembro;Contabilidade;-20885,64;Loja Sul
+2024;Dezembro;Depreciação;-89955,61;Loja Centro
+2024;Dezembro;Depreciação;-55083,16;Loja Norte
+2024;Dezembro;Depreciação;-70269,45;Loja Sul
+2024;Dezembro;Descontos Concedidos;-45411,93;Loja Centro
+2024;Dezembro;Descontos Concedidos;-27669,09;Loja Norte
+2024;Dezembro;Descontos Concedidos;-34539,4;Loja Sul
+2024;Dezembro;Despesas Financeiras;-35935,32;Loja Centro
+2024;Dezembro;Despesas Financeiras;-22220,23;Loja Norte
+2024;Dezembro;Despesas Financeiras;-27998,69;Loja Sul
+2024;Dezembro;Devoluções;-90976,86;Loja Centro
+2024;Dezembro;Devoluções;-53936,93;Loja Norte
+2024;Dezembro;Devoluções;-70114,71;Loja Sul
+2024;Dezembro;Energia Elétrica;-36307,04;Loja Centro
+2024;Dezembro;Energia Elétrica;-21737,05;Loja Norte
+2024;Dezembro;Energia Elétrica;-27999,36;Loja Sul
+2024;Dezembro;Fretes de Produção;-181136,48;Loja Centro
+2024;Dezembro;Fretes de Produção;-109157,93;Loja Norte
+2024;Dezembro;Fretes de Produção;-140037,4;Loja Sul
+2024;Dezembro;IRPJ;-270973,88;Loja Centro
+2024;Dezembro;IRPJ;-165346,43;Loja Norte
+2024;Dezembro;IRPJ;-209486,12;Loja Sul
+2024;Dezembro;Impostos sobre Vendas;-1079135,75;Loja Centro
+2024;Dezembro;Impostos sobre Vendas;-664187,84;Loja Norte
+2024;Dezembro;Impostos sobre Vendas;-840853,15;Loja Sul
+2024;Dezembro;Internet e Telefonia;-18143,17;Loja Centro
+2024;Dezembro;Internet e Telefonia;-11030,88;Loja Norte
+2024;Dezembro;Internet e Telefonia;-13871,28;Loja Sul
+2024;Dezembro;Juros Ativos;9110,89;Loja Centro
+2024;Dezembro;Juros Ativos;5918,8;Loja Norte
+2024;Dezembro;Juros Ativos;7059,34;Loja Sul
+2024;Dezembro;Juros Bancários;-17943,96;Loja Centro
+2024;Dezembro;Juros Bancários;-11272,66;Loja Norte
+2024;Dezembro;Juros Bancários;-13886,05;Loja Sul
+2024;Dezembro;Manutenção;-18129,37;Loja Centro
+2024;Dezembro;Manutenção;-11101,74;Loja Norte
+2024;Dezembro;Manutenção;-13825,96;Loja Sul
+2024;Dezembro;Marketing e Publicidade;-179437,49;Loja Centro
+2024;Dezembro;Marketing e Publicidade;-112684,99;Loja Norte
+2024;Dezembro;Marketing e Publicidade;-138897,44;Loja Sul
+2024;Dezembro;Materiais e Insumos;-449895,64;Loja Centro
+2024;Dezembro;Materiais e Insumos;-276096,38;Loja Norte
+2024;Dezembro;Materiais e Insumos;-350628,25;Loja Sul
+2024;Dezembro;Material de Escritório;-9033,18;Loja Centro
+2024;Dezembro;Material de Escritório;-5558,27;Loja Norte
+2024;Dezembro;Material de Escritório;-6941,85;Loja Sul
+2024;Dezembro;Mão de Obra Direta;-715665,43;Loja Centro
+2024;Dezembro;Mão de Obra Direta;-443576,42;Loja Norte
+2024;Dezembro;Mão de Obra Direta;-564097,88;Loja Sul
+2024;Dezembro;Outras Receitas Operacionais;90251,72;Loja Centro
+2024;Dezembro;Outras Receitas Operacionais;59178,67;Loja Norte
+2024;Dezembro;Outras Receitas Operacionais;71560,48;Loja Sul
+2024;Dezembro;Pró-Labore;-134246,07;Loja Centro
+2024;Dezembro;Pró-Labore;-82761,6;Loja Norte
+2024;Dezembro;Pró-Labore;-106055,23;Loja Sul
+2024;Dezembro;Receita de Serviços;636999,43;Loja Centro
+2024;Dezembro;Receita de Serviços;409257,34;Loja Norte
+2024;Dezembro;Receita de Serviços;499368,48;Loja Sul
+2024;Dezembro;Receita de Vendas;8369726,85;Loja Centro
+2024;Dezembro;Receita de Vendas;5436555,55;Loja Norte
+2024;Dezembro;Receita de Vendas;6515877,9;Loja Sul
+2024;Dezembro;Receitas Financeiras;27435,57;Loja Centro
+2024;Dezembro;Receitas Financeiras;17810,13;Loja Norte
+2024;Dezembro;Receitas Financeiras;21016,55;Loja Sul
+2024;Dezembro;Salários Administrativos;-451743,13;Loja Centro
+2024;Dezembro;Salários Administrativos;-280539,96;Loja Norte
+2024;Dezembro;Salários Administrativos;-344730,03;Loja Sul
+2024;Dezembro;Salários Comerciais;-360251,15;Loja Centro
+2024;Dezembro;Salários Comerciais;-219757,2;Loja Norte
+2024;Dezembro;Salários Comerciais;-281093,93;Loja Sul
+2024;Dezembro;Seguros;-17989,86;Loja Centro
+2024;Dezembro;Seguros;-11112,64;Loja Norte
+2024;Dezembro;Seguros;-13972,66;Loja Sul
+2024;Dezembro;Sistemas e Licenças;-35880,12;Loja Centro
+2024;Dezembro;Sistemas e Licenças;-22343,65;Loja Norte
+2024;Dezembro;Sistemas e Licenças;-27954,04;Loja Sul
+2024;Dezembro;Tarifas Bancárias;-4558,74;Loja Centro
+2024;Dezembro;Tarifas Bancárias;-2681,8;Loja Norte
+2024;Dezembro;Tarifas Bancárias;-3507,85;Loja Sul
+2024;Dezembro;Treinamentos;-8958,78;Loja Centro
+2024;Dezembro;Treinamentos;-5501,42;Loja Norte
+2024;Dezembro;Treinamentos;-7074,11;Loja Sul
+2024;Dezembro;Viagens Comerciais;-45203,41;Loja Centro
+2024;Dezembro;Viagens Comerciais;-27692,84;Loja Norte
+2024;Dezembro;Viagens Comerciais;-34751,88;Loja Sul
+2024;Fevereiro;Aluguel;-74181,71;Loja Centro
+2024;Fevereiro;Aluguel;-46174,84;Loja Norte
+2024;Fevereiro;Aluguel;-57598,05;Loja Sul
+2024;Fevereiro;CMV;-3499404,04;Loja Centro
+2024;Fevereiro;CMV;-2269704,88;Loja Norte
+2024;Fevereiro;CMV;-2687995,14;Loja Sul
+2024;Fevereiro;CSLL;-62840,7;Loja Centro
+2024;Fevereiro;CSLL;-37839,42;Loja Norte
+2024;Fevereiro;CSLL;-47410,86;Loja Sul
+2024;Fevereiro;Comissões;-155939,85;Loja Centro
+2024;Fevereiro;Comissões;-94908,58;Loja Norte
+2024;Fevereiro;Comissões;-119551,69;Loja Sul
+2024;Fevereiro;Contabilidade;-18565,2;Loja Centro
+2024;Fevereiro;Contabilidade;-11444,34;Loja Norte
+2024;Fevereiro;Contabilidade;-14462,44;Loja Sul
+2024;Fevereiro;Depreciação;-62783,56;Loja Centro
+2024;Fevereiro;Depreciação;-37465,48;Loja Norte
+2024;Fevereiro;Depreciação;-47794,66;Loja Sul
+2024;Fevereiro;Descontos Concedidos;-31208,72;Loja Centro
+2024;Fevereiro;Descontos Concedidos;-18984,8;Loja Norte
+2024;Fevereiro;Descontos Concedidos;-23884,77;Loja Sul
+2024;Fevereiro;Despesas Financeiras;-25095,01;Loja Centro
+2024;Fevereiro;Despesas Financeiras;-15013,21;Loja Norte
+2024;Fevereiro;Despesas Financeiras;-19115,03;Loja Sul
+2024;Fevereiro;Devoluções;-62746,15;Loja Centro
+2024;Fevereiro;Devoluções;-37727,27;Loja Norte
+2024;Fevereiro;Devoluções;-47612,09;Loja Sul
+2024;Fevereiro;Energia Elétrica;-25090,3;Loja Centro
+2024;Fevereiro;Energia Elétrica;-15025,13;Loja Norte
+2024;Fevereiro;Energia Elétrica;-19110,05;Loja Sul
+2024;Fevereiro;Fretes de Produção;-124783,34;Loja Centro
+2024;Fevereiro;Fretes de Produção;-76165,53;Loja Norte
+2024;Fevereiro;Fretes de Produção;-95402,27;Loja Sul
+2024;Fevereiro;IRPJ;-186196,5;Loja Centro
+2024;Fevereiro;IRPJ;-113318,66;Loja Norte
+2024;Fevereiro;IRPJ;-144985,08;Loja Sul
+2024;Fevereiro;Impostos sobre Vendas;-743736,01;Loja Centro
+2024;Fevereiro;Impostos sobre Vendas;-454900,87;Loja Norte
+2024;Fevereiro;Impostos sobre Vendas;-579714,49;Loja Sul
+2024;Fevereiro;Internet e Telefonia;-12469,42;Loja Centro
+2024;Fevereiro;Internet e Telefonia;-7690,09;Loja Norte
+2024;Fevereiro;Internet e Telefonia;-9487;Loja Sul
+2024;Fevereiro;Juros Ativos;6102,51;Loja Centro
+2024;Fevereiro;Juros Ativos;4106,69;Loja Norte
+2024;Fevereiro;Juros Ativos;4783,42;Loja Sul
+2024;Fevereiro;Juros Bancários;-12432,67;Loja Centro
+2024;Fevereiro;Juros Bancários;-7582,01;Loja Norte
+2024;Fevereiro;Juros Bancários;-9620,57;Loja Sul
+2024;Fevereiro;Manutenção;-12577,87;Loja Centro
+2024;Fevereiro;Manutenção;-7448,64;Loja Norte
+2024;Fevereiro;Manutenção;-9573,31;Loja Sul
+2024;Fevereiro;Marketing e Publicidade;-124314,81;Loja Centro
+2024;Fevereiro;Marketing e Publicidade;-75031,78;Loja Norte
+2024;Fevereiro;Marketing e Publicidade;-96892,94;Loja Sul
+2024;Fevereiro;Materiais e Insumos;-312110,71;Loja Centro
+2024;Fevereiro;Materiais e Insumos;-188528,26;Loja Norte
+2024;Fevereiro;Materiais e Insumos;-239950,33;Loja Sul
+2024;Fevereiro;Material de Escritório;-6235,83;Loja Centro
+2024;Fevereiro;Material de Escritório;-3838,8;Loja Norte
+2024;Fevereiro;Material de Escritório;-4747,6;Loja Sul
+2024;Fevereiro;Mão de Obra Direta;-499824,15;Loja Centro
+2024;Fevereiro;Mão de Obra Direta;-301687,7;Loja Norte
+2024;Fevereiro;Mão de Obra Direta;-383387,78;Loja Sul
+2024;Fevereiro;Outras Receitas Operacionais;61410,25;Loja Centro
+2024;Fevereiro;Outras Receitas Operacionais;39615,29;Loja Norte
+2024;Fevereiro;Outras Receitas Operacionais;48649,31;Loja Sul
+2024;Fevereiro;Pró-Labore;-93959,34;Loja Centro
+2024;Fevereiro;Pró-Labore;-57014,82;Loja Norte
+2024;Fevereiro;Pró-Labore;-71232,45;Loja Sul
+2024;Fevereiro;Receita de Serviços;430802,3;Loja Centro
+2024;Fevereiro;Receita de Serviços;280838,71;Loja Norte
+2024;Fevereiro;Receita de Serviços;336489,07;Loja Sul
+2024;Fevereiro;Receita de Vendas;5676499,11;Loja Centro
+2024;Fevereiro;Receita de Vendas;3707836,69;Loja Norte
+2024;Fevereiro;Receita de Vendas;4391905,61;Loja Sul
+2024;Fevereiro;Receitas Financeiras;18473,56;Loja Centro
+2024;Fevereiro;Receitas Financeiras;12120,46;Loja Norte
+2024;Fevereiro;Receitas Financeiras;14337,08;Loja Sul
+2024;Fevereiro;Salários Administrativos;-312583,94;Loja Centro
+2024;Fevereiro;Salários Administrativos;-188095,92;Loja Norte
+2024;Fevereiro;Salários Administrativos;-239795,12;Loja Sul
+2024;Fevereiro;Salários Comerciais;-248777,28;Loja Centro
+2024;Fevereiro;Salários Comerciais;-151911,2;Loja Norte
+2024;Fevereiro;Salários Comerciais;-192040,01;Loja Sul
+2024;Fevereiro;Seguros;-12499,22;Loja Centro
+2024;Fevereiro;Seguros;-7643,6;Loja Norte
+2024;Fevereiro;Seguros;-9493,71;Loja Sul
+2024;Fevereiro;Sistemas e Licenças;-25063,86;Loja Centro
+2024;Fevereiro;Sistemas e Licenças;-15003,92;Loja Norte
+2024;Fevereiro;Sistemas e Licenças;-19157,56;Loja Sul
+2024;Fevereiro;Tarifas Bancárias;-3114,78;Loja Centro
+2024;Fevereiro;Tarifas Bancárias;-1900,51;Loja Norte
+2024;Fevereiro;Tarifas Bancárias;-2393,58;Loja Sul
+2024;Fevereiro;Treinamentos;-6180,93;Loja Centro
+2024;Fevereiro;Treinamentos;-3860,3;Loja Norte
+2024;Fevereiro;Treinamentos;-4790,39;Loja Sul
+2024;Fevereiro;Viagens Comerciais;-30853,79;Loja Centro
+2024;Fevereiro;Viagens Comerciais;-19274,77;Loja Norte
+2024;Fevereiro;Viagens Comerciais;-24030,53;Loja Sul
+2024;Janeiro;Aluguel;-72150,93;Loja Centro
+2024;Janeiro;Aluguel;-45221,1;Loja Norte
+2024;Janeiro;Aluguel;-56671,42;Loja Sul
+2024;Janeiro;CMV;-3381849,6;Loja Centro
+2024;Janeiro;CMV;-2209185,99;Loja Norte
+2024;Janeiro;CMV;-2622538,8;Loja Sul
+2024;Janeiro;CSLL;-60134,88;Loja Centro
+2024;Janeiro;CSLL;-37185,19;Loja Norte
+2024;Janeiro;CSLL;-47646,75;Loja Sul
+2024;Janeiro;Comissões;-150313,34;Loja Centro
+2024;Janeiro;Comissões;-93851,19;Loja Norte
+2024;Janeiro;Comissões;-118377,07;Loja Sul
+2024;Janeiro;Contabilidade;-18118,44;Loja Centro
+2024;Janeiro;Contabilidade;-11150,21;Loja Norte
+2024;Janeiro;Contabilidade;-14209,85;Loja Sul
+2024;Janeiro;Depreciação;-60131,2;Loja Centro
+2024;Janeiro;Depreciação;-37530,52;Loja Norte
+2024;Janeiro;Depreciação;-47353;Loja Sul
+2024;Janeiro;Descontos Concedidos;-30135,57;Loja Centro
+2024;Janeiro;Descontos Concedidos;-18678,85;Loja Norte
+2024;Janeiro;Descontos Concedidos;-23671,31;Loja Sul
+2024;Janeiro;Despesas Financeiras;-23971,99;Loja Centro
+2024;Janeiro;Despesas Financeiras;-15008,09;Loja Norte
+2024;Janeiro;Despesas Financeiras;-19036,32;Loja Sul
+2024;Janeiro;Devoluções;-59884,08;Loja Centro
+2024;Janeiro;Devoluções;-37421,8;Loja Norte
+2024;Janeiro;Devoluções;-47728,28;Loja Sul
+2024;Janeiro;Energia Elétrica;-23860,47;Loja Centro
+2024;Janeiro;Energia Elétrica;-15086,48;Loja Norte
+2024;Janeiro;Energia Elétrica;-19095,86;Loja Sul
+2024;Janeiro;Fretes de Produção;-120121,15;Loja Centro
+2024;Janeiro;Fretes de Produção;-73942,64;Loja Norte
+2024;Janeiro;Fretes de Produção;-95832,08;Loja Sul
+2024;Janeiro;IRPJ;-181790,15;Loja Centro
+2024;Janeiro;IRPJ;-111419,37;Loja Norte
+2024;Janeiro;IRPJ;-141480,15;Loja Sul
+2024;Janeiro;Impostos sobre Vendas;-725200,37;Loja Centro
+2024;Janeiro;Impostos sobre Vendas;-447323,75;Loja Norte
+2024;Janeiro;Impostos sobre Vendas;-566731,21;Loja Sul
+2024;Janeiro;Internet e Telefonia;-12068,33;Loja Centro
+2024;Janeiro;Internet e Telefonia;-7521,5;Loja Norte
+2024;Janeiro;Internet e Telefonia;-9409,33;Loja Sul
+2024;Janeiro;Juros Ativos;5921,02;Loja Centro
+2024;Janeiro;Juros Ativos;3878,2;Loja Norte
+2024;Janeiro;Juros Ativos;4732,34;Loja Sul
+2024;Janeiro;Juros Bancários;-11927,09;Loja Centro
+2024;Janeiro;Juros Bancários;-7523,21;Loja Norte
+2024;Janeiro;Juros Bancários;-9568,68;Loja Sul
+2024;Janeiro;Manutenção;-12008,67;Loja Centro
+2024;Janeiro;Manutenção;-7520,64;Loja Norte
+2024;Janeiro;Manutenção;-9478,01;Loja Sul
+2024;Janeiro;Marketing e Publicidade;-120461,78;Loja Centro
+2024;Janeiro;Marketing e Publicidade;-74526,01;Loja Norte
+2024;Janeiro;Marketing e Publicidade;-94940,46;Loja Sul
+2024;Janeiro;Materiais e Insumos;-301349,81;Loja Centro
+2024;Janeiro;Materiais e Insumos;-185227,54;Loja Norte
+2024;Janeiro;Materiais e Insumos;-238067,73;Loja Sul
+2024;Janeiro;Material de Escritório;-6035,14;Loja Centro
+2024;Janeiro;Material de Escritório;-3748,59;Loja Norte
+2024;Janeiro;Material de Escritório;-4714,3;Loja Sul
+2024;Janeiro;Mão de Obra Direta;-480413;Loja Centro
+2024;Janeiro;Mão de Obra Direta;-303829,65;Loja Norte
+2024;Janeiro;Mão de Obra Direta;-376450,8;Loja Sul
+2024;Janeiro;Outras Receitas Operacionais;59233,85;Loja Centro
+2024;Janeiro;Outras Receitas Operacionais;39678,33;Loja Norte
+2024;Janeiro;Outras Receitas Operacionais;46519,93;Loja Sul
+2024;Janeiro;Pró-Labore;-90087,12;Loja Centro
+2024;Janeiro;Pró-Labore;-56330,4;Loja Norte
+2024;Janeiro;Pró-Labore;-71124,12;Loja Sul
+2024;Janeiro;Receita de Serviços;416345,96;Loja Centro
+2024;Janeiro;Receita de Serviços;270695,47;Loja Norte
+2024;Janeiro;Receita de Serviços;329783,63;Loja Sul
+2024;Janeiro;Receita de Vendas;5480497,99;Loja Centro
+2024;Janeiro;Receita de Vendas;3608488,57;Loja Norte
+2024;Janeiro;Receita de Vendas;4280748,39;Loja Sul
+2024;Janeiro;Receitas Financeiras;17676,5;Loja Centro
+2024;Janeiro;Receitas Financeiras;11839,73;Loja Norte
+2024;Janeiro;Receitas Financeiras;14117,7;Loja Sul
+2024;Janeiro;Salários Administrativos;-301249,79;Loja Centro
+2024;Janeiro;Salários Administrativos;-184362,35;Loja Norte
+2024;Janeiro;Salários Administrativos;-238928,47;Loja Sul
+2024;Janeiro;Salários Comerciais;-238757,22;Loja Centro
+2024;Janeiro;Salários Comerciais;-148554,49;Loja Norte
+2024;Janeiro;Salários Comerciais;-192777,14;Loja Sul
+2024;Janeiro;Seguros;-11988,05;Loja Centro
+2024;Janeiro;Seguros;-7475,72;Loja Norte
+2024;Janeiro;Seguros;-9540,27;Loja Sul
+2024;Janeiro;Sistemas e Licenças;-23946,6;Loja Centro
+2024;Janeiro;Sistemas e Licenças;-14903,09;Loja Norte
+2024;Janeiro;Sistemas e Licenças;-19156,14;Loja Sul
+2024;Janeiro;Tarifas Bancárias;-3021,15;Loja Centro
+2024;Janeiro;Tarifas Bancárias;-1870,57;Loja Norte
+2024;Janeiro;Tarifas Bancárias;-2356,16;Loja Sul
+2024;Janeiro;Treinamentos;-6073,11;Loja Centro
+2024;Janeiro;Treinamentos;-3719,69;Loja Norte
+2024;Janeiro;Treinamentos;-4696,02;Loja Sul
+2024;Janeiro;Viagens Comerciais;-30043,14;Loja Centro
+2024;Janeiro;Viagens Comerciais;-18691,16;Loja Norte
+2024;Janeiro;Viagens Comerciais;-23765,69;Loja Sul
+2024;Julho;Aluguel;-70385,74;Loja Centro
+2024;Julho;Aluguel;-41523,73;Loja Norte
+2024;Julho;Aluguel;-54155,35;Loja Sul
+2024;Julho;CMV;-3149637,97;Loja Centro
+2024;Julho;CMV;-2068972,31;Loja Norte
+2024;Julho;CMV;-2462969,12;Loja Sul
+2024;Julho;CSLL;-58087,89;Loja Centro
+2024;Julho;CSLL;-35314,26;Loja Norte
+2024;Julho;CSLL;-45153,24;Loja Sul
+2024;Julho;Comissões;-144546,95;Loja Centro
+2024;Julho;Comissões;-89181,2;Loja Norte
+2024;Julho;Comissões;-112866,59;Loja Sul
+2024;Julho;Contabilidade;-17399,42;Loja Centro
+2024;Julho;Contabilidade;-10848,95;Loja Norte
+2024;Julho;Contabilidade;-13355,79;Loja Sul
+2024;Julho;Depreciação;-57673,37;Loja Centro
+2024;Julho;Depreciação;-35260,1;Loja Norte
+2024;Julho;Depreciação;-45668,24;Loja Sul
+2024;Julho;Descontos Concedidos;-28905,96;Loja Centro
+2024;Julho;Descontos Concedidos;-17658,88;Loja Norte
+2024;Julho;Descontos Concedidos;-22730,84;Loja Sul
+2024;Julho;Despesas Financeiras;-23035,21;Loja Centro
+2024;Julho;Despesas Financeiras;-14418,14;Loja Norte
+2024;Julho;Despesas Financeiras;-18033,75;Loja Sul
+2024;Julho;Devoluções;-57860,81;Loja Centro
+2024;Julho;Devoluções;-35313,26;Loja Norte
+2024;Julho;Devoluções;-45410,41;Loja Sul
+2024;Julho;Energia Elétrica;-23022,12;Loja Centro
+2024;Julho;Energia Elétrica;-14289,27;Loja Norte
+2024;Julho;Energia Elétrica;-18159,95;Loja Sul
+2024;Julho;Fretes de Produção;-116737,7;Loja Centro
+2024;Julho;Fretes de Produção;-70650,33;Loja Norte
+2024;Julho;Fretes de Produção;-89653,13;Loja Sul
+2024;Julho;IRPJ;-173662,87;Loja Centro
+2024;Julho;IRPJ;-106062,37;Loja Norte
+2024;Julho;IRPJ;-136034,01;Loja Sul
+2024;Julho;Impostos sobre Vendas;-692906,05;Loja Centro
+2024;Julho;Impostos sobre Vendas;-425748,75;Loja Norte
+2024;Julho;Impostos sobre Vendas;-544807,88;Loja Sul
+2024;Julho;Internet e Telefonia;-11530,98;Loja Centro
+2024;Julho;Internet e Telefonia;-7134,61;Loja Norte
+2024;Julho;Internet e Telefonia;-9066,18;Loja Sul
+2024;Julho;Juros Ativos;5568,05;Loja Centro
+2024;Julho;Juros Ativos;3646,91;Loja Norte
+2024;Julho;Juros Ativos;4370,19;Loja Sul
+2024;Julho;Juros Bancários;-11570,62;Loja Centro
+2024;Julho;Juros Bancários;-7083,96;Loja Norte
+2024;Julho;Juros Bancários;-9065,53;Loja Sul
+2024;Julho;Manutenção;-11533,48;Loja Centro
+2024;Julho;Manutenção;-7078,95;Loja Norte
+2024;Julho;Manutenção;-9111,58;Loja Sul
+2024;Julho;Marketing e Publicidade;-116514,09;Loja Centro
+2024;Julho;Marketing e Publicidade;-69904,7;Loja Norte
+2024;Julho;Marketing e Publicidade;-90551,71;Loja Sul
+2024;Julho;Materiais e Insumos;-291291,56;Loja Centro
+2024;Julho;Materiais e Insumos;-178955,85;Loja Norte
+2024;Julho;Materiais e Insumos;-222738,13;Loja Sul
+2024;Julho;Material de Escritório;-5818,99;Loja Centro
+2024;Julho;Material de Escritório;-3571,44;Loja Norte
+2024;Julho;Material de Escritório;-4469,02;Loja Sul
+2024;Julho;Mão de Obra Direta;-462139,23;Loja Centro
+2024;Julho;Mão de Obra Direta;-286933,68;Loja Norte
+2024;Julho;Mão de Obra Direta;-360290,64;Loja Sul
+2024;Julho;Outras Receitas Operacionais;55309,83;Loja Centro
+2024;Julho;Outras Receitas Operacionais;36736,82;Loja Norte
+2024;Julho;Outras Receitas Operacionais;43888,23;Loja Sul
+2024;Julho;Pró-Labore;-87315,8;Loja Centro
+2024;Julho;Pró-Labore;-53316,12;Loja Norte
+2024;Julho;Pró-Labore;-67223,55;Loja Sul
+2024;Julho;Receita de Serviços;388022,47;Loja Centro
+2024;Julho;Receita de Serviços;256827,28;Loja Norte
+2024;Julho;Receita de Serviços;306540,38;Loja Sul
+2024;Julho;Receita de Vendas;5102460,31;Loja Centro
+2024;Julho;Receita de Vendas;3378161,6;Loja Norte
+2024;Julho;Receita de Vendas;4023373,73;Loja Sul
+2024;Julho;Receitas Financeiras;16495,73;Loja Centro
+2024;Julho;Receitas Financeiras;11106,69;Loja Norte
+2024;Julho;Receitas Financeiras;13202;Loja Sul
+2024;Julho;Salários Administrativos;-289906,58;Loja Centro
+2024;Julho;Salários Administrativos;-178549,69;Loja Norte
+2024;Julho;Salários Administrativos;-224653,46;Loja Sul
+2024;Julho;Salários Comerciais;-231025,26;Loja Centro
+2024;Julho;Salários Comerciais;-141006,32;Loja Norte
+2024;Julho;Salários Comerciais;-182327,15;Loja Sul
+2024;Julho;Seguros;-11574,47;Loja Centro
+2024;Julho;Seguros;-6988,44;Loja Norte
+2024;Julho;Seguros;-9143,73;Loja Sul
+2024;Julho;Sistemas e Licenças;-23170,88;Loja Centro
+2024;Julho;Sistemas e Licenças;-14180,96;Loja Norte
+2024;Julho;Sistemas e Licenças;-18085,88;Loja Sul
+2024;Julho;Tarifas Bancárias;-2869,47;Loja Centro
+2024;Julho;Tarifas Bancárias;-1814,18;Loja Norte
+2024;Julho;Tarifas Bancárias;-2255,03;Loja Sul
+2024;Julho;Treinamentos;-5796,47;Loja Centro
+2024;Julho;Treinamentos;-3570,19;Loja Norte
+2024;Julho;Treinamentos;-4495,73;Loja Sul
+2024;Julho;Viagens Comerciais;-28913,85;Loja Centro
+2024;Julho;Viagens Comerciais;-17894,31;Loja Norte
+2024;Julho;Viagens Comerciais;-22517,97;Loja Sul
+2024;Junho;Aluguel;-72245,94;Loja Centro
+2024;Junho;Aluguel;-43282,49;Loja Norte
+2024;Junho;Aluguel;-55303,86;Loja Sul
+2024;Junho;CMV;-3272960,84;Loja Centro
+2024;Junho;CMV;-2146287,95;Loja Norte
+2024;Junho;CMV;-2520133,1;Loja Sul
+2024;Junho;CSLL;-59761,49;Loja Centro
+2024;Junho;CSLL;-37062,23;Loja Norte
+2024;Junho;CSLL;-45733,85;Loja Sul
+2024;Junho;Comissões;-148737,08;Loja Centro
+2024;Junho;Comissões;-92153,8;Loja Norte
+2024;Junho;Comissões;-115499,88;Loja Sul
+2024;Junho;Contabilidade;-17905,73;Loja Centro
+2024;Junho;Contabilidade;-11111,5;Loja Norte
+2024;Junho;Contabilidade;-13751,46;Loja Sul
+2024;Junho;Depreciação;-60058,14;Loja Centro
+2024;Junho;Depreciação;-36077,13;Loja Norte
+2024;Junho;Depreciação;-46242,14;Loja Sul
+2024;Junho;Descontos Concedidos;-30150,11;Loja Centro
+2024;Junho;Descontos Concedidos;-18236,74;Loja Norte
+2024;Junho;Descontos Concedidos;-22818,56;Loja Sul
+2024;Junho;Despesas Financeiras;-23881,72;Loja Centro
+2024;Junho;Despesas Financeiras;-14777,82;Loja Norte
+2024;Junho;Despesas Financeiras;-18358,79;Loja Sul
+2024;Junho;Devoluções;-59889,81;Loja Centro
+2024;Junho;Devoluções;-36591,81;Loja Norte
+2024;Junho;Devoluções;-45991,58;Loja Sul
+2024;Junho;Energia Elétrica;-23812,81;Loja Centro
+2024;Junho;Energia Elétrica;-14802,86;Loja Norte
+2024;Junho;Energia Elétrica;-18413,87;Loja Sul
+2024;Junho;Fretes de Produção;-119836,4;Loja Centro
+2024;Junho;Fretes de Produção;-73614,25;Loja Norte
+2024;Junho;Fretes de Produção;-91553,9;Loja Sul
+2024;Junho;IRPJ;-180146,33;Loja Centro
+2024;Junho;IRPJ;-108362,36;Loja Norte
+2024;Junho;IRPJ;-138646,7;Loja Sul
+2024;Junho;Impostos sobre Vendas;-723507,34;Loja Centro
+2024;Junho;Impostos sobre Vendas;-432864,39;Loja Norte
+2024;Junho;Impostos sobre Vendas;-551845,84;Loja Sul
+2024;Junho;Internet e Telefonia;-12046,75;Loja Centro
+2024;Junho;Internet e Telefonia;-7305,5;Loja Norte
+2024;Junho;Internet e Telefonia;-9132,93;Loja Sul
+2024;Junho;Juros Ativos;5804,43;Loja Centro
+2024;Junho;Juros Ativos;3794,14;Loja Norte
+2024;Junho;Juros Ativos;4451,48;Loja Sul
+2024;Junho;Juros Bancários;-11943,08;Loja Centro
+2024;Junho;Juros Bancários;-7429,63;Loja Norte
+2024;Junho;Juros Bancários;-9142,34;Loja Sul
+2024;Junho;Manutenção;-11916,21;Loja Centro
+2024;Junho;Manutenção;-7397,74;Loja Norte
+2024;Junho;Manutenção;-9199,21;Loja Sul
+2024;Junho;Marketing e Publicidade;-119314,85;Loja Centro
+2024;Junho;Marketing e Publicidade;-74259,12;Loja Norte
+2024;Junho;Marketing e Publicidade;-91583,91;Loja Sul
+2024;Junho;Materiais e Insumos;-300468,32;Loja Centro
+2024;Junho;Materiais e Insumos;-183408,4;Loja Norte
+2024;Junho;Materiais e Insumos;-228445,99;Loja Sul
+2024;Junho;Material de Escritório;-6001,04;Loja Centro
+2024;Junho;Material de Escritório;-3687,14;Loja Norte
+2024;Junho;Material de Escritório;-4562,32;Loja Sul
+2024;Junho;Mão de Obra Direta;-477508,35;Loja Centro
+2024;Junho;Mão de Obra Direta;-297923,82;Loja Norte
+2024;Junho;Mão de Obra Direta;-365306,72;Loja Sul
+2024;Junho;Outras Receitas Operacionais;57525,73;Loja Centro
+2024;Junho;Outras Receitas Operacionais;38353,82;Loja Norte
+2024;Junho;Outras Receitas Operacionais;44736,52;Loja Sul
+2024;Junho;Pró-Labore;-89367,42;Loja Centro
+2024;Junho;Pró-Labore;-54638,28;Loja Norte
+2024;Junho;Pró-Labore;-69716,78;Loja Sul
+2024;Junho;Receita de Serviços;406135,17;Loja Centro
+2024;Junho;Receita de Serviços;261804;Loja Norte
+2024;Junho;Receita de Serviços;314998,01;Loja Sul
+2024;Junho;Receita de Vendas;5307732,02;Loja Centro
+2024;Junho;Receita de Vendas;3505704,27;Loja Norte
+2024;Junho;Receita de Vendas;4118166,68;Loja Sul
+2024;Junho;Receitas Financeiras;17477,33;Loja Centro
+2024;Junho;Receitas Financeiras;11308,63;Loja Norte
+2024;Junho;Receitas Financeiras;13345,49;Loja Sul
+2024;Junho;Salários Administrativos;-296396,5;Loja Centro
+2024;Junho;Salários Administrativos;-185620,53;Loja Norte
+2024;Junho;Salários Administrativos;-231078,59;Loja Sul
+2024;Junho;Salários Comerciais;-240629,64;Loja Centro
+2024;Junho;Salários Comerciais;-143854,17;Loja Norte
+2024;Junho;Salários Comerciais;-184915,04;Loja Sul
+2024;Junho;Seguros;-12049,17;Loja Centro
+2024;Junho;Seguros;-7268,87;Loja Norte
+2024;Junho;Seguros;-9161,37;Loja Sul
+2024;Junho;Sistemas e Licenças;-23966,39;Loja Centro
+2024;Junho;Sistemas e Licenças;-14615,22;Loja Norte
+2024;Junho;Sistemas e Licenças;-18403,12;Loja Sul
+2024;Junho;Tarifas Bancárias;-2987,89;Loja Centro
+2024;Junho;Tarifas Bancárias;-1860,57;Loja Norte
+2024;Junho;Tarifas Bancárias;-2280,38;Loja Sul
+2024;Junho;Treinamentos;-5959,42;Loja Centro
+2024;Junho;Treinamentos;-3688,99;Loja Norte
+2024;Junho;Treinamentos;-4606,88;Loja Sul
+2024;Junho;Viagens Comerciais;-29931,67;Loja Centro
+2024;Junho;Viagens Comerciais;-18643,91;Loja Norte
+2024;Junho;Viagens Comerciais;-22714,66;Loja Sul
+2024;Maio;Aluguel;-75250,42;Loja Centro
+2024;Maio;Aluguel;-45160,32;Loja Norte
+2024;Maio;Aluguel;-57878,55;Loja Sul
+2024;Maio;CMV;-3412653,3;Loja Centro
+2024;Maio;CMV;-2221781,61;Loja Norte
+2024;Maio;CMV;-2620546,42;Loja Sul
+2024;Maio;CSLL;-62232,43;Loja Centro
+2024;Maio;CSLL;-38463,3;Loja Norte
+2024;Maio;CSLL;-48034,54;Loja Sul
+2024;Maio;Comissões;-156243,49;Loja Centro
+2024;Maio;Comissões;-94129,46;Loja Norte
+2024;Maio;Comissões;-121123,63;Loja Sul
+2024;Maio;Contabilidade;-18814,1;Loja Centro
+2024;Maio;Contabilidade;-11231,27;Loja Norte
+2024;Maio;Contabilidade;-14519,5;Loja Sul
+2024;Maio;Depreciação;-63610,09;Loja Centro
+2024;Maio;Depreciação;-37004,57;Loja Norte
+2024;Maio;Depreciação;-47786,01;Loja Sul
+2024;Maio;Descontos Concedidos;-31785,48;Loja Centro
+2024;Maio;Descontos Concedidos;-18372,49;Loja Norte
+2024;Maio;Descontos Concedidos;-24027,18;Loja Sul
+2024;Maio;Despesas Financeiras;-25162,94;Loja Centro
+2024;Maio;Despesas Financeiras;-15176,78;Loja Norte
+2024;Maio;Despesas Financeiras;-19097,27;Loja Sul
+2024;Maio;Devoluções;-63336,82;Loja Centro
+2024;Maio;Devoluções;-37486,39;Loja Norte
+2024;Maio;Devoluções;-47667,3;Loja Sul
+2024;Maio;Energia Elétrica;-25216,83;Loja Centro
+2024;Maio;Energia Elétrica;-15005,17;Loja Norte
+2024;Maio;Energia Elétrica;-19187,43;Loja Sul
+2024;Maio;Fretes de Produção;-125568,18;Loja Centro
+2024;Maio;Fretes de Produção;-74753,26;Loja Norte
+2024;Maio;Fretes de Produção;-96745,97;Loja Sul
+2024;Maio;IRPJ;-189859,51;Loja Centro
+2024;Maio;IRPJ;-111697,75;Loja Norte
+2024;Maio;IRPJ;-143832,19;Loja Sul
+2024;Maio;Impostos sobre Vendas;-749197,63;Loja Centro
+2024;Maio;Impostos sobre Vendas;-459265,52;Loja Norte
+2024;Maio;Impostos sobre Vendas;-575754,54;Loja Sul
+2024;Maio;Internet e Telefonia;-12580,51;Loja Centro
+2024;Maio;Internet e Telefonia;-7479,03;Loja Norte
+2024;Maio;Internet e Telefonia;-9645,52;Loja Sul
+2024;Maio;Juros Ativos;6089,05;Loja Centro
+2024;Maio;Juros Ativos;3857,81;Loja Norte
+2024;Maio;Juros Ativos;4642,68;Loja Sul
+2024;Maio;Juros Bancários;-12609,38;Loja Centro
+2024;Maio;Juros Bancários;-7508,27;Loja Norte
+2024;Maio;Juros Bancários;-9588,17;Loja Sul
+2024;Maio;Manutenção;-12603,6;Loja Centro
+2024;Maio;Manutenção;-7502,86;Loja Norte
+2024;Maio;Manutenção;-9599,26;Loja Sul
+2024;Maio;Marketing e Publicidade;-125932,75;Loja Centro
+2024;Maio;Marketing e Publicidade;-74419,24;Loja Norte
+2024;Maio;Marketing e Publicidade;-96634,81;Loja Sul
+2024;Maio;Materiais e Insumos;-310836,69;Loja Centro
+2024;Maio;Materiais e Insumos;-191033,71;Loja Norte
+2024;Maio;Materiais e Insumos;-241649,91;Loja Sul
+2024;Maio;Material de Escritório;-6306,51;Loja Centro
+2024;Maio;Material de Escritório;-3782,01;Loja Norte
+2024;Maio;Material de Escritório;-4767,53;Loja Sul
+2024;Maio;Mão de Obra Direta;-504606,18;Loja Centro
+2024;Maio;Mão de Obra Direta;-299395,8;Loja Norte
+2024;Maio;Mão de Obra Direta;-384074,27;Loja Sul
+2024;Maio;Outras Receitas Operacionais;60382,21;Loja Centro
+2024;Maio;Outras Receitas Operacionais;38903,16;Loja Norte
+2024;Maio;Outras Receitas Operacionais;46704,58;Loja Sul
+2024;Maio;Pró-Labore;-94279,2;Loja Centro
+2024;Maio;Pró-Labore;-56243,26;Loja Norte
+2024;Maio;Pró-Labore;-72289,95;Loja Sul
+2024;Maio;Receita de Serviços;425877,71;Loja Centro
+2024;Maio;Receita de Serviços;268845,99;Loja Norte
+2024;Maio;Receita de Serviços;326427,01;Loja Sul
+2024;Maio;Receita de Vendas;5531862,02;Loja Centro
+2024;Maio;Receita de Vendas;3626256,42;Loja Norte
+2024;Maio;Receita de Vendas;4281395,25;Loja Sul
+2024;Maio;Receitas Financeiras;18127,51;Loja Centro
+2024;Maio;Receitas Financeiras;11523,61;Loja Norte
+2024;Maio;Receitas Financeiras;14125,82;Loja Sul
+2024;Maio;Salários Administrativos;-318459,71;Loja Centro
+2024;Maio;Salários Administrativos;-181273,88;Loja Norte
+2024;Maio;Salários Administrativos;-241745,5;Loja Sul
+2024;Maio;Salários Comerciais;-251978,83;Loja Centro
+2024;Maio;Salários Comerciais;-148222,4;Loja Norte
+2024;Maio;Salários Comerciais;-193681,46;Loja Sul
+2024;Maio;Seguros;-12522,99;Loja Centro
+2024;Maio;Seguros;-7638,47;Loja Norte
+2024;Maio;Seguros;-9569,76;Loja Sul
+2024;Maio;Sistemas e Licenças;-25283,75;Loja Centro
+2024;Maio;Sistemas e Licenças;-14887,69;Loja Norte
+2024;Maio;Sistemas e Licenças;-19215,99;Loja Sul
+2024;Maio;Tarifas Bancárias;-3159,67;Loja Centro
+2024;Maio;Tarifas Bancárias;-1883,16;Loja Norte
+2024;Maio;Tarifas Bancárias;-2383,53;Loja Sul
+2024;Maio;Treinamentos;-6239,15;Loja Centro
+2024;Maio;Treinamentos;-3812,33;Loja Norte
+2024;Maio;Treinamentos;-4815,68;Loja Sul
+2024;Maio;Viagens Comerciais;-31501,74;Loja Centro
+2024;Maio;Viagens Comerciais;-18768,78;Loja Norte
+2024;Maio;Viagens Comerciais;-23995,08;Loja Sul
+2024;Março;Aluguel;-75639,83;Loja Centro
+2024;Março;Aluguel;-47556,66;Loja Norte
+2024;Março;Aluguel;-58688,92;Loja Sul
+2024;Março;CMV;-3535443,98;Loja Centro
+2024;Março;CMV;-2303454,57;Loja Norte
+2024;Março;CMV;-2716562,96;Loja Sul
+2024;Março;CSLL;-63126,34;Loja Centro
+2024;Março;CSLL;-39629,81;Loja Norte
+2024;Março;CSLL;-48803,66;Loja Sul
+2024;Março;Comissões;-157710,3;Loja Centro
+2024;Março;Comissões;-98202,18;Loja Norte
+2024;Março;Comissões;-122867,64;Loja Sul
+2024;Março;Contabilidade;-18915,36;Loja Centro
+2024;Março;Contabilidade;-11926,71;Loja Norte
+2024;Março;Contabilidade;-14634,27;Loja Sul
+2024;Março;Depreciação;-63588,03;Loja Centro
+2024;Março;Depreciação;-38859,87;Loja Norte
+2024;Março;Depreciação;-48940,55;Loja Sul
+2024;Março;Descontos Concedidos;-31508;Loja Centro
+2024;Março;Descontos Concedidos;-19925,55;Loja Norte
+2024;Março;Descontos Concedidos;-24369,42;Loja Sul
+2024;Março;Despesas Financeiras;-25198,42;Loja Centro
+2024;Março;Despesas Financeiras;-15738,78;Loja Norte
+2024;Março;Despesas Financeiras;-19675,76;Loja Sul
+2024;Março;Devoluções;-62799,08;Loja Centro
+2024;Março;Devoluções;-40107,35;Loja Norte
+2024;Março;Devoluções;-48764,51;Loja Sul
+2024;Março;Energia Elétrica;-25409,75;Loja Centro
+2024;Março;Energia Elétrica;-15618,89;Loja Norte
+2024;Março;Energia Elétrica;-19541,36;Loja Sul
+2024;Março;Fretes de Produção;-126098,64;Loja Centro
+2024;Março;Fretes de Produção;-79205,55;Loja Norte
+2024;Março;Fretes de Produção;-97826,25;Loja Sul
+2024;Março;IRPJ;-188559,54;Loja Centro
+2024;Março;IRPJ;-117246,41;Loja Norte
+2024;Março;IRPJ;-148722,15;Loja Sul
+2024;Março;Impostos sobre Vendas;-759183,19;Loja Centro
+2024;Março;Impostos sobre Vendas;-470358,59;Loja Norte
+2024;Março;Impostos sobre Vendas;-588191,98;Loja Sul
+2024;Março;Internet e Telefonia;-12710,12;Loja Centro
+2024;Março;Internet e Telefonia;-7690,28;Loja Norte
+2024;Março;Internet e Telefonia;-9865,56;Loja Sul
+2024;Março;Juros Ativos;6171,14;Loja Centro
+2024;Março;Juros Ativos;4105,07;Loja Norte
+2024;Março;Juros Ativos;4874,43;Loja Sul
+2024;Março;Juros Bancários;-12669,1;Loja Centro
+2024;Março;Juros Bancários;-7882,47;Loja Norte
+2024;Março;Juros Bancários;-9748,36;Loja Sul
+2024;Março;Manutenção;-12576,36;Loja Centro
+2024;Março;Manutenção;-7919,2;Loja Norte
+2024;Março;Manutenção;-9820,92;Loja Sul
+2024;Março;Marketing e Publicidade;-127416,6;Loja Centro
+2024;Março;Marketing e Publicidade;-77568,7;Loja Norte
+2024;Março;Marketing e Publicidade;-97740,72;Loja Sul
+2024;Março;Materiais e Insumos;-314744,68;Loja Centro
+2024;Março;Materiais e Insumos;-198831,13;Loja Norte
+2024;Março;Materiais e Insumos;-244432,21;Loja Sul
+2024;Março;Material de Escritório;-6329,87;Loja Centro
+2024;Março;Material de Escritório;-3940,79;Loja Norte
+2024;Março;Material de Escritório;-4879,92;Loja Sul
+2024;Março;Mão de Obra Direta;-502222,79;Loja Centro
+2024;Março;Mão de Obra Direta;-316871,28;Loja Norte
+2024;Março;Mão de Obra Direta;-393690,46;Loja Sul
+2024;Março;Outras Receitas Operacionais;61899,78;Loja Centro
+2024;Março;Outras Receitas Operacionais;40970,15;Loja Norte
+2024;Março;Outras Receitas Operacionais;48601,69;Loja Sul
+2024;Março;Pró-Labore;-94837,87;Loja Centro
+2024;Março;Pró-Labore;-58558,85;Loja Norte
+2024;Março;Pró-Labore;-73791,45;Loja Sul
+2024;Março;Receita de Serviços;430674,83;Loja Centro
+2024;Março;Receita de Serviços;291388,95;Loja Norte
+2024;Março;Receita de Serviços;339246,88;Loja Sul
+2024;Março;Receita de Vendas;5728929,37;Loja Centro
+2024;Março;Receita de Vendas;3764467,68;Loja Norte
+2024;Março;Receita de Vendas;4437244,33;Loja Sul
+2024;Março;Receitas Financeiras;18765,78;Loja Centro
+2024;Março;Receitas Financeiras;12151,52;Loja Norte
+2024;Março;Receitas Financeiras;14479,92;Loja Sul
+2024;Março;Salários Administrativos;-315021,78;Loja Centro
+2024;Março;Salários Administrativos;-198250,44;Loja Norte
+2024;Março;Salários Administrativos;-244615,23;Loja Sul
+2024;Março;Salários Comerciais;-253449,7;Loja Centro
+2024;Março;Salários Comerciais;-157474,83;Loja Norte
+2024;Março;Salários Comerciais;-195044,84;Loja Sul
+2024;Março;Seguros;-12676,23;Loja Centro
+2024;Março;Seguros;-7886;Loja Norte
+2024;Março;Seguros;-9737,39;Loja Sul
+2024;Março;Sistemas e Licenças;-25284,02;Loja Centro
+2024;Março;Sistemas e Licenças;-15729,09;Loja Norte
+2024;Março;Sistemas e Licenças;-19588,49;Loja Sul
+2024;Março;Tarifas Bancárias;-3164,26;Loja Centro
+2024;Março;Tarifas Bancárias;-1944,24;Loja Norte
+2024;Março;Tarifas Bancárias;-2463,02;Loja Sul
+2024;Março;Treinamentos;-6335,44;Loja Centro
+2024;Março;Treinamentos;-3862,33;Loja Norte
+2024;Março;Treinamentos;-4940,26;Loja Sul
+2024;Março;Viagens Comerciais;-31686,12;Loja Centro
+2024;Março;Viagens Comerciais;-19446,25;Loja Norte
+2024;Março;Viagens Comerciais;-24576,87;Loja Sul
+2024;Novembro;Aluguel;-90787,64;Loja Centro
+2024;Novembro;Aluguel;-54669,63;Loja Norte
+2024;Novembro;Aluguel;-68737,5;Loja Sul
+2024;Novembro;CMV;-4342144,16;Loja Centro
+2024;Novembro;CMV;-2795110,59;Loja Norte
+2024;Novembro;CMV;-3305734,1;Loja Sul
+2024;Novembro;CSLL;-74600,87;Loja Centro
+2024;Novembro;CSLL;-46256,11;Loja Norte
+2024;Novembro;CSLL;-57848,31;Loja Sul
+2024;Novembro;Comissões;-187995,37;Loja Centro
+2024;Novembro;Comissões;-113772,03;Loja Norte
+2024;Novembro;Comissões;-144583,09;Loja Sul
+2024;Novembro;Contabilidade;-22537,57;Loja Centro
+2024;Novembro;Contabilidade;-13547,15;Loja Norte
+2024;Novembro;Contabilidade;-17466,16;Loja Sul
+2024;Novembro;Depreciação;-74768,49;Loja Centro
+2024;Novembro;Depreciação;-46226,75;Loja Norte
+2024;Novembro;Depreciação;-57687,41;Loja Sul
+2024;Novembro;Descontos Concedidos;-37795,02;Loja Centro
+2024;Novembro;Descontos Concedidos;-22269,84;Loja Norte
+2024;Novembro;Descontos Concedidos;-29119,61;Loja Sul
+2024;Novembro;Despesas Financeiras;-30008,48;Loja Centro
+2024;Novembro;Despesas Financeiras;-18302,13;Loja Norte
+2024;Novembro;Despesas Financeiras;-23126,46;Loja Sul
+2024;Novembro;Devoluções;-75862,11;Loja Centro
+2024;Novembro;Devoluções;-44747,43;Loja Norte
+2024;Novembro;Devoluções;-57756,24;Loja Sul
+2024;Novembro;Energia Elétrica;-30078,28;Loja Centro
+2024;Novembro;Energia Elétrica;-18240,17;Loja Norte
+2024;Novembro;Energia Elétrica;-23102,67;Loja Sul
+2024;Novembro;Fretes de Produção;-150834,66;Loja Centro
+2024;Novembro;Fretes de Produção;-91066,15;Loja Norte
+2024;Novembro;Fretes de Produção;-115136,87;Loja Sul
+2024;Novembro;IRPJ;-223574,11;Loja Centro
+2024;Novembro;IRPJ;-138061,92;Loja Norte
+2024;Novembro;IRPJ;-174412,58;Loja Sul
+2024;Novembro;Impostos sobre Vendas;-896399,34;Loja Centro
+2024;Novembro;Impostos sobre Vendas;-542659,11;Loja Norte
+2024;Novembro;Impostos sobre Vendas;-703640,62;Loja Sul
+2024;Novembro;Internet e Telefonia;-15170,33;Loja Centro
+2024;Novembro;Internet e Telefonia;-9019,15;Loja Norte
+2024;Novembro;Internet e Telefonia;-11493,12;Loja Sul
+2024;Novembro;Juros Ativos;7615,35;Loja Centro
+2024;Novembro;Juros Ativos;4937,29;Loja Norte
+2024;Novembro;Juros Ativos;5939,04;Loja Sul
+2024;Novembro;Juros Bancários;-15008,06;Loja Centro
+2024;Novembro;Juros Bancários;-9196,56;Loja Norte
+2024;Novembro;Juros Bancários;-11519,47;Loja Sul
+2024;Novembro;Manutenção;-15101,81;Loja Centro
+2024;Novembro;Manutenção;-9049,48;Loja Norte
+2024;Novembro;Manutenção;-11542,98;Loja Sul
+2024;Novembro;Marketing e Publicidade;-149279,95;Loja Centro
+2024;Novembro;Marketing e Publicidade;-91869,08;Loja Norte
+2024;Novembro;Marketing e Publicidade;-116168,26;Loja Sul
+2024;Novembro;Materiais e Insumos;-375592,56;Loja Centro
+2024;Novembro;Materiais e Insumos;-226703,94;Loja Norte
+2024;Novembro;Materiais e Insumos;-290338,64;Loja Sul
+2024;Novembro;Material de Escritório;-7502,25;Loja Centro
+2024;Novembro;Material de Escritório;-4629,75;Loja Norte
+2024;Novembro;Material de Escritório;-5734,24;Loja Sul
+2024;Novembro;Mão de Obra Direta;-604998,81;Loja Centro
+2024;Novembro;Mão de Obra Direta;-357487,92;Loja Norte
+2024;Novembro;Mão de Obra Direta;-464587,77;Loja Sul
+2024;Novembro;Outras Receitas Operacionais;76748,12;Loja Centro
+2024;Novembro;Outras Receitas Operacionais;48956,8;Loja Norte
+2024;Novembro;Outras Receitas Operacionais;59093,56;Loja Sul
+2024;Novembro;Pró-Labore;-113147,9;Loja Centro
+2024;Novembro;Pró-Labore;-69051,67;Loja Norte
+2024;Novembro;Pró-Labore;-85675,07;Loja Sul
+2024;Novembro;Receita de Serviços;534349,8;Loja Centro
+2024;Novembro;Receita de Serviços;341809,84;Loja Norte
+2024;Novembro;Receita de Serviços;417636,58;Loja Sul
+2024;Novembro;Receita de Vendas;7042270,47;Loja Centro
+2024;Novembro;Receita de Vendas;4565907,5;Loja Norte
+2024;Novembro;Receita de Vendas;5403492,3;Loja Sul
+2024;Novembro;Receitas Financeiras;22903,89;Loja Centro
+2024;Novembro;Receitas Financeiras;14616,53;Loja Norte
+2024;Novembro;Receitas Financeiras;17923,64;Loja Sul
+2024;Novembro;Salários Administrativos;-373761,97;Loja Centro
+2024;Novembro;Salários Administrativos;-233739,88;Loja Norte
+2024;Novembro;Salários Administrativos;-286262,66;Loja Sul
+2024;Novembro;Salários Comerciais;-299623,97;Loja Centro
+2024;Novembro;Salários Comerciais;-182985,46;Loja Norte
+2024;Novembro;Salários Comerciais;-231807,37;Loja Sul
+2024;Novembro;Seguros;-15026,91;Loja Centro
+2024;Novembro;Seguros;-9116,66;Loja Norte
+2024;Novembro;Seguros;-11567,91;Loja Sul
+2024;Novembro;Sistemas e Licenças;-30292,52;Loja Centro
+2024;Novembro;Sistemas e Licenças;-18127,65;Loja Norte
+2024;Novembro;Sistemas e Licenças;-22962,17;Loja Sul
+2024;Novembro;Tarifas Bancárias;-3765,13;Loja Centro
+2024;Novembro;Tarifas Bancárias;-2254,22;Loja Norte
+2024;Novembro;Tarifas Bancárias;-2904,65;Loja Sul
+2024;Novembro;Treinamentos;-7521,1;Loja Centro
+2024;Novembro;Treinamentos;-4550,83;Loja Norte
+2024;Novembro;Treinamentos;-5781,83;Loja Sul
+2024;Novembro;Viagens Comerciais;-37673;Loja Centro
+2024;Novembro;Viagens Comerciais;-22522,59;Loja Norte
+2024;Novembro;Viagens Comerciais;-29036,04;Loja Sul
+2024;Outubro;Aluguel;-64200,73;Loja Centro
+2024;Outubro;Aluguel;-40512,42;Loja Norte
+2024;Outubro;Aluguel;-50290,73;Loja Sul
+2024;Outubro;CMV;-3067802,87;Loja Centro
+2024;Outubro;CMV;-2012431,18;Loja Norte
+2024;Outubro;CMV;-2365199,7;Loja Sul
+2024;Outubro;CSLL;-53775,12;Loja Centro
+2024;Outubro;CSLL;-33305,88;Loja Norte
+2024;Outubro;CSLL;-41988,05;Loja Sul
+2024;Outubro;Comissões;-134416,97;Loja Centro
+2024;Outubro;Comissões;-84263,09;Loja Norte
+2024;Outubro;Comissões;-104142,21;Loja Sul
+2024;Outubro;Contabilidade;-16125,43;Loja Centro
+2024;Outubro;Contabilidade;-10027,39;Loja Norte
+2024;Outubro;Contabilidade;-12574,11;Loja Sul
+2024;Outubro;Depreciação;-53503,84;Loja Centro
+2024;Outubro;Depreciação;-33231,66;Loja Norte
+2024;Outubro;Depreciação;-42356,21;Loja Sul
+2024;Outubro;Descontos Concedidos;-26850,23;Loja Centro
+2024;Outubro;Descontos Concedidos;-16580,03;Loja Norte
+2024;Outubro;Descontos Concedidos;-21098,22;Loja Sul
+2024;Outubro;Despesas Financeiras;-21622,66;Loja Centro
+2024;Outubro;Despesas Financeiras;-13528,4;Loja Norte
+2024;Outubro;Despesas Financeiras;-16493,04;Loja Sul
+2024;Outubro;Devoluções;-53309,03;Loja Centro
+2024;Outubro;Devoluções;-34012,05;Loja Norte
+2024;Outubro;Devoluções;-41909,28;Loja Sul
+2024;Outubro;Energia Elétrica;-21534,22;Loja Centro
+2024;Outubro;Energia Elétrica;-13164,22;Loja Norte
+2024;Outubro;Energia Elétrica;-16902,92;Loja Sul
+2024;Outubro;Fretes de Produção;-108692,09;Loja Centro
+2024;Outubro;Fretes de Produção;-66453,29;Loja Norte
+2024;Outubro;Fretes de Produção;-82829,07;Loja Sul
+2024;Outubro;IRPJ;-161944,04;Loja Centro
+2024;Outubro;IRPJ;-99880,88;Loja Norte
+2024;Outubro;IRPJ;-125300,88;Loja Sul
+2024;Outubro;Impostos sobre Vendas;-646607,32;Loja Centro
+2024;Outubro;Impostos sobre Vendas;-398336;Loja Norte
+2024;Outubro;Impostos sobre Vendas;-503528,89;Loja Sul
+2024;Outubro;Internet e Telefonia;-10622,05;Loja Centro
+2024;Outubro;Internet e Telefonia;-6835,92;Loja Norte
+2024;Outubro;Internet e Telefonia;-8397,73;Loja Sul
+2024;Outubro;Juros Ativos;5403,9;Loja Centro
+2024;Outubro;Juros Ativos;3604,58;Loja Norte
+2024;Outubro;Juros Ativos;4167,63;Loja Sul
+2024;Outubro;Juros Bancários;-10797,47;Loja Centro
+2024;Outubro;Juros Bancários;-6515,88;Loja Norte
+2024;Outubro;Juros Bancários;-8473,85;Loja Sul
+2024;Outubro;Manutenção;-10777,17;Loja Centro
+2024;Outubro;Manutenção;-6645,71;Loja Norte
+2024;Outubro;Manutenção;-8386,13;Loja Sul
+2024;Outubro;Marketing e Publicidade;-107339,85;Loja Centro
+2024;Outubro;Marketing e Publicidade;-66334,44;Loja Norte
+2024;Outubro;Marketing e Publicidade;-84448,86;Loja Sul
+2024;Outubro;Materiais e Insumos;-268716,32;Loja Centro
+2024;Outubro;Materiais e Insumos;-167605,47;Loja Norte
+2024;Outubro;Materiais e Insumos;-209201,87;Loja Sul
+2024;Outubro;Material de Escritório;-5411,33;Loja Centro
+2024;Outubro;Material de Escritório;-3354,48;Loja Norte
+2024;Outubro;Material de Escritório;-4140,76;Loja Sul
+2024;Outubro;Mão de Obra Direta;-428383,19;Loja Centro
+2024;Outubro;Mão de Obra Direta;-266338,2;Loja Norte
+2024;Outubro;Mão de Obra Direta;-338039,06;Loja Sul
+2024;Outubro;Outras Receitas Operacionais;53780,38;Loja Centro
+2024;Outubro;Outras Receitas Operacionais;35920,54;Loja Norte
+2024;Outubro;Outras Receitas Operacionais;42069,25;Loja Sul
+2024;Outubro;Pró-Labore;-80924,36;Loja Centro
+2024;Outubro;Pró-Labore;-50496,62;Loja Norte
+2024;Outubro;Pró-Labore;-62229,67;Loja Sul
+2024;Outubro;Receita de Serviços;374604,62;Loja Centro
+2024;Outubro;Receita de Serviços;252673,53;Loja Norte
+2024;Outubro;Receita de Serviços;295524,31;Loja Sul
+2024;Outubro;Receita de Vendas;4970135,21;Loja Centro
+2024;Outubro;Receita de Vendas;3285525,28;Loja Norte
+2024;Outubro;Receita de Vendas;3861642,91;Loja Sul
+2024;Outubro;Receitas Financeiras;16252,83;Loja Centro
+2024;Outubro;Receitas Financeiras;10601,11;Loja Norte
+2024;Outubro;Receitas Financeiras;12636,79;Loja Sul
+2024;Outubro;Salários Administrativos;-269103,58;Loja Centro
+2024;Outubro;Salários Administrativos;-166749,9;Loja Norte
+2024;Outubro;Salários Administrativos;-209496,56;Loja Sul
+2024;Outubro;Salários Comerciais;-213260,05;Loja Centro
+2024;Outubro;Salários Comerciais;-135573,27;Loja Norte
+2024;Outubro;Salários Comerciais;-168015,68;Loja Sul
+2024;Outubro;Seguros;-10743,28;Loja Centro
+2024;Outubro;Seguros;-6670,29;Loja Norte
+2024;Outubro;Seguros;-8403,02;Loja Sul
+2024;Outubro;Sistemas e Licenças;-21582,25;Loja Centro
+2024;Outubro;Sistemas e Licenças;-13391,18;Loja Norte
+2024;Outubro;Sistemas e Licenças;-16655,44;Loja Sul
+2024;Outubro;Tarifas Bancárias;-2689,08;Loja Centro
+2024;Outubro;Tarifas Bancárias;-1665,07;Loja Norte
+2024;Outubro;Tarifas Bancárias;-2099,08;Loja Sul
+2024;Outubro;Treinamentos;-5389,4;Loja Centro
+2024;Outubro;Treinamentos;-3346,36;Loja Norte
+2024;Outubro;Treinamentos;-4172,31;Loja Sul
+2024;Outubro;Viagens Comerciais;-26937,58;Loja Centro
+2024;Outubro;Viagens Comerciais;-16916,53;Loja Norte
+2024;Outubro;Viagens Comerciais;-20713,17;Loja Sul
+2024;Setembro;Aluguel;-62841,29;Loja Centro
+2024;Setembro;Aluguel;-39716,25;Loja Norte
+2024;Setembro;Aluguel;-49472,5;Loja Sul
+2024;Setembro;CMV;-3034515,84;Loja Centro
+2024;Setembro;CMV;-1984192,91;Loja Norte
+2024;Setembro;CMV;-2342288,99;Loja Sul
+2024;Setembro;CSLL;-52607,29;Loja Centro
+2024;Setembro;CSLL;-32760,42;Loja Norte
+2024;Setembro;CSLL;-41241,45;Loja Sul
+2024;Setembro;Comissões;-131014,9;Loja Centro
+2024;Setembro;Comissões;-83667,4;Loja Norte
+2024;Setembro;Comissões;-102177,43;Loja Sul
+2024;Setembro;Contabilidade;-15773,09;Loja Centro
+2024;Setembro;Contabilidade;-9745,22;Loja Norte
+2024;Setembro;Contabilidade;-12452,77;Loja Sul
+2024;Setembro;Depreciação;-52141,16;Loja Centro
+2024;Setembro;Depreciação;-33766,78;Loja Norte
+2024;Setembro;Depreciação;-40916,09;Loja Sul
+2024;Setembro;Descontos Concedidos;-26350,2;Loja Centro
+2024;Setembro;Descontos Concedidos;-16493;Loja Norte
+2024;Setembro;Descontos Concedidos;-20472,88;Loja Sul
+2024;Setembro;Despesas Financeiras;-20977,18;Loja Centro
+2024;Setembro;Despesas Financeiras;-13270,7;Loja Norte
+2024;Setembro;Despesas Financeiras;-16430;Loja Sul
+2024;Setembro;Devoluções;-52562,26;Loja Centro
+2024;Setembro;Devoluções;-32927,15;Loja Norte
+2024;Setembro;Devoluções;-41151,42;Loja Sul
+2024;Setembro;Energia Elétrica;-20968,53;Loja Centro
+2024;Setembro;Energia Elétrica;-13388,9;Loja Norte
+2024;Setembro;Energia Elétrica;-16339,57;Loja Sul
+2024;Setembro;Fretes de Produção;-105100,93;Loja Centro
+2024;Setembro;Fretes de Produção;-66278,07;Loja Norte
+2024;Setembro;Fretes de Produção;-81970,57;Loja Sul
+2024;Setembro;IRPJ;-157773,42;Loja Centro
+2024;Setembro;IRPJ;-99769,78;Loja Norte
+2024;Setembro;IRPJ;-122519,64;Loja Sul
+2024;Setembro;Impostos sobre Vendas;-630920,4;Loja Centro
+2024;Setembro;Impostos sobre Vendas;-398779,05;Loja Norte
+2024;Setembro;Impostos sobre Vendas;-490528,71;Loja Sul
+2024;Setembro;Internet e Telefonia;-10614,57;Loja Centro
+2024;Setembro;Internet e Telefonia;-6441;Loja Norte
+2024;Setembro;Internet e Telefonia;-8236,95;Loja Sul
+2024;Setembro;Juros Ativos;5305,85;Loja Centro
+2024;Setembro;Juros Ativos;3511,55;Loja Norte
+2024;Setembro;Juros Ativos;4211,35;Loja Sul
+2024;Setembro;Juros Bancários;-10505,61;Loja Centro
+2024;Setembro;Juros Bancários;-6634,39;Loja Norte
+2024;Setembro;Juros Bancários;-8196,1;Loja Sul
+2024;Setembro;Manutenção;-10504,35;Loja Centro
+2024;Setembro;Manutenção;-6648,32;Loja Norte
+2024;Setembro;Manutenção;-8185,74;Loja Sul
+2024;Setembro;Marketing e Publicidade;-104903,17;Loja Centro
+2024;Setembro;Marketing e Publicidade;-65684,21;Loja Norte
+2024;Setembro;Marketing e Publicidade;-82696,07;Loja Sul
+2024;Setembro;Materiais e Insumos;-261957,41;Loja Centro
+2024;Setembro;Materiais e Insumos;-165593,08;Loja Norte
+2024;Setembro;Materiais e Insumos;-205909,71;Loja Sul
+2024;Setembro;Material de Escritório;-5217,95;Loja Centro
+2024;Setembro;Material de Escritório;-3335,45;Loja Norte
+2024;Setembro;Material de Escritório;-4122,13;Loja Sul
+2024;Setembro;Mão de Obra Direta;-422746,03;Loja Centro
+2024;Setembro;Mão de Obra Direta;-266914,79;Loja Norte
+2024;Setembro;Mão de Obra Direta;-323714,83;Loja Sul
+2024;Setembro;Outras Receitas Operacionais;53490,01;Loja Centro
+2024;Setembro;Outras Receitas Operacionais;35156,31;Loja Norte
+2024;Setembro;Outras Receitas Operacionais;41594,03;Loja Sul
+2024;Setembro;Pró-Labore;-78445,08;Loja Centro
+2024;Setembro;Pró-Labore;-49657,02;Loja Norte
+2024;Setembro;Pró-Labore;-61951,08;Loja Sul
+2024;Setembro;Receita de Serviços;371916,25;Loja Centro
+2024;Setembro;Receita de Serviços;247379,18;Loja Norte
+2024;Setembro;Receita de Serviços;292907,56;Loja Sul
+2024;Setembro;Receita de Vendas;4918110,64;Loja Centro
+2024;Setembro;Receita de Vendas;3240572,18;Loja Norte
+2024;Setembro;Receita de Vendas;3824764,21;Loja Sul
+2024;Setembro;Receitas Financeiras;15882,42;Loja Centro
+2024;Setembro;Receitas Financeiras;10718,66;Loja Norte
+2024;Setembro;Receitas Financeiras;12518,61;Loja Sul
+2024;Setembro;Salários Administrativos;-260899,62;Loja Centro
+2024;Setembro;Salários Administrativos;-167780,2;Loja Norte
+2024;Setembro;Salários Administrativos;-205253,11;Loja Sul
+2024;Setembro;Salários Comerciais;-208395;Loja Centro
+2024;Setembro;Salários Comerciais;-133681,66;Loja Norte
+2024;Setembro;Salários Comerciais;-165027,76;Loja Sul
+2024;Setembro;Seguros;-10472,47;Loja Centro
+2024;Setembro;Seguros;-6740,57;Loja Norte
+2024;Setembro;Seguros;-8144,08;Loja Sul
+2024;Setembro;Sistemas e Licenças;-20981,32;Loja Centro
+2024;Setembro;Sistemas e Licenças;-13375,69;Loja Norte
+2024;Setembro;Sistemas e Licenças;-16336,32;Loja Sul
+2024;Setembro;Tarifas Bancárias;-2648,87;Loja Centro
+2024;Setembro;Tarifas Bancárias;-1649,71;Loja Norte
+2024;Setembro;Tarifas Bancárias;-2031,19;Loja Sul
+2024;Setembro;Treinamentos;-5217,95;Loja Centro
+2024;Setembro;Treinamentos;-3271,55;Loja Norte
+2024;Setembro;Treinamentos;-4176,39;Loja Sul
+2024;Setembro;Viagens Comerciais;-26343,72;Loja Centro
+2024;Setembro;Viagens Comerciais;-16561,23;Loja Norte
+2024;Setembro;Viagens Comerciais;-20422,28;Loja Sul
+2025;Abril;Aluguel;-76591,51;Loja Centro
+2025;Abril;Aluguel;-47468,46;Loja Norte
+2025;Abril;Aluguel;-59815,4;Loja Sul
+2025;Abril;CMV;-3596670,81;Loja Centro
+2025;Abril;CMV;-2335017,73;Loja Norte
+2025;Abril;CMV;-2769952,2;Loja Sul
+2025;Abril;CSLL;-63725,91;Loja Centro
+2025;Abril;CSLL;-39244,63;Loja Norte
+2025;Abril;CSLL;-50226,55;Loja Sul
+2025;Abril;Comissões;-159442,62;Loja Centro
+2025;Abril;Comissões;-99495,64;Loja Norte
+2025;Abril;Comissões;-124238,32;Loja Sul
+2025;Abril;Contabilidade;-19001,94;Loja Centro
+2025;Abril;Contabilidade;-12155,76;Loja Norte
+2025;Abril;Contabilidade;-14871,74;Loja Sul
+2025;Abril;Depreciação;-63259,03;Loja Centro
+2025;Abril;Depreciação;-39674,54;Loja Norte
+2025;Abril;Depreciação;-50386,59;Loja Sul
+2025;Abril;Descontos Concedidos;-31783,84;Loja Centro
+2025;Abril;Descontos Concedidos;-19837,8;Loja Norte
+2025;Abril;Descontos Concedidos;-25018,58;Loja Sul
+2025;Abril;Despesas Financeiras;-25373,41;Loja Centro
+2025;Abril;Despesas Financeiras;-15932,25;Loja Norte
+2025;Abril;Despesas Financeiras;-20022,36;Loja Sul
+2025;Abril;Devoluções;-63365,51;Loja Centro
+2025;Abril;Devoluções;-39774,29;Loja Norte
+2025;Abril;Devoluções;-50180,73;Loja Sul
+2025;Abril;Energia Elétrica;-25403,98;Loja Centro
+2025;Abril;Energia Elétrica;-16123,06;Loja Norte
+2025;Abril;Energia Elétrica;-19824,63;Loja Sul
+2025;Abril;Fretes de Produção;-126218,19;Loja Centro
+2025;Abril;Fretes de Produção;-78374,47;Loja Norte
+2025;Abril;Fretes de Produção;-101945,16;Loja Sul
+2025;Abril;IRPJ;-189719,95;Loja Centro
+2025;Abril;IRPJ;-121470,54;Loja Norte
+2025;Abril;IRPJ;-149131,4;Loja Sul
+2025;Abril;Impostos sobre Vendas;-764551,65;Loja Centro
+2025;Abril;Impostos sobre Vendas;-480509,31;Loja Norte
+2025;Abril;Impostos sobre Vendas;-594711,9;Loja Sul
+2025;Abril;Internet e Telefonia;-12764,72;Loja Centro
+2025;Abril;Internet e Telefonia;-7911,37;Loja Norte
+2025;Abril;Internet e Telefonia;-9969,87;Loja Sul
+2025;Abril;Juros Ativos;6264,39;Loja Centro
+2025;Abril;Juros Ativos;4186,86;Loja Norte
+2025;Abril;Juros Ativos;4964,4;Loja Sul
+2025;Abril;Juros Bancários;-12830,25;Loja Centro
+2025;Abril;Juros Bancários;-7878,38;Loja Norte
+2025;Abril;Juros Bancários;-9924,05;Loja Sul
+2025;Abril;Manutenção;-12810,67;Loja Centro
+2025;Abril;Manutenção;-7793,4;Loja Norte
+2025;Abril;Manutenção;-10018,63;Loja Sul
+2025;Abril;Marketing e Publicidade;-126329,67;Loja Centro
+2025;Abril;Marketing e Publicidade;-80793,43;Loja Norte
+2025;Abril;Marketing e Publicidade;-99750,42;Loja Sul
+2025;Abril;Materiais e Insumos;-317809,85;Loja Centro
+2025;Abril;Materiais e Insumos;-200369,92;Loja Norte
+2025;Abril;Materiais e Insumos;-248512,76;Loja Sul
+2025;Abril;Material de Escritório;-6362,28;Loja Centro
+2025;Abril;Material de Escritório;-3957,53;Loja Norte
+2025;Abril;Material de Escritório;-5005,93;Loja Sul
+2025;Abril;Mão de Obra Direta;-506954,04;Loja Centro
+2025;Abril;Mão de Obra Direta;-316874,28;Loja Norte
+2025;Abril;Mão de Obra Direta;-402542,65;Loja Sul
+2025;Abril;Outras Receitas Operacionais;63060,85;Loja Centro
+2025;Abril;Outras Receitas Operacionais;41948,08;Loja Norte
+2025;Abril;Outras Receitas Operacionais;49107,18;Loja Sul
+2025;Abril;Pró-Labore;-96124,26;Loja Centro
+2025;Abril;Pró-Labore;-59422,08;Loja Norte
+2025;Abril;Pró-Labore;-74260,29;Loja Sul
+2025;Abril;Receita de Serviços;441180,43;Loja Centro
+2025;Abril;Receita de Serviços;292350,57;Loja Norte
+2025;Abril;Receita de Serviços;345127,84;Loja Sul
+2025;Abril;Receita de Vendas;5827208,37;Loja Centro
+2025;Abril;Receita de Vendas;3816917,23;Loja Norte
+2025;Abril;Receita de Vendas;4525109,46;Loja Sul
+2025;Abril;Receitas Financeiras;18954,59;Loja Centro
+2025;Abril;Receitas Financeiras;12546,61;Loja Norte
+2025;Abril;Receitas Financeiras;14723,67;Loja Sul
+2025;Abril;Salários Administrativos;-318439,34;Loja Centro
+2025;Abril;Salários Administrativos;-199078,89;Loja Norte
+2025;Abril;Salários Administrativos;-248905,98;Loja Sul
+2025;Abril;Salários Comerciais;-254885,64;Loja Centro
+2025;Abril;Salários Comerciais;-158182,47;Loja Norte
+2025;Abril;Salários Comerciais;-199897,44;Loja Sul
+2025;Abril;Seguros;-12807,47;Loja Centro
+2025;Abril;Seguros;-7915,06;Loja Norte
+2025;Abril;Seguros;-9918,41;Loja Sul
+2025;Abril;Sistemas e Licenças;-25450,73;Loja Centro
+2025;Abril;Sistemas e Licenças;-15826,16;Loja Norte
+2025;Abril;Sistemas e Licenças;-20025,52;Loja Sul
+2025;Abril;Tarifas Bancárias;-3182,44;Loja Centro
+2025;Abril;Tarifas Bancárias;-1949,47;Loja Norte
+2025;Abril;Tarifas Bancárias;-2526,55;Loja Sul
+2025;Abril;Treinamentos;-6437,6;Loja Centro
+2025;Abril;Treinamentos;-3923,49;Loja Norte
+2025;Abril;Treinamentos;-4949,72;Loja Sul
+2025;Abril;Viagens Comerciais;-31568,08;Loja Centro
+2025;Abril;Viagens Comerciais;-20058,16;Loja Norte
+2025;Abril;Viagens Comerciais;-25073,89;Loja Sul
+2025;Agosto;Aluguel;-71178,09;Loja Centro
+2025;Agosto;Aluguel;-43349,25;Loja Norte
+2025;Agosto;Aluguel;-54547,99;Loja Sul
+2025;Agosto;CMV;-3282384,33;Loja Centro
+2025;Agosto;CMV;-2120217,98;Loja Norte
+2025;Agosto;CMV;-2532488,32;Loja Sul
+2025;Agosto;CSLL;-58650,85;Loja Centro
+2025;Agosto;CSLL;-36837,44;Loja Norte
+2025;Agosto;CSLL;-45588,66;Loja Sul
+2025;Agosto;Comissões;-146470,1;Loja Centro
+2025;Agosto;Comissões;-92036,23;Loja Norte
+2025;Agosto;Comissões;-114197,78;Loja Sul
+2025;Agosto;Contabilidade;-17664,78;Loja Centro
+2025;Agosto;Contabilidade;-10878,69;Loja Norte
+2025;Agosto;Contabilidade;-13747,13;Loja Sul
+2025;Agosto;Depreciação;-59073;Loja Centro
+2025;Agosto;Depreciação;-36593,75;Loja Norte
+2025;Agosto;Depreciação;-45324,26;Loja Sul
+2025;Agosto;Descontos Concedidos;-29435,9;Loja Centro
+2025;Agosto;Descontos Concedidos;-18016,51;Loja Norte
+2025;Agosto;Descontos Concedidos;-23017,08;Loja Sul
+2025;Agosto;Despesas Financeiras;-23524,24;Loja Centro
+2025;Agosto;Despesas Financeiras;-14390,82;Loja Norte
+2025;Agosto;Despesas Financeiras;-18460,36;Loja Sul
+2025;Agosto;Devoluções;-58824,19;Loja Centro
+2025;Agosto;Devoluções;-36515,35;Loja Norte
+2025;Agosto;Devoluções;-45671,57;Loja Sul
+2025;Agosto;Energia Elétrica;-23643,62;Loja Centro
+2025;Agosto;Energia Elétrica;-14398,41;Loja Norte
+2025;Agosto;Energia Elétrica;-18319,72;Loja Sul
+2025;Agosto;Fretes de Produção;-117822,77;Loja Centro
+2025;Agosto;Fretes de Produção;-73332,33;Loja Norte
+2025;Agosto;Fretes de Produção;-90886,74;Loja Sul
+2025;Agosto;IRPJ;-177376,63;Loja Centro
+2025;Agosto;IRPJ;-109405,13;Loja Norte
+2025;Agosto;IRPJ;-136119,56;Loja Sul
+2025;Agosto;Impostos sobre Vendas;-700394,04;Loja Centro
+2025;Agosto;Impostos sobre Vendas;-440620,19;Loja Norte
+2025;Agosto;Impostos sobre Vendas;-552140,15;Loja Sul
+2025;Agosto;Internet e Telefonia;-11856,11;Loja Centro
+2025;Agosto;Internet e Telefonia;-7157,36;Loja Norte
+2025;Agosto;Internet e Telefonia;-9157,28;Loja Sul
+2025;Agosto;Juros Ativos;5771,12;Loja Centro
+2025;Agosto;Juros Ativos;3760,18;Loja Norte
+2025;Agosto;Juros Ativos;4526,38;Loja Sul
+2025;Agosto;Juros Bancários;-11799,33;Loja Centro
+2025;Agosto;Juros Bancários;-7255,99;Loja Norte
+2025;Agosto;Juros Bancários;-9136,06;Loja Sul
+2025;Agosto;Manutenção;-11833,71;Loja Centro
+2025;Agosto;Manutenção;-7124,95;Loja Norte
+2025;Agosto;Manutenção;-9210,24;Loja Sul
+2025;Agosto;Marketing e Publicidade;-117448,41;Loja Centro
+2025;Agosto;Marketing e Publicidade;-73916,72;Loja Norte
+2025;Agosto;Marketing e Publicidade;-90803,63;Loja Sul
+2025;Agosto;Materiais e Insumos;-295042,29;Loja Centro
+2025;Agosto;Materiais e Insumos;-183847,85;Loja Norte
+2025;Agosto;Materiais e Insumos;-226224,99;Loja Sul
+2025;Agosto;Material de Escritório;-5873,74;Loja Centro
+2025;Agosto;Material de Escritório;-3641,1;Loja Norte
+2025;Agosto;Material de Escritório;-4586,28;Loja Sul
+2025;Agosto;Mão de Obra Direta;-473262,87;Loja Centro
+2025;Agosto;Mão de Obra Direta;-290251,22;Loja Norte
+2025;Agosto;Mão de Obra Direta;-363985,12;Loja Sul
+2025;Agosto;Outras Receitas Operacionais;57981,13;Loja Centro
+2025;Agosto;Outras Receitas Operacionais;37309,18;Loja Norte
+2025;Agosto;Outras Receitas Operacionais;45212,59;Loja Sul
+2025;Agosto;Pró-Labore;-87989,59;Loja Centro
+2025;Agosto;Pró-Labore;-54839,47;Loja Norte
+2025;Agosto;Pró-Labore;-68727,53;Loja Sul
+2025;Agosto;Receita de Serviços;398714,82;Loja Centro
+2025;Agosto;Receita de Serviços;265534,84;Loja Norte
+2025;Agosto;Receita de Serviços;320763,58;Loja Sul
+2025;Agosto;Receita de Vendas;5323714,49;Loja Centro
+2025;Agosto;Receita de Vendas;3466399,81;Loja Norte
+2025;Agosto;Receita de Vendas;4142128,4;Loja Sul
+2025;Agosto;Receitas Financeiras;17408,39;Loja Centro
+2025;Agosto;Receitas Financeiras;11221,01;Loja Norte
+2025;Agosto;Receitas Financeiras;13523,59;Loja Sul
+2025;Agosto;Salários Administrativos;-293724,36;Loja Centro
+2025;Agosto;Salários Administrativos;-178913,13;Loja Norte
+2025;Agosto;Salários Administrativos;-231965,08;Loja Sul
+2025;Agosto;Salários Comerciais;-236617,15;Loja Centro
+2025;Agosto;Salários Comerciais;-142974,13;Loja Norte
+2025;Agosto;Salários Comerciais;-183864,7;Loja Sul
+2025;Agosto;Seguros;-11735,67;Loja Centro
+2025;Agosto;Seguros;-7243,34;Loja Norte
+2025;Agosto;Seguros;-9218,38;Loja Sul
+2025;Agosto;Sistemas e Licenças;-23699,87;Loja Centro
+2025;Agosto;Sistemas e Licenças;-14219,55;Loja Norte
+2025;Agosto;Sistemas e Licenças;-18410,77;Loja Sul
+2025;Agosto;Tarifas Bancárias;-2927,53;Loja Centro
+2025;Agosto;Tarifas Bancárias;-1833,42;Loja Norte
+2025;Agosto;Tarifas Bancárias;-2292,35;Loja Sul
+2025;Agosto;Treinamentos;-5849,41;Loja Centro
+2025;Agosto;Treinamentos;-3627,76;Loja Norte
+2025;Agosto;Treinamentos;-4624,96;Loja Sul
+2025;Agosto;Viagens Comerciais;-29598,66;Loja Centro
+2025;Agosto;Viagens Comerciais;-18066,17;Loja Norte
+2025;Agosto;Viagens Comerciais;-22791,16;Loja Sul
+2025;Dezembro;Aluguel;-122913,28;Loja Centro
+2025;Dezembro;Aluguel;-74270,97;Loja Norte
+2025;Dezembro;Aluguel;-91053,75;Loja Sul
+2025;Dezembro;CMV;-5830112;Loja Centro
+2025;Dezembro;CMV;-3680007,66;Loja Norte
+2025;Dezembro;CMV;-4423538,53;Loja Sul
+2025;Dezembro;CSLL;-102538;Loja Centro
+2025;Dezembro;CSLL;-60351,36;Loja Norte
+2025;Dezembro;CSLL;-77080,81;Loja Sul
+2025;Dezembro;Comissões;-255378,45;Loja Centro
+2025;Dezembro;Comissões;-152165,71;Loja Norte
+2025;Dezembro;Comissões;-192653,06;Loja Sul
+2025;Dezembro;Contabilidade;-30752,49;Loja Centro
+2025;Dezembro;Contabilidade;-18257,19;Loja Norte
+2025;Dezembro;Contabilidade;-23003,67;Loja Sul
+2025;Dezembro;Depreciação;-102307,96;Loja Centro
+2025;Dezembro;Depreciação;-60177,15;Loja Norte
+2025;Dezembro;Depreciação;-77481,52;Loja Sul
+2025;Dezembro;Descontos Concedidos;-51282,94;Loja Centro
+2025;Dezembro;Descontos Concedidos;-29942,11;Loja Norte
+2025;Dezembro;Descontos Concedidos;-38726,04;Loja Sul
+2025;Dezembro;Despesas Financeiras;-41018,78;Loja Centro
+2025;Dezembro;Despesas Financeiras;-24222,02;Loja Norte
+2025;Dezembro;Despesas Financeiras;-30758,8;Loja Sul
+2025;Dezembro;Devoluções;-102012,75;Loja Centro
+2025;Dezembro;Devoluções;-61704,2;Loja Norte
+2025;Dezembro;Devoluções;-76492,82;Loja Sul
+2025;Dezembro;Energia Elétrica;-41182,45;Loja Centro
+2025;Dezembro;Energia Elétrica;-24423,98;Loja Norte
+2025;Dezembro;Energia Elétrica;-30406,4;Loja Sul
+2025;Dezembro;Fretes de Produção;-204271,91;Loja Centro
+2025;Dezembro;Fretes de Produção;-122388,18;Loja Norte
+2025;Dezembro;Fretes de Produção;-153593,15;Loja Sul
+2025;Dezembro;IRPJ;-304990,46;Loja Centro
+2025;Dezembro;IRPJ;-184039,57;Loja Norte
+2025;Dezembro;IRPJ;-231544,21;Loja Sul
+2025;Dezembro;Impostos sobre Vendas;-1220658,34;Loja Centro
+2025;Dezembro;Impostos sobre Vendas;-736697,5;Loja Norte
+2025;Dezembro;Impostos sobre Vendas;-924954,53;Loja Sul
+2025;Dezembro;Internet e Telefonia;-20392,55;Loja Centro
+2025;Dezembro;Internet e Telefonia;-12249,19;Loja Norte
+2025;Dezembro;Internet e Telefonia;-15388,5;Loja Sul
+2025;Dezembro;Juros Ativos;10222,34;Loja Centro
+2025;Dezembro;Juros Ativos;6579,2;Loja Norte
+2025;Dezembro;Juros Ativos;7873,59;Loja Sul
+2025;Dezembro;Juros Bancários;-20338,9;Loja Centro
+2025;Dezembro;Juros Bancários;-12188,67;Loja Norte
+2025;Dezembro;Juros Bancários;-15498,69;Loja Sul
+2025;Dezembro;Manutenção;-20248,88;Loja Centro
+2025;Dezembro;Manutenção;-12357,49;Loja Norte
+2025;Dezembro;Manutenção;-15452,03;Loja Sul
+2025;Dezembro;Marketing e Publicidade;-205973,16;Loja Centro
+2025;Dezembro;Marketing e Publicidade;-120837,23;Loja Norte
+2025;Dezembro;Marketing e Publicidade;-153067,36;Loja Sul
+2025;Dezembro;Materiais e Insumos;-508345,21;Loja Centro
+2025;Dezembro;Materiais e Insumos;-304122,91;Loja Norte
+2025;Dezembro;Materiais e Insumos;-388117,38;Loja Sul
+2025;Dezembro;Material de Escritório;-10237,19;Loja Centro
+2025;Dezembro;Material de Escritório;-6091,25;Loja Norte
+2025;Dezembro;Material de Escritório;-7678,04;Loja Sul
+2025;Dezembro;Mão de Obra Direta;-813936,7;Loja Centro
+2025;Dezembro;Mão de Obra Direta;-493789,3;Loja Norte
+2025;Dezembro;Mão de Obra Direta;-614175,39;Loja Sul
+2025;Dezembro;Outras Receitas Operacionais;103065,38;Loja Centro
+2025;Dezembro;Outras Receitas Operacionais;65253,96;Loja Norte
+2025;Dezembro;Outras Receitas Operacionais;78278,31;Loja Sul
+2025;Dezembro;Pró-Labore;-152691,33;Loja Centro
+2025;Dezembro;Pró-Labore;-92144,66;Loja Norte
+2025;Dezembro;Pró-Labore;-115450,81;Loja Sul
+2025;Dezembro;Receita de Serviços;717226,22;Loja Centro
+2025;Dezembro;Receita de Serviços;467496,78;Loja Norte
+2025;Dezembro;Receita de Serviços;543367,65;Loja Sul
+2025;Dezembro;Receita de Vendas;9440497,15;Loja Centro
+2025;Dezembro;Receita de Vendas;6017683,33;Loja Norte
+2025;Dezembro;Receita de Vendas;7234668,65;Loja Sul
+2025;Dezembro;Receitas Financeiras;30698,84;Loja Centro
+2025;Dezembro;Receitas Financeiras;19648,19;Loja Norte
+2025;Dezembro;Receitas Financeiras;23662,8;Loja Sul
+2025;Dezembro;Salários Administrativos;-509200,84;Loja Centro
+2025;Dezembro;Salários Administrativos;-304547,26;Loja Norte
+2025;Dezembro;Salários Administrativos;-386819,29;Loja Sul
+2025;Dezembro;Salários Comerciais;-408435,01;Loja Centro
+2025;Dezembro;Salários Comerciais;-246706,95;Loja Norte
+2025;Dezembro;Salários Comerciais;-305647,65;Loja Sul
+2025;Dezembro;Seguros;-20357,09;Loja Centro
+2025;Dezembro;Seguros;-12296,98;Loja Norte
+2025;Dezembro;Seguros;-15385,85;Loja Sul
+2025;Dezembro;Sistemas e Licenças;-40316,21;Loja Centro
+2025;Dezembro;Sistemas e Licenças;-24583,55;Loja Norte
+2025;Dezembro;Sistemas e Licenças;-31215,1;Loja Sul
+2025;Dezembro;Tarifas Bancárias;-5057,98;Loja Centro
+2025;Dezembro;Tarifas Bancárias;-3018,26;Loja Norte
+2025;Dezembro;Tarifas Bancárias;-3929,02;Loja Sul
+2025;Dezembro;Treinamentos;-10159,3;Loja Centro
+2025;Dezembro;Treinamentos;-6193,01;Loja Norte
+2025;Dezembro;Treinamentos;-7675,72;Loja Sul
+2025;Dezembro;Viagens Comerciais;-50954,39;Loja Centro
+2025;Dezembro;Viagens Comerciais;-30709,49;Loja Norte
+2025;Dezembro;Viagens Comerciais;-38425,59;Loja Sul
+2025;Fevereiro;Aluguel;-78761,37;Loja Centro
+2025;Fevereiro;Aluguel;-49335,12;Loja Norte
+2025;Fevereiro;Aluguel;-59924,48;Loja Sul
+2025;Fevereiro;CMV;-3596269,72;Loja Centro
+2025;Fevereiro;CMV;-2335383,19;Loja Norte
+2025;Fevereiro;CMV;-2759783,42;Loja Sul
+2025;Fevereiro;CSLL;-66046,17;Loja Centro
+2025;Fevereiro;CSLL;-39876,39;Loja Norte
+2025;Fevereiro;CSLL;-50524,21;Loja Sul
+2025;Fevereiro;Comissões;-165552,68;Loja Centro
+2025;Fevereiro;Comissões;-101382,33;Loja Norte
+2025;Fevereiro;Comissões;-124412,06;Loja Sul
+2025;Fevereiro;Contabilidade;-19774,76;Loja Centro
+2025;Fevereiro;Contabilidade;-12108,76;Loja Norte
+2025;Fevereiro;Contabilidade;-15077,82;Loja Sul
+2025;Fevereiro;Depreciação;-66277,06;Loja Centro
+2025;Fevereiro;Depreciação;-40344,43;Loja Norte
+2025;Fevereiro;Depreciação;-49878,68;Loja Sul
+2025;Fevereiro;Descontos Concedidos;-32972,37;Loja Centro
+2025;Fevereiro;Descontos Concedidos;-20436,87;Loja Norte
+2025;Fevereiro;Descontos Concedidos;-24899,19;Loja Sul
+2025;Fevereiro;Despesas Financeiras;-26364,7;Loja Centro
+2025;Fevereiro;Despesas Financeiras;-16090,11;Loja Norte
+2025;Fevereiro;Despesas Financeiras;-20151,58;Loja Sul
+2025;Fevereiro;Devoluções;-65641,9;Loja Centro
+2025;Fevereiro;Devoluções;-41426,96;Loja Norte
+2025;Fevereiro;Devoluções;-49664,86;Loja Sul
+2025;Fevereiro;Energia Elétrica;-26373,16;Loja Centro
+2025;Fevereiro;Energia Elétrica;-16283,02;Loja Norte
+2025;Fevereiro;Energia Elétrica;-19980,39;Loja Sul
+2025;Fevereiro;Fretes de Produção;-132176,86;Loja Centro
+2025;Fevereiro;Fretes de Produção;-80111,74;Loja Norte
+2025;Fevereiro;Fretes de Produção;-100654,38;Loja Sul
+2025;Fevereiro;IRPJ;-199042,7;Loja Centro
+2025;Fevereiro;IRPJ;-120095,6;Loja Norte
+2025;Fevereiro;IRPJ;-150191,58;Loja Sul
+2025;Fevereiro;Impostos sobre Vendas;-792220,68;Loja Centro
+2025;Fevereiro;Impostos sobre Vendas;-485534,67;Loja Norte
+2025;Fevereiro;Impostos sobre Vendas;-600763,17;Loja Sul
+2025;Fevereiro;Internet e Telefonia;-13184,62;Loja Centro
+2025;Fevereiro;Internet e Telefonia;-8083,88;Loja Norte
+2025;Fevereiro;Internet e Telefonia;-10040,61;Loja Sul
+2025;Fevereiro;Juros Ativos;6341,73;Loja Centro
+2025;Fevereiro;Juros Ativos;4171,85;Loja Norte
+2025;Fevereiro;Juros Ativos;4868,06;Loja Sul
+2025;Fevereiro;Juros Bancários;-13153,7;Loja Centro
+2025;Fevereiro;Juros Bancários;-8089,52;Loja Norte
+2025;Fevereiro;Juros Bancários;-10069,7;Loja Sul
+2025;Fevereiro;Manutenção;-13246,47;Loja Centro
+2025;Fevereiro;Manutenção;-8043,04;Loja Norte
+2025;Fevereiro;Manutenção;-10007,22;Loja Sul
+2025;Fevereiro;Marketing e Publicidade;-132267,16;Loja Centro
+2025;Fevereiro;Marketing e Publicidade;-81690,52;Loja Norte
+2025;Fevereiro;Marketing e Publicidade;-99230,26;Loja Sul
+2025;Fevereiro;Materiais e Insumos;-330672,84;Loja Centro
+2025;Fevereiro;Materiais e Insumos;-205324,14;Loja Norte
+2025;Fevereiro;Materiais e Insumos;-247149,19;Loja Sul
+2025;Fevereiro;Material de Escritório;-6607,05;Loja Centro
+2025;Fevereiro;Material de Escritório;-4071,36;Loja Norte
+2025;Fevereiro;Material de Escritório;-4979,48;Loja Sul
+2025;Fevereiro;Mão de Obra Direta;-525561,53;Loja Centro
+2025;Fevereiro;Mão de Obra Direta;-322736,94;Loja Norte
+2025;Fevereiro;Mão de Obra Direta;-404137,28;Loja Sul
+2025;Fevereiro;Outras Receitas Operacionais;63835,37;Loja Centro
+2025;Fevereiro;Outras Receitas Operacionais;41418,09;Loja Norte
+2025;Fevereiro;Outras Receitas Operacionais;48475,31;Loja Sul
+2025;Fevereiro;Pró-Labore;-99387,14;Loja Centro
+2025;Fevereiro;Pró-Labore;-61262,79;Loja Norte
+2025;Fevereiro;Pró-Labore;-74222,8;Loja Sul
+2025;Fevereiro;Receita de Serviços;440010,87;Loja Centro
+2025;Fevereiro;Receita de Serviços;299852,63;Loja Norte
+2025;Fevereiro;Receita de Serviços;338474,58;Loja Sul
+2025;Fevereiro;Receita de Vendas;5827103,75;Loja Centro
+2025;Fevereiro;Receita de Vendas;3813614,94;Loja Norte
+2025;Fevereiro;Receita de Vendas;4507138,18;Loja Sul
+2025;Fevereiro;Receitas Financeiras;19195,88;Loja Centro
+2025;Fevereiro;Receitas Financeiras;12411,56;Loja Norte
+2025;Fevereiro;Receitas Financeiras;14504,7;Loja Sul
+2025;Fevereiro;Salários Administrativos;-329911,93;Loja Centro
+2025;Fevereiro;Salários Administrativos;-203724,94;Loja Norte
+2025;Fevereiro;Salários Administrativos;-249323,95;Loja Sul
+2025;Fevereiro;Salários Comerciais;-265573,95;Loja Centro
+2025;Fevereiro;Salários Comerciais;-158498,8;Loja Norte
+2025;Fevereiro;Salários Comerciais;-201421,99;Loja Sul
+2025;Fevereiro;Seguros;-13152,25;Loja Centro
+2025;Fevereiro;Seguros;-8260,14;Loja Norte
+2025;Fevereiro;Seguros;-9927,83;Loja Sul
+2025;Fevereiro;Sistemas e Licenças;-26467,37;Loja Centro
+2025;Fevereiro;Sistemas e Licenças;-16239,23;Loja Norte
+2025;Fevereiro;Sistemas e Licenças;-19913,85;Loja Sul
+2025;Fevereiro;Tarifas Bancárias;-3303,42;Loja Centro
+2025;Fevereiro;Tarifas Bancárias;-2044,41;Loja Norte
+2025;Fevereiro;Tarifas Bancárias;-2482,63;Loja Sul
+2025;Fevereiro;Treinamentos;-6628,28;Loja Centro
+2025;Fevereiro;Treinamentos;-4096,35;Loja Norte
+2025;Fevereiro;Treinamentos;-4935,27;Loja Sul
+2025;Fevereiro;Viagens Comerciais;-32962,68;Loja Centro
+2025;Fevereiro;Viagens Comerciais;-20310,59;Loja Norte
+2025;Fevereiro;Viagens Comerciais;-25015,58;Loja Sul
+2025;Janeiro;Aluguel;-74831,17;Loja Centro
+2025;Janeiro;Aluguel;-45888,78;Loja Norte
+2025;Janeiro;Aluguel;-57617,69;Loja Sul
+2025;Janeiro;CMV;-3470275,32;Loja Centro
+2025;Janeiro;CMV;-2266789,51;Loja Norte
+2025;Janeiro;CMV;-2660056,4;Loja Sul
+2025;Janeiro;CSLL;-62567,09;Loja Centro
+2025;Janeiro;CSLL;-38228,8;Loja Norte
+2025;Janeiro;CSLL;-47794,03;Loja Sul
+2025;Janeiro;Comissões;-156526,24;Loja Centro
+2025;Janeiro;Comissões;-95025,45;Loja Norte
+2025;Janeiro;Comissões;-119828,79;Loja Sul
+2025;Janeiro;Contabilidade;-18737,9;Loja Centro
+2025;Janeiro;Contabilidade;-11363,98;Loja Norte
+2025;Janeiro;Contabilidade;-14463,04;Loja Sul
+2025;Janeiro;Depreciação;-62132,79;Loja Centro
+2025;Janeiro;Depreciação;-38484,43;Loja Norte
+2025;Janeiro;Depreciação;-48058,93;Loja Sul
+2025;Janeiro;Descontos Concedidos;-31238,03;Loja Centro
+2025;Janeiro;Descontos Concedidos;-19226,79;Loja Norte
+2025;Janeiro;Descontos Concedidos;-23851,72;Loja Sul
+2025;Janeiro;Despesas Financeiras;-25016,87;Loja Centro
+2025;Janeiro;Despesas Financeiras;-15243,64;Loja Norte
+2025;Janeiro;Despesas Financeiras;-19169,26;Loja Sul
+2025;Janeiro;Devoluções;-62217,01;Loja Centro
+2025;Janeiro;Devoluções;-38406,01;Loja Norte
+2025;Janeiro;Devoluções;-48032,06;Loja Sul
+2025;Janeiro;Energia Elétrica;-25154,9;Loja Centro
+2025;Janeiro;Energia Elétrica;-15143,27;Loja Norte
+2025;Janeiro;Energia Elétrica;-19101,31;Loja Sul
+2025;Janeiro;Fretes de Produção;-124044,53;Loja Centro
+2025;Janeiro;Fretes de Produção;-77466,52;Loja Norte
+2025;Janeiro;Fretes de Produção;-95940,44;Loja Sul
+2025;Janeiro;IRPJ;-185549,59;Loja Centro
+2025;Janeiro;IRPJ;-114205,72;Loja Norte
+2025;Janeiro;IRPJ;-146178,72;Loja Sul
+2025;Janeiro;Impostos sobre Vendas;-750952,06;Loja Centro
+2025;Janeiro;Impostos sobre Vendas;-459021,09;Loja Norte
+2025;Janeiro;Impostos sobre Vendas;-573130,65;Loja Sul
+2025;Janeiro;Internet e Telefonia;-12379,91;Loja Centro
+2025;Janeiro;Internet e Telefonia;-7781,26;Loja Norte
+2025;Janeiro;Internet e Telefonia;-9591,62;Loja Sul
+2025;Janeiro;Juros Ativos;6132,34;Loja Centro
+2025;Janeiro;Juros Ativos;3928,53;Loja Norte
+2025;Janeiro;Juros Ativos;4777,27;Loja Sul
+2025;Janeiro;Juros Bancários;-12499,73;Loja Centro
+2025;Janeiro;Juros Bancários;-7598,55;Loja Norte
+2025;Janeiro;Juros Bancários;-9613,83;Loja Sul
+2025;Janeiro;Manutenção;-12460,33;Loja Centro
+2025;Janeiro;Manutenção;-7707,29;Loja Norte
+2025;Janeiro;Manutenção;-9565,2;Loja Sul
+2025;Janeiro;Marketing e Publicidade;-124425,42;Loja Centro
+2025;Janeiro;Marketing e Publicidade;-77665,95;Loja Norte
+2025;Janeiro;Marketing e Publicidade;-95348,25;Loja Sul
+2025;Janeiro;Materiais e Insumos;-310956,82;Loja Centro
+2025;Janeiro;Materiais e Insumos;-190815,18;Loja Norte
+2025;Janeiro;Materiais e Insumos;-241334,46;Loja Sul
+2025;Janeiro;Material de Escritório;-6225,76;Loja Centro
+2025;Janeiro;Material de Escritório;-3837,57;Loja Norte
+2025;Janeiro;Material de Escritório;-4801,25;Loja Sul
+2025;Janeiro;Mão de Obra Direta;-496292,96;Loja Centro
+2025;Janeiro;Mão de Obra Direta;-310494,44;Loja Norte
+2025;Janeiro;Mão de Obra Direta;-383100,29;Loja Sul
+2025;Janeiro;Outras Receitas Operacionais;61029,15;Loja Centro
+2025;Janeiro;Outras Receitas Operacionais;40043,82;Loja Norte
+2025;Janeiro;Outras Receitas Operacionais;47454,97;Loja Sul
+2025;Janeiro;Pró-Labore;-93188,38;Loja Centro
+2025;Janeiro;Pró-Labore;-58957,48;Loja Norte
+2025;Janeiro;Pró-Labore;-71054,66;Loja Sul
+2025;Janeiro;Receita de Serviços;427008,6;Loja Centro
+2025;Janeiro;Receita de Serviços;286194,28;Loja Norte
+2025;Janeiro;Receita de Serviços;327400,17;Loja Sul
+2025;Janeiro;Receita de Vendas;5621831,51;Loja Centro
+2025;Janeiro;Receita de Vendas;3700868,12;Loja Norte
+2025;Janeiro;Receita de Vendas;4343617,71;Loja Sul
+2025;Janeiro;Receitas Financeiras;18381,42;Loja Centro
+2025;Janeiro;Receitas Financeiras;11930,92;Loja Norte
+2025;Janeiro;Receitas Financeiras;14225,9;Loja Sul
+2025;Janeiro;Salários Administrativos;-312365,93;Loja Centro
+2025;Janeiro;Salários Administrativos;-189887,02;Loja Norte
+2025;Janeiro;Salários Administrativos;-240559,08;Loja Sul
+2025;Janeiro;Salários Comerciais;-249242,92;Loja Centro
+2025;Janeiro;Salários Comerciais;-153270,67;Loja Norte
+2025;Janeiro;Salários Comerciais;-192012,33;Loja Sul
+2025;Janeiro;Seguros;-12461,73;Loja Centro
+2025;Janeiro;Seguros;-7703,63;Loja Norte
+2025;Janeiro;Seguros;-9566,75;Loja Sul
+2025;Janeiro;Sistemas e Licenças;-24931,05;Loja Centro
+2025;Janeiro;Sistemas e Licenças;-15316,3;Loja Norte
+2025;Janeiro;Sistemas e Licenças;-19202,79;Loja Sul
+2025;Janeiro;Tarifas Bancárias;-3087,68;Loja Centro
+2025;Janeiro;Tarifas Bancárias;-1951,72;Loja Norte
+2025;Janeiro;Tarifas Bancárias;-2400,74;Loja Sul
+2025;Janeiro;Treinamentos;-6237,36;Loja Centro
+2025;Janeiro;Treinamentos;-3860,57;Loja Norte
+2025;Janeiro;Treinamentos;-4768,83;Loja Sul
+2025;Janeiro;Viagens Comerciais;-31147,61;Loja Centro
+2025;Janeiro;Viagens Comerciais;-19314,88;Loja Norte
+2025;Janeiro;Viagens Comerciais;-23877,47;Loja Sul
+2025;Julho;Aluguel;-68402,17;Loja Centro
+2025;Julho;Aluguel;-43765,25;Loja Norte
+2025;Julho;Aluguel;-53681,29;Loja Sul
+2025;Julho;CMV;-3343123,64;Loja Centro
+2025;Julho;CMV;-2183242,46;Loja Norte
+2025;Julho;CMV;-2570043,5;Loja Sul
+2025;Julho;CSLL;-57317,58;Loja Centro
+2025;Julho;CSLL;-36526,94;Loja Norte
+2025;Julho;CSLL;-44336,06;Loja Sul
+2025;Julho;Comissões;-142638,35;Loja Centro
+2025;Julho;Comissões;-91491,74;Loja Norte
+2025;Julho;Comissões;-111427,85;Loja Sul
+2025;Julho;Contabilidade;-17211,66;Loja Centro
+2025;Julho;Contabilidade;-10825,13;Loja Norte
+2025;Julho;Contabilidade;-13392,38;Loja Sul
+2025;Julho;Depreciação;-57145,43;Loja Centro
+2025;Julho;Depreciação;-36230,13;Loja Norte
+2025;Julho;Depreciação;-44773,24;Loja Sul
+2025;Julho;Descontos Concedidos;-28492,77;Loja Centro
+2025;Julho;Descontos Concedidos;-18667,06;Loja Norte
+2025;Julho;Descontos Concedidos;-22020,12;Loja Sul
+2025;Julho;Despesas Financeiras;-22865,21;Loja Centro
+2025;Julho;Despesas Financeiras;-14541,31;Loja Norte
+2025;Julho;Despesas Financeiras;-17860,8;Loja Sul
+2025;Julho;Devoluções;-57280,41;Loja Centro
+2025;Julho;Devoluções;-36532,8;Loja Norte
+2025;Julho;Devoluções;-44373,11;Loja Sul
+2025;Julho;Energia Elétrica;-22868,28;Loja Centro
+2025;Julho;Energia Elétrica;-14702,16;Loja Norte
+2025;Julho;Energia Elétrica;-17724,68;Loja Sul
+2025;Julho;Fretes de Produção;-115136,83;Loja Centro
+2025;Julho;Fretes de Produção;-72689,21;Loja Norte
+2025;Julho;Fretes de Produção;-88413,16;Loja Sul
+2025;Julho;IRPJ;-171975,48;Loja Centro
+2025;Julho;IRPJ;-109946,94;Loja Norte
+2025;Julho;IRPJ;-132680,95;Loja Sul
+2025;Julho;Impostos sobre Vendas;-684172,6;Loja Centro
+2025;Julho;Impostos sobre Vendas;-436047,16;Loja Norte
+2025;Julho;Impostos sobre Vendas;-537970,95;Loja Sul
+2025;Julho;Internet e Telefonia;-11402,2;Loja Centro
+2025;Julho;Internet e Telefonia;-7305,92;Loja Norte
+2025;Julho;Internet e Telefonia;-8935,24;Loja Sul
+2025;Julho;Juros Ativos;5854,04;Loja Centro
+2025;Julho;Juros Ativos;3958,56;Loja Norte
+2025;Julho;Juros Ativos;4545,55;Loja Sul
+2025;Julho;Juros Bancários;-11475,64;Loja Centro
+2025;Julho;Juros Bancários;-7341,8;Loja Norte
+2025;Julho;Juros Bancários;-8823,47;Loja Sul
+2025;Julho;Manutenção;-11456,51;Loja Centro
+2025;Julho;Manutenção;-7342,29;Loja Norte
+2025;Julho;Manutenção;-8844,42;Loja Sul
+2025;Julho;Marketing e Publicidade;-115355,55;Loja Centro
+2025;Julho;Marketing e Publicidade;-71906,68;Loja Norte
+2025;Julho;Marketing e Publicidade;-88814,69;Loja Sul
+2025;Julho;Materiais e Insumos;-286683,19;Loja Centro
+2025;Julho;Materiais e Insumos;-182126,5;Loja Norte
+2025;Julho;Materiais e Insumos;-221993,63;Loja Sul
+2025;Julho;Material de Escritório;-5778,79;Loja Centro
+2025;Julho;Material de Escritório;-3628,8;Loja Norte
+2025;Julho;Material de Escritório;-4400,96;Loja Sul
+2025;Julho;Mão de Obra Direta;-460237,67;Loja Centro
+2025;Julho;Mão de Obra Direta;-293171,57;Loja Norte
+2025;Julho;Mão de Obra Direta;-352006,42;Loja Sul
+2025;Julho;Outras Receitas Operacionais;58591,61;Loja Centro
+2025;Julho;Outras Receitas Operacionais;39274,84;Loja Norte
+2025;Julho;Outras Receitas Operacionais;45656,85;Loja Sul
+2025;Julho;Pró-Labore;-86028,89;Loja Centro
+2025;Julho;Pró-Labore;-55083,67;Loja Norte
+2025;Julho;Pró-Labore;-66203,54;Loja Sul
+2025;Julho;Receita de Serviços;409213,36;Loja Centro
+2025;Julho;Receita de Serviços;272777,37;Loja Norte
+2025;Julho;Receita de Serviços;322403,06;Loja Sul
+2025;Julho;Receita de Vendas;5419416,98;Loja Centro
+2025;Julho;Receita de Vendas;3567249,63;Loja Norte
+2025;Julho;Receita de Vendas;4206043,02;Loja Sul
+2025;Julho;Receitas Financeiras;17506,71;Loja Centro
+2025;Julho;Receitas Financeiras;11963,54;Loja Norte
+2025;Julho;Receitas Financeiras;13626,78;Loja Sul
+2025;Julho;Salários Administrativos;-284824,12;Loja Centro
+2025;Julho;Salários Administrativos;-183621,76;Loja Norte
+2025;Julho;Salários Administrativos;-222834,76;Loja Sul
+2025;Julho;Salários Comerciais;-231004,88;Loja Centro
+2025;Julho;Salários Comerciais;-145894,17;Loja Norte
+2025;Julho;Salários Comerciais;-175585,06;Loja Sul
+2025;Julho;Seguros;-11516,79;Loja Centro
+2025;Julho;Seguros;-7327,4;Loja Norte
+2025;Julho;Seguros;-8789,64;Loja Sul
+2025;Julho;Sistemas e Licenças;-22804,03;Loja Centro
+2025;Julho;Sistemas e Licenças;-14602,57;Loja Norte
+2025;Julho;Sistemas e Licenças;-17878,32;Loja Sul
+2025;Julho;Tarifas Bancárias;-2879,38;Loja Centro
+2025;Julho;Tarifas Bancárias;-1823,31;Loja Norte
+2025;Julho;Tarifas Bancárias;-2204,01;Loja Sul
+2025;Julho;Treinamentos;-5731,51;Loja Centro
+2025;Julho;Treinamentos;-3680,79;Loja Norte
+2025;Julho;Treinamentos;-4410,63;Loja Sul
+2025;Julho;Viagens Comerciais;-28525,97;Loja Centro
+2025;Julho;Viagens Comerciais;-18481,07;Loja Norte
+2025;Julho;Viagens Comerciais;-22136,72;Loja Sul
+2025;Junho;Aluguel;-70873,14;Loja Centro
+2025;Junho;Aluguel;-43930,93;Loja Norte
+2025;Junho;Aluguel;-54551,98;Loja Sul
+2025;Junho;CMV;-3436376,69;Loja Centro
+2025;Junho;CMV;-2236562,38;Loja Norte
+2025;Junho;CMV;-2635945,53;Loja Sul
+2025;Junho;CSLL;-59025,32;Loja Centro
+2025;Junho;CSLL;-36416,53;Loja Norte
+2025;Junho;CSLL;-45663,21;Loja Sul
+2025;Junho;Comissões;-148720,58;Loja Centro
+2025;Junho;Comissões;-89472,33;Loja Norte
+2025;Junho;Comissões;-114209,71;Loja Sul
+2025;Junho;Contabilidade;-17758,51;Loja Centro
+2025;Junho;Contabilidade;-10914,01;Loja Norte
+2025;Junho;Contabilidade;-13651,75;Loja Sul
+2025;Junho;Depreciação;-59764,67;Loja Centro
+2025;Junho;Depreciação;-36187,91;Loja Norte
+2025;Junho;Depreciação;-45038,15;Loja Sul
+2025;Junho;Descontos Concedidos;-29692,45;Loja Centro
+2025;Junho;Descontos Concedidos;-18285,17;Loja Norte
+2025;Junho;Descontos Concedidos;-22566,89;Loja Sul
+2025;Junho;Despesas Financeiras;-23727,18;Loja Centro
+2025;Junho;Despesas Financeiras;-14518,62;Loja Norte
+2025;Junho;Despesas Financeiras;-18176,39;Loja Sul
+2025;Junho;Devoluções;-59120,69;Loja Centro
+2025;Junho;Devoluções;-36536,14;Loja Norte
+2025;Junho;Devoluções;-45455,83;Loja Sul
+2025;Junho;Energia Elétrica;-23637,66;Loja Centro
+2025;Junho;Energia Elétrica;-14684;Loja Norte
+2025;Junho;Energia Elétrica;-18134,75;Loja Sul
+2025;Junho;Fretes de Produção;-118246,28;Loja Centro
+2025;Junho;Fretes de Produção;-73070,31;Loja Norte
+2025;Junho;Fretes de Produção;-90908,1;Loja Sul
+2025;Junho;IRPJ;-177864,03;Loja Centro
+2025;Junho;IRPJ;-110265,01;Loja Norte
+2025;Junho;IRPJ;-135252,97;Loja Sul
+2025;Junho;Impostos sobre Vendas;-715029,58;Loja Centro
+2025;Junho;Impostos sobre Vendas;-438132,43;Loja Norte
+2025;Junho;Impostos sobre Vendas;-539541,4;Loja Sul
+2025;Junho;Internet e Telefonia;-11795,7;Loja Centro
+2025;Junho;Internet e Telefonia;-7413,74;Loja Norte
+2025;Junho;Internet e Telefonia;-9032,32;Loja Sul
+2025;Junho;Juros Ativos;6034,77;Loja Centro
+2025;Junho;Juros Ativos;3981,39;Loja Norte
+2025;Junho;Juros Ativos;4693,09;Loja Sul
+2025;Junho;Juros Bancários;-11912,41;Loja Centro
+2025;Junho;Juros Bancários;-7230,89;Loja Norte
+2025;Junho;Juros Bancários;-9058,48;Loja Sul
+2025;Junho;Manutenção;-11807,22;Loja Centro
+2025;Junho;Manutenção;-7271,25;Loja Norte
+2025;Junho;Manutenção;-9140,51;Loja Sul
+2025;Junho;Marketing e Publicidade;-118205,49;Loja Centro
+2025;Junho;Marketing e Publicidade;-72738,32;Loja Norte
+2025;Junho;Marketing e Publicidade;-91235,39;Loja Sul
+2025;Junho;Materiais e Insumos;-294879,57;Loja Centro
+2025;Junho;Materiais e Insumos;-180733,06;Loja Norte
+2025;Junho;Materiais e Insumos;-229737,34;Loja Sul
+2025;Junho;Material de Escritório;-5932,6;Loja Centro
+2025;Junho;Material de Escritório;-3598,46;Loja Norte
+2025;Junho;Material de Escritório;-4569,63;Loja Sul
+2025;Junho;Mão de Obra Direta;-473800,04;Loja Centro
+2025;Junho;Mão de Obra Direta;-289334,19;Loja Norte
+2025;Junho;Mão de Obra Direta;-365234,3;Loja Sul
+2025;Junho;Outras Receitas Operacionais;60329,91;Loja Centro
+2025;Junho;Outras Receitas Operacionais;39494,74;Loja Norte
+2025;Junho;Outras Receitas Operacionais;47221,99;Loja Sul
+2025;Junho;Pró-Labore;-89260,52;Loja Centro
+2025;Junho;Pró-Labore;-53976,94;Loja Norte
+2025;Junho;Pró-Labore;-68244,75;Loja Sul
+2025;Junho;Receita de Serviços;424195,79;Loja Centro
+2025;Junho;Receita de Serviços;274273,41;Loja Norte
+2025;Junho;Receita de Serviços;330325,84;Loja Sul
+2025;Junho;Receita de Vendas;5567357,16;Loja Centro
+2025;Junho;Receita de Vendas;3655537,3;Loja Norte
+2025;Junho;Receita de Vendas;4306855,23;Loja Sul
+2025;Junho;Receitas Financeiras;18375,3;Loja Centro
+2025;Junho;Receitas Financeiras;11756,65;Loja Norte
+2025;Junho;Receitas Financeiras;13938,65;Loja Sul
+2025;Junho;Salários Administrativos;-296342,98;Loja Centro
+2025;Junho;Salários Administrativos;-180636,84;Loja Norte
+2025;Junho;Salários Administrativos;-228197,6;Loja Sul
+2025;Junho;Salários Comerciais;-237169,42;Loja Centro
+2025;Junho;Salários Comerciais;-145184,76;Loja Norte
+2025;Junho;Salários Comerciais;-181878,78;Loja Sul
+2025;Junho;Seguros;-11796,83;Loja Centro
+2025;Junho;Seguros;-7247,87;Loja Norte
+2025;Junho;Seguros;-9172,11;Loja Sul
+2025;Junho;Sistemas e Licenças;-23753,99;Loja Centro
+2025;Junho;Sistemas e Licenças;-14522,81;Loja Norte
+2025;Junho;Sistemas e Licenças;-18142,91;Loja Sul
+2025;Junho;Tarifas Bancárias;-2939,29;Loja Centro
+2025;Junho;Tarifas Bancárias;-1851,65;Loja Norte
+2025;Junho;Tarifas Bancárias;-2270,06;Loja Sul
+2025;Junho;Treinamentos;-5939,4;Loja Centro
+2025;Junho;Treinamentos;-3607,81;Loja Norte
+2025;Junho;Treinamentos;-4554,14;Loja Sul
+2025;Junho;Viagens Comerciais;-29663,17;Loja Centro
+2025;Junho;Viagens Comerciais;-17993,3;Loja Norte
+2025;Junho;Viagens Comerciais;-22847,3;Loja Sul
+2025;Maio;Aluguel;-76468,54;Loja Centro
+2025;Maio;Aluguel;-46781,91;Loja Norte
+2025;Maio;Aluguel;-58307,5;Loja Sul
+2025;Maio;CMV;-3535394,15;Loja Centro
+2025;Maio;CMV;-2289801,87;Loja Norte
+2025;Maio;CMV;-2729577,14;Loja Sul
+2025;Maio;CSLL;-63625,24;Loja Centro
+2025;Maio;CSLL;-39155,41;Loja Norte
+2025;Maio;CSLL;-48555,37;Loja Sul
+2025;Maio;Comissões;-158869,01;Loja Centro
+2025;Maio;Comissões;-97089,85;Loja Norte
+2025;Maio;Comissões;-122273,88;Loja Sul
+2025;Maio;Contabilidade;-19026,12;Loja Centro
+2025;Maio;Contabilidade;-11904,5;Loja Norte
+2025;Maio;Contabilidade;-14501,93;Loja Sul
+2025;Maio;Depreciação;-63673,81;Loja Centro
+2025;Maio;Depreciação;-38927,81;Loja Norte
+2025;Maio;Depreciação;-48693,01;Loja Sul
+2025;Maio;Descontos Concedidos;-31707,84;Loja Centro
+2025;Maio;Descontos Concedidos;-19484,03;Loja Norte
+2025;Maio;Descontos Concedidos;-24472,33;Loja Sul
+2025;Maio;Despesas Financeiras;-25560,47;Loja Centro
+2025;Maio;Despesas Financeiras;-15543,82;Loja Norte
+2025;Maio;Despesas Financeiras;-19399,35;Loja Sul
+2025;Maio;Devoluções;-62951,73;Loja Centro
+2025;Maio;Devoluções;-39401,59;Loja Norte
+2025;Maio;Devoluções;-49094,23;Loja Sul
+2025;Maio;Energia Elétrica;-25349,55;Loja Centro
+2025;Maio;Energia Elétrica;-15706,65;Loja Norte
+2025;Maio;Energia Elétrica;-19496,02;Loja Sul
+2025;Maio;Fretes de Produção;-127264,38;Loja Centro
+2025;Maio;Fretes de Produção;-77545,17;Loja Norte
+2025;Maio;Fretes de Produção;-97738,47;Loja Sul
+2025;Maio;IRPJ;-190097,62;Loja Centro
+2025;Maio;IRPJ;-118452,5;Loja Norte
+2025;Maio;IRPJ;-145699,06;Loja Sul
+2025;Maio;Impostos sobre Vendas;-762102,38;Loja Centro
+2025;Maio;Impostos sobre Vendas;-466940,13;Loja Norte
+2025;Maio;Impostos sobre Vendas;-586671,64;Loja Sul
+2025;Maio;Internet e Telefonia;-12638,84;Loja Centro
+2025;Maio;Internet e Telefonia;-7857,2;Loja Norte
+2025;Maio;Internet e Telefonia;-9784,64;Loja Sul
+2025;Maio;Juros Ativos;6240,4;Loja Centro
+2025;Maio;Juros Ativos;4062,27;Loja Norte
+2025;Maio;Juros Ativos;4829,79;Loja Sul
+2025;Maio;Juros Bancários;-12748,12;Loja Centro
+2025;Maio;Juros Bancários;-7736,43;Loja Norte
+2025;Maio;Juros Bancários;-9765,13;Loja Sul
+2025;Maio;Manutenção;-12800,41;Loja Centro
+2025;Maio;Manutenção;-7862,1;Loja Norte
+2025;Maio;Manutenção;-9601,48;Loja Sul
+2025;Maio;Marketing e Publicidade;-127507,82;Loja Centro
+2025;Maio;Marketing e Publicidade;-78192,37;Loja Norte
+2025;Maio;Marketing e Publicidade;-96925,2;Loja Sul
+2025;Maio;Materiais e Insumos;-315902,77;Loja Centro
+2025;Maio;Materiais e Insumos;-201192,28;Loja Norte
+2025;Maio;Materiais e Insumos;-240689,26;Loja Sul
+2025;Maio;Material de Escritório;-6310,7;Loja Centro
+2025;Maio;Material de Escritório;-3999,3;Loja Norte
+2025;Maio;Material de Escritório;-4842,57;Loja Sul
+2025;Maio;Mão de Obra Direta;-504271,08;Loja Centro
+2025;Maio;Mão de Obra Direta;-315965,72;Loja Norte
+2025;Maio;Mão de Obra Direta;-391392,38;Loja Sul
+2025;Maio;Outras Receitas Operacionais;61969,18;Loja Centro
+2025;Maio;Outras Receitas Operacionais;40933,14;Loja Norte
+2025;Maio;Outras Receitas Operacionais;48518,31;Loja Sul
+2025;Maio;Pró-Labore;-94958,82;Loja Centro
+2025;Maio;Pró-Labore;-59282,25;Loja Norte
+2025;Maio;Pró-Labore;-72902,2;Loja Sul
+2025;Maio;Receita de Serviços;434258,96;Loja Centro
+2025;Maio;Receita de Serviços;287465,06;Loja Norte
+2025;Maio;Receita de Serviços;338318,92;Loja Sul
+2025;Maio;Receita de Vendas;5727779,27;Loja Centro
+2025;Maio;Receita de Vendas;3737227,77;Loja Norte
+2025;Maio;Receita de Vendas;4458267,52;Loja Sul
+2025;Maio;Receitas Financeiras;18698,47;Loja Centro
+2025;Maio;Receitas Financeiras;12252,61;Loja Norte
+2025;Maio;Receitas Financeiras;14459,45;Loja Sul
+2025;Maio;Salários Administrativos;-317667,72;Loja Centro
+2025;Maio;Salários Administrativos;-197945,2;Loja Norte
+2025;Maio;Salários Administrativos;-241463,3;Loja Sul
+2025;Maio;Salários Comerciais;-253237,17;Loja Centro
+2025;Maio;Salários Comerciais;-159182,03;Loja Norte
+2025;Maio;Salários Comerciais;-193469,77;Loja Sul
+2025;Maio;Seguros;-12762,41;Loja Centro
+2025;Maio;Seguros;-7767,65;Loja Norte
+2025;Maio;Seguros;-9723,08;Loja Sul
+2025;Maio;Sistemas e Licenças;-25302,35;Loja Centro
+2025;Maio;Sistemas e Licenças;-15906,13;Loja Norte
+2025;Maio;Sistemas e Licenças;-19380,7;Loja Sul
+2025;Maio;Tarifas Bancárias;-3169,16;Loja Centro
+2025;Maio;Tarifas Bancárias;-1971,27;Loja Norte
+2025;Maio;Tarifas Bancárias;-2430,07;Loja Sul
+2025;Maio;Treinamentos;-6328,33;Loja Centro
+2025;Maio;Treinamentos;-3943,57;Loja Norte
+2025;Maio;Treinamentos;-4869,67;Loja Sul
+2025;Maio;Viagens Comerciais;-31777,76;Loja Centro
+2025;Maio;Viagens Comerciais;-19876,79;Loja Norte
+2025;Maio;Viagens Comerciais;-24065,05;Loja Sul
+2025;Março;Aluguel;-78841,11;Loja Centro
+2025;Março;Aluguel;-48054,87;Loja Norte
+2025;Março;Aluguel;-60103,48;Loja Sul
+2025;Março;CMV;-3596070,86;Loja Centro
+2025;Março;CMV;-2342965,92;Loja Norte
+2025;Março;CMV;-2785851,26;Loja Sul
+2025;Março;CSLL;-65570,06;Loja Centro
+2025;Março;CSLL;-40104,8;Loja Norte
+2025;Março;CSLL;-50180,73;Loja Sul
+2025;Março;Comissões;-163264,65;Loja Centro
+2025;Março;Comissões;-98611,29;Loja Norte
+2025;Março;Comissões;-127586,01;Loja Sul
+2025;Março;Contabilidade;-19485,39;Loja Centro
+2025;Março;Contabilidade;-12096,61;Loja Norte
+2025;Março;Contabilidade;-15204,58;Loja Sul
+2025;Março;Depreciação;-65621,3;Loja Centro
+2025;Março;Depreciação;-40009,27;Loja Norte
+2025;Março;Depreciação;-50205,37;Loja Sul
+2025;Março;Descontos Concedidos;-32795,24;Loja Centro
+2025;Março;Descontos Concedidos;-19928,8;Loja Norte
+2025;Março;Descontos Concedidos;-25184,07;Loja Sul
+2025;Março;Despesas Financeiras;-26332,03;Loja Centro
+2025;Março;Despesas Financeiras;-15827,5;Loja Norte
+2025;Março;Despesas Financeiras;-20139,39;Loja Sul
+2025;Março;Devoluções;-65514,11;Loja Centro
+2025;Março;Devoluções;-40177,45;Loja Norte
+2025;Março;Devoluções;-50181,18;Loja Sul
+2025;Março;Energia Elétrica;-26218,71;Loja Centro
+2025;Março;Energia Elétrica;-15974,12;Loja Norte
+2025;Março;Energia Elétrica;-20140,52;Loja Sul
+2025;Março;Fretes de Produção;-129859,96;Loja Centro
+2025;Março;Fretes de Produção;-81976,73;Loja Norte
+2025;Março;Fretes de Produção;-100278,27;Loja Sul
+2025;Março;IRPJ;-195943,71;Loja Centro
+2025;Março;IRPJ;-121490,8;Loja Norte
+2025;Março;IRPJ;-150392,31;Loja Sul
+2025;Março;Impostos sobre Vendas;-788364,79;Loja Centro
+2025;Março;Impostos sobre Vendas;-475243,65;Loja Norte
+2025;Março;Impostos sobre Vendas;-605593,9;Loja Sul
+2025;Março;Internet e Telefonia;-13135,49;Loja Centro
+2025;Março;Internet e Telefonia;-8005,69;Loja Norte
+2025;Março;Internet e Telefonia;-10025,16;Loja Sul
+2025;Março;Juros Ativos;6378,48;Loja Centro
+2025;Março;Juros Ativos;4162,5;Loja Norte
+2025;Março;Juros Ativos;4896,38;Loja Sul
+2025;Março;Juros Bancários;-13096,49;Loja Centro
+2025;Março;Juros Bancários;-7983,87;Loja Norte
+2025;Março;Juros Bancários;-10086,88;Loja Sul
+2025;Março;Manutenção;-13102,41;Loja Centro
+2025;Março;Manutenção;-7989,72;Loja Norte
+2025;Março;Manutenção;-10075,57;Loja Sul
+2025;Março;Marketing e Publicidade;-130527,19;Loja Centro
+2025;Março;Marketing e Publicidade;-80665,42;Loja Norte
+2025;Março;Marketing e Publicidade;-100653,31;Loja Sul
+2025;Março;Materiais e Insumos;-327602,62;Loja Centro
+2025;Março;Materiais e Insumos;-201341,45;Loja Norte
+2025;Março;Materiais e Insumos;-250484,52;Loja Sul
+2025;Março;Material de Escritório;-6562,64;Loja Centro
+2025;Março;Material de Escritório;-3959,47;Loja Norte
+2025;Março;Material de Escritório;-5055,31;Loja Sul
+2025;Março;Mão de Obra Direta;-522211,67;Loja Centro
+2025;Março;Mão de Obra Direta;-319402,84;Loja Norte
+2025;Março;Mão de Obra Direta;-405268,18;Loja Sul
+2025;Março;Outras Receitas Operacionais;63899,74;Loja Centro
+2025;Março;Outras Receitas Operacionais;41347,99;Loja Norte
+2025;Março;Outras Receitas Operacionais;49073,91;Loja Sul
+2025;Março;Pró-Labore;-98024,12;Loja Centro
+2025;Março;Pró-Labore;-60700,43;Loja Norte
+2025;Março;Pró-Labore;-75176,26;Loja Sul
+2025;Março;Receita de Serviços;445192,98;Loja Centro
+2025;Março;Receita de Serviços;293942,49;Loja Norte
+2025;Março;Receita de Serviços;342021,47;Loja Sul
+2025;Março;Receita de Vendas;5827904,37;Loja Centro
+2025;Março;Receita de Vendas;3827917,22;Loja Norte
+2025;Março;Receita de Vendas;4550841,07;Loja Sul
+2025;Março;Receitas Financeiras;19157,28;Loja Centro
+2025;Março;Receitas Financeiras;12481,11;Loja Norte
+2025;Março;Receitas Financeiras;14671,06;Loja Sul
+2025;Março;Salários Administrativos;-328529,75;Loja Centro
+2025;Março;Salários Administrativos;-202638,39;Loja Norte
+2025;Março;Salários Administrativos;-248356,1;Loja Sul
+2025;Março;Salários Comerciais;-260456,57;Loja Centro
+2025;Março;Salários Comerciais;-159586,34;Loja Norte
+2025;Março;Salários Comerciais;-203450,64;Loja Sul
+2025;Março;Seguros;-12952,96;Loja Centro
+2025;Março;Seguros;-8136,87;Loja Norte
+2025;Março;Seguros;-10116,04;Loja Sul
+2025;Março;Sistemas e Licenças;-26201,36;Loja Centro
+2025;Março;Sistemas e Licenças;-16047,3;Loja Norte
+2025;Março;Sistemas e Licenças;-20097,57;Loja Sul
+2025;Março;Tarifas Bancárias;-3294,49;Loja Centro
+2025;Março;Tarifas Bancárias;-1987,72;Loja Norte
+2025;Março;Tarifas Bancárias;-2506,4;Loja Sul
+2025;Março;Treinamentos;-6551,82;Loja Centro
+2025;Março;Treinamentos;-4039,83;Loja Norte
+2025;Março;Treinamentos;-4998,79;Loja Sul
+2025;Março;Viagens Comerciais;-32604,34;Loja Centro
+2025;Março;Viagens Comerciais;-20410,43;Loja Norte
+2025;Março;Viagens Comerciais;-24986,04;Loja Sul
+2025;Novembro;Aluguel;-100089,92;Loja Centro
+2025;Novembro;Aluguel;-62402,47;Loja Norte
+2025;Novembro;Aluguel;-77259,8;Loja Sul
+2025;Novembro;CMV;-4783745,93;Loja Centro
+2025;Novembro;CMV;-3045296,89;Loja Norte
+2025;Novembro;CMV;-3662267,84;Loja Sul
+2025;Novembro;CSLL;-83538,68;Loja Centro
+2025;Novembro;CSLL;-52145,88;Loja Norte
+2025;Novembro;CSLL;-64114,97;Loja Sul
+2025;Novembro;Comissões;-207348,93;Loja Centro
+2025;Novembro;Comissões;-129350,85;Loja Norte
+2025;Novembro;Comissões;-162822,51;Loja Sul
+2025;Novembro;Contabilidade;-25117,06;Loja Centro
+2025;Novembro;Contabilidade;-15560,31;Loja Norte
+2025;Novembro;Contabilidade;-19243,6;Loja Sul
+2025;Novembro;Depreciação;-83379,1;Loja Centro
+2025;Novembro;Depreciação;-51474,22;Loja Norte
+2025;Novembro;Depreciação;-64864,58;Loja Sul
+2025;Novembro;Descontos Concedidos;-41682,22;Loja Centro
+2025;Novembro;Descontos Concedidos;-25846,93;Loja Norte
+2025;Novembro;Descontos Concedidos;-32347,06;Loja Sul
+2025;Novembro;Despesas Financeiras;-33139,26;Loja Centro
+2025;Novembro;Despesas Financeiras;-20686,82;Loja Norte
+2025;Novembro;Despesas Financeiras;-26100,31;Loja Sul
+2025;Novembro;Devoluções;-84392,78;Loja Centro
+2025;Novembro;Devoluções;-51100,54;Loja Norte
+2025;Novembro;Devoluções;-64050,29;Loja Sul
+2025;Novembro;Energia Elétrica;-33565,31;Loja Centro
+2025;Novembro;Energia Elétrica;-20511,56;Loja Norte
+2025;Novembro;Energia Elétrica;-25773,53;Loja Sul
+2025;Novembro;Fretes de Produção;-167490;Loja Centro
+2025;Novembro;Fretes de Produção;-103491,19;Loja Norte
+2025;Novembro;Fretes de Produção;-128450,11;Loja Sul
+2025;Novembro;IRPJ;-252042,61;Loja Centro
+2025;Novembro;IRPJ;-152245,84;Loja Norte
+2025;Novembro;IRPJ;-194317,23;Loja Sul
+2025;Novembro;Impostos sobre Vendas;-1002305,85;Loja Centro
+2025;Novembro;Impostos sobre Vendas;-611558,02;Loja Norte
+2025;Novembro;Impostos sobre Vendas;-781629,71;Loja Sul
+2025;Novembro;Internet e Telefonia;-16720,26;Loja Centro
+2025;Novembro;Internet e Telefonia;-10364,62;Loja Norte
+2025;Novembro;Internet e Telefonia;-12863,86;Loja Sul
+2025;Novembro;Juros Ativos;8418,42;Loja Centro
+2025;Novembro;Juros Ativos;5425,45;Loja Norte
+2025;Novembro;Juros Ativos;6504,67;Loja Sul
+2025;Novembro;Juros Bancários;-16687,95;Loja Centro
+2025;Novembro;Juros Bancários;-10358,42;Loja Norte
+2025;Novembro;Juros Bancários;-12905,23;Loja Sul
+2025;Novembro;Manutenção;-16766,25;Loja Centro
+2025;Novembro;Manutenção;-10323,5;Loja Norte
+2025;Novembro;Manutenção;-12847,48;Loja Sul
+2025;Novembro;Marketing e Publicidade;-166033,11;Loja Centro
+2025;Novembro;Marketing e Publicidade;-103514,36;Loja Norte
+2025;Novembro;Marketing e Publicidade;-130057,61;Loja Sul
+2025;Novembro;Materiais e Insumos;-419002,65;Loja Centro
+2025;Novembro;Materiais e Insumos;-260373,98;Loja Norte
+2025;Novembro;Materiais e Insumos;-319414,65;Loja Sul
+2025;Novembro;Material de Escritório;-8294,14;Loja Centro
+2025;Novembro;Material de Escritório;-5227,67;Loja Norte
+2025;Novembro;Material de Escritório;-6466,91;Loja Sul
+2025;Novembro;Mão de Obra Direta;-669365,15;Loja Centro
+2025;Novembro;Mão de Obra Direta;-411922,38;Loja Norte
+2025;Novembro;Mão de Obra Direta;-516202,26;Loja Sul
+2025;Novembro;Outras Receitas Operacionais;83228,46;Loja Centro
+2025;Novembro;Outras Receitas Operacionais;55146,46;Loja Norte
+2025;Novembro;Outras Receitas Operacionais;65355,44;Loja Sul
+2025;Novembro;Pró-Labore;-126648,45;Loja Centro
+2025;Novembro;Pró-Labore;-76778,42;Loja Norte
+2025;Novembro;Pró-Labore;-95900,66;Loja Sul
+2025;Novembro;Receita de Serviços;583105,09;Loja Centro
+2025;Novembro;Receita de Serviços;380957,76;Loja Norte
+2025;Novembro;Receita de Serviços;461234,19;Loja Sul
+2025;Novembro;Receita de Vendas;7752484,1;Loja Centro
+2025;Novembro;Receita de Vendas;4978357,52;Loja Norte
+2025;Novembro;Receita de Vendas;5986988,92;Loja Sul
+2025;Novembro;Receitas Financeiras;25170,5;Loja Centro
+2025;Novembro;Receitas Financeiras;16676,15;Loja Norte
+2025;Novembro;Receitas Financeiras;19268,31;Loja Sul
+2025;Novembro;Salários Administrativos;-416358,08;Loja Centro
+2025;Novembro;Salários Administrativos;-257477,19;Loja Norte
+2025;Novembro;Salários Administrativos;-324832,94;Loja Sul
+2025;Novembro;Salários Comerciais;-333714,51;Loja Centro
+2025;Novembro;Salários Comerciais;-208201,34;Loja Norte
+2025;Novembro;Salários Comerciais;-257276,7;Loja Sul
+2025;Novembro;Seguros;-16677,51;Loja Centro
+2025;Novembro;Seguros;-10230,49;Loja Norte
+2025;Novembro;Seguros;-13026;Loja Sul
+2025;Novembro;Sistemas e Licenças;-33475,83;Loja Centro
+2025;Novembro;Sistemas e Licenças;-20675,72;Loja Norte
+2025;Novembro;Sistemas e Licenças;-25733,83;Loja Sul
+2025;Novembro;Tarifas Bancárias;-4151,42;Loja Centro
+2025;Novembro;Tarifas Bancárias;-2574,67;Loja Norte
+2025;Novembro;Tarifas Bancárias;-3261,91;Loja Sul
+2025;Novembro;Treinamentos;-8282,45;Loja Centro
+2025;Novembro;Treinamentos;-5188,84;Loja Norte
+2025;Novembro;Treinamentos;-6513;Loja Sul
+2025;Novembro;Viagens Comerciais;-41725,22;Loja Centro
+2025;Novembro;Viagens Comerciais;-25931,79;Loja Norte
+2025;Novembro;Viagens Comerciais;-32226,84;Loja Sul
+2025;Outubro;Aluguel;-73868,91;Loja Centro
+2025;Outubro;Aluguel;-44717,09;Loja Norte
+2025;Outubro;Aluguel;-56307,2;Loja Sul
+2025;Outubro;CMV;-3375427,2;Loja Centro
+2025;Outubro;CMV;-2190330,21;Loja Norte
+2025;Outubro;CMV;-2589318,76;Loja Sul
+2025;Outubro;CSLL;-61338,64;Loja Centro
+2025;Outubro;CSLL;-37152,56;Loja Norte
+2025;Outubro;CSLL;-47261,11;Loja Sul
+2025;Outubro;Comissões;-153277,21;Loja Centro
+2025;Outubro;Comissões;-92522,59;Loja Norte
+2025;Outubro;Comissões;-118538,47;Loja Sul
+2025;Outubro;Contabilidade;-18494,63;Loja Centro
+2025;Outubro;Contabilidade;-11094,5;Loja Norte
+2025;Outubro;Contabilidade;-14119,38;Loja Sul
+2025;Outubro;Depreciação;-61719,38;Loja Centro
+2025;Outubro;Depreciação;-37046,15;Loja Norte
+2025;Outubro;Depreciação;-46930,81;Loja Sul
+2025;Outubro;Descontos Concedidos;-30596,34;Loja Centro
+2025;Outubro;Descontos Concedidos;-18513,38;Loja Norte
+2025;Outubro;Descontos Concedidos;-23765,54;Loja Sul
+2025;Outubro;Despesas Financeiras;-24578,8;Loja Centro
+2025;Outubro;Despesas Financeiras;-14948,32;Loja Norte
+2025;Outubro;Despesas Financeiras;-18781,37;Loja Sul
+2025;Outubro;Devoluções;-61763,8;Loja Centro
+2025;Outubro;Devoluções;-36794,33;Loja Norte
+2025;Outubro;Devoluções;-47097,95;Loja Sul
+2025;Outubro;Energia Elétrica;-24577,18;Loja Centro
+2025;Outubro;Energia Elétrica;-14918,78;Loja Norte
+2025;Outubro;Energia Elétrica;-18808,57;Loja Sul
+2025;Outubro;Fretes de Produção;-122750;Loja Centro
+2025;Outubro;Fretes de Produção;-74139,63;Loja Norte
+2025;Outubro;Fretes de Produção;-94584,16;Loja Sul
+2025;Outubro;IRPJ;-184797,47;Loja Centro
+2025;Outubro;IRPJ;-111653,2;Loja Norte
+2025;Outubro;IRPJ;-140749,15;Loja Sul
+2025;Outubro;Impostos sobre Vendas;-733761,71;Loja Centro
+2025;Outubro;Impostos sobre Vendas;-450573,47;Loja Norte
+2025;Outubro;Impostos sobre Vendas;-565607,68;Loja Sul
+2025;Outubro;Internet e Telefonia;-12213,11;Loja Centro
+2025;Outubro;Internet e Telefonia;-7466,2;Loja Norte
+2025;Outubro;Internet e Telefonia;-9482,2;Loja Sul
+2025;Outubro;Juros Ativos;6013,61;Loja Centro
+2025;Outubro;Juros Ativos;3873,9;Loja Norte
+2025;Outubro;Juros Ativos;4542,7;Loja Sul
+2025;Outubro;Juros Bancários;-12254,83;Loja Centro
+2025;Outubro;Juros Bancários;-7455,81;Loja Norte
+2025;Outubro;Juros Bancários;-9444,68;Loja Sul
+2025;Outubro;Manutenção;-12240,51;Loja Centro
+2025;Outubro;Manutenção;-7445,19;Loja Norte
+2025;Outubro;Manutenção;-9469,69;Loja Sul
+2025;Outubro;Marketing e Publicidade;-122850,64;Loja Centro
+2025;Outubro;Marketing e Publicidade;-74285,74;Loja Norte
+2025;Outubro;Marketing e Publicidade;-94346,95;Loja Sul
+2025;Outubro;Materiais e Insumos;-306510,01;Loja Centro
+2025;Outubro;Materiais e Insumos;-190422,21;Loja Norte
+2025;Outubro;Materiais e Insumos;-232502,29;Loja Sul
+2025;Outubro;Material de Escritório;-6177,47;Loja Centro
+2025;Outubro;Material de Escritório;-3714,63;Loja Norte
+2025;Outubro;Material de Escritório;-4678,27;Loja Sul
+2025;Outubro;Mão de Obra Direta;-492145,25;Loja Centro
+2025;Outubro;Mão de Obra Direta;-299173,49;Loja Norte
+2025;Outubro;Mão de Obra Direta;-374818,6;Loja Sul
+2025;Outubro;Outras Receitas Operacionais;60232,95;Loja Centro
+2025;Outubro;Outras Receitas Operacionais;38262,82;Loja Norte
+2025;Outubro;Outras Receitas Operacionais;45731,07;Loja Sul
+2025;Outubro;Pró-Labore;-91910,27;Loja Centro
+2025;Outubro;Pró-Labore;-57187,3;Loja Norte
+2025;Outubro;Pró-Labore;-69745,92;Loja Sul
+2025;Outubro;Receita de Serviços;418984,99;Loja Centro
+2025;Outubro;Receita de Serviços;272612,7;Loja Norte
+2025;Outubro;Receita de Serviços;318945,32;Loja Sul
+2025;Outubro;Receita de Vendas;5470041,04;Loja Centro
+2025;Outubro;Receita de Vendas;3580587,5;Loja Norte
+2025;Outubro;Receita de Vendas;4234438,17;Loja Sul
+2025;Outubro;Receitas Financeiras;18032,58;Loja Centro
+2025;Outubro;Receitas Financeiras;11422,96;Loja Norte
+2025;Outubro;Receitas Financeiras;13808,73;Loja Sul
+2025;Outubro;Salários Administrativos;-305760,7;Loja Centro
+2025;Outubro;Salários Administrativos;-186774,74;Loja Norte
+2025;Outubro;Salários Administrativos;-236469,53;Loja Sul
+2025;Outubro;Salários Comerciais;-243085,34;Loja Centro
+2025;Outubro;Salários Comerciais;-150068,13;Loja Norte
+2025;Outubro;Salários Comerciais;-190306,33;Loja Sul
+2025;Outubro;Seguros;-12239,79;Loja Centro
+2025;Outubro;Seguros;-7563,37;Loja Norte
+2025;Outubro;Seguros;-9369,05;Loja Sul
+2025;Outubro;Sistemas e Licenças;-24250,53;Loja Centro
+2025;Outubro;Sistemas e Licenças;-15243,54;Loja Norte
+2025;Outubro;Sistemas e Licenças;-18891,15;Loja Sul
+2025;Outubro;Tarifas Bancárias;-3072,8;Loja Centro
+2025;Outubro;Tarifas Bancárias;-1853,74;Loja Norte
+2025;Outubro;Tarifas Bancárias;-2359,98;Loja Sul
+2025;Outubro;Treinamentos;-6207,56;Loja Centro
+2025;Outubro;Treinamentos;-3725,71;Loja Norte
+2025;Outubro;Treinamentos;-4635,2;Loja Sul
+2025;Outubro;Viagens Comerciais;-30624,64;Loja Centro
+2025;Outubro;Viagens Comerciais;-18734,28;Loja Norte
+2025;Outubro;Viagens Comerciais;-23544,21;Loja Sul
+2025;Setembro;Aluguel;-71950,56;Loja Centro
+2025;Setembro;Aluguel;-44211,56;Loja Norte
+2025;Setembro;Aluguel;-56123,82;Loja Sul
+2025;Setembro;CMV;-3298936,02;Loja Centro
+2025;Setembro;CMV;-2123458,99;Loja Norte
+2025;Setembro;CMV;-2580702,92;Loja Sul
+2025;Setembro;CSLL;-59253,71;Loja Centro
+2025;Setembro;CSLL;-37487,45;Loja Norte
+2025;Setembro;CSLL;-47009,47;Loja Sul
+2025;Setembro;Comissões;-150212,55;Loja Centro
+2025;Setembro;Comissões;-92319,4;Loja Norte
+2025;Setembro;Comissões;-116384,09;Loja Sul
+2025;Setembro;Contabilidade;-18077,81;Loja Centro
+2025;Setembro;Contabilidade;-10921,69;Loja Norte
+2025;Setembro;Contabilidade;-14042,74;Loja Sul
+2025;Setembro;Depreciação;-60045,91;Loja Centro
+2025;Setembro;Depreciação;-37108,36;Loja Norte
+2025;Setembro;Depreciação;-46441,41;Loja Sul
+2025;Setembro;Descontos Concedidos;-29976,48;Loja Centro
+2025;Setembro;Descontos Concedidos;-18253,68;Loja Norte
+2025;Setembro;Descontos Concedidos;-23533,67;Loja Sul
+2025;Setembro;Despesas Financeiras;-23742,17;Loja Centro
+2025;Setembro;Despesas Financeiras;-14751,65;Loja Norte
+2025;Setembro;Despesas Financeiras;-18968,54;Loja Sul
+2025;Setembro;Devoluções;-59741,61;Loja Centro
+2025;Setembro;Devoluções;-36948,87;Loja Norte
+2025;Setembro;Devoluções;-46923,97;Loja Sul
+2025;Setembro;Energia Elétrica;-23806,65;Loja Centro
+2025;Setembro;Energia Elétrica;-14836,32;Loja Norte
+2025;Setembro;Energia Elétrica;-18822,4;Loja Sul
+2025;Setembro;Fretes de Produção;-120293,17;Loja Centro
+2025;Setembro;Fretes de Produção;-73590,25;Loja Norte
+2025;Setembro;Fretes de Produção;-93197,97;Loja Sul
+2025;Setembro;IRPJ;-179728,02;Loja Centro
+2025;Setembro;IRPJ;-110814,72;Loja Norte
+2025;Setembro;IRPJ;-140230,11;Loja Sul
+2025;Setembro;Impostos sobre Vendas;-716557,6;Loja Centro
+2025;Setembro;Impostos sobre Vendas;-443120,06;Loja Norte
+2025;Setembro;Impostos sobre Vendas;-563705,85;Loja Sul
+2025;Setembro;Internet e Telefonia;-12055,39;Loja Centro
+2025;Setembro;Internet e Telefonia;-7323,27;Loja Norte
+2025;Setembro;Internet e Telefonia;-9321,33;Loja Sul
+2025;Setembro;Juros Ativos;5770,48;Loja Centro
+2025;Setembro;Juros Ativos;3812,06;Loja Norte
+2025;Setembro;Juros Ativos;4596,94;Loja Sul
+2025;Setembro;Juros Bancários;-12000,05;Loja Centro
+2025;Setembro;Juros Bancários;-7296,42;Loja Norte
+2025;Setembro;Juros Bancários;-9407,22;Loja Sul
+2025;Setembro;Manutenção;-12085,43;Loja Centro
+2025;Setembro;Manutenção;-7469,68;Loja Norte
+2025;Setembro;Manutenção;-9160,48;Loja Sul
+2025;Setembro;Marketing e Publicidade;-120004,15;Loja Centro
+2025;Setembro;Marketing e Publicidade;-73335,07;Loja Norte
+2025;Setembro;Marketing e Publicidade;-93746,15;Loja Sul
+2025;Setembro;Materiais e Insumos;-299906,98;Loja Centro
+2025;Setembro;Materiais e Insumos;-182666,92;Loja Norte
+2025;Setembro;Materiais e Insumos;-235063,26;Loja Sul
+2025;Setembro;Material de Escritório;-5951,62;Loja Centro
+2025;Setembro;Material de Escritório;-3712,92;Loja Norte
+2025;Setembro;Material de Escritório;-4702,32;Loja Sul
+2025;Setembro;Mão de Obra Direta;-479922,09;Loja Centro
+2025;Setembro;Mão de Obra Direta;-291095,55;Loja Norte
+2025;Setembro;Mão de Obra Direta;-377036,11;Loja Sul
+2025;Setembro;Outras Receitas Operacionais;57846,93;Loja Centro
+2025;Setembro;Outras Receitas Operacionais;38085,93;Loja Norte
+2025;Setembro;Outras Receitas Operacionais;45838,56;Loja Sul
+2025;Setembro;Pró-Labore;-89745,33;Loja Centro
+2025;Setembro;Pró-Labore;-54883,35;Loja Norte
+2025;Setembro;Pró-Labore;-70703,39;Loja Sul
+2025;Setembro;Receita de Serviços;404609,63;Loja Centro
+2025;Setembro;Receita de Serviços;265919,26;Loja Norte
+2025;Setembro;Receita de Serviços;321821,74;Loja Sul
+2025;Setembro;Receita de Vendas;5344340,71;Loja Centro
+2025;Setembro;Receita de Vendas;3471799,58;Loja Norte
+2025;Setembro;Receita de Vendas;4219590,07;Loja Sul
+2025;Setembro;Receitas Financeiras;17418,26;Loja Centro
+2025;Setembro;Receitas Financeiras;11566,52;Loja Norte
+2025;Setembro;Receitas Financeiras;13556,99;Loja Sul
+2025;Setembro;Salários Administrativos;-299393,08;Loja Centro
+2025;Setembro;Salários Administrativos;-184922,44;Loja Norte
+2025;Setembro;Salários Administrativos;-233690,54;Loja Sul
+2025;Setembro;Salários Comerciais;-238605,74;Loja Centro
+2025;Setembro;Salários Comerciais;-146470,27;Loja Norte
+2025;Setembro;Salários Comerciais;-189252,73;Loja Sul
+2025;Setembro;Seguros;-11977,21;Loja Centro
+2025;Setembro;Seguros;-7327,63;Loja Norte
+2025;Setembro;Seguros;-9405,83;Loja Sul
+2025;Setembro;Sistemas e Licenças;-23965,31;Loja Centro
+2025;Setembro;Sistemas e Licenças;-14784,23;Loja Norte
+2025;Setembro;Sistemas e Licenças;-18687,79;Loja Sul
+2025;Setembro;Tarifas Bancárias;-2988,02;Loja Centro
+2025;Setembro;Tarifas Bancárias;-1861,74;Loja Norte
+2025;Setembro;Tarifas Bancárias;-2332,67;Loja Sul
+2025;Setembro;Treinamentos;-6003,45;Loja Centro
+2025;Setembro;Treinamentos;-3700,76;Loja Norte
+2025;Setembro;Treinamentos;-4654,2;Loja Sul
+2025;Setembro;Viagens Comerciais;-30139,7;Loja Centro
+2025;Setembro;Viagens Comerciais;-18316,56;Loja Norte
+2025;Setembro;Viagens Comerciais;-23294,27;Loja Sul
+2026;Abril;Aluguel;-89159,57;Loja Centro
+2026;Abril;Aluguel;-53882,83;Loja Norte
+2026;Abril;Aluguel;-69447,27;Loja Sul
+2026;Abril;CMV;-4207935,02;Loja Centro
+2026;Abril;CMV;-2631415,15;Loja Norte
+2026;Abril;CMV;-3194451,31;Loja Sul
+2026;Abril;CSLL;-73841;Loja Centro
+2026;Abril;CSLL;-45486,4;Loja Norte
+2026;Abril;CSLL;-57883,05;Loja Sul
+2026;Abril;Comissões;-184841,18;Loja Centro
+2026;Abril;Comissões;-112854,89;Loja Norte
+2026;Abril;Comissões;-145186,74;Loja Sul
+2026;Abril;Contabilidade;-22235,16;Loja Centro
+2026;Abril;Contabilidade;-13619,39;Loja Norte
+2026;Abril;Contabilidade;-17294,2;Loja Sul
+2026;Abril;Depreciação;-73993,85;Loja Centro
+2026;Abril;Depreciação;-44889,49;Loja Norte
+2026;Abril;Depreciação;-58229,65;Loja Sul
+2026;Abril;Descontos Concedidos;-37141,82;Loja Centro
+2026;Abril;Descontos Concedidos;-22716,02;Loja Norte
+2026;Abril;Descontos Concedidos;-28714,68;Loja Sul
+2026;Abril;Despesas Financeiras;-29531,88;Loja Centro
+2026;Abril;Despesas Financeiras;-17880,12;Loja Norte
+2026;Abril;Despesas Financeiras;-23431,78;Loja Sul
+2026;Abril;Devoluções;-73864,63;Loja Centro
+2026;Abril;Devoluções;-45442,64;Loja Norte
+2026;Abril;Devoluções;-57894,4;Loja Sul
+2026;Abril;Energia Elétrica;-29591,89;Loja Centro
+2026;Abril;Energia Elétrica;-18063,33;Loja Norte
+2026;Abril;Energia Elétrica;-23204,81;Loja Sul
+2026;Abril;Fretes de Produção;-148666,62;Loja Centro
+2026;Abril;Fretes de Produção;-91204,39;Loja Norte
+2026;Abril;Fretes de Produção;-114451,59;Loja Sul
+2026;Abril;IRPJ;-221804,86;Loja Centro
+2026;Abril;IRPJ;-136514,65;Loja Norte
+2026;Abril;IRPJ;-173282,46;Loja Sul
+2026;Abril;Impostos sobre Vendas;-880982,6;Loja Centro
+2026;Abril;Impostos sobre Vendas;-542222,73;Loja Norte
+2026;Abril;Impostos sobre Vendas;-703518,34;Loja Sul
+2026;Abril;Internet e Telefonia;-14777,23;Loja Centro
+2026;Abril;Internet e Telefonia;-8997,41;Loja Norte
+2026;Abril;Internet e Telefonia;-11653,35;Loja Sul
+2026;Abril;Juros Ativos;7359,87;Loja Centro
+2026;Abril;Juros Ativos;4584,47;Loja Norte
+2026;Abril;Juros Ativos;5808,24;Loja Sul
+2026;Abril;Juros Bancários;-14778,28;Loja Centro
+2026;Abril;Juros Bancários;-8989,26;Loja Norte
+2026;Abril;Juros Bancários;-11659,5;Loja Sul
+2026;Abril;Manutenção;-14634;Loja Centro
+2026;Abril;Manutenção;-9127,34;Loja Norte
+2026;Abril;Manutenção;-11702,53;Loja Sul
+2026;Abril;Marketing e Publicidade;-148951,4;Loja Centro
+2026;Abril;Marketing e Publicidade;-89565,88;Loja Norte
+2026;Abril;Marketing e Publicidade;-115554,74;Loja Sul
+2026;Abril;Materiais e Insumos;-366367,4;Loja Centro
+2026;Abril;Materiais e Insumos;-227782,92;Loja Norte
+2026;Abril;Materiais e Insumos;-292319,03;Loja Sul
+2026;Abril;Material de Escritório;-7402,94;Loja Centro
+2026;Abril;Material de Escritório;-4500,2;Loja Norte
+2026;Abril;Material de Escritório;-5809,18;Loja Sul
+2026;Abril;Mão de Obra Direta;-591510,84;Loja Centro
+2026;Abril;Mão de Obra Direta;-359174,09;Loja Norte
+2026;Abril;Mão de Obra Direta;-466282,86;Loja Sul
+2026;Abril;Outras Receitas Operacionais;72564,7;Loja Centro
+2026;Abril;Outras Receitas Operacionais;47359,49;Loja Norte
+2026;Abril;Outras Receitas Operacionais;57933,88;Loja Sul
+2026;Abril;Pró-Labore;-111397,25;Loja Centro
+2026;Abril;Pró-Labore;-67585,94;Loja Norte
+2026;Abril;Pró-Labore;-86665,58;Loja Sul
+2026;Abril;Receita de Serviços;508412,04;Loja Centro
+2026;Abril;Receita de Serviços;334246,84;Loja Norte
+2026;Abril;Receita de Serviços;402642,88;Loja Sul
+2026;Abril;Receita de Vendas;6809090,78;Loja Centro
+2026;Abril;Receita de Vendas;4299875,6;Loja Norte
+2026;Abril;Receita de Vendas;5229125,6;Loja Sul
+2026;Abril;Receitas Financeiras;21969,2;Loja Centro
+2026;Abril;Receitas Financeiras;14135,3;Loja Norte
+2026;Abril;Receitas Financeiras;17217,13;Loja Sul
+2026;Abril;Salários Administrativos;-366439,33;Loja Centro
+2026;Abril;Salários Administrativos;-222381,92;Loja Norte
+2026;Abril;Salários Administrativos;-296935,45;Loja Sul
+2026;Abril;Salários Comerciais;-295929,39;Loja Centro
+2026;Abril;Salários Comerciais;-181360,65;Loja Norte
+2026;Abril;Salários Comerciais;-231402,18;Loja Sul
+2026;Abril;Seguros;-14821,98;Loja Centro
+2026;Abril;Seguros;-8953,11;Loja Norte
+2026;Abril;Seguros;-11641,53;Loja Sul
+2026;Abril;Sistemas e Licenças;-29517,87;Loja Centro
+2026;Abril;Sistemas e Licenças;-17904,86;Loja Norte
+2026;Abril;Sistemas e Licenças;-23426,1;Loja Sul
+2026;Abril;Tarifas Bancárias;-3679,83;Loja Centro
+2026;Abril;Tarifas Bancárias;-2254,45;Loja Norte
+2026;Abril;Tarifas Bancárias;-2925,28;Loja Sul
+2026;Abril;Treinamentos;-7324,11;Loja Centro
+2026;Abril;Treinamentos;-4519,5;Loja Norte
+2026;Abril;Treinamentos;-5881,53;Loja Sul
+2026;Abril;Viagens Comerciais;-37060,91;Loja Centro
+2026;Abril;Viagens Comerciais;-22254,75;Loja Norte
+2026;Abril;Viagens Comerciais;-29207,39;Loja Sul
+2026;Fevereiro;Aluguel;-86175,39;Loja Centro
+2026;Fevereiro;Aluguel;-51331,64;Loja Norte
+2026;Fevereiro;Aluguel;-67233,08;Loja Sul
+2026;Fevereiro;CMV;-4076170,2;Loja Centro
+2026;Fevereiro;CMV;-2589747,64;Loja Norte
+2026;Fevereiro;CMV;-3130694,06;Loja Sul
+2026;Fevereiro;CSLL;-71342,64;Loja Centro
+2026;Fevereiro;CSLL;-43203,86;Loja Norte
+2026;Fevereiro;CSLL;-56184,74;Loja Sul
+2026;Fevereiro;Comissões;-178807;Loja Centro
+2026;Fevereiro;Comissões;-110191,76;Loja Norte
+2026;Fevereiro;Comissões;-138065,3;Loja Sul
+2026;Fevereiro;Contabilidade;-21490,12;Loja Centro
+2026;Fevereiro;Contabilidade;-13108,56;Loja Norte
+2026;Fevereiro;Contabilidade;-16629,8;Loja Sul
+2026;Fevereiro;Depreciação;-71882,45;Loja Centro
+2026;Fevereiro;Depreciação;-43388,22;Loja Norte
+2026;Fevereiro;Depreciação;-55418,85;Loja Sul
+2026;Fevereiro;Descontos Concedidos;-35533,5;Loja Centro
+2026;Fevereiro;Descontos Concedidos;-21912,93;Loja Norte
+2026;Fevereiro;Descontos Concedidos;-27977,57;Loja Sul
+2026;Fevereiro;Despesas Financeiras;-28618,02;Loja Centro
+2026;Fevereiro;Despesas Financeiras;-17666,85;Loja Norte
+2026;Fevereiro;Despesas Financeiras;-22049,13;Loja Sul
+2026;Fevereiro;Devoluções;-71076,6;Loja Centro
+2026;Fevereiro;Devoluções;-43931,01;Loja Norte
+2026;Fevereiro;Devoluções;-55853,45;Loja Sul
+2026;Fevereiro;Energia Elétrica;-28737,37;Loja Centro
+2026;Fevereiro;Energia Elétrica;-17454,38;Loja Norte
+2026;Fevereiro;Energia Elétrica;-22099,03;Loja Sul
+2026;Fevereiro;Fretes de Produção;-142713,03;Loja Centro
+2026;Fevereiro;Fretes de Produção;-87817,14;Loja Norte
+2026;Fevereiro;Fretes de Produção;-111116,97;Loja Sul
+2026;Fevereiro;IRPJ;-214502,42;Loja Centro
+2026;Fevereiro;IRPJ;-130487,4;Loja Norte
+2026;Fevereiro;IRPJ;-167262,81;Loja Sul
+2026;Fevereiro;Impostos sobre Vendas;-854507,7;Loja Centro
+2026;Fevereiro;Impostos sobre Vendas;-525034,97;Loja Norte
+2026;Fevereiro;Impostos sobre Vendas;-670308,67;Loja Sul
+2026;Fevereiro;Internet e Telefonia;-14365,35;Loja Centro
+2026;Fevereiro;Internet e Telefonia;-8709,49;Loja Norte
+2026;Fevereiro;Internet e Telefonia;-11068,49;Loja Sul
+2026;Fevereiro;Juros Ativos;7144,8;Loja Centro
+2026;Fevereiro;Juros Ativos;4561,53;Loja Norte
+2026;Fevereiro;Juros Ativos;5629,49;Loja Sul
+2026;Fevereiro;Juros Bancários;-14282,93;Loja Centro
+2026;Fevereiro;Juros Bancários;-8756,25;Loja Norte
+2026;Fevereiro;Juros Bancários;-11120,51;Loja Sul
+2026;Fevereiro;Manutenção;-14239,32;Loja Centro
+2026;Fevereiro;Manutenção;-8712,73;Loja Norte
+2026;Fevereiro;Manutenção;-11207,19;Loja Sul
+2026;Fevereiro;Marketing e Publicidade;-142072,44;Loja Centro
+2026;Fevereiro;Marketing e Publicidade;-87991,49;Loja Norte
+2026;Fevereiro;Marketing e Publicidade;-111685,12;Loja Sul
+2026;Fevereiro;Materiais e Insumos;-356603,65;Loja Centro
+2026;Fevereiro;Materiais e Insumos;-220587,88;Loja Norte
+2026;Fevereiro;Materiais e Insumos;-277087,67;Loja Sul
+2026;Fevereiro;Material de Escritório;-7119,55;Loja Centro
+2026;Fevereiro;Material de Escritório;-4380,15;Loja Norte
+2026;Fevereiro;Material de Escritório;-5583,33;Loja Sul
+2026;Fevereiro;Mão de Obra Direta;-570058,17;Loja Centro
+2026;Fevereiro;Mão de Obra Direta;-354462,3;Loja Norte
+2026;Fevereiro;Mão de Obra Direta;-442591,21;Loja Sul
+2026;Fevereiro;Outras Receitas Operacionais;70719,57;Loja Centro
+2026;Fevereiro;Outras Receitas Operacionais;46758,21;Loja Norte
+2026;Fevereiro;Outras Receitas Operacionais;56122,18;Loja Sul
+2026;Fevereiro;Pró-Labore;-106909,52;Loja Centro
+2026;Fevereiro;Pró-Labore;-64908,38;Loja Norte
+2026;Fevereiro;Pró-Labore;-84305,45;Loja Sul
+2026;Fevereiro;Receita de Serviços;498831,13;Loja Centro
+2026;Fevereiro;Receita de Serviços;321032,69;Loja Norte
+2026;Fevereiro;Receita de Serviços;394033,97;Loja Sul
+2026;Fevereiro;Receita de Vendas;6597604,1;Loja Centro
+2026;Fevereiro;Receita de Vendas;4233287,13;Loja Norte
+2026;Fevereiro;Receita de Vendas;5119955,38;Loja Sul
+2026;Fevereiro;Receitas Financeiras;21333,41;Loja Centro
+2026;Fevereiro;Receitas Financeiras;13958,97;Loja Norte
+2026;Fevereiro;Receitas Financeiras;16764,05;Loja Sul
+2026;Fevereiro;Salários Administrativos;-356895,15;Loja Centro
+2026;Fevereiro;Salários Administrativos;-218442,13;Loja Norte
+2026;Fevereiro;Salários Administrativos;-278620,16;Loja Sul
+2026;Fevereiro;Salários Comerciais;-285701,08;Loja Centro
+2026;Fevereiro;Salários Comerciais;-176581,72;Loja Norte
+2026;Fevereiro;Salários Comerciais;-221104,19;Loja Sul
+2026;Fevereiro;Seguros;-14366,6;Loja Centro
+2026;Fevereiro;Seguros;-8718,41;Loja Norte
+2026;Fevereiro;Seguros;-11059,36;Loja Sul
+2026;Fevereiro;Sistemas e Licenças;-28572,53;Loja Centro
+2026;Fevereiro;Sistemas e Licenças;-17224,62;Loja Norte
+2026;Fevereiro;Sistemas e Licenças;-22483,5;Loja Sul
+2026;Fevereiro;Tarifas Bancárias;-3575,63;Loja Centro
+2026;Fevereiro;Tarifas Bancárias;-2168,45;Loja Norte
+2026;Fevereiro;Tarifas Bancárias;-2792,49;Loja Sul
+2026;Fevereiro;Treinamentos;-7083,25;Loja Centro
+2026;Fevereiro;Treinamentos;-4417,73;Loja Norte
+2026;Fevereiro;Treinamentos;-5591,53;Loja Sul
+2026;Fevereiro;Viagens Comerciais;-35816,86;Loja Centro
+2026;Fevereiro;Viagens Comerciais;-21698,84;Loja Norte
+2026;Fevereiro;Viagens Comerciais;-27845,19;Loja Sul
+2026;Janeiro;Aluguel;-82411,53;Loja Centro
+2026;Janeiro;Aluguel;-49663,17;Loja Norte
+2026;Janeiro;Aluguel;-63197,14;Loja Sul
+2026;Janeiro;CMV;-3923971,89;Loja Centro
+2026;Janeiro;CMV;-2503487,36;Loja Norte
+2026;Janeiro;CMV;-3013535,56;Loja Sul
+2026;Janeiro;CSLL;-67988,14;Loja Centro
+2026;Janeiro;CSLL;-41453,42;Loja Norte
+2026;Janeiro;CSLL;-53377,62;Loja Sul
+2026;Janeiro;Comissões;-171289,71;Loja Centro
+2026;Janeiro;Comissões;-103741,61;Loja Norte
+2026;Janeiro;Comissões;-131867,23;Loja Sul
+2026;Janeiro;Contabilidade;-20565,76;Loja Centro
+2026;Janeiro;Contabilidade;-12292,65;Loja Norte
+2026;Janeiro;Contabilidade;-15949,32;Loja Sul
+2026;Janeiro;Depreciação;-68270,26;Loja Centro
+2026;Janeiro;Depreciação;-41230,02;Loja Norte
+2026;Janeiro;Depreciação;-53257,09;Loja Sul
+2026;Janeiro;Descontos Concedidos;-34326,51;Loja Centro
+2026;Janeiro;Descontos Concedidos;-20476,39;Loja Norte
+2026;Janeiro;Descontos Concedidos;-26535,46;Loja Sul
+2026;Janeiro;Despesas Financeiras;-27255,06;Loja Centro
+2026;Janeiro;Despesas Financeiras;-16515,99;Loja Norte
+2026;Janeiro;Despesas Financeiras;-21341,08;Loja Sul
+2026;Janeiro;Devoluções;-68291,45;Loja Centro
+2026;Janeiro;Devoluções;-41445,62;Loja Norte
+2026;Janeiro;Devoluções;-53043,94;Loja Sul
+2026;Janeiro;Energia Elétrica;-27203,93;Loja Centro
+2026;Janeiro;Energia Elétrica;-16586,99;Loja Norte
+2026;Janeiro;Energia Elétrica;-21336,5;Loja Sul
+2026;Janeiro;Fretes de Produção;-137574,51;Loja Centro
+2026;Janeiro;Fretes de Produção;-82317,51;Loja Norte
+2026;Janeiro;Fretes de Produção;-105478,37;Loja Sul
+2026;Janeiro;IRPJ;-204070,95;Loja Centro
+2026;Janeiro;IRPJ;-124432,04;Loja Norte
+2026;Janeiro;IRPJ;-159949,66;Loja Sul
+2026;Janeiro;Impostos sobre Vendas;-823331,63;Loja Centro
+2026;Janeiro;Impostos sobre Vendas;-497226,99;Loja Norte
+2026;Janeiro;Impostos sobre Vendas;-632325,89;Loja Sul
+2026;Janeiro;Internet e Telefonia;-13826,95;Loja Centro
+2026;Janeiro;Internet e Telefonia;-8059,95;Loja Norte
+2026;Janeiro;Internet e Telefonia;-10620,91;Loja Sul
+2026;Janeiro;Juros Ativos;6927,23;Loja Centro
+2026;Janeiro;Juros Ativos;4448,82;Loja Norte
+2026;Janeiro;Juros Ativos;5325,66;Loja Sul
+2026;Janeiro;Juros Bancários;-13666,23;Loja Centro
+2026;Janeiro;Juros Bancários;-8172,82;Loja Norte
+2026;Janeiro;Juros Bancários;-10701,87;Loja Sul
+2026;Janeiro;Manutenção;-13592,7;Loja Centro
+2026;Janeiro;Manutenção;-8357,21;Loja Norte
+2026;Janeiro;Manutenção;-10622,51;Loja Sul
+2026;Janeiro;Marketing e Publicidade;-136581,47;Loja Centro
+2026;Janeiro;Marketing e Publicidade;-82464,19;Loja Norte
+2026;Janeiro;Marketing e Publicidade;-106464,32;Loja Sul
+2026;Janeiro;Materiais e Insumos;-342248,01;Loja Centro
+2026;Janeiro;Materiais e Insumos;-204888,2;Loja Norte
+2026;Janeiro;Materiais e Insumos;-266388,83;Loja Sul
+2026;Janeiro;Material de Escritório;-6810,71;Loja Centro
+2026;Janeiro;Material de Escritório;-4163,78;Loja Norte
+2026;Janeiro;Material de Escritório;-5308,05;Loja Sul
+2026;Janeiro;Mão de Obra Direta;-547956,3;Loja Centro
+2026;Janeiro;Mão de Obra Direta;-336732,08;Loja Norte
+2026;Janeiro;Mão de Obra Direta;-417982,46;Loja Sul
+2026;Janeiro;Outras Receitas Operacionais;69090,56;Loja Centro
+2026;Janeiro;Outras Receitas Operacionais;44160,27;Loja Norte
+2026;Janeiro;Outras Receitas Operacionais;53751,33;Loja Sul
+2026;Janeiro;Pró-Labore;-102053,1;Loja Centro
+2026;Janeiro;Pró-Labore;-61316,55;Loja Norte
+2026;Janeiro;Pró-Labore;-80746,03;Loja Sul
+2026;Janeiro;Receita de Serviços;480999,7;Loja Centro
+2026;Janeiro;Receita de Serviços;310062,29;Loja Norte
+2026;Janeiro;Receita de Serviços;378389,91;Loja Sul
+2026;Janeiro;Receita de Vendas;6347583,39;Loja Centro
+2026;Janeiro;Receita de Vendas;4092291,52;Loja Norte
+2026;Janeiro;Receita de Vendas;4928961,08;Loja Sul
+2026;Janeiro;Receitas Financeiras;20584,29;Loja Centro
+2026;Janeiro;Receitas Financeiras;13408,36;Loja Norte
+2026;Janeiro;Receitas Financeiras;16144,63;Loja Sul
+2026;Janeiro;Salários Administrativos;-342075,07;Loja Centro
+2026;Janeiro;Salários Administrativos;-208733,13;Loja Norte
+2026;Janeiro;Salários Administrativos;-263201,8;Loja Sul
+2026;Janeiro;Salários Comerciais;-273582,16;Loja Centro
+2026;Janeiro;Salários Comerciais;-165786,89;Loja Norte
+2026;Janeiro;Salários Comerciais;-211703,69;Loja Sul
+2026;Janeiro;Seguros;-13746,7;Loja Centro
+2026;Janeiro;Seguros;-8133,29;Loja Norte
+2026;Janeiro;Seguros;-10646,75;Loja Sul
+2026;Janeiro;Sistemas e Licenças;-27417,82;Loja Centro
+2026;Janeiro;Sistemas e Licenças;-16437,44;Loja Norte
+2026;Janeiro;Sistemas e Licenças;-21227,64;Loja Sul
+2026;Janeiro;Tarifas Bancárias;-3441,72;Loja Centro
+2026;Janeiro;Tarifas Bancárias;-2025,71;Loja Norte
+2026;Janeiro;Tarifas Bancárias;-2662,6;Loja Sul
+2026;Janeiro;Treinamentos;-6841,88;Loja Centro
+2026;Janeiro;Treinamentos;-4099,8;Loja Norte
+2026;Janeiro;Treinamentos;-5329,32;Loja Sul
+2026;Janeiro;Viagens Comerciais;-34408,6;Loja Centro
+2026;Janeiro;Viagens Comerciais;-20428,53;Loja Norte
+2026;Janeiro;Viagens Comerciais;-26485,37;Loja Sul
+2026;Julho;Aluguel;-80063,58;Loja Centro
+2026;Julho;Aluguel;-47063,93;Loja Norte
+2026;Julho;Aluguel;-61030,83;Loja Sul
+2026;Julho;CMV;-3871281,55;Loja Centro
+2026;Julho;CMV;-2438120,59;Loja Norte
+2026;Julho;CMV;-2911495,26;Loja Sul
+2026;Julho;CSLL;-66596,3;Loja Centro
+2026;Julho;CSLL;-39246,36;Loja Norte
+2026;Julho;CSLL;-50972,39;Loja Sul
+2026;Julho;Comissões;-166970,94;Loja Centro
+2026;Julho;Comissões;-98841,04;Loja Norte
+2026;Julho;Comissões;-126262,87;Loja Sul
+2026;Julho;Contabilidade;-20064,3;Loja Centro
+2026;Julho;Contabilidade;-11746,65;Loja Norte
+2026;Julho;Contabilidade;-15220,85;Loja Sul
+2026;Julho;Depreciação;-66728,66;Loja Centro
+2026;Julho;Depreciação;-38794,76;Loja Norte
+2026;Julho;Depreciação;-51222,01;Loja Sul
+2026;Julho;Descontos Concedidos;-33078,33;Loja Centro
+2026;Julho;Descontos Concedidos;-19746,34;Loja Norte
+2026;Julho;Descontos Concedidos;-25621,68;Loja Sul
+2026;Julho;Despesas Financeiras;-26447,84;Loja Centro
+2026;Julho;Despesas Financeiras;-15903,91;Loja Norte
+2026;Julho;Despesas Financeiras;-20419,91;Loja Sul
+2026;Julho;Devoluções;-66404,75;Loja Centro
+2026;Julho;Devoluções;-39918,75;Loja Norte
+2026;Julho;Devoluções;-50594,4;Loja Sul
+2026;Julho;Energia Elétrica;-26739,8;Loja Centro
+2026;Julho;Energia Elétrica;-15615,81;Loja Norte
+2026;Julho;Energia Elétrica;-20349,33;Loja Sul
+2026;Julho;Fretes de Produção;-130928,03;Loja Centro
+2026;Julho;Fretes de Produção;-80320,84;Loja Norte
+2026;Julho;Fretes de Produção;-102849,22;Loja Sul
+2026;Julho;IRPJ;-200293,76;Loja Centro
+2026;Julho;IRPJ;-118428,65;Loja Norte
+2026;Julho;IRPJ;-151753,25;Loja Sul
+2026;Julho;Impostos sobre Vendas;-803252,04;Loja Centro
+2026;Julho;Impostos sobre Vendas;-468153,36;Loja Norte
+2026;Julho;Impostos sobre Vendas;-609591,08;Loja Sul
+2026;Julho;Internet e Telefonia;-13205,01;Loja Centro
+2026;Julho;Internet e Telefonia;-8019,51;Loja Norte
+2026;Julho;Internet e Telefonia;-10171,53;Loja Sul
+2026;Julho;Juros Ativos;6783,47;Loja Centro
+2026;Julho;Juros Ativos;4286,87;Loja Norte
+2026;Julho;Juros Ativos;5241,57;Loja Sul
+2026;Julho;Juros Bancários;-13336,43;Loja Centro
+2026;Julho;Juros Bancários;-7845,98;Loja Norte
+2026;Julho;Juros Bancários;-10178,44;Loja Sul
+2026;Julho;Manutenção;-13382,38;Loja Centro
+2026;Julho;Manutenção;-7831,42;Loja Norte
+2026;Julho;Manutenção;-10140,53;Loja Sul
+2026;Julho;Marketing e Publicidade;-132906,31;Loja Centro
+2026;Julho;Marketing e Publicidade;-79055,79;Loja Norte
+2026;Julho;Marketing e Publicidade;-101768,03;Loja Sul
+2026;Julho;Materiais e Insumos;-331933,73;Loja Centro
+2026;Julho;Materiais e Insumos;-198197,64;Loja Norte
+2026;Julho;Materiais e Insumos;-254297,37;Loja Sul
+2026;Julho;Material de Escritório;-6645,81;Loja Centro
+2026;Julho;Material de Escritório;-3963,92;Loja Norte
+2026;Julho;Material de Escritório;-5078,22;Loja Sul
+2026;Julho;Mão de Obra Direta;-532937,34;Loja Centro
+2026;Julho;Mão de Obra Direta;-321624,46;Loja Norte
+2026;Julho;Mão de Obra Direta;-400879,63;Loja Sul
+2026;Julho;Outras Receitas Operacionais;68073,86;Loja Centro
+2026;Julho;Outras Receitas Operacionais;43164,22;Loja Norte
+2026;Julho;Outras Receitas Operacionais;51891,49;Loja Sul
+2026;Julho;Pró-Labore;-99506,34;Loja Centro
+2026;Julho;Pró-Labore;-59938,15;Loja Norte
+2026;Julho;Pró-Labore;-75950,76;Loja Sul
+2026;Julho;Receita de Serviços;476297,65;Loja Centro
+2026;Julho;Receita de Serviços;301231,74;Loja Norte
+2026;Julho;Receita de Serviços;364288,56;Loja Sul
+2026;Julho;Receita de Vendas;6258159,67;Loja Centro
+2026;Julho;Receita de Vendas;3981840,24;Loja Norte
+2026;Julho;Receita de Vendas;4769734,56;Loja Sul
+2026;Julho;Receitas Financeiras;20120,08;Loja Centro
+2026;Julho;Receitas Financeiras;13048,7;Loja Norte
+2026;Julho;Receitas Financeiras;15814,74;Loja Sul
+2026;Julho;Salários Administrativos;-331533,42;Loja Centro
+2026;Julho;Salários Administrativos;-197413,54;Loja Norte
+2026;Julho;Salários Administrativos;-255428,81;Loja Sul
+2026;Julho;Salários Comerciais;-266721,77;Loja Centro
+2026;Julho;Salários Comerciais;-158567,47;Loja Norte
+2026;Julho;Salários Comerciais;-202128,82;Loja Sul
+2026;Julho;Seguros;-13224,11;Loja Centro
+2026;Julho;Seguros;-7879,87;Loja Norte
+2026;Julho;Seguros;-10273,09;Loja Sul
+2026;Julho;Sistemas e Licenças;-26585,5;Loja Centro
+2026;Julho;Sistemas e Licenças;-15579,29;Loja Norte
+2026;Julho;Sistemas e Licenças;-20552,25;Loja Sul
+2026;Julho;Tarifas Bancárias;-3321,01;Loja Centro
+2026;Julho;Tarifas Bancárias;-1951,77;Loja Norte
+2026;Julho;Tarifas Bancárias;-2567,38;Loja Sul
+2026;Julho;Treinamentos;-6594,94;Loja Centro
+2026;Julho;Treinamentos;-4017,87;Loja Norte
+2026;Julho;Treinamentos;-5087,02;Loja Sul
+2026;Julho;Viagens Comerciais;-33116,15;Loja Centro
+2026;Julho;Viagens Comerciais;-19909,61;Loja Norte
+2026;Julho;Viagens Comerciais;-25436,35;Loja Sul
+2026;Junho;Aluguel;-87199,92;Loja Centro
+2026;Junho;Aluguel;-50480,03;Loja Norte
+2026;Junho;Aluguel;-64671,69;Loja Sul
+2026;Junho;CMV;-4010324,27;Loja Centro
+2026;Junho;CMV;-2527103,97;Loja Norte
+2026;Junho;CMV;-3038996,15;Loja Sul
+2026;Junho;CSLL;-71948,69;Loja Centro
+2026;Junho;CSLL;-42320,82;Loja Norte
+2026;Junho;CSLL;-54458,65;Loja Sul
+2026;Junho;Comissões;-179331,44;Loja Centro
+2026;Junho;Comissões;-104632,95;Loja Norte
+2026;Junho;Comissões;-137758,12;Loja Sul
+2026;Junho;Contabilidade;-21458,48;Loja Centro
+2026;Junho;Contabilidade;-12657,81;Loja Norte
+2026;Junho;Contabilidade;-16509,31;Loja Sul
+2026;Junho;Depreciação;-72039,85;Loja Centro
+2026;Junho;Depreciação;-42801,52;Loja Norte
+2026;Junho;Depreciação;-53939,46;Loja Sul
+2026;Junho;Descontos Concedidos;-36259,67;Loja Centro
+2026;Junho;Descontos Concedidos;-21274,45;Loja Norte
+2026;Junho;Descontos Concedidos;-26817,07;Loja Sul
+2026;Junho;Despesas Financeiras;-28530,76;Loja Centro
+2026;Junho;Despesas Financeiras;-17257,81;Loja Norte
+2026;Junho;Despesas Financeiras;-21768,93;Loja Sul
+2026;Junho;Devoluções;-71777,72;Loja Centro
+2026;Junho;Devoluções;-42256,22;Loja Norte
+2026;Junho;Devoluções;-54702,43;Loja Sul
+2026;Junho;Energia Elétrica;-28689,99;Loja Centro
+2026;Junho;Energia Elétrica;-17211,49;Loja Norte
+2026;Junho;Energia Elétrica;-21634,71;Loja Sul
+2026;Junho;Fretes de Produção;-143614,35;Loja Centro
+2026;Junho;Fretes de Produção;-85945,3;Loja Norte
+2026;Junho;Fretes de Produção;-108091,26;Loja Sul
+2026;Junho;IRPJ;-215545,13;Loja Centro
+2026;Junho;IRPJ;-127726,07;Loja Norte
+2026;Junho;IRPJ;-163040,3;Loja Sul
+2026;Junho;Impostos sobre Vendas;-863553,7;Loja Centro
+2026;Junho;Impostos sobre Vendas;-508218,6;Loja Norte
+2026;Junho;Impostos sobre Vendas;-652996,63;Loja Sul
+2026;Junho;Internet e Telefonia;-14338,82;Loja Centro
+2026;Junho;Internet e Telefonia;-8481,44;Loja Norte
+2026;Junho;Internet e Telefonia;-10932,37;Loja Sul
+2026;Junho;Juros Ativos;7073,67;Loja Centro
+2026;Junho;Juros Ativos;4426,99;Loja Norte
+2026;Junho;Juros Ativos;5434,21;Loja Sul
+2026;Junho;Juros Bancários;-14321,71;Loja Centro
+2026;Junho;Juros Bancários;-8470,17;Loja Norte
+2026;Junho;Juros Bancários;-10960,96;Loja Sul
+2026;Junho;Manutenção;-14325,89;Loja Centro
+2026;Junho;Manutenção;-8699,01;Loja Norte
+2026;Junho;Manutenção;-10756,9;Loja Sul
+2026;Junho;Marketing e Publicidade;-144424,24;Loja Centro
+2026;Junho;Marketing e Publicidade;-83787,13;Loja Norte
+2026;Junho;Marketing e Publicidade;-109084,26;Loja Sul
+2026;Junho;Materiais e Insumos;-359460,83;Loja Centro
+2026;Junho;Materiais e Insumos;-211320,17;Loja Norte
+2026;Junho;Materiais e Insumos;-272850,65;Loja Sul
+2026;Junho;Material de Escritório;-7207,23;Loja Centro
+2026;Junho;Material de Escritório;-4277,02;Loja Norte
+2026;Junho;Material de Escritório;-5393,18;Loja Sul
+2026;Junho;Mão de Obra Direta;-574371,62;Loja Centro
+2026;Junho;Mão de Obra Direta;-338820,91;Loja Norte
+2026;Junho;Mão de Obra Direta;-436783,12;Loja Sul
+2026;Junho;Outras Receitas Operacionais;70729,18;Loja Centro
+2026;Junho;Outras Receitas Operacionais;44689,79;Loja Norte
+2026;Junho;Outras Receitas Operacionais;53982,23;Loja Sul
+2026;Junho;Pró-Labore;-107382,75;Loja Centro
+2026;Junho;Pró-Labore;-64027,9;Loja Norte
+2026;Junho;Pró-Labore;-81803,86;Loja Sul
+2026;Junho;Receita de Serviços;499420,41;Loja Centro
+2026;Junho;Receita de Serviços;306664,75;Loja Norte
+2026;Junho;Receita de Serviços;378516,15;Loja Sul
+2026;Junho;Receita de Vendas;6484032,85;Loja Centro
+2026;Junho;Receita de Vendas;4126893,95;Loja Norte
+2026;Junho;Receita de Vendas;4978187,36;Loja Sul
+2026;Junho;Receitas Financeiras;21258,84;Loja Centro
+2026;Junho;Receitas Financeiras;13282,23;Loja Norte
+2026;Junho;Receitas Financeiras;16259,64;Loja Sul
+2026;Junho;Salários Administrativos;-355265,47;Loja Centro
+2026;Junho;Salários Administrativos;-215070,92;Loja Norte
+2026;Junho;Salários Administrativos;-274181,05;Loja Sul
+2026;Junho;Salários Comerciais;-289018,67;Loja Centro
+2026;Junho;Salários Comerciais;-168079,75;Loja Norte
+2026;Junho;Salários Comerciais;-217541,73;Loja Sul
+2026;Junho;Seguros;-14300,21;Loja Centro
+2026;Junho;Seguros;-8418,35;Loja Norte
+2026;Junho;Seguros;-11029,92;Loja Sul
+2026;Junho;Sistemas e Licenças;-28692,38;Loja Centro
+2026;Junho;Sistemas e Licenças;-17120,86;Loja Norte
+2026;Junho;Sistemas e Licenças;-21711,31;Loja Sul
+2026;Junho;Tarifas Bancárias;-3586,1;Loja Centro
+2026;Junho;Tarifas Bancárias;-2150,15;Loja Norte
+2026;Junho;Tarifas Bancárias;-2705,54;Loja Sul
+2026;Junho;Treinamentos;-7157,67;Loja Centro
+2026;Junho;Treinamentos;-4298,05;Loja Norte
+2026;Junho;Treinamentos;-5429,19;Loja Sul
+2026;Junho;Viagens Comerciais;-35585,92;Loja Centro
+2026;Junho;Viagens Comerciais;-21535,83;Loja Norte
+2026;Junho;Viagens Comerciais;-27327,97;Loja Sul
+2026;Maio;Aluguel;-89908,67;Loja Centro
+2026;Maio;Aluguel;-54499,23;Loja Norte
+2026;Maio;Aluguel;-69370,17;Loja Sul
+2026;Maio;CMV;-4167374,51;Loja Centro
+2026;Maio;CMV;-2614054,97;Loja Norte
+2026;Maio;CMV;-3154884,43;Loja Sul
+2026;Maio;CSLL;-74389,07;Loja Centro
+2026;Maio;CSLL;-45909,78;Loja Norte
+2026;Maio;CSLL;-57979,92;Loja Sul
+2026;Maio;Comissões;-185002,6;Loja Centro
+2026;Maio;Comissões;-114327,5;Loja Norte
+2026;Maio;Comissões;-146427;Loja Sul
+2026;Maio;Contabilidade;-22568,51;Loja Centro
+2026;Maio;Contabilidade;-13773,81;Loja Norte
+2026;Maio;Contabilidade;-17111,01;Loja Sul
+2026;Maio;Depreciação;-74702,6;Loja Centro
+2026;Maio;Depreciação;-45027,06;Loja Norte
+2026;Maio;Depreciação;-58394,49;Loja Sul
+2026;Maio;Descontos Concedidos;-37265,82;Loja Centro
+2026;Maio;Descontos Concedidos;-22844,65;Loja Norte
+2026;Maio;Descontos Concedidos;-29005,9;Loja Sul
+2026;Maio;Despesas Financeiras;-29822,12;Loja Centro
+2026;Maio;Despesas Financeiras;-18382,37;Loja Norte
+2026;Maio;Despesas Financeiras;-23101,3;Loja Sul
+2026;Maio;Devoluções;-74487;Loja Centro
+2026;Maio;Devoluções;-45521,74;Loja Norte
+2026;Maio;Devoluções;-58206,95;Loja Sul
+2026;Maio;Energia Elétrica;-29780,15;Loja Centro
+2026;Maio;Energia Elétrica;-17859,23;Loja Norte
+2026;Maio;Energia Elétrica;-23602,7;Loja Sul
+2026;Maio;Fretes de Produção;-149378,86;Loja Centro
+2026;Maio;Fretes de Produção;-91280,99;Loja Norte
+2026;Maio;Fretes de Produção;-115753,14;Loja Sul
+2026;Maio;IRPJ;-222337,95;Loja Centro
+2026;Maio;IRPJ;-136362,83;Loja Norte
+2026;Maio;IRPJ;-176057,86;Loja Sul
+2026;Maio;Impostos sobre Vendas;-891635,14;Loja Centro
+2026;Maio;Impostos sobre Vendas;-551874,01;Loja Norte
+2026;Maio;Impostos sobre Vendas;-696089,8;Loja Sul
+2026;Maio;Internet e Telefonia;-14963,73;Loja Centro
+2026;Maio;Internet e Telefonia;-9126,96;Loja Norte
+2026;Maio;Internet e Telefonia;-11547,53;Loja Sul
+2026;Maio;Juros Ativos;7203,62;Loja Centro
+2026;Maio;Juros Ativos;4711,75;Loja Norte
+2026;Maio;Juros Ativos;5691,66;Loja Sul
+2026;Maio;Juros Bancários;-14860,45;Loja Centro
+2026;Maio;Juros Bancários;-9131,74;Loja Norte
+2026;Maio;Juros Bancários;-11659,08;Loja Sul
+2026;Maio;Manutenção;-14960,43;Loja Centro
+2026;Maio;Manutenção;-9034,14;Loja Norte
+2026;Maio;Manutenção;-11631,83;Loja Sul
+2026;Maio;Marketing e Publicidade;-149304,8;Loja Centro
+2026;Maio;Marketing e Publicidade;-90476,19;Loja Norte
+2026;Maio;Marketing e Publicidade;-116535,39;Loja Sul
+2026;Maio;Materiais e Insumos;-372713,34;Loja Centro
+2026;Maio;Materiais e Insumos;-230127,36;Loja Norte
+2026;Maio;Materiais e Insumos;-288535,59;Loja Sul
+2026;Maio;Material de Escritório;-7452,55;Loja Centro
+2026;Maio;Material de Escritório;-4599,25;Loja Norte
+2026;Maio;Material de Escritório;-5775,73;Loja Sul
+2026;Maio;Mão de Obra Direta;-599726,98;Loja Centro
+2026;Maio;Mão de Obra Direta;-365785,93;Loja Norte
+2026;Maio;Mão de Obra Direta;-459955,64;Loja Sul
+2026;Maio;Outras Receitas Operacionais;72894,49;Loja Centro
+2026;Maio;Outras Receitas Operacionais;46076,8;Loja Norte
+2026;Maio;Outras Receitas Operacionais;56856,79;Loja Sul
+2026;Maio;Pró-Labore;-111944,35;Loja Centro
+2026;Maio;Pró-Labore;-68655,23;Loja Norte
+2026;Maio;Pró-Labore;-86746,78;Loja Sul
+2026;Maio;Receita de Serviços;506223,09;Loja Centro
+2026;Maio;Receita de Serviços;326406,81;Loja Norte
+2026;Maio;Receita de Serviços;399171,46;Loja Sul
+2026;Maio;Receita de Vendas;6735547,8;Loja Centro
+2026;Maio;Receita de Vendas;4271793,55;Loja Norte
+2026;Maio;Receita de Vendas;5169561,73;Loja Sul
+2026;Maio;Receitas Financeiras;21752,4;Loja Centro
+2026;Maio;Receitas Financeiras;14094,83;Loja Norte
+2026;Maio;Receitas Financeiras;16951,42;Loja Sul
+2026;Maio;Salários Administrativos;-373466,7;Loja Centro
+2026;Maio;Salários Administrativos;-228928,68;Loja Norte
+2026;Maio;Salários Administrativos;-288730,75;Loja Sul
+2026;Maio;Salários Comerciais;-298496,05;Loja Centro
+2026;Maio;Salários Comerciais;-181696,54;Loja Norte
+2026;Maio;Salários Comerciais;-232551,82;Loja Sul
+2026;Maio;Seguros;-14980,39;Loja Centro
+2026;Maio;Seguros;-9078,28;Loja Norte
+2026;Maio;Seguros;-11570,86;Loja Sul
+2026;Maio;Sistemas e Licenças;-29851,95;Loja Centro
+2026;Maio;Sistemas e Licenças;-18147,53;Loja Norte
+2026;Maio;Sistemas e Licenças;-23271,74;Loja Sul
+2026;Maio;Tarifas Bancárias;-3727,51;Loja Centro
+2026;Maio;Tarifas Bancárias;-2281,67;Loja Norte
+2026;Maio;Tarifas Bancárias;-2901,95;Loja Sul
+2026;Maio;Treinamentos;-7433,41;Loja Centro
+2026;Maio;Treinamentos;-4594,2;Loja Norte
+2026;Maio;Treinamentos;-5801,6;Loja Sul
+2026;Maio;Viagens Comerciais;-37192,79;Loja Centro
+2026;Maio;Viagens Comerciais;-22952,9;Loja Norte
+2026;Maio;Viagens Comerciais;-28993,89;Loja Sul
+2026;Março;Aluguel;-91139,74;Loja Centro
+2026;Março;Aluguel;-53190,89;Loja Norte
+2026;Março;Aluguel;-68762,57;Loja Sul
+2026;Março;CMV;-4212108,42;Loja Centro
+2026;Março;CMV;-2636953,44;Loja Norte
+2026;Março;CMV;-3207226,48;Loja Sul
+2026;Março;CSLL;-75041,42;Loja Centro
+2026;Março;CSLL;-45577,98;Loja Norte
+2026;Março;CSLL;-57212,95;Loja Sul
+2026;Março;Comissões;-187949,19;Loja Centro
+2026;Março;Comissões;-112660,13;Loja Norte
+2026;Março;Comissões;-143769,65;Loja Sul
+2026;Março;Contabilidade;-22714,66;Loja Centro
+2026;Março;Contabilidade;-13500,05;Loja Norte
+2026;Março;Contabilidade;-17091,94;Loja Sul
+2026;Março;Depreciação;-75634,35;Loja Centro
+2026;Março;Depreciação;-44875,49;Loja Norte
+2026;Março;Depreciação;-57171,37;Loja Sul
+2026;Março;Descontos Concedidos;-37452,74;Loja Centro
+2026;Março;Descontos Concedidos;-22831,4;Loja Norte
+2026;Março;Descontos Concedidos;-28644,63;Loja Sul
+2026;Março;Despesas Financeiras;-30255,72;Loja Centro
+2026;Março;Despesas Financeiras;-17924,04;Loja Norte
+2026;Março;Despesas Financeiras;-22888,96;Loja Sul
+2026;Março;Devoluções;-75290,1;Loja Centro
+2026;Março;Devoluções;-44800,18;Loja Norte
+2026;Março;Devoluções;-57615,31;Loja Sul
+2026;Março;Energia Elétrica;-30107,54;Loja Centro
+2026;Março;Energia Elétrica;-18120,87;Loja Norte
+2026;Março;Energia Elétrica;-22880,69;Loja Sul
+2026;Março;Fretes de Produção;-150763,82;Loja Centro
+2026;Março;Fretes de Produção;-89041,69;Loja Norte
+2026;Março;Fretes de Produção;-115515,09;Loja Sul
+2026;Março;IRPJ;-224898,55;Loja Centro
+2026;Março;IRPJ;-134020,22;Loja Norte
+2026;Março;IRPJ;-174246,53;Loja Sul
+2026;Março;Impostos sobre Vendas;-906643,24;Loja Centro
+2026;Março;Impostos sobre Vendas;-529605,42;Loja Norte
+2026;Março;Impostos sobre Vendas;-694858,53;Loja Sul
+2026;Março;Internet e Telefonia;-15196,58;Loja Centro
+2026;Março;Internet e Telefonia;-8870;Loja Norte
+2026;Março;Internet e Telefonia;-11449,21;Loja Sul
+2026;Março;Juros Ativos;7396,96;Loja Centro
+2026;Março;Juros Ativos;4748,86;Loja Norte
+2026;Março;Juros Ativos;5664,47;Loja Sul
+2026;Março;Juros Bancários;-14944,24;Loja Centro
+2026;Março;Juros Bancários;-8900,72;Loja Norte
+2026;Março;Juros Bancários;-11699,88;Loja Sul
+2026;Março;Manutenção;-15091,78;Loja Centro
+2026;Março;Manutenção;-8927,09;Loja Norte
+2026;Março;Manutenção;-11514,65;Loja Sul
+2026;Março;Marketing e Publicidade;-150425,79;Loja Centro
+2026;Março;Marketing e Publicidade;-90097,06;Loja Norte
+2026;Março;Marketing e Publicidade;-114969,79;Loja Sul
+2026;Março;Materiais e Insumos;-375368,79;Loja Centro
+2026;Março;Materiais e Insumos;-226342,73;Loja Norte
+2026;Março;Materiais e Insumos;-287233,1;Loja Sul
+2026;Março;Material de Escritório;-7582,72;Loja Centro
+2026;Março;Material de Escritório;-4482,71;Loja Norte
+2026;Março;Material de Escritório;-5700,15;Loja Sul
+2026;Março;Mão de Obra Direta;-607495,29;Loja Centro
+2026;Março;Mão de Obra Direta;-355664,38;Loja Norte
+2026;Março;Mão de Obra Direta;-457611,01;Loja Sul
+2026;Março;Outras Receitas Operacionais;73795,85;Loja Centro
+2026;Março;Outras Receitas Operacionais;47866,23;Loja Norte
+2026;Março;Outras Receitas Operacionais;56509,83;Loja Sul
+2026;Março;Pró-Labore;-113288,1;Loja Centro
+2026;Março;Pró-Labore;-68529,27;Loja Norte
+2026;Março;Pró-Labore;-84879,92;Loja Sul
+2026;Março;Receita de Serviços;515233,67;Loja Centro
+2026;Março;Receita de Serviços;330191,31;Loja Norte
+2026;Março;Receita de Serviços;401276,02;Loja Sul
+2026;Março;Receita de Vendas;6820141,02;Loja Centro
+2026;Março;Receita de Vendas;4311451,18;Loja Norte
+2026;Março;Receita de Vendas;5245069,38;Loja Sul
+2026;Março;Receitas Financeiras;22175,84;Loja Centro
+2026;Março;Receitas Financeiras;13982,06;Loja Norte
+2026;Março;Receitas Financeiras;17240,32;Loja Sul
+2026;Março;Salários Administrativos;-376405,19;Loja Centro
+2026;Março;Salários Administrativos;-225757,41;Loja Norte
+2026;Março;Salários Administrativos;-286601,56;Loja Sul
+2026;Março;Salários Comerciais;-301319,75;Loja Centro
+2026;Março;Salários Comerciais;-180842,77;Loja Norte
+2026;Março;Salários Comerciais;-228860,32;Loja Sul
+2026;Março;Seguros;-15220,42;Loja Centro
+2026;Março;Seguros;-8842,54;Loja Norte
+2026;Março;Seguros;-11446,84;Loja Sul
+2026;Março;Sistemas e Licenças;-30179,05;Loja Centro
+2026;Março;Sistemas e Licenças;-17957,75;Loja Norte
+2026;Março;Sistemas e Licenças;-22943,78;Loja Sul
+2026;Março;Tarifas Bancárias;-3760,11;Loja Centro
+2026;Março;Tarifas Bancárias;-2255,9;Loja Norte
+2026;Março;Tarifas Bancárias;-2871,81;Loja Sul
+2026;Março;Treinamentos;-7520,23;Loja Centro
+2026;Março;Treinamentos;-4490,32;Loja Norte
+2026;Março;Treinamentos;-5762,29;Loja Sul
+2026;Março;Viagens Comerciais;-37780,02;Loja Centro
+2026;Março;Viagens Comerciais;-22428,5;Loja Norte
+2026;Março;Viagens Comerciais;-28634,47;Loja Sul

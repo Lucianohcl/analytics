@@ -1,0 +1,931 @@
+﻿Ano;Mês;Conta;Valor;Filial
+2024;Jan;Receita Serviços;138774,07;Loja Centro
+2024;Jan;Receita Serviços;80203,68;Loja Norte
+2024;Jan;Receita Serviços;101022,25;Loja Sul
+2024;Fev;Receita Serviços;144523,96;Loja Centro
+2024;Fev;Receita Serviços;82772,56;Loja Norte
+2024;Fev;Receita Serviços;102703,48;Loja Sul
+2024;Mar;Receita Serviços;156141,69;Loja Centro
+2024;Mar;Receita Serviços;79987,86;Loja Norte
+2024;Mar;Receita Serviços;113870,45;Loja Sul
+2024;Abr;Receita Serviços;158784,97;Loja Centro
+2024;Abr;Receita Serviços;76585,51;Loja Norte
+2024;Abr;Receita Serviços;104629,52;Loja Sul
+2024;Mai;Receita Serviços;161542,59;Loja Centro
+2024;Mai;Receita Serviços;75553,27;Loja Norte
+2024;Mai;Receita Serviços;117904,14;Loja Sul
+2024;Jun;Receita Serviços;159458,57;Loja Centro
+2024;Jun;Receita Serviços;79577,84;Loja Norte
+2024;Jun;Receita Serviços;130963,59;Loja Sul
+2024;Jul;Receita Serviços;182021,3;Loja Centro
+2024;Jul;Receita Serviços;87395,73;Loja Norte
+2024;Jul;Receita Serviços;110582,97;Loja Sul
+2024;Ago;Receita Serviços;185502,56;Loja Centro
+2024;Ago;Receita Serviços;96994,31;Loja Norte
+2024;Ago;Receita Serviços;107503,13;Loja Sul
+2024;Set;Receita Serviços;186664,24;Loja Centro
+2024;Set;Receita Serviços;97397,2;Loja Norte
+2024;Set;Receita Serviços;110938,56;Loja Sul
+2024;Out;Receita Serviços;183616,89;Loja Centro
+2024;Out;Receita Serviços;110985,57;Loja Norte
+2024;Out;Receita Serviços;110397,54;Loja Sul
+2024;Nov;Receita Serviços;187376,69;Loja Centro
+2024;Nov;Receita Serviços;113601,42;Loja Norte
+2024;Nov;Receita Serviços;119021,89;Loja Sul
+2024;Dez;Receita Serviços;196981,35;Loja Centro
+2024;Dez;Receita Serviços;104662,62;Loja Norte
+2024;Dez;Receita Serviços;148356,03;Loja Sul
+2025;Jan;Receita Serviços;190010,76;Loja Centro
+2025;Jan;Receita Serviços;74314,56;Loja Norte
+2025;Jan;Receita Serviços;119674,68;Loja Sul
+2025;Fev;Receita Serviços;176499,33;Loja Centro
+2025;Fev;Receita Serviços;84189,35;Loja Norte
+2025;Fev;Receita Serviços;135311,32;Loja Sul
+2025;Mar;Receita Serviços;180764,87;Loja Centro
+2025;Mar;Receita Serviços;88039,69;Loja Norte
+2025;Mar;Receita Serviços;151195,43;Loja Sul
+2025;Abr;Receita Serviços;190730,5;Loja Centro
+2025;Abr;Receita Serviços;83697,87;Loja Norte
+2025;Abr;Receita Serviços;133571,63;Loja Sul
+2025;Mai;Receita Serviços;185669,9;Loja Centro
+2025;Mai;Receita Serviços;103326,16;Loja Norte
+2025;Mai;Receita Serviços;137003,94;Loja Sul
+2025;Jun;Receita Serviços;205270,78;Loja Centro
+2025;Jun;Receita Serviços;99847,71;Loja Norte
+2025;Jun;Receita Serviços;138881,52;Loja Sul
+2025;Jul;Receita Serviços;205553,13;Loja Centro
+2025;Jul;Receita Serviços;119661,08;Loja Norte
+2025;Jul;Receita Serviços;130785,8;Loja Sul
+2025;Ago;Receita Serviços;218169,72;Loja Centro
+2025;Ago;Receita Serviços;110386,72;Loja Norte
+2025;Ago;Receita Serviços;139443,56;Loja Sul
+2025;Set;Receita Serviços;228288,2;Loja Centro
+2025;Set;Receita Serviços;110977,47;Loja Norte
+2025;Set;Receita Serviços;134734,33;Loja Sul
+2025;Out;Receita Serviços;206259,97;Loja Centro
+2025;Out;Receita Serviços;115281,15;Loja Norte
+2025;Out;Receita Serviços;164458,87;Loja Sul
+2025;Nov;Receita Serviços;225801,36;Loja Centro
+2025;Nov;Receita Serviços;109042,89;Loja Norte
+2025;Nov;Receita Serviços;169155,75;Loja Sul
+2025;Dez;Receita Serviços;276065,36;Loja Centro
+2025;Dez;Receita Serviços;106955,69;Loja Norte
+2025;Dez;Receita Serviços;156978,94;Loja Sul
+2026;Jan;Receita Serviços;209711,74;Loja Centro
+2026;Jan;Receita Serviços;116006,09;Loja Norte
+2026;Jan;Receita Serviços;138282,18;Loja Sul
+2026;Fev;Receita Serviços;222354,67;Loja Centro
+2026;Fev;Receita Serviços;97847,11;Loja Norte
+2026;Fev;Receita Serviços;158298,22;Loja Sul
+2026;Mar;Receita Serviços;225643,31;Loja Centro
+2026;Mar;Receita Serviços;108935,27;Loja Norte
+2026;Mar;Receita Serviços;172921,42;Loja Sul
+2026;Abr;Receita Serviços;214671,05;Loja Centro
+2026;Abr;Receita Serviços;104890,35;Loja Norte
+2026;Abr;Receita Serviços;173438,6;Loja Sul
+2026;Mai;Receita Serviços;255333,51;Loja Centro
+2026;Mai;Receita Serviços;125126,84;Loja Norte
+2026;Mai;Receita Serviços;134289,65;Loja Sul
+2026;Jun;Receita Serviços;250231,71;Loja Centro
+2026;Jun;Receita Serviços;125185,7;Loja Norte
+2026;Jun;Receita Serviços;161082,59;Loja Sul
+2026;Jul;Receita Serviços;214463,72;Loja Centro
+2026;Jul;Receita Serviços;136758,62;Loja Norte
+2026;Jul;Receita Serviços;199777,66;Loja Sul
+2024;Jan;Receita Produtos;41198,55;Loja Centro
+2024;Jan;Receita Produtos;23810,47;Loja Norte
+2024;Jan;Receita Produtos;29990,98;Loja Sul
+2024;Fev;Receita Produtos;42919,24;Loja Centro
+2024;Fev;Receita Produtos;24580,94;Loja Norte
+2024;Fev;Receita Produtos;30499,82;Loja Sul
+2024;Mar;Receita Produtos;45504,15;Loja Centro
+2024;Mar;Receita Produtos;23310,75;Loja Norte
+2024;Mar;Receita Produtos;33185,1;Loja Sul
+2024;Abr;Receita Produtos;44833,4;Loja Centro
+2024;Abr;Receita Produtos;21624,14;Loja Norte
+2024;Abr;Receita Produtos;29542,45;Loja Sul
+2024;Mai;Receita Produtos;47325,15;Loja Centro
+2024;Mai;Receita Produtos;22133,92;Loja Norte
+2024;Mai;Receita Produtos;34540,93;Loja Sul
+2024;Jun;Receita Produtos;46544,66;Loja Centro
+2024;Jun;Receita Produtos;23228,13;Loja Norte
+2024;Jun;Receita Produtos;38227,21;Loja Sul
+2024;Jul;Receita Produtos;53648,38;Loja Centro
+2024;Jul;Receita Produtos;25758,74;Loja Norte
+2024;Jul;Receita Produtos;32592,87;Loja Sul
+2024;Ago;Receita Produtos;54699,47;Loja Centro
+2024;Ago;Receita Produtos;28600,89;Loja Norte
+2024;Ago;Receita Produtos;31699,64;Loja Sul
+2024;Set;Receita Produtos;55762,99;Loja Centro
+2024;Set;Receita Produtos;29095,87;Loja Norte
+2024;Set;Receita Produtos;33141,14;Loja Sul
+2024;Out;Receita Produtos;54405;Loja Centro
+2024;Out;Receita Produtos;32884,61;Loja Norte
+2024;Out;Receita Produtos;32710,38;Loja Sul
+2024;Nov;Receita Produtos;55766,87;Loja Centro
+2024;Nov;Receita Produtos;33809,95;Loja Norte
+2024;Nov;Receita Produtos;35423,18;Loja Sul
+2024;Dez;Receita Produtos;59094,41;Loja Centro
+2024;Dez;Receita Produtos;31398,79;Loja Norte
+2024;Dez;Receita Produtos;44506,81;Loja Sul
+2025;Jan;Receita Produtos;56409,45;Loja Centro
+2025;Jan;Receita Produtos;22062,13;Loja Norte
+2025;Jan;Receita Produtos;35528,42;Loja Sul
+2025;Fev;Receita Produtos;52414,95;Loja Centro
+2025;Fev;Receita Produtos;25001,69;Loja Norte
+2025;Fev;Receita Produtos;40183,36;Loja Sul
+2025;Mar;Receita Produtos;52680,05;Loja Centro
+2025;Mar;Receita Produtos;25657,28;Loja Norte
+2025;Mar;Receita Produtos;44062,67;Loja Sul
+2025;Abr;Receita Produtos;53853,32;Loja Centro
+2025;Abr;Receita Produtos;23632,34;Loja Norte
+2025;Abr;Receita Produtos;37714,34;Loja Sul
+2025;Mai;Receita Produtos;54393,43;Loja Centro
+2025;Mai;Receita Produtos;30270,2;Loja Norte
+2025;Mai;Receita Produtos;40136,37;Loja Sul
+2025;Jun;Receita Produtos;59916,88;Loja Centro
+2025;Jun;Receita Produtos;29144,74;Loja Norte
+2025;Jun;Receita Produtos;40538,39;Loja Sul
+2025;Jul;Receita Produtos;60584,08;Loja Centro
+2025;Jul;Receita Produtos;35268,53;Loja Norte
+2025;Jul;Receita Produtos;38547,39;Loja Sul
+2025;Ago;Receita Produtos;64332,1;Loja Centro
+2025;Ago;Receita Produtos;32549,93;Loja Norte
+2025;Ago;Receita Produtos;41117,97;Loja Sul
+2025;Set;Receita Produtos;68197,49;Loja Centro
+2025;Set;Receita Produtos;33152,76;Loja Norte
+2025;Set;Receita Produtos;40249,75;Loja Sul
+2025;Out;Receita Produtos;61114,07;Loja Centro
+2025;Out;Receita Produtos;34157,38;Loja Norte
+2025;Out;Receita Produtos;48728,56;Loja Sul
+2025;Nov;Receita Produtos;67202,79;Loja Centro
+2025;Nov;Receita Produtos;32453,24;Loja Norte
+2025;Nov;Receita Produtos;50343,97;Loja Sul
+2025;Dez;Receita Produtos;82819,61;Loja Centro
+2025;Dez;Receita Produtos;32086,71;Loja Norte
+2025;Dez;Receita Produtos;47093,68;Loja Sul
+2026;Jan;Receita Produtos;62258,17;Loja Centro
+2026;Jan;Receita Produtos;34439,31;Loja Norte
+2026;Jan;Receita Produtos;41052,52;Loja Sul
+2026;Fev;Receita Produtos;66032,6;Loja Centro
+2026;Fev;Receita Produtos;29057,63;Loja Norte
+2026;Fev;Receita Produtos;47009,77;Loja Sul
+2026;Mar;Receita Produtos;65758,91;Loja Centro
+2026;Mar;Receita Produtos;31746,85;Loja Norte
+2026;Mar;Receita Produtos;50394,24;Loja Sul
+2026;Abr;Receita Produtos;60613;Loja Centro
+2026;Abr;Receita Produtos;29616,1;Loja Norte
+2026;Abr;Receita Produtos;48970,9;Loja Sul
+2026;Mai;Receita Produtos;74801,93;Loja Centro
+2026;Mai;Receita Produtos;36656,88;Loja Norte
+2026;Mai;Receita Produtos;39341,19;Loja Sul
+2026;Jun;Receita Produtos;73040,61;Loja Centro
+2026;Jun;Receita Produtos;36540,69;Loja Norte
+2026;Jun;Receita Produtos;47018,7;Loja Sul
+2026;Jul;Receita Produtos;63210,36;Loja Centro
+2026;Jul;Receita Produtos;40307,8;Loja Norte
+2026;Jul;Receita Produtos;58881,84;Loja Sul
+2024;Jan;Receb. Clientes;60713,66;Loja Centro
+2024;Jan;Receb. Clientes;35089,11;Loja Norte
+2024;Jan;Receb. Clientes;44197,23;Loja Sul
+2024;Fev;Receb. Clientes;63502,95;Loja Centro
+2024;Fev;Receb. Clientes;36369,76;Loja Norte
+2024;Fev;Receb. Clientes;45127,29;Loja Sul
+2024;Mar;Receb. Clientes;66917,87;Loja Centro
+2024;Mar;Receb. Clientes;34280,51;Loja Norte
+2024;Mar;Receb. Clientes;48801,62;Loja Sul
+2024;Abr;Receb. Clientes;69118,16;Loja Centro
+2024;Abr;Receb. Clientes;33337,22;Loja Norte
+2024;Abr;Receb. Clientes;45544,62;Loja Sul
+2024;Mai;Receb. Clientes;70077,63;Loja Centro
+2024;Mai;Receb. Clientes;32775,22;Loja Norte
+2024;Mai;Receb. Clientes;51147,15;Loja Sul
+2024;Jun;Receb. Clientes;68955,06;Loja Centro
+2024;Jun;Receb. Clientes;34412,04;Loja Norte
+2024;Jun;Receb. Clientes;56632,9;Loja Sul
+2024;Jul;Receb. Clientes;79035,57;Loja Centro
+2024;Jul;Receb. Clientes;37948,14;Loja Norte
+2024;Jul;Receb. Clientes;48016,29;Loja Sul
+2024;Ago;Receb. Clientes;80860,09;Loja Centro
+2024;Ago;Receb. Clientes;42279,57;Loja Norte
+2024;Ago;Receb. Clientes;46860,34;Loja Sul
+2024;Set;Receb. Clientes;81281,64;Loja Centro
+2024;Set;Receb. Clientes;42410,93;Loja Norte
+2024;Set;Receb. Clientes;48307,42;Loja Sul
+2024;Out;Receb. Clientes;79340,63;Loja Centro
+2024;Out;Receb. Clientes;47956,73;Loja Norte
+2024;Out;Receb. Clientes;47702,64;Loja Sul
+2024;Nov;Receb. Clientes;80304,29;Loja Centro
+2024;Nov;Receb. Clientes;48686,32;Loja Norte
+2024;Nov;Receb. Clientes;51009,38;Loja Sul
+2024;Dez;Receb. Clientes;83169,9;Loja Centro
+2024;Dez;Receb. Clientes;44190,89;Loja Norte
+2024;Dez;Receb. Clientes;62639,21;Loja Sul
+2025;Jan;Receb. Clientes;83129,71;Loja Centro
+2025;Jan;Receb. Clientes;32512,62;Loja Norte
+2025;Jan;Receb. Clientes;52357,67;Loja Sul
+2025;Fev;Receb. Clientes;77552,74;Loja Centro
+2025;Fev;Receb. Clientes;36992,29;Loja Norte
+2025;Fev;Receb. Clientes;59454,97;Loja Sul
+2025;Mar;Receb. Clientes;77470,66;Loja Centro
+2025;Mar;Receb. Clientes;37731,3;Loja Norte
+2025;Mar;Receb. Clientes;64798,04;Loja Sul
+2025;Abr;Receb. Clientes;83023,87;Loja Centro
+2025;Abr;Receb. Clientes;36433,19;Loja Norte
+2025;Abr;Receb. Clientes;58142,94;Loja Sul
+2025;Mai;Receb. Clientes;80544,12;Loja Centro
+2025;Mai;Receb. Clientes;44823,18;Loja Norte
+2025;Mai;Receb. Clientes;59432,69;Loja Sul
+2025;Jun;Receb. Clientes;88765,74;Loja Centro
+2025;Jun;Receb. Clientes;43177,39;Loja Norte
+2025;Jun;Receb. Clientes;60056,87;Loja Sul
+2025;Jul;Receb. Clientes;89253,33;Loja Centro
+2025;Jul;Receb. Clientes;51958,1;Loja Norte
+2025;Jul;Receb. Clientes;56788,57;Loja Sul
+2025;Ago;Receb. Clientes;95099,62;Loja Centro
+2025;Ago;Receb. Clientes;48117,29;Loja Norte
+2025;Ago;Receb. Clientes;60783,09;Loja Sul
+2025;Set;Receb. Clientes;99406,51;Loja Centro
+2025;Set;Receb. Clientes;48324,37;Loja Norte
+2025;Set;Receb. Clientes;58669,12;Loja Sul
+2025;Out;Receb. Clientes;89124,68;Loja Centro
+2025;Out;Receb. Clientes;49812,84;Loja Norte
+2025;Out;Receb. Clientes;71062,48;Loja Sul
+2025;Nov;Receb. Clientes;96772,01;Loja Centro
+2025;Nov;Receb. Clientes;46732,67;Loja Norte
+2025;Nov;Receb. Clientes;72495,32;Loja Sul
+2025;Dez;Receb. Clientes;116560,93;Loja Centro
+2025;Dez;Receb. Clientes;45159,07;Loja Norte
+2025;Dez;Receb. Clientes;66280;Loja Sul
+2026;Jan;Receb. Clientes;91748,88;Loja Centro
+2026;Jan;Receb. Clientes;50752,66;Loja Norte
+2026;Jan;Receb. Clientes;60498,45;Loja Sul
+2026;Fev;Receb. Clientes;97701,29;Loja Centro
+2026;Fev;Receb. Clientes;42993,43;Loja Norte
+2026;Fev;Receb. Clientes;69555,28;Loja Sul
+2026;Mar;Receb. Clientes;96704,27;Loja Centro
+2026;Mar;Receb. Clientes;46686,54;Loja Norte
+2026;Mar;Receb. Clientes;74109,18;Loja Sul
+2026;Abr;Receb. Clientes;93445,04;Loja Centro
+2026;Abr;Receb. Clientes;45658,15;Loja Norte
+2026;Abr;Receb. Clientes;75496,8;Loja Sul
+2026;Mai;Receb. Clientes;110764,4;Loja Centro
+2026;Mai;Receb. Clientes;54280,37;Loja Norte
+2026;Mai;Receb. Clientes;58255,23;Loja Sul
+2026;Jun;Receb. Clientes;108208,31;Loja Centro
+2026;Jun;Receb. Clientes;54134,36;Loja Norte
+2026;Jun;Receb. Clientes;69657,34;Loja Sul
+2026;Jul;Receb. Clientes;93122,41;Loja Centro
+2026;Jul;Receb. Clientes;59382,03;Loja Norte
+2026;Jul;Receb. Clientes;86745,56;Loja Sul
+2024;Jan;Receita Financ.;3469,35;Loja Centro
+2024;Jan;Receita Financ.;2005,09;Loja Norte
+2024;Jan;Receita Financ.;2525,56;Loja Sul
+2024;Fev;Receita Financ.;3503,61;Loja Centro
+2024;Fev;Receita Financ.;2006,61;Loja Norte
+2024;Fev;Receita Financ.;2489,78;Loja Sul
+2024;Mar;Receita Financ.;4015,07;Loja Centro
+2024;Mar;Receita Financ.;2056,83;Loja Norte
+2024;Mar;Receita Financ.;2928,1;Loja Sul
+2024;Abr;Receita Financ.;3736,12;Loja Centro
+2024;Abr;Receita Financ.;1802,01;Loja Norte
+2024;Abr;Receita Financ.;2461,87;Loja Sul
+2024;Mai;Receita Financ.;4550,5;Loja Centro
+2024;Mai;Receita Financ.;2128,26;Loja Norte
+2024;Mai;Receita Financ.;3321,24;Loja Sul
+2024;Jun;Receita Financ.;4309,69;Loja Centro
+2024;Jun;Receita Financ.;2150,75;Loja Norte
+2024;Jun;Receita Financ.;3539,56;Loja Sul
+2024;Jul;Receita Financ.;5269,04;Loja Centro
+2024;Jul;Receita Financ.;2529,88;Loja Norte
+2024;Jul;Receita Financ.;3201,09;Loja Sul
+2024;Ago;Receita Financ.;5232,12;Loja Centro
+2024;Ago;Receita Financ.;2735,74;Loja Norte
+2024;Ago;Receita Financ.;3032,14;Loja Sul
+2024;Set;Receita Financ.;5670,81;Loja Centro
+2024;Set;Receita Financ.;2958,9;Loja Norte
+2024;Set;Receita Financ.;3370,29;Loja Sul
+2024;Out;Receita Financ.;5440,5;Loja Centro
+2024;Out;Receita Financ.;3288,46;Loja Norte
+2024;Out;Receita Financ.;3271,04;Loja Sul
+2024;Nov;Receita Financ.;5799,75;Loja Centro
+2024;Nov;Receita Financ.;3516,23;Loja Norte
+2024;Nov;Receita Financ.;3684,01;Loja Sul
+2024;Dez;Receita Financ.;6566,05;Loja Centro
+2024;Dez;Receita Financ.;3488,75;Loja Norte
+2024;Dez;Receita Financ.;4945,2;Loja Sul
+2025;Jan;Receita Financ.;4750,27;Loja Centro
+2025;Jan;Receita Financ.;1857,86;Loja Norte
+2025;Jan;Receita Financ.;2991,87;Loja Sul
+2025;Fev;Receita Financ.;4278,77;Loja Centro
+2025;Fev;Receita Financ.;2040,95;Loja Norte
+2025;Fev;Receita Financ.;3280,27;Loja Sul
+2025;Mar;Receita Financ.;4648,24;Loja Centro
+2025;Mar;Receita Financ.;2263,88;Loja Norte
+2025;Mar;Receita Financ.;3887,88;Loja Sul
+2025;Abr;Receita Financ.;4487,78;Loja Centro
+2025;Abr;Receita Financ.;1969,36;Loja Norte
+2025;Abr;Receita Financ.;3142,86;Loja Sul
+2025;Mai;Receita Financ.;5230,14;Loja Centro
+2025;Mai;Receita Financ.;2910,6;Loja Norte
+2025;Mai;Receita Financ.;3859,27;Loja Sul
+2025;Jun;Receita Financ.;5547,86;Loja Centro
+2025;Jun;Receita Financ.;2698,59;Loja Norte
+2025;Jun;Receita Financ.;3753,55;Loja Sul
+2025;Jul;Receita Financ.;5950,22;Loja Centro
+2025;Jul;Receita Financ.;3463,87;Loja Norte
+2025;Jul;Receita Financ.;3785,9;Loja Sul
+2025;Ago;Receita Financ.;6153,5;Loja Centro
+2025;Ago;Receita Financ.;3113,47;Loja Norte
+2025;Ago;Receita Financ.;3933,02;Loja Sul
+2025;Set;Receita Financ.;6935,34;Loja Centro
+2025;Set;Receita Financ.;3371,47;Loja Norte
+2025;Set;Receita Financ.;4093,19;Loja Sul
+2025;Out;Receita Financ.;6111,41;Loja Centro
+2025;Out;Receita Financ.;3415,74;Loja Norte
+2025;Out;Receita Financ.;4872,86;Loja Sul
+2025;Nov;Receita Financ.;6989,09;Loja Centro
+2025;Nov;Receita Financ.;3375,14;Loja Norte
+2025;Nov;Receita Financ.;5235,77;Loja Sul
+2025;Dez;Receita Financ.;9202,18;Loja Centro
+2025;Dez;Receita Financ.;3565,19;Loja Norte
+2025;Dez;Receita Financ.;5232,63;Loja Sul
+2026;Jan;Receita Financ.;5242,79;Loja Centro
+2026;Jan;Receita Financ.;2900,15;Loja Norte
+2026;Jan;Receita Financ.;3457,05;Loja Sul
+2026;Fev;Receita Financ.;5390,42;Loja Centro
+2026;Fev;Receita Financ.;2372,05;Loja Norte
+2026;Fev;Receita Financ.;3837,53;Loja Sul
+2026;Mar;Receita Financ.;5802,26;Loja Centro
+2026;Mar;Receita Financ.;2801,19;Loja Norte
+2026;Mar;Receita Financ.;4446,55;Loja Sul
+2026;Abr;Receita Financ.;5051,08;Loja Centro
+2026;Abr;Receita Financ.;2468,01;Loja Norte
+2026;Abr;Receita Financ.;4080,91;Loja Sul
+2026;Mai;Receita Financ.;7192,49;Loja Centro
+2026;Mai;Receita Financ.;3524,7;Loja Norte
+2026;Mai;Receita Financ.;3782,81;Loja Sul
+2026;Jun;Receita Financ.;6763,02;Loja Centro
+2026;Jun;Receita Financ.;3383,4;Loja Norte
+2026;Jun;Receita Financ.;4353,58;Loja Sul
+2026;Jul;Receita Financ.;6208,16;Loja Centro
+2026;Jul;Receita Financ.;3958,8;Loja Norte
+2026;Jul;Receita Financ.;5783,04;Loja Sul
+2024;Jan;Outras Receitas;5204,03;Loja Centro
+2024;Jan;Outras Receitas;3007,64;Loja Norte
+2024;Jan;Outras Receitas;3788,33;Loja Sul
+2024;Fev;Outras Receitas;4379,51;Loja Centro
+2024;Fev;Outras Receitas;2508,26;Loja Norte
+2024;Fev;Outras Receitas;3112,23;Loja Sul
+2024;Mar;Outras Receitas;4907,31;Loja Centro
+2024;Mar;Outras Receitas;2513,9;Loja Norte
+2024;Mar;Outras Receitas;3578,79;Loja Sul
+2024;Abr;Outras Receitas;4203,13;Loja Centro
+2024;Abr;Outras Receitas;2027,26;Loja Norte
+2024;Abr;Outras Receitas;2769,6;Loja Sul
+2024;Mai;Outras Receitas;4550,5;Loja Centro
+2024;Mai;Outras Receitas;2128,26;Loja Norte
+2024;Mai;Outras Receitas;3321,24;Loja Sul
+2024;Jun;Outras Receitas;5171,63;Loja Centro
+2024;Jun;Outras Receitas;2580,9;Loja Norte
+2024;Jun;Outras Receitas;4247,47;Loja Sul
+2024;Jul;Outras Receitas;5748,04;Loja Centro
+2024;Jul;Outras Receitas;2759,87;Loja Norte
+2024;Jul;Outras Receitas;3492,09;Loja Sul
+2024;Ago;Outras Receitas;6659,07;Loja Centro
+2024;Ago;Outras Receitas;3481,85;Loja Norte
+2024;Ago;Outras Receitas;3859,09;Loja Sul
+2024;Set;Outras Receitas;6143,38;Loja Centro
+2024;Set;Outras Receitas;3205,48;Loja Norte
+2024;Set;Outras Receitas;3651,14;Loja Sul
+2024;Out;Outras Receitas;5893,88;Loja Centro
+2024;Out;Outras Receitas;3562,5;Loja Norte
+2024;Out;Outras Receitas;3543,62;Loja Sul
+2024;Nov;Outras Receitas;6245,89;Loja Centro
+2024;Nov;Outras Receitas;3786,71;Loja Norte
+2024;Nov;Outras Receitas;3967,4;Loja Sul
+2024;Dez;Outras Receitas;6566,05;Loja Centro
+2024;Dez;Outras Receitas;3488,75;Loja Norte
+2024;Dez;Outras Receitas;4945,2;Loja Sul
+2025;Jan;Outras Receitas;7125,4;Loja Centro
+2025;Jan;Outras Receitas;2786,8;Loja Norte
+2025;Jan;Outras Receitas;4487,8;Loja Sul
+2025;Fev;Outras Receitas;5348,46;Loja Centro
+2025;Fev;Outras Receitas;2551,19;Loja Norte
+2025;Fev;Outras Receitas;4100,34;Loja Sul
+2025;Mar;Outras Receitas;5681,18;Loja Centro
+2025;Mar;Outras Receitas;2766,96;Loja Norte
+2025;Mar;Outras Receitas;4751,86;Loja Sul
+2025;Abr;Outras Receitas;5048,75;Loja Centro
+2025;Abr;Outras Receitas;2215,53;Loja Norte
+2025;Abr;Outras Receitas;3535,72;Loja Sul
+2025;Mai;Outras Receitas;5230,14;Loja Centro
+2025;Mai;Outras Receitas;2910,6;Loja Norte
+2025;Mai;Outras Receitas;3859,27;Loja Sul
+2025;Jun;Outras Receitas;6657,43;Loja Centro
+2025;Jun;Outras Receitas;3238,3;Loja Norte
+2025;Jun;Outras Receitas;4504,27;Loja Sul
+2025;Jul;Outras Receitas;6491,15;Loja Centro
+2025;Jul;Outras Receitas;3778,77;Loja Norte
+2025;Jul;Outras Receitas;4130,08;Loja Sul
+2025;Ago;Outras Receitas;7831,73;Loja Centro
+2025;Ago;Outras Receitas;3962,6;Loja Norte
+2025;Ago;Outras Receitas;5005,67;Loja Sul
+2025;Set;Outras Receitas;7513,28;Loja Centro
+2025;Set;Outras Receitas;3652,42;Loja Norte
+2025;Set;Outras Receitas;4434,29;Loja Sul
+2025;Out;Outras Receitas;6620,69;Loja Centro
+2025;Out;Outras Receitas;3700,38;Loja Norte
+2025;Out;Outras Receitas;5278,93;Loja Sul
+2025;Nov;Outras Receitas;7526,71;Loja Centro
+2025;Nov;Outras Receitas;3634,76;Loja Norte
+2025;Nov;Outras Receitas;5638,52;Loja Sul
+2025;Dez;Outras Receitas;9202,18;Loja Centro
+2025;Dez;Outras Receitas;3565,19;Loja Norte
+2025;Dez;Outras Receitas;5232,63;Loja Sul
+2026;Jan;Outras Receitas;7864,19;Loja Centro
+2026;Jan;Outras Receitas;4350,23;Loja Norte
+2026;Jan;Outras Receitas;5185,58;Loja Sul
+2026;Fev;Outras Receitas;6738,02;Loja Centro
+2026;Fev;Outras Receitas;2965,06;Loja Norte
+2026;Fev;Outras Receitas;4796,92;Loja Sul
+2026;Mar;Outras Receitas;7091,65;Loja Centro
+2026;Mar;Outras Receitas;3423,68;Loja Norte
+2026;Mar;Outras Receitas;5434,67;Loja Sul
+2026;Abr;Outras Receitas;5682,47;Loja Centro
+2026;Abr;Outras Receitas;2776,51;Loja Norte
+2026;Abr;Outras Receitas;4591,02;Loja Sul
+2026;Mai;Outras Receitas;7192,49;Loja Centro
+2026;Mai;Outras Receitas;3524,7;Loja Norte
+2026;Mai;Outras Receitas;3782,81;Loja Sul
+2026;Jun;Outras Receitas;8115,62;Loja Centro
+2026;Jun;Outras Receitas;4060,08;Loja Norte
+2026;Jun;Outras Receitas;5224,3;Loja Sul
+2026;Jul;Outras Receitas;6772,54;Loja Centro
+2026;Jul;Outras Receitas;4318,69;Loja Norte
+2026;Jul;Outras Receitas;6308,77;Loja Sul
+2024;Jan;Folha;78060,41;Loja Centro
+2024;Jan;Folha;45114,57;Loja Norte
+2024;Jan;Folha;56825,01;Loja Sul
+2024;Fev;Folha;78831,25;Loja Centro
+2024;Fev;Folha;45148,67;Loja Norte
+2024;Fev;Folha;56020,08;Loja Sul
+2024;Mar;Folha;82532,04;Loja Centro
+2024;Mar;Folha;42279,3;Loja Norte
+2024;Mar;Folha;60188,67;Loja Sul
+2024;Abr;Folha;86397,7;Loja Centro
+2024;Abr;Folha;41671,53;Loja Norte
+2024;Abr;Folha;56930,77;Loja Sul
+2024;Mai;Folha;86459,42;Loja Centro
+2024;Mai;Folha;40436,96;Loja Norte
+2024;Mai;Folha;63103,62;Loja Sul
+2024;Jun;Folha;84038,97;Loja Centro
+2024;Jun;Folha;41939,67;Loja Norte
+2024;Jun;Folha;69021,35;Loja Sul
+2024;Jul;Folha;94842,68;Loja Centro
+2024;Jul;Folha;45537,77;Loja Norte
+2024;Jul;Folha;57619,55;Loja Sul
+2024;Ago;Folha;95129,52;Loja Centro
+2024;Ago;Folha;49740,67;Loja Norte
+2024;Ago;Folha;55129,81;Loja Sul
+2024;Set;Folha;95458,67;Loja Centro
+2024;Set;Folha;49808,19;Loja Norte
+2024;Set;Folha;56733,14;Loja Sul
+2024;Out;Folha;92941,88;Loja Centro
+2024;Out;Folha;56177,88;Loja Norte
+2024;Out;Folha;55880,24;Loja Sul
+2024;Nov;Folha;92796,07;Loja Centro
+2024;Nov;Folha;56259,75;Loja Norte
+2024;Nov;Folha;58944,18;Loja Sul
+2024;Dez;Folha;96301,99;Loja Centro
+2024;Dez;Folha;51168,39;Loja Norte
+2024;Dez;Folha;72529,61;Loja Sul
+2025;Jan;Folha;106881,05;Loja Centro
+2025;Jan;Folha;41801,94;Loja Norte
+2025;Jan;Folha;67317,01;Loja Sul
+2025;Fev;Folha;96272,36;Loja Centro
+2025;Fev;Folha;45921,46;Loja Norte
+2025;Fev;Folha;73806,17;Loja Sul
+2025;Mar;Folha;95547,15;Loja Centro
+2025;Mar;Folha;46535,27;Loja Norte
+2025;Mar;Folha;79917,59;Loja Sul
+2025;Abr;Folha;103779,83;Loja Centro
+2025;Abr;Folha;45541,49;Loja Norte
+2025;Abr;Folha;72678,68;Loja Sul
+2025;Mai;Folha;99372,62;Loja Centro
+2025;Mai;Folha;55301,33;Loja Norte
+2025;Mai;Folha;73326,05;Loja Sul
+2025;Jun;Folha;108183,25;Loja Centro
+2025;Jun;Folha;52622,44;Loja Norte
+2025;Jun;Folha;73194,31;Loja Sul
+2025;Jul;Folha;107104;Loja Centro
+2025;Jul;Folha;62349,72;Loja Norte
+2025;Jul;Folha;68146,28;Loja Sul
+2025;Ago;Folha;111881,91;Loja Centro
+2025;Ago;Folha;56608,57;Loja Norte
+2025;Ago;Folha;71509,52;Loja Sul
+2025;Set;Folha;116744,85;Loja Centro
+2025;Set;Folha;56753,04;Loja Norte
+2025;Set;Folha;68902,11;Loja Sul
+2025;Out;Folha;104403,19;Loja Centro
+2025;Out;Folha;58352,19;Loja Norte
+2025;Out;Folha;83244,62;Loja Sul
+2025;Nov;Folha;111825,44;Loja Centro
+2025;Nov;Folha;54002,19;Loja Norte
+2025;Nov;Folha;83772,37;Loja Sul
+2025;Dez;Folha;134965,29;Loja Centro
+2025;Dez;Folha;52289,45;Loja Norte
+2025;Dez;Folha;76745,26;Loja Sul
+2026;Jan;Folha;117962,85;Loja Centro
+2026;Jan;Folha;65253,42;Loja Norte
+2026;Jan;Folha;77783,72;Loja Sul
+2026;Fev;Folha;121284,36;Loja Centro
+2026;Fev;Folha;53371,15;Loja Norte
+2026;Fev;Folha;86344,48;Loja Sul
+2026;Mar;Folha;119268,61;Loja Centro
+2026;Mar;Folha;57580,07;Loja Norte
+2026;Mar;Folha;91401,32;Loja Sul
+2026;Abr;Folha;116806,3;Loja Centro
+2026;Abr;Folha;57072,69;Loja Norte
+2026;Abr;Folha;94371;Loja Sul
+2026;Mai;Folha;136657,37;Loja Centro
+2026;Mai;Folha;66969,29;Loja Norte
+2026;Mai;Folha;71873,33;Loja Sul
+2026;Jun;Folha;131878,87;Loja Centro
+2026;Jun;Folha;65976,25;Loja Norte
+2026;Jun;Folha;84894,88;Loja Sul
+2026;Jul;Folha;111746,89;Loja Centro
+2026;Jul;Folha;71258,44;Loja Norte
+2026;Jul;Folha;104094,68;Loja Sul
+2024;Jan;Fornecedores;54208,62;Loja Centro
+2024;Jan;Fornecedores;31329,56;Loja Norte
+2024;Jan;Fornecedores;39461,82;Loja Sul
+2024;Fev;Fornecedores;56057,78;Loja Centro
+2024;Fev;Fornecedores;32105,72;Loja Norte
+2024;Fev;Fornecedores;39836,5;Loja Sul
+2024;Mar;Fornecedores;58887,72;Loja Centro
+2024;Mar;Fornecedores;30166,85;Loja Norte
+2024;Mar;Fornecedores;42945,43;Loja Sul
+2024;Abr;Fornecedores;60711,9;Loja Centro
+2024;Abr;Fornecedores;29282,7;Loja Norte
+2024;Abr;Fornecedores;40005,41;Loja Sul
+2024;Mai;Fornecedores;60976,64;Loja Centro
+2024;Mai;Fornecedores;28518,7;Loja Norte
+2024;Mai;Fornecedores;44504,66;Loja Sul
+2024;Jun;Fornecedores;60335,67;Loja Centro
+2024;Jun;Fornecedores;30110,54;Loja Norte
+2024;Jun;Fornecedores;49553,79;Loja Sul
+2024;Jul;Fornecedores;69455,5;Loja Centro
+2024;Jul;Fornecedores;33348,37;Loja Norte
+2024;Jul;Fornecedores;42196,13;Loja Sul
+2024;Ago;Fornecedores;70395,84;Loja Centro
+2024;Ago;Fornecedores;36808,1;Loja Norte
+2024;Ago;Fornecedores;40796,06;Loja Sul
+2024;Set;Fornecedores;70885,15;Loja Centro
+2024;Set;Fornecedores;36986,28;Loja Norte
+2024;Set;Fornecedores;42128,57;Loja Sul
+2024;Out;Fornecedores;69819,76;Loja Centro
+2024;Out;Fornecedores;42201,92;Loja Norte
+2024;Out;Fornecedores;41978,33;Loja Sul
+2024;Nov;Fornecedores;70489,33;Loja Centro
+2024;Nov;Fornecedores;42735,77;Loja Norte
+2024;Nov;Fornecedores;44774,9;Loja Sul
+2024;Dez;Fornecedores;72226,5;Loja Centro
+2024;Dez;Fornecedores;38376,3;Loja Norte
+2024;Dez;Fornecedores;54397,21;Loja Sul
+2025;Jan;Fornecedores;74222,95;Loja Centro
+2025;Jan;Fornecedores;29029,12;Loja Norte
+2025;Jan;Fornecedores;46747,92;Loja Sul
+2025;Fev;Fornecedores;68460,35;Loja Centro
+2025;Fev;Fornecedores;32655,26;Loja Norte
+2025;Fev;Fornecedores;52484,39;Loja Sul
+2025;Mar;Fornecedores;68174,18;Loja Centro
+2025;Mar;Fornecedores;33203,54;Loja Norte
+2025;Mar;Fornecedores;57022,28;Loja Sul
+2025;Abr;Fornecedores;72926,37;Loja Centro
+2025;Abr;Fornecedores;32002,13;Loja Norte
+2025;Abr;Fornecedores;51071,5;Loja Sul
+2025;Mai;Fornecedores;70083,85;Loja Centro
+2025;Mai;Fornecedores;39001,99;Loja Norte
+2025;Mai;Fornecedores;51714,16;Loja Sul
+2025;Jun;Fornecedores;77670,02;Loja Centro
+2025;Jun;Fornecedores;37780,21;Loja Norte
+2025;Jun;Fornecedores;52549,76;Loja Sul
+2025;Jul;Fornecedores;78434,75;Loja Centro
+2025;Jul;Fornecedores;45660,15;Loja Norte
+2025;Jul;Fornecedores;49905,11;Loja Sul
+2025;Ago;Fornecedores;82792,61;Loja Centro
+2025;Ago;Fornecedores;41890,35;Loja Norte
+2025;Ago;Fornecedores;52917,04;Loja Sul
+2025;Set;Fornecedores;86691,72;Loja Centro
+2025;Set;Fornecedores;42143,34;Loja Norte
+2025;Set;Fornecedores;51164,93;Loja Sul
+2025;Out;Fornecedores;78429,72;Loja Centro
+2025;Out;Fornecedores;43835,3;Loja Norte
+2025;Out;Fornecedores;62534,98;Loja Sul
+2025;Nov;Fornecedores;84944,32;Loja Centro
+2025;Nov;Fornecedores;41020,9;Loja Norte
+2025;Nov;Fornecedores;63634,78;Loja Sul
+2025;Dez;Fornecedores;101223,97;Loja Centro
+2025;Dez;Fornecedores;39217,09;Loja Norte
+2025;Dez;Fornecedores;57558,95;Loja Sul
+2026;Jan;Fornecedores;81918,65;Loja Centro
+2026;Jan;Fornecedores;45314,88;Loja Norte
+2026;Jan;Fornecedores;54016,47;Loja Sul
+2026;Fev;Fornecedores;86246,66;Loja Centro
+2026;Fev;Fornecedores;37952,82;Loja Norte
+2026;Fev;Fornecedores;61400,52;Loja Sul
+2026;Mar;Fornecedores;85099,76;Loja Centro
+2026;Mar;Fornecedores;41084,16;Loja Norte
+2026;Mar;Fornecedores;65216,08;Loja Sul
+2026;Abr;Fornecedores;82080,11;Loja Centro
+2026;Abr;Fornecedores;40105,13;Loja Norte
+2026;Abr;Fornecedores;66314,76;Loja Sul
+2026;Mai;Fornecedores;96379,41;Loja Centro
+2026;Mai;Fornecedores;47230,97;Loja Norte
+2026;Mai;Fornecedores;50689,61;Loja Sul
+2026;Jun;Fornecedores;94682,27;Loja Centro
+2026;Jun;Fornecedores;47367,56;Loja Norte
+2026;Jun;Fornecedores;60950,17;Loja Sul
+2026;Jul;Fornecedores;81834,84;Loja Centro
+2026;Jul;Fornecedores;52184,21;Loja Norte
+2026;Jul;Fornecedores;76230,95;Loja Sul
+2024;Jan;Impostos;22550,79;Loja Centro
+2024;Jan;Impostos;13033,1;Loja Norte
+2024;Jan;Impostos;16416,12;Loja Sul
+2024;Fev;Impostos;23649,38;Loja Centro
+2024;Fev;Impostos;13544,6;Loja Norte
+2024;Fev;Impostos;16806,02;Loja Sul
+2024;Mar;Impostos;25874,91;Loja Centro
+2024;Mar;Impostos;13255,13;Loja Norte
+2024;Mar;Impostos;18869,96;Loja Sul
+2024;Abr;Impostos;26152,82;Loja Centro
+2024;Abr;Impostos;12614,08;Loja Norte
+2024;Abr;Impostos;17233,1;Loja Sul
+2024;Mai;Impostos;26847,92;Loja Centro
+2024;Mai;Impostos;12556,74;Loja Norte
+2024;Mai;Impostos;19595,34;Loja Sul
+2024;Jun;Impostos;26289,12;Loja Centro
+2024;Jun;Impostos;13119,59;Loja Norte
+2024;Jun;Impostos;21591,29;Loja Sul
+2024;Jul;Impostos;30177,22;Loja Centro
+2024;Jul;Impostos;14489,29;Loja Norte
+2024;Jul;Impostos;18333,49;Loja Sul
+2024;Ago;Impostos;30917,09;Loja Centro
+2024;Ago;Impostos;16165,72;Loja Norte
+2024;Ago;Impostos;17917,19;Loja Sul
+2024;Set;Impostos;31189,47;Loja Centro
+2024;Set;Impostos;16273,96;Loja Norte
+2024;Set;Impostos;18536,57;Loja Sul
+2024;Out;Impostos;30829,5;Loja Centro
+2024;Out;Impostos;18634,61;Loja Norte
+2024;Out;Impostos;18535,88;Loja Sul
+2024;Nov;Impostos;31229,45;Loja Centro
+2024;Nov;Impostos;18933,57;Loja Norte
+2024;Nov;Impostos;19836,98;Loja Sul
+2024;Dez;Impostos;32830,23;Loja Centro
+2024;Dez;Impostos;17443,77;Loja Norte
+2024;Dez;Impostos;24726;Loja Sul
+2025;Jan;Impostos;30876,75;Loja Centro
+2025;Jan;Impostos;12076,12;Loja Norte
+2025;Jan;Impostos;19447,14;Loja Sul
+2025;Fev;Impostos;28881,71;Loja Centro
+2025;Fev;Impostos;13776,44;Loja Norte
+2025;Fev;Impostos;22141,85;Loja Sul
+2025;Mar;Impostos;29955,32;Loja Centro
+2025;Mar;Impostos;14589,44;Loja Norte
+2025;Mar;Impostos;25055,24;Loja Sul
+2025;Abr;Impostos;31414,44;Loja Centro
+2025;Abr;Impostos;13785,53;Loja Norte
+2025;Abr;Impostos;22000,03;Loja Sul
+2025;Mai;Impostos;30857,81;Loja Centro
+2025;Mai;Impostos;17172,52;Loja Norte
+2025;Mai;Impostos;22769,67;Loja Sul
+2025;Jun;Impostos;33841,94;Loja Centro
+2025;Jun;Impostos;16461,38;Loja Norte
+2025;Jun;Impostos;22896,68;Loja Sul
+2025;Jul;Impostos;34078,54;Loja Centro
+2025;Jul;Impostos;19838,55;Loja Norte
+2025;Jul;Impostos;21682,91;Loja Sul
+2025;Ago;Impostos;36361,62;Loja Centro
+2025;Ago;Impostos;18397,79;Loja Norte
+2025;Ago;Impostos;23240,59;Loja Sul
+2025;Set;Impostos;38144,36;Loja Centro
+2025;Set;Impostos;18543,07;Loja Norte
+2025;Set;Impostos;22512,57;Loja Sul
+2025;Out;Impostos;34631,3;Loja Centro
+2025;Out;Impostos;19355,85;Loja Norte
+2025;Out;Impostos;27612,85;Loja Sul
+2025;Nov;Impostos;37633,56;Loja Centro
+2025;Nov;Impostos;18173,81;Loja Norte
+2025;Nov;Impostos;28192,62;Loja Sul
+2025;Dez;Impostos;46010,89;Loja Centro
+2025;Dez;Impostos;17825,95;Loja Norte
+2025;Dez;Impostos;26163,16;Loja Sul
+2026;Jan;Impostos;34078,16;Loja Centro
+2026;Jan;Impostos;18850,99;Loja Norte
+2026;Jan;Impostos;22470,85;Loja Sul
+2026;Fev;Impostos;36385,31;Loja Centro
+2026;Fev;Impostos;16011,35;Loja Norte
+2026;Fev;Impostos;25903,35;Loja Sul
+2026;Mar;Impostos;37392,32;Loja Centro
+2026;Mar;Impostos;18052,13;Loja Norte
+2026;Mar;Impostos;28655,55;Loja Sul
+2026;Abr;Impostos;35357,58;Loja Centro
+2026;Abr;Impostos;17276,06;Loja Norte
+2026;Abr;Impostos;28566,36;Loja Sul
+2026;Mai;Impostos;42435,71;Loja Centro
+2026;Mai;Impostos;20795,73;Loja Norte
+2026;Mai;Impostos;22318,56;Loja Sul
+2026;Jun;Impostos;41254,42;Loja Centro
+2026;Jun;Impostos;20638,72;Loja Norte
+2026;Jun;Impostos;26556,86;Loja Sul
+2026;Jul;Impostos;35555,83;Loja Centro
+2026;Jul;Impostos;22673,14;Loja Norte
+2026;Jul;Impostos;33121,03;Loja Sul
+2024;Jan;Desp. Operacionais;33826,18;Loja Centro
+2024;Jan;Desp. Operacionais;19549,65;Loja Norte
+2024;Jan;Desp. Operacionais;24624,17;Loja Sul
+2024;Fev;Desp. Operacionais;35036,11;Loja Centro
+2024;Fev;Desp. Operacionais;20066,08;Loja Norte
+2024;Fev;Desp. Operacionais;24897,81;Loja Sul
+2024;Mar;Desp. Operacionais;36135,65;Loja Centro
+2024;Mar;Desp. Operacionais;18511,48;Loja Norte
+2024;Mar;Desp. Operacionais;26352,88;Loja Sul
+2024;Abr;Desp. Operacionais;38295,2;Loja Centro
+2024;Abr;Desp. Operacionais;18470,62;Loja Norte
+2024;Abr;Desp. Operacionais;25234,18;Loja Sul
+2024;Mai;Desp. Operacionais;38224,16;Loja Centro
+2024;Mai;Desp. Operacionais;17877,39;Loja Norte
+2024;Mai;Desp. Operacionais;27898,44;Loja Sul
+2024;Jun;Desp. Operacionais;36632,37;Loja Centro
+2024;Jun;Desp. Operacionais;18281,4;Loja Norte
+2024;Jun;Desp. Operacionais;30086,23;Loja Sul
+2024;Jul;Desp. Operacionais;42152,3;Loja Centro
+2024;Jul;Desp. Operacionais;20239,01;Loja Norte
+2024;Jul;Desp. Operacionais;25608,69;Loja Sul
+2024;Ago;Desp. Operacionais;42332,64;Loja Centro
+2024;Ago;Desp. Operacionais;22134,6;Loja Norte
+2024;Ago;Desp. Operacionais;24532,77;Loja Sul
+2024;Set;Desp. Operacionais;42531,09;Loja Centro
+2024;Set;Desp. Operacionais;22191,77;Loja Norte
+2024;Set;Desp. Operacionais;25277,14;Loja Sul
+2024;Out;Desp. Operacionais;41710,5;Loja Centro
+2024;Out;Desp. Operacionais;25211,54;Loja Norte
+2024;Out;Desp. Operacionais;25077,96;Loja Sul
+2024;Nov;Desp. Operacionais;41936,69;Loja Centro
+2024;Nov;Desp. Operacionais;25425,08;Loja Norte
+2024;Nov;Desp. Operacionais;26638,23;Loja Sul
+2024;Dez;Desp. Operacionais;42898,16;Loja Centro
+2024;Dez;Desp. Operacionais;22793,19;Loja Norte
+2024;Dez;Desp. Operacionais;32308,65;Loja Sul
+2025;Jan;Desp. Operacionais;46315,12;Loja Centro
+2025;Jan;Desp. Operacionais;18114,17;Loja Norte
+2025;Jan;Desp. Operacionais;29170,7;Loja Sul
+2025;Fev;Desp. Operacionais;42787,72;Loja Centro
+2025;Fev;Desp. Operacionais;20409,54;Loja Norte
+2025;Fev;Desp. Operacionais;32802,74;Loja Sul
+2025;Mar;Desp. Operacionais;41834,16;Loja Centro
+2025;Mar;Desp. Operacionais;20374,9;Loja Norte
+2025;Mar;Desp. Operacionais;34990,94;Loja Sul
+2025;Abr;Desp. Operacionais;45999,71;Loja Centro
+2025;Abr;Desp. Operacionais;20185,96;Loja Norte
+2025;Abr;Desp. Operacionais;32214,33;Loja Sul
+2025;Mai;Desp. Operacionais;43933,16;Loja Centro
+2025;Mai;Desp. Operacionais;24449,01;Loja Norte
+2025;Mai;Desp. Operacionais;32417,83;Loja Sul
+2025;Jun;Desp. Operacionais;47156,8;Loja Centro
+2025;Jun;Desp. Operacionais;22937,99;Loja Norte
+2025;Jun;Desp. Operacionais;31905,21;Loja Sul
+2025;Jul;Desp. Operacionais;47601,78;Loja Centro
+2025;Jul;Desp. Operacionais;27710,99;Loja Norte
+2025;Jul;Desp. Operacionais;30287,24;Loja Sul
+2025;Ago;Desp. Operacionais;49787,45;Loja Centro
+2025;Ago;Desp. Operacionais;25190,82;Loja Norte
+2025;Ago;Desp. Operacionais;31821,74;Loja Sul
+2025;Set;Desp. Operacionais;52015,03;Loja Centro
+2025;Set;Desp. Operacionais;25286,01;Loja Norte
+2025;Set;Desp. Operacionais;30698,96;Loja Sul
+2025;Out;Desp. Operacionais;46854,12;Loja Centro
+2025;Out;Desp. Operacionais;26187,32;Loja Norte
+2025;Out;Desp. Operacionais;37358,56;Loja Sul
+2025;Nov;Desp. Operacionais;50536,5;Loja Centro
+2025;Nov;Desp. Operacionais;24404,84;Loja Norte
+2025;Nov;Desp. Operacionais;37858,67;Loja Sul
+2025;Dez;Desp. Operacionais;60120,9;Loja Centro
+2025;Dez;Desp. Operacionais;23292,57;Loja Norte
+2025;Dez;Desp. Operacionais;34186,53;Loja Sul
+2026;Jan;Desp. Operacionais;51117,24;Loja Centro
+2026;Jan;Desp. Operacionais;28276,48;Loja Norte
+2026;Jan;Desp. Operacionais;33706,28;Loja Sul
+2026;Fev;Desp. Operacionais;53904,16;Loja Centro
+2026;Fev;Desp. Operacionais;23720,51;Loja Norte
+2026;Fev;Desp. Operacionais;38375,33;Loja Sul
+2026;Mar;Desp. Operacionais;52220,31;Loja Centro
+2026;Mar;Desp. Operacionais;25210,73;Loja Norte
+2026;Mar;Desp. Operacionais;40018,96;Loja Sul
+2026;Abr;Desp. Operacionais;51773,61;Loja Centro
+2026;Abr;Desp. Operacionais;25297,08;Loja Norte
+2026;Abr;Desp. Operacionais;41829,31;Loja Sul
+2026;Mai;Desp. Operacionais;60416,94;Loja Centro
+2026;Mai;Desp. Operacionais;29607,48;Loja Norte
+2026;Mai;Desp. Operacionais;31775,58;Loja Sul
+2026;Jun;Desp. Operacionais;57485,66;Loja Centro
+2026;Jun;Desp. Operacionais;28758,88;Loja Norte
+2026;Jun;Desp. Operacionais;37005,46;Loja Sul
+2026;Jul;Desp. Operacionais;49665,28;Loja Centro
+2026;Jul;Desp. Operacionais;31670,42;Loja Norte
+2026;Jul;Desp. Operacionais;46264,3;Loja Sul
+2024;Jan;Investimentos;15178,41;Loja Centro
+2024;Jan;Investimentos;8772,28;Loja Norte
+2024;Jan;Investimentos;11049,31;Loja Sul
+2024;Fev;Investimentos;8759,03;Loja Centro
+2024;Fev;Investimentos;5016,52;Loja Norte
+2024;Fev;Investimentos;6224,45;Loja Sul
+2024;Mar;Investimentos;6691,79;Loja Centro
+2024;Mar;Investimentos;3428,05;Loja Norte
+2024;Mar;Investimentos;4880,16;Loja Sul
+2024;Abr;Investimentos;11675,37;Loja Centro
+2024;Abr;Investimentos;5631,29;Loja Norte
+2024;Abr;Investimentos;7693,35;Loja Sul
+2024;Mai;Investimentos;8190,89;Loja Centro
+2024;Mai;Investimentos;3830,87;Loja Norte
+2024;Mai;Investimentos;5978,24;Loja Sul
+2024;Jun;Investimentos;12929,07;Loja Centro
+2024;Jun;Investimentos;6452,26;Loja Norte
+2024;Jun;Investimentos;10618,67;Loja Sul
+2024;Jul;Investimentos;10538,08;Loja Centro
+2024;Jul;Investimentos;5059,75;Loja Norte
+2024;Jul;Investimentos;6402,17;Loja Sul
+2024;Ago;Investimentos;11891,19;Loja Centro
+2024;Ago;Investimentos;6217,58;Loja Norte
+2024;Ago;Investimentos;6891,23;Loja Sul
+2024;Set;Investimentos;9451,35;Loja Centro
+2024;Set;Investimentos;4931,5;Loja Norte
+2024;Set;Investimentos;5617,14;Loja Sul
+2024;Out;Investimentos;12694,5;Loja Centro
+2024;Out;Investimentos;7673,08;Loja Norte
+2024;Out;Investimentos;7632,42;Loja Sul
+2024;Nov;Investimentos;13384,05;Loja Centro
+2024;Nov;Investimentos;8114,39;Loja Norte
+2024;Nov;Investimentos;8501,56;Loja Sul
+2024;Dez;Investimentos;17509,45;Loja Centro
+2024;Dez;Investimentos;9303,34;Loja Norte
+2024;Dez;Investimentos;13187,2;Loja Sul
+2025;Jan;Investimentos;20782,43;Loja Centro
+2025;Jan;Investimentos;8128,15;Loja Norte
+2025;Jan;Investimentos;13089,42;Loja Sul
+2025;Fev;Investimentos;10696,93;Loja Centro
+2025;Fev;Investimentos;5102,38;Loja Norte
+2025;Fev;Investimentos;8200,69;Loja Sul
+2025;Mar;Investimentos;7747,07;Loja Centro
+2025;Mar;Investimentos;3773,13;Loja Norte
+2025;Mar;Investimentos;6479,8;Loja Sul
+2025;Abr;Investimentos;14024,3;Loja Centro
+2025;Abr;Investimentos;6154,26;Loja Norte
+2025;Abr;Investimentos;9821,44;Loja Sul
+2025;Mai;Investimentos;9414,25;Loja Centro
+2025;Mai;Investimentos;5239,07;Loja Norte
+2025;Mai;Investimentos;6946,68;Loja Sul
+2025;Jun;Investimentos;16643,58;Loja Centro
+2025;Jun;Investimentos;8095,76;Loja Norte
+2025;Jun;Investimentos;11260,66;Loja Sul
+2025;Jul;Investimentos;11900,44;Loja Centro
+2025;Jul;Investimentos;6927,75;Loja Norte
+2025;Jul;Investimentos;7571,81;Loja Sul
+2025;Ago;Investimentos;13985,24;Loja Centro
+2025;Ago;Investimentos;7076,07;Loja Norte
+2025;Ago;Investimentos;8938,69;Loja Sul
+2025;Set;Investimentos;11558,9;Loja Centro
+2025;Set;Investimentos;5619,11;Loja Norte
+2025;Set;Investimentos;6821,99;Loja Sul
+2025;Out;Investimentos;14259,95;Loja Centro
+2025;Out;Investimentos;7970,06;Loja Norte
+2025;Out;Investimentos;11370;Loja Sul
+2025;Nov;Investimentos;16128,67;Loja Centro
+2025;Nov;Investimentos;7788,78;Loja Norte
+2025;Nov;Investimentos;12082,55;Loja Sul
+2025;Dez;Investimentos;24539,14;Loja Centro
+2025;Dez;Investimentos;9507,17;Loja Norte
+2025;Dez;Investimentos;13953,68;Loja Sul
+2026;Jan;Investimentos;22937,22;Loja Centro
+2026;Jan;Investimentos;12688,17;Loja Norte
+2026;Jan;Investimentos;15124,61;Loja Sul
+2026;Fev;Investimentos;13476,04;Loja Centro
+2026;Fev;Investimentos;5930,13;Loja Norte
+2026;Fev;Investimentos;9593,83;Loja Sul
+2026;Mar;Investimentos;9670,43;Loja Centro
+2026;Mar;Investimentos;4668,65;Loja Norte
+2026;Mar;Investimentos;7410,92;Loja Sul
+2026;Abr;Investimentos;15784,64;Loja Centro
+2026;Abr;Investimentos;7712,53;Loja Norte
+2026;Abr;Investimentos;12752,84;Loja Sul
+2026;Mai;Investimentos;12946,49;Loja Centro
+2026;Mai;Investimentos;6344,46;Loja Norte
+2026;Mai;Investimentos;6809,05;Loja Sul
+2026;Jun;Investimentos;20289,06;Loja Centro
+2026;Jun;Investimentos;10150,19;Loja Norte
+2026;Jun;Investimentos;13060,75;Loja Sul
+2026;Jul;Investimentos;12416,32;Loja Centro
+2026;Jul;Investimentos;7917,6;Loja Norte
+2026;Jul;Investimentos;11566,08;Loja Sul

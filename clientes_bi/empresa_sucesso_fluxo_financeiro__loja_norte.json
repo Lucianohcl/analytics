@@ -1,0 +1,1 @@
+{"ff_parcelas_pagar": [{"pct": 50, "dias": 30}, {"pct": 50, "dias": 60}], "ff_parcelas_receber": [{"pct": 25, "dias": 30}, {"pct": 25, "dias": 60}, {"pct": 25, "dias": 90}, {"pct": 25, "dias": 120}], "ff_encargos_pct": 30.0, "ff_saldo_inicial": 0.0, "ff_incluir_contas_pr": true}

@@ -1,0 +1,931 @@
+﻿Ano;Mês;Conta;Valor;Filial
+2024;Abr;Desp. Operacionais;832818,6;Loja Centro
+2024;Abr;Desp. Operacionais;542437,42;Loja Norte
+2024;Abr;Desp. Operacionais;613919,88;Loja Sul
+2024;Abr;Folha;1878919,85;Loja Centro
+2024;Abr;Folha;1223792;Loja Norte
+2024;Abr;Folha;1385063,1;Loja Sul
+2024;Abr;Fornecedores;1639683,93;Loja Centro
+2024;Abr;Fornecedores;1108610,82;Loja Norte
+2024;Abr;Fornecedores;1214868,11;Loja Sul
+2024;Abr;Impostos;568754,18;Loja Centro
+2024;Abr;Impostos;370445,01;Loja Norte
+2024;Abr;Impostos;419262,39;Loja Sul
+2024;Abr;Investimentos;253908,2;Loja Centro
+2024;Abr;Investimentos;165377,36;Loja Norte
+2024;Abr;Investimentos;187170,75;Loja Sul
+2024;Abr;Outras Receitas;91406,88;Loja Centro
+2024;Abr;Outras Receitas;59535,72;Loja Norte
+2024;Abr;Outras Receitas;67381,33;Loja Sul
+2024;Abr;Receb. Clientes;1503135,88;Loja Centro
+2024;Abr;Receb. Clientes;979033,48;Loja Norte
+2024;Abr;Receb. Clientes;1108050,58;Loja Sul
+2024;Abr;Receita Financ.;81250,66;Loja Centro
+2024;Abr;Receita Financ.;52920,67;Loja Norte
+2024;Abr;Receita Financ.;59894,59;Loja Sul
+2024;Abr;Receita Produtos;975007,04;Loja Centro
+2024;Abr;Receita Produtos;635048,67;Loja Norte
+2024;Abr;Receita Produtos;718735,36;Loja Sul
+2024;Abr;Receita Serviços;3453150,17;Loja Centro
+2024;Abr;Receita Serviços;2249131,11;Loja Norte
+2024;Abr;Receita Serviços;2545521,29;Loja Sul
+2024;Ago;Desp. Operacionais;783273,6;Loja Centro
+2024;Ago;Desp. Operacionais;542917,56;Loja Norte
+2024;Ago;Desp. Operacionais;509811,26;Loja Sul
+2024;Ago;Folha;1760165,24;Loja Centro
+2024;Ago;Folha;1220039,36;Loja Norte
+2024;Ago;Folha;1145643,07;Loja Sul
+2024;Ago;Fornecedores;1632315,09;Loja Centro
+2024;Ago;Fornecedores;1167376,27;Loja Norte
+2024;Ago;Fornecedores;1060214,8;Loja Sul
+2024;Ago;Impostos;572053,63;Loja Centro
+2024;Ago;Impostos;396512,85;Loja Norte
+2024;Ago;Impostos;372334,03;Loja Sul
+2024;Ago;Investimentos;220020,66;Loja Centro
+2024;Ago;Investimentos;152504,83;Loja Norte
+2024;Ago;Investimentos;143205,46;Loja Sul
+2024;Ago;Outras Receitas;123211,63;Loja Centro
+2024;Ago;Outras Receitas;85402,83;Loja Norte
+2024;Ago;Outras Receitas;80195,08;Loja Sul
+2024;Ago;Receb. Clientes;1496140,42;Loja Centro
+2024;Ago;Receb. Clientes;1037033,47;Loja Norte
+2024;Ago;Receb. Clientes;973796,64;Loja Sul
+2024;Ago;Receita Financ.;96809,02;Loja Centro
+2024;Ago;Receita Financ.;67102,24;Loja Norte
+2024;Ago;Receita Financ.;63010,38;Loja Sul
+2024;Ago;Receita Produtos;1012094,94;Loja Centro
+2024;Ago;Receita Produtos;701522,75;Loja Norte
+2024;Ago;Receita Produtos;658744,75;Loja Sul
+2024;Ago;Receita Serviços;3432322,15;Loja Centro
+2024;Ago;Receita Serviços;2379076,83;Loja Norte
+2024;Ago;Receita Serviços;2234004;Loja Sul
+2024;Dez;Desp. Operacionais;1287013,56;Loja Centro
+2024;Dez;Desp. Operacionais;887438,23;Loja Norte
+2024;Dez;Desp. Operacionais;1084534,94;Loja Sul
+2024;Dez;Folha;2889214,06;Loja Centro
+2024;Dez;Folha;1992208,44;Loja Norte
+2024;Dez;Folha;2434669,86;Loja Sul
+2024;Dez;Fornecedores;2756275,34;Loja Centro
+2024;Dez;Fornecedores;2006049,51;Loja Norte
+2024;Dez;Fornecedores;2313007,27;Loja Sul
+2024;Dez;Impostos;984959,52;Loja Centro
+2024;Dez;Impostos;679162;Loja Norte
+2024;Dez;Impostos;830000,97;Loja Sul
+2024;Dez;Investimentos;525311,56;Loja Centro
+2024;Dez;Investimentos;362219,58;Loja Norte
+2024;Dez;Investimentos;442667,19;Loja Sul
+2024;Dez;Outras Receitas;196992,02;Loja Centro
+2024;Dez;Outras Receitas;135832,24;Loja Norte
+2024;Dez;Outras Receitas;166000,19;Loja Sul
+2024;Dez;Receb. Clientes;2495230,31;Loja Centro
+2024;Dez;Receb. Clientes;1720543,96;Loja Norte
+2024;Dez;Receb. Clientes;2102669,47;Loja Sul
+2024;Dez;Receita Financ.;196992,02;Loja Centro
+2024;Dez;Receita Financ.;135832,24;Loja Norte
+2024;Dez;Receita Financ.;166000,19;Loja Sul
+2024;Dez;Receita Produtos;1772927,02;Loja Centro
+2024;Dez;Receita Produtos;1222491,75;Loja Norte
+2024;Dez;Receita Produtos;1494002,09;Loja Sul
+2024;Dez;Receita Serviços;5909756,23;Loja Centro
+2024;Dez;Receita Serviços;4074971,97;Loja Norte
+2024;Dez;Receita Serviços;4980006,85;Loja Sul
+2024;Fev;Desp. Operacionais;785049,1;Loja Centro
+2024;Fev;Desp. Operacionais;583027,91;Loja Norte
+2024;Fev;Desp. Operacionais;619295,42;Loja Sul
+2024;Fev;Folha;1766360,53;Loja Centro
+2024;Fev;Folha;1311812,5;Loja Norte
+2024;Fev;Folha;1393414,88;Loja Sul
+2024;Fev;Fornecedores;1580646,89;Loja Centro
+2024;Fev;Fornecedores;1228633,27;Loja Norte
+2024;Fev;Fornecedores;1228477,26;Loja Sul
+2024;Fev;Impostos;529908,27;Loja Centro
+2024;Fev;Impostos;393543,72;Loja Norte
+2024;Fev;Impostos;418024,37;Loja Sul
+2024;Fev;Investimentos;196262,33;Loja Centro
+2024;Fev;Investimentos;145756,98;Loja Norte
+2024;Fev;Investimentos;154823,79;Loja Sul
+2024;Fev;Outras Receitas;98131,05;Loja Centro
+2024;Fev;Outras Receitas;72878,49;Loja Norte
+2024;Fev;Outras Receitas;77412,02;Loja Sul
+2024;Fev;Receb. Clientes;1422901,51;Loja Centro
+2024;Fev;Receb. Clientes;1056737,79;Loja Norte
+2024;Fev;Receb. Clientes;1122473,18;Loja Sul
+2024;Fev;Receita Financ.;78504,89;Loja Centro
+2024;Fev;Receita Financ.;58302,85;Loja Norte
+2024;Fev;Receita Financ.;61929,52;Loja Sul
+2024;Fev;Receita Produtos;961685,27;Loja Centro
+2024;Fev;Receita Produtos;714208,95;Loja Norte
+2024;Fev;Receita Produtos;758636,96;Loja Sul
+2024;Fev;Receita Serviços;3238327,68;Loja Centro
+2024;Fev;Receita Serviços;2404989,53;Loja Norte
+2024;Fev;Receita Serviços;2554593,95;Loja Sul
+2024;Jan;Desp. Operacionais;733888,48;Loja Centro
+2024;Jan;Desp. Operacionais;559331,36;Loja Norte
+2024;Jan;Desp. Operacionais;608352,04;Loja Sul
+2024;Jan;Folha;1693588,69;Loja Centro
+2024;Jan;Folha;1290764,47;Loja Norte
+2024;Jan;Folha;1403889,38;Loja Sul
+2024;Jan;Fornecedores;1465407,31;Loja Centro
+2024;Jan;Fornecedores;1189063,21;Loja Norte
+2024;Jan;Fornecedores;1193793,97;Loja Sul
+2024;Jan;Impostos;489259,06;Loja Centro
+2024;Jan;Impostos;372887,57;Loja Norte
+2024;Jan;Impostos;405568,19;Loja Sul
+2024;Jan;Investimentos;329308,85;Loja Centro
+2024;Jan;Investimentos;250982,05;Loja Norte
+2024;Jan;Investimentos;272978,55;Loja Sul
+2024;Jan;Outras Receitas;112905,97;Loja Centro
+2024;Jan;Outras Receitas;86051,02;Loja Norte
+2024;Jan;Outras Receitas;93592,53;Loja Sul
+2024;Jan;Receb. Clientes;1317235,82;Loja Centro
+2024;Jan;Receb. Clientes;1003927,92;Loja Norte
+2024;Jan;Receb. Clientes;1091913,96;Loja Sul
+2024;Jan;Receita Financ.;75270,57;Loja Centro
+2024;Jan;Receita Financ.;57367,25;Loja Norte
+2024;Jan;Receita Financ.;62395,18;Loja Sul
+2024;Jan;Receita Produtos;893838,48;Loja Centro
+2024;Jan;Receita Produtos;681236,88;Loja Norte
+2024;Jan;Receita Produtos;740941,68;Loja Sul
+2024;Jan;Receita Serviços;3010824,51;Loja Centro
+2024;Jan;Receita Serviços;2294692,39;Loja Norte
+2024;Jan;Receita Serviços;2495803,6;Loja Sul
+2024;Jul;Desp. Operacionais;811177,11;Loja Centro
+2024;Jul;Desp. Operacionais;507423,03;Loja Norte
+2024;Jul;Desp. Operacionais;556236,4;Loja Sul
+2024;Jul;Folha;1825148,58;Loja Centro
+2024;Jul;Folha;1141701,76;Loja Norte
+2024;Jul;Folha;1251531,83;Loja Sul
+2024;Jul;Fornecedores;1613596,36;Loja Centro
+2024;Jul;Fornecedores;1078861,56;Loja Norte
+2024;Jul;Fornecedores;1114655,8;Loja Sul
+2024;Jul;Impostos;580729,16;Loja Centro
+2024;Jul;Impostos;363268,73;Loja Norte
+2024;Jul;Impostos;398214,61;Loja Sul
+2024;Jul;Investimentos;202794,37;Loja Centro
+2024;Jul;Investimentos;126855,7;Loja Norte
+2024;Jul;Investimentos;139059,04;Loja Sul
+2024;Jul;Outras Receitas;110615,04;Loja Centro
+2024;Jul;Outras Receitas;69194,18;Loja Norte
+2024;Jul;Outras Receitas;75850,33;Loja Sul
+2024;Jul;Receb. Clientes;1520957,22;Loja Centro
+2024;Jul;Receb. Clientes;951418,09;Loja Norte
+2024;Jul;Receb. Clientes;1042943,16;Loja Sul
+2024;Jul;Receita Financ.;101397,19;Loja Centro
+2024;Jul;Receita Financ.;63427,97;Loja Norte
+2024;Jul;Receita Financ.;69529,63;Loja Sul
+2024;Jul;Receita Produtos;1032407,19;Loja Centro
+2024;Jul;Receita Produtos;645811,13;Loja Norte
+2024;Jul;Receita Produtos;707937,05;Loja Sul
+2024;Jul;Receita Serviços;3502810,31;Loja Centro
+2024;Jul;Receita Serviços;2191145,04;Loja Norte
+2024;Jul;Receita Serviços;2401929,68;Loja Sul
+2024;Jun;Desp. Operacionais;740251,54;Loja Centro
+2024;Jun;Desp. Operacionais;481782,08;Loja Norte
+2024;Jun;Desp. Operacionais;673683,94;Loja Sul
+2024;Jun;Folha;1698224,2;Loja Centro
+2024;Jun;Folha;1105264,45;Loja Norte
+2024;Jun;Folha;1545510,18;Loja Sul
+2024;Jun;Fornecedores;1476906,86;Loja Centro
+2024;Jun;Fornecedores;1028494,58;Loja Norte
+2024;Jun;Fornecedores;1361371,05;Loja Sul
+2024;Jun;Impostos;531239,49;Loja Centro
+2024;Jun;Impostos;345749,42;Loja Norte
+2024;Jun;Impostos;483467,2;Loja Sul
+2024;Jun;Investimentos;261265,21;Loja Centro
+2024;Jun;Investimentos;170040,77;Loja Norte
+2024;Jun;Investimentos;237770,81;Loja Sul
+2024;Jun;Outras Receitas;104506,13;Loja Centro
+2024;Jun;Outras Receitas;68016,2;Loja Norte
+2024;Jun;Outras Receitas;95108,37;Loja Sul
+2024;Jun;Receb. Clientes;1393414,88;Loja Centro
+2024;Jun;Receb. Clientes;906883,73;Loja Norte
+2024;Jun;Receb. Clientes;1268110,86;Loja Sul
+2024;Jun;Receita Financ.;87088,4;Loja Centro
+2024;Jun;Receita Financ.;56680,17;Loja Norte
+2024;Jun;Receita Financ.;79257,01;Loja Sul
+2024;Jun;Receita Produtos;940554,93;Loja Centro
+2024;Jun;Receita Produtos;612146,6;Loja Norte
+2024;Jun;Receita Produtos;855974,89;Loja Sul
+2024;Jun;Receita Serviços;3222271,79;Loja Centro
+2024;Jun;Receita Serviços;2097168,57;Loja Norte
+2024;Jun;Receita Serviços;2932506,57;Loja Sul
+2024;Mai;Desp. Operacionais;817321,74;Loja Centro
+2024;Mai;Desp. Operacionais;483914,66;Loja Norte
+2024;Mai;Desp. Operacionais;658449,04;Loja Sul
+2024;Mai;Folha;1848704,16;Loja Centro
+2024;Mai;Folha;1094569,05;Loja Norte
+2024;Mai;Folha;1489349,14;Loja Sul
+2024;Mai;Fornecedores;1582056,14;Loja Centro
+2024;Mai;Fornecedores;1009061,52;Loja Norte
+2024;Mai;Fornecedores;1265307,33;Loja Sul
+2024;Mai;Impostos;574071,18;Loja Centro
+2024;Mai;Impostos;339892,49;Loja Norte
+2024;Mai;Impostos;462482,23;Loja Sul
+2024;Mai;Investimentos;175140,34;Loja Centro
+2024;Mai;Investimentos;103696,02;Loja Norte
+2024;Mai;Investimentos;141096,29;Loja Sul
+2024;Mai;Outras Receitas;97300,31;Loja Centro
+2024;Mai;Outras Receitas;57608,87;Loja Norte
+2024;Mai;Outras Receitas;78386,72;Loja Sul
+2024;Mai;Receb. Clientes;1498423,26;Loja Centro
+2024;Mai;Receb. Clientes;887177,02;Loja Norte
+2024;Mai;Receb. Clientes;1207156,8;Loja Sul
+2024;Mai;Receita Financ.;97300,31;Loja Centro
+2024;Mai;Receita Financ.;57608,87;Loja Norte
+2024;Mai;Receita Financ.;78386,72;Loja Sul
+2024;Mai;Receita Produtos;1011922,15;Loja Centro
+2024;Mai;Receita Produtos;599132,67;Loja Norte
+2024;Mai;Receita Produtos;815222,72;Loja Sul
+2024;Mai;Receita Serviços;3454157,55;Loja Centro
+2024;Mai;Receita Serviços;2045115,93;Loja Norte
+2024;Mai;Receita Serviços;2782731,48;Loja Sul
+2024;Mar;Desp. Operacionais;805571,07;Loja Centro
+2024;Mar;Desp. Operacionais;543996,49;Loja Norte
+2024;Mar;Desp. Operacionais;657094,03;Loja Sul
+2024;Mar;Folha;1839884,55;Loja Centro
+2024;Mar;Folha;1242460,93;Loja Norte
+2024;Mar;Folha;1500770,16;Loja Sul
+2024;Mar;Fornecedores;1632634,48;Loja Centro
+2024;Mar;Fornecedores;1168718,08;Loja Norte
+2024;Mar;Fornecedores;1307734,82;Loja Sul
+2024;Mar;Impostos;576828,67;Loja Centro
+2024;Mar;Impostos;389528,24;Loja Norte
+2024;Mar;Impostos;470511,69;Loja Sul
+2024;Mar;Investimentos;149179,89;Loja Centro
+2024;Mar;Investimentos;100740,04;Loja Norte
+2024;Mar;Investimentos;121684,01;Loja Sul
+2024;Mar;Outras Receitas;109398,53;Loja Centro
+2024;Mar;Outras Receitas;73875,93;Loja Norte
+2024;Mar;Outras Receitas;89235,09;Loja Sul
+2024;Mar;Receb. Clientes;1491798,27;Loja Centro
+2024;Mar;Receb. Clientes;1007400,65;Loja Norte
+2024;Mar;Receb. Clientes;1216840,56;Loja Sul
+2024;Mar;Receita Financ.;89507,85;Loja Centro
+2024;Mar;Receita Financ.;60444,02;Loja Norte
+2024;Mar;Receita Financ.;73010,5;Loja Sul
+2024;Mar;Receita Produtos;1014422,79;Loja Centro
+2024;Mar;Receita Produtos;685032,53;Loja Norte
+2024;Mar;Receita Produtos;827451,54;Loja Sul
+2024;Mar;Receita Serviços;3480862,49;Loja Centro
+2024;Mar;Receita Serviços;2350601,61;Loja Norte
+2024;Mar;Receita Serviços;2839294,73;Loja Sul
+2024;Nov;Desp. Operacionais;1068317,23;Loja Centro
+2024;Nov;Desp. Operacionais;829190,11;Loja Norte
+2024;Nov;Desp. Operacionais;754581,66;Loja Sul
+2024;Nov;Folha;2363935,74;Loja Centro
+2024;Nov;Folha;1834803,59;Loja Norte
+2024;Nov;Folha;1669712,94;Loja Sul
+2024;Nov;Fornecedores;2295457,66;Loja Centro
+2024;Nov;Fornecedores;1884465,57;Loja Norte
+2024;Nov;Fornecedores;1630546,27;Loja Sul
+2024;Nov;Impostos;795555,38;Loja Centro
+2024;Nov;Impostos;617481,99;Loja Norte
+2024;Nov;Impostos;561922,52;Loja Sul
+2024;Nov;Investimentos;340952,31;Loja Centro
+2024;Nov;Investimentos;264635,23;Loja Norte
+2024;Nov;Investimentos;240823,86;Loja Sul
+2024;Nov;Outras Receitas;159111,08;Loja Centro
+2024;Nov;Outras Receitas;123496,27;Loja Norte
+2024;Nov;Outras Receitas;112384,62;Loja Sul
+2024;Nov;Receb. Clientes;2045713,58;Loja Centro
+2024;Nov;Receb. Clientes;1587810,73;Loja Norte
+2024;Nov;Receb. Clientes;1444943,71;Loja Sul
+2024;Nov;Receita Financ.;147745,87;Loja Centro
+2024;Nov;Receita Financ.;114675,08;Loja Norte
+2024;Nov;Receita Financ.;104357,02;Loja Sul
+2024;Nov;Receita Produtos;1420634,48;Loja Centro
+2024;Nov;Receita Produtos;1102646,52;Loja Norte
+2024;Nov;Receita Produtos;1003433,11;Loja Sul
+2024;Nov;Receita Serviços;4773332,04;Loja Centro
+2024;Nov;Receita Serviços;3704891,92;Loja Norte
+2024;Nov;Receita Serviços;3371535,41;Loja Sul
+2024;Out;Desp. Operacionais;755866,08;Loja Centro
+2024;Out;Desp. Operacionais;601675,62;Loja Norte
+2024;Out;Desp. Operacionais;510379,69;Loja Sul
+2024;Out;Folha;1684266,9;Loja Centro
+2024;Out;Folha;1340690,05;Loja Norte
+2024;Out;Folha;1137259,15;Loja Sul
+2024;Out;Fornecedores;1597156,67;Loja Centro
+2024;Out;Fornecedores;1341557,84;Loja Norte
+2024;Out;Fornecedores;1082008,14;Loja Sul
+2024;Out;Impostos;558683,63;Loja Centro
+2024;Out;Impostos;444716,61;Loja Norte
+2024;Out;Impostos;377237,09;Loja Sul
+2024;Out;Investimentos;230046,2;Loja Centro
+2024;Out;Investimentos;183118,73;Loja Norte
+2024;Out;Investimentos;155332,9;Loja Sul
+2024;Out;Outras Receitas;106807,25;Loja Centro
+2024;Out;Outras Receitas;85019,38;Loja Norte
+2024;Out;Outras Receitas;72118,77;Loja Sul
+2024;Out;Receb. Clientes;1437788,83;Loja Centro
+2024;Out;Receb. Clientes;1144491,58;Loja Norte
+2024;Out;Receb. Clientes;970830,9;Loja Sul
+2024;Out;Receita Financ.;98591,23;Loja Centro
+2024;Out;Receita Financ.;78479,39;Loja Norte
+2024;Out;Receita Financ.;66571,3;Loja Sul
+2024;Out;Receita Produtos;985912,28;Loja Centro
+2024;Out;Receita Produtos;784794,11;Loja Norte
+2024;Out;Receita Produtos;665712,58;Loja Sul
+2024;Out;Receita Serviços;3327454,22;Loja Centro
+2024;Out;Receita Serviços;2648680,39;Loja Norte
+2024;Out;Receita Serviços;2246780,12;Loja Sul
+2024;Set;Desp. Operacionais;766025,41;Loja Centro
+2024;Set;Desp. Operacionais;533128,81;Loja Norte
+2024;Set;Desp. Operacionais;513684,31;Loja Sul
+2024;Set;Folha;1719301,5;Loja Centro
+2024;Set;Folha;1196577,87;Loja Norte
+2024;Set;Folha;1152935,96;Loja Sul
+2024;Set;Fornecedores;1631410,62;Loja Centro
+2024;Set;Fornecedores;1192923,51;Loja Norte
+2024;Set;Fornecedores;1087278,73;Loja Sul
+2024;Set;Impostos;561752,04;Loja Centro
+2024;Set;Impostos;390961,01;Loja Norte
+2024;Set;Impostos;376701,84;Loja Sul
+2024;Set;Investimentos;170227,81;Loja Centro
+2024;Set;Investimentos;118472,96;Loja Norte
+2024;Set;Investimentos;114152,02;Loja Sul
+2024;Set;Outras Receitas;110648,12;Loja Centro
+2024;Set;Outras Receitas;77007,54;Loja Norte
+2024;Set;Outras Receitas;74198,79;Loja Sul
+2024;Set;Receb. Clientes;1463959,69;Loja Centro
+2024;Set;Receb. Clientes;1018868,19;Loja Norte
+2024;Set;Receb. Clientes;981707,72;Loja Sul
+2024;Set;Receita Financ.;102136,69;Loja Centro
+2024;Set;Receita Financ.;71083,78;Loja Norte
+2024;Set;Receita Financ.;68491,34;Loja Sul
+2024;Set;Receita Produtos;1004344,52;Loja Centro
+2024;Set;Receita Produtos;698990,95;Loja Norte
+2024;Set;Receita Produtos;673497,22;Loja Sul
+2024;Set;Receita Serviços;3362000,61;Loja Centro
+2024;Set;Receita Serviços;2339842,78;Loja Norte
+2024;Set;Receita Serviços;2254503,37;Loja Sul
+2025;Abr;Desp. Operacionais;918966,1;Loja Centro
+2025;Abr;Desp. Operacionais;532719,1;Loja Norte
+2025;Abr;Desp. Operacionais;727161,69;Loja Sul
+2025;Abr;Folha;2073277,11;Loja Centro
+2025;Abr;Folha;1201866,13;Loja Norte
+2025;Abr;Folha;1640547,91;Loja Sul
+2025;Abr;Fornecedores;1815913,39;Loja Centro
+2025;Abr;Fornecedores;1128099,06;Loja Norte
+2025;Abr;Fornecedores;1415916,02;Loja Sul
+2025;Abr;Impostos;627586,68;Loja Centro
+2025;Abr;Impostos;363808,07;Loja Norte
+2025;Abr;Impostos;496598,22;Loja Sul
+2025;Abr;Investimentos;280172,56;Loja Centro
+2025;Abr;Investimentos;162414,46;Loja Norte
+2025;Abr;Investimentos;221695,59;Loja Sul
+2025;Abr;Outras Receitas;100862,16;Loja Centro
+2025;Abr;Outras Receitas;58469,11;Loja Norte
+2025;Abr;Outras Receitas;79810,45;Loja Sul
+2025;Abr;Receb. Clientes;1658621,81;Loja Centro
+2025;Abr;Receb. Clientes;961492,85;Loja Norte
+2025;Abr;Receb. Clientes;1312438,24;Loja Sul
+2025;Abr;Receita Financ.;89655,3;Loja Centro
+2025;Abr;Receita Financ.;51972,54;Loja Norte
+2025;Abr;Receita Financ.;70942,57;Loja Sul
+2025;Abr;Receita Produtos;1075862,77;Loja Centro
+2025;Abr;Receita Produtos;623671,05;Loja Norte
+2025;Abr;Receita Produtos;851311,3;Loja Sul
+2025;Abr;Receita Serviços;3810347,15;Loja Centro
+2025;Abr;Receita Serviços;2208834,96;Loja Norte
+2025;Abr;Receita Serviços;3015061,07;Loja Sul
+2025;Ago;Desp. Operacionais;877930,61;Loja Centro
+2025;Ago;Desp. Operacionais;579127,66;Loja Norte
+2025;Ago;Desp. Operacionais;631188,3;Loja Sul
+2025;Ago;Folha;1972877,77;Loja Centro
+2025;Ago;Folha;1301410,15;Loja Norte
+2025;Ago;Folha;1418400,51;Loja Sul
+2025;Ago;Fornecedores;1825735,6;Loja Centro
+2025;Ago;Fornecedores;1244299,93;Loja Norte
+2025;Ago;Fornecedores;1276544,05;Loja Sul
+2025;Ago;Impostos;641185,26;Loja Centro
+2025;Ago;Impostos;422958,41;Loja Norte
+2025;Ago;Impostos;460980,09;Loja Sul
+2025;Ago;Investimentos;246609,74;Loja Centro
+2025;Ago;Investimentos;162676,24;Loja Norte
+2025;Ago;Investimentos;177300,06;Loja Sul
+2025;Ago;Outras Receitas;138101,38;Loja Centro
+2025;Ago;Outras Receitas;91098,71;Loja Norte
+2025;Ago;Outras Receitas;99288,11;Loja Sul
+2025;Ago;Receb. Clientes;1676946,04;Loja Centro
+2025;Ago;Receb. Clientes;1106198,75;Loja Norte
+2025;Ago;Receb. Clientes;1205640,39;Loja Sul
+2025;Ago;Receita Financ.;108508,19;Loja Centro
+2025;Ago;Receita Financ.;71577,53;Loja Norte
+2025;Ago;Receita Financ.;78011,96;Loja Sul
+2025;Ago;Receita Produtos;1134404,75;Loja Centro
+2025;Ago;Receita Produtos;748310,89;Loja Norte
+2025;Ago;Receita Produtos;815580,21;Loja Sul
+2025;Ago;Receita Serviços;3847111,57;Loja Centro
+2025;Ago;Receita Serviços;2537749,98;Loja Norte
+2025;Ago;Receita Serviços;2765880,91;Loja Sul
+2025;Dez;Desp. Operacionais;1822208,48;Loja Centro
+2025;Dez;Desp. Operacionais;897753,42;Loja Norte
+2025;Dez;Desp. Operacionais;1131207,61;Loja Sul
+2025;Dez;Folha;4090672,24;Loja Centro
+2025;Dez;Folha;2015365,1;Loja Norte
+2025;Dez;Folha;2539445,29;Loja Sul
+2025;Dez;Fornecedores;3938019,56;Loja Centro
+2025;Dez;Fornecedores;2019684,64;Loja Norte
+2025;Dez;Fornecedores;2397198,18;Loja Sul
+2025;Dez;Impostos;1394547,22;Loja Centro
+2025;Dez;Impostos;687056,33;Loja Norte
+2025;Dez;Impostos;865720,09;Loja Sul
+2025;Dez;Investimentos;743758,48;Loja Centro
+2025;Dez;Investimentos;366429,91;Loja Norte
+2025;Dez;Investimentos;461717,2;Loja Sul
+2025;Dez;Outras Receitas;278909,51;Loja Centro
+2025;Dez;Outras Receitas;137411,27;Loja Norte
+2025;Dez;Outras Receitas;173143,95;Loja Sul
+2025;Dez;Receb. Clientes;3532853,23;Loja Centro
+2025;Dez;Receb. Clientes;1740542,57;Loja Norte
+2025;Dez;Receb. Clientes;2193157,38;Loja Sul
+2025;Dez;Receita Financ.;278909,51;Loja Centro
+2025;Dez;Receita Financ.;137411,27;Loja Norte
+2025;Dez;Receita Financ.;173143,95;Loja Sul
+2025;Dez;Receita Produtos;2510185,24;Loja Centro
+2025;Dez;Receita Produtos;1236701,39;Loja Norte
+2025;Dez;Receita Produtos;1558295,9;Loja Sul
+2025;Dez;Receita Serviços;8367283,94;Loja Centro
+2025;Dez;Receita Serviços;4122337,59;Loja Norte
+2025;Dez;Receita Serviços;5194319,87;Loja Sul
+2025;Fev;Desp. Operacionais;882088,64;Loja Centro
+2025;Fev;Desp. Operacionais;548370,6;Loja Norte
+2025;Fev;Desp. Operacionais;739867,36;Loja Sul
+2025;Fev;Folha;1984699,23;Loja Centro
+2025;Fev;Folha;1233833,71;Loja Norte
+2025;Fev;Folha;1664701,68;Loja Sul
+2025;Fev;Fornecedores;1714705,93;Loja Centro
+2025;Fev;Fornecedores;1126623,39;Loja Norte
+2025;Fev;Fornecedores;1441514,03;Loja Sul
+2025;Fev;Impostos;595409,81;Loja Centro
+2025;Fev;Impostos;370150,17;Loja Norte
+2025;Fev;Impostos;499410,48;Loja Sul
+2025;Fev;Investimentos;220522,16;Loja Centro
+2025;Fev;Investimentos;137092,51;Loja Norte
+2025;Fev;Investimentos;184966,95;Loja Sul
+2025;Fev;Outras Receitas;110260,98;Loja Centro
+2025;Fev;Outras Receitas;68546,26;Loja Norte
+2025;Fev;Outras Receitas;92483,36;Loja Sul
+2025;Fev;Receb. Clientes;1598785,6;Loja Centro
+2025;Fev;Receb. Clientes;993921,67;Loja Norte
+2025;Fev;Receb. Clientes;1341009,68;Loja Sul
+2025;Fev;Receita Financ.;88208,82;Loja Centro
+2025;Fev;Receita Financ.;54836,95;Loja Norte
+2025;Fev;Receita Financ.;73986,65;Loja Sul
+2025;Fev;Receita Produtos;1080558,44;Loja Centro
+2025;Fev;Receita Produtos;671754,07;Loja Norte
+2025;Fev;Receita Produtos;906337,6;Loja Sul
+2025;Fev;Receita Serviços;3638615,32;Loja Centro
+2025;Fev;Receita Serviços;2262028,64;Loja Norte
+2025;Fev;Receita Serviços;3051953,27;Loja Sul
+2025;Jan;Desp. Operacionais;926505,06;Loja Centro
+2025;Jan;Desp. Operacionais;473466,73;Loja Norte
+2025;Jan;Desp. Operacionais;647717,14;Loja Sul
+2025;Jan;Folha;2138088,68;Loja Centro
+2025;Jan;Folha;1092615,77;Loja Norte
+2025;Jan;Folha;1494732,09;Loja Sul
+2025;Jan;Fornecedores;1840462,77;Loja Centro
+2025;Jan;Fornecedores;992632,59;Loja Norte
+2025;Jan;Fornecedores;1279607,24;Loja Sul
+2025;Jan;Impostos;617670,11;Loja Centro
+2025;Jan;Impostos;315644,66;Loja Norte
+2025;Jan;Impostos;431811,58;Loja Sul
+2025;Jan;Investimentos;415739,54;Loja Centro
+2025;Jan;Investimentos;212452,94;Loja Norte
+2025;Jan;Investimentos;290642,38;Loja Sul
+2025;Jan;Outras Receitas;142539,18;Loja Centro
+2025;Jan;Outras Receitas;72841,16;Loja Norte
+2025;Jan;Outras Receitas;99648,79;Loja Sul
+2025;Jan;Receb. Clientes;1662957,95;Loja Centro
+2025;Jan;Receb. Clientes;849812,27;Loja Norte
+2025;Jan;Receb. Clientes;1162569,3;Loja Sul
+2025;Jan;Receita Financ.;95026,19;Loja Centro
+2025;Jan;Receita Financ.;48560,6;Loja Norte
+2025;Jan;Receita Financ.;66432,6;Loja Sul
+2025;Jan;Receita Produtos;1128435,83;Loja Centro
+2025;Jan;Receita Produtos;576658,19;Loja Norte
+2025;Jan;Receita Produtos;788886,34;Loja Sul
+2025;Jan;Receita Serviços;3801046,63;Loja Centro
+2025;Jan;Receita Serviços;1942428,04;Loja Norte
+2025;Jan;Receita Serviços;2657301,39;Loja Sul
+2025;Jul;Desp. Operacionais;859009,05;Loja Centro
+2025;Jul;Desp. Operacionais;676381,12;Loja Norte
+2025;Jul;Desp. Operacionais;609897,25;Loja Sul
+2025;Jul;Folha;1932770,27;Loja Centro
+2025;Jul;Folha;1521857,34;Loja Norte
+2025;Jul;Folha;1372268,62;Loja Sul
+2025;Jul;Fornecedores;1825286,53;Loja Centro
+2025;Jul;Fornecedores;1489360,14;Loja Norte
+2025;Jul;Fornecedores;1298700,16;Loja Sul
+2025;Jul;Impostos;614972,26;Loja Centro
+2025;Jul;Impostos;484227,4;Loja Norte
+2025;Jul;Impostos;436630,98;Loja Sul
+2025;Jul;Investimentos;214752,17;Loja Centro
+2025;Jul;Investimentos;169095,34;Loja Norte
+2025;Jul;Investimentos;152474,31;Loja Sul
+2025;Jul;Outras Receitas;117137,56;Loja Centro
+2025;Jul;Outras Receitas;92233,76;Loja Norte
+2025;Jul;Outras Receitas;83167,84;Loja Sul
+2025;Jul;Receb. Clientes;1610641,83;Loja Centro
+2025;Jul;Receb. Clientes;1268214,45;Loja Norte
+2025;Jul;Receb. Clientes;1143557,25;Loja Sul
+2025;Jul;Receita Financ.;107376,09;Loja Centro
+2025;Jul;Receita Financ.;84547,55;Loja Norte
+2025;Jul;Receita Financ.;76237,06;Loja Sul
+2025;Jul;Receita Produtos;1093284,18;Loja Centro
+2025;Jul;Receita Produtos;860848,63;Loja Norte
+2025;Jul;Receita Produtos;776232,74;Loja Sul
+2025;Jul;Receita Serviços;3709357,05;Loja Centro
+2025;Jul;Receita Serviços;2920736,34;Loja Norte
+2025;Jul;Receita Serviços;2633647,05;Loja Sul
+2025;Jun;Desp. Operacionais;890565,63;Loja Centro
+2025;Jun;Desp. Operacionais;564502,17;Loja Norte
+2025;Jun;Desp. Operacionais;667650,83;Loja Sul
+2025;Jun;Folha;2043062,39;Loja Centro
+2025;Jun;Folha;1295034,2;Loja Norte
+2025;Jun;Folha;1531669,65;Loja Sul
+2025;Jun;Fornecedores;1885549,98;Loja Centro
+2025;Jun;Fornecedores;1280663,35;Loja Norte
+2025;Jun;Fornecedores;1414910,46;Loja Sul
+2025;Jun;Impostos;639111,83;Loja Centro
+2025;Jun;Impostos;405113,3;Loja Norte
+2025;Jun;Impostos;479137,65;Loja Sul
+2025;Jun;Investimentos;314317,35;Loja Centro
+2025;Jun;Investimentos;199236,03;Loja Norte
+2025;Jun;Investimentos;235641,42;Loja Sul
+2025;Jun;Outras Receitas;125726,9;Loja Centro
+2025;Jun;Outras Receitas;79694,31;Loja Norte
+2025;Jun;Outras Receitas;94256,69;Loja Sul
+2025;Jun;Receb. Clientes;1676358,81;Loja Centro
+2025;Jun;Receb. Clientes;1062592,25;Loja Norte
+2025;Jun;Receb. Clientes;1256754,59;Loja Sul
+2025;Jun;Receita Financ.;104772,45;Loja Centro
+2025;Jun;Receita Financ.;66412,09;Loja Norte
+2025;Jun;Receita Financ.;78547,07;Loja Sul
+2025;Jun;Receita Produtos;1131542,3;Loja Centro
+2025;Jun;Receita Produtos;717249,81;Loja Norte
+2025;Jun;Receita Produtos;848309,41;Loja Sul
+2025;Jun;Receita Serviços;3876579,87;Loja Centro
+2025;Jun;Receita Serviços;2457244,46;Loja Norte
+2025;Jun;Receita Serviços;2906245,17;Loja Sul
+2025;Mai;Desp. Operacionais;860407,6;Loja Centro
+2025;Mai;Desp. Operacionais;630913,95;Loja Norte
+2025;Mai;Desp. Operacionais;702680,15;Loja Sul
+2025;Mai;Folha;1946159,96;Loja Centro
+2025;Mai;Folha;1427067,2;Loja Norte
+2025;Mai;Folha;1589395,71;Loja Sul
+2025;Mai;Fornecedores;1700506,14;Loja Centro
+2025;Mai;Fornecedores;1293096,3;Loja Norte
+2025;Mai;Fornecedores;1404446,53;Loja Sul
+2025;Mai;Impostos;604333,81;Loja Centro
+2025;Mai;Impostos;443141,97;Loja Norte
+2025;Mai;Impostos;493549,23;Loja Sul
+2025;Mai;Investimentos;184373,08;Loja Centro
+2025;Mai;Investimentos;135195,75;Loja Norte
+2025;Mai;Investimentos;150574,36;Loja Sul
+2025;Mai;Outras Receitas;102429,51;Loja Centro
+2025;Mai;Outras Receitas;75108,9;Loja Norte
+2025;Mai;Outras Receitas;83652,5;Loja Sul
+2025;Mai;Receb. Clientes;1577413,8;Loja Centro
+2025;Mai;Receb. Clientes;1156675,44;Loja Norte
+2025;Mai;Receb. Clientes;1288246,98;Loja Sul
+2025;Mai;Receita Financ.;102429,51;Loja Centro
+2025;Mai;Receita Financ.;75108,9;Loja Norte
+2025;Mai;Receita Financ.;83652,5;Loja Sul
+2025;Mai;Receita Produtos;1065266,43;Loja Centro
+2025;Mai;Receita Produtos;781131,48;Loja Norte
+2025;Mai;Receita Produtos;869985,14;Loja Sul
+2025;Mai;Receita Serviços;3636246,34;Loja Centro
+2025;Mai;Receita Serviços;2666362,17;Loja Norte
+2025;Mai;Receita Serviços;2969660,49;Loja Sul
+2025;Mar;Desp. Operacionais;854128,6;Loja Centro
+2025;Mar;Desp. Operacionais;542162,68;Loja Norte
+2025;Mar;Desp. Operacionais;791029,06;Loja Sul
+2025;Mar;Folha;1950787,44;Loja Centro
+2025;Mar;Folha;1238272,91;Loja Norte
+2025;Mar;Folha;1806671,55;Loja Sul
+2025;Mar;Fornecedores;1708777,64;Loja Centro
+2025;Mar;Fornecedores;1129598,54;Loja Norte
+2025;Mar;Fornecedores;1590298,4;Loja Sul
+2025;Mar;Impostos;611598,17;Loja Centro
+2025;Mar;Impostos;388215,4;Loja Norte
+2025;Mar;Impostos;566415,84;Loja Sul
+2025;Mar;Investimentos;158172,03;Loja Centro
+2025;Mar;Investimentos;100400,51;Loja Norte
+2025;Mar;Investimentos;146486,78;Loja Sul
+2025;Mar;Outras Receitas;115992,73;Loja Centro
+2025;Mar;Outras Receitas;73626,98;Loja Norte
+2025;Mar;Outras Receitas;107423,79;Loja Sul
+2025;Mar;Receb. Clientes;1581719,5;Loja Centro
+2025;Mar;Receb. Clientes;1004005,06;Loja Norte
+2025;Mar;Receb. Clientes;1464868,69;Loja Sul
+2025;Mar;Receita Financ.;94903,18;Loja Centro
+2025;Mar;Receita Financ.;60240,36;Loja Norte
+2025;Mar;Receita Financ.;87892,07;Loja Sul
+2025;Mar;Receita Produtos;1075569,29;Loja Centro
+2025;Mar;Receita Produtos;682723,34;Loja Norte
+2025;Mar;Receita Produtos;996110,77;Loja Sul
+2025;Mar;Receita Serviços;3690678,77;Loja Centro
+2025;Mar;Receita Serviços;2342678,22;Loja Norte
+2025;Mar;Receita Serviços;3418027,01;Loja Sul
+2025;Nov;Desp. Operacionais;1256201,07;Loja Centro
+2025;Nov;Desp. Operacionais;796482,53;Loja Norte
+2025;Nov;Desp. Operacionais;1051082,85;Loja Sul
+2025;Nov;Folha;2779678,8;Loja Centro
+2025;Nov;Folha;1762429,13;Loja Norte
+2025;Nov;Folha;2325800,19;Loja Sul
+2025;Nov;Fornecedores;2684350,89;Loja Centro
+2025;Nov;Fornecedores;1762995,75;Loja Norte
+2025;Nov;Fornecedores;2223347;Loja Sul
+2025;Nov;Impostos;935468,79;Loja Centro
+2025;Nov;Impostos;593125,06;Loja Norte
+2025;Nov;Impostos;782721,09;Loja Sul
+2025;Nov;Investimentos;400915,23;Loja Centro
+2025;Nov;Investimentos;254196,59;Loja Norte
+2025;Nov;Investimentos;335451,86;Loja Sul
+2025;Nov;Outras Receitas;187093,71;Loja Centro
+2025;Nov;Outras Receitas;118624,95;Loja Norte
+2025;Nov;Outras Receitas;156544,11;Loja Sul
+2025;Nov;Receb. Clientes;2405491,14;Loja Centro
+2025;Nov;Receb. Clientes;1525179,24;Loja Norte
+2025;Nov;Receb. Clientes;2012711,7;Loja Sul
+2025;Nov;Receita Financ.;173729,93;Loja Centro
+2025;Nov;Receita Financ.;110151,92;Loja Norte
+2025;Nov;Receita Financ.;145362,42;Loja Sul
+2025;Nov;Receita Produtos;1670480,09;Loja Centro
+2025;Nov;Receita Produtos;1059152,15;Loja Norte
+2025;Nov;Receita Produtos;1397716,39;Loja Sul
+2025;Nov;Receita Serviços;5612812,73;Loja Centro
+2025;Nov;Receita Serviços;3558751,34;Loja Norte
+2025;Nov;Receita Serviços;4696327,38;Loja Sul
+2025;Out;Desp. Operacionais;839102,53;Loja Centro
+2025;Out;Desp. Operacionais;604463,34;Loja Norte
+2025;Out;Desp. Operacionais;741571,32;Loja Sul
+2025;Out;Folha;1869739,12;Loja Centro
+2025;Out;Folha;1346902,22;Loja Norte
+2025;Out;Folha;1652414,4;Loja Sul
+2025;Out;Fornecedores;1716362,27;Loja Centro
+2025;Out;Fornecedores;1336657,73;Loja Norte
+2025;Out;Fornecedores;1504494,51;Loja Sul
+2025;Out;Impostos;620206,11;Loja Centro
+2025;Out;Impostos;446777,36;Loja Norte
+2025;Out;Impostos;548117,96;Loja Sul
+2025;Out;Investimentos;255379,04;Loja Centro
+2025;Out;Investimentos;183967,24;Loja Norte
+2025;Out;Investimentos;225695,69;Loja Sul
+2025;Out;Outras Receitas;118568,82;Loja Centro
+2025;Out;Outras Receitas;85413,25;Loja Norte
+2025;Out;Outras Receitas;104787,31;Loja Sul
+2025;Out;Receb. Clientes;1596118,87;Loja Centro
+2025;Out;Receb. Clientes;1149794,46;Loja Norte
+2025;Out;Receb. Clientes;1410597,65;Loja Sul
+2025;Out;Receita Financ.;109448,21;Loja Centro
+2025;Out;Receita Financ.;78843,1;Loja Norte
+2025;Out;Receita Financ.;96726,78;Loja Sul
+2025;Out;Receita Produtos;1094481,57;Loja Centro
+2025;Out;Receita Produtos;788430,58;Loja Norte
+2025;Out;Receita Produtos;967267;Loja Sul
+2025;Out;Receita Serviços;3693875,02;Loja Centro
+2025;Out;Receita Serviços;2660953,03;Loja Norte
+2025;Out;Receita Serviços;3264525,74;Loja Sul
+2025;Set;Desp. Operacionais;913870,61;Loja Centro
+2025;Set;Desp. Operacionais;580253,63;Loja Norte
+2025;Set;Desp. Operacionais;610386,06;Loja Sul
+2025;Set;Folha;2051131,9;Loja Centro
+2025;Set;Folha;1302346,94;Loja Norte
+2025;Set;Folha;1369977,6;Loja Sul
+2025;Set;Fornecedores;1882201,31;Loja Centro
+2025;Set;Fornecedores;1220475,46;Loja Norte
+2025;Set;Fornecedores;1240951,27;Loja Sul
+2025;Set;Impostos;670171,86;Loja Centro
+2025;Set;Impostos;425519,24;Loja Norte
+2025;Set;Impostos;447616,43;Loja Sul
+2025;Set;Investimentos;203082,44;Loja Centro
+2025;Set;Investimentos;128945,18;Loja Norte
+2025;Set;Investimentos;135641,32;Loja Sul
+2025;Set;Outras Receitas;132003,5;Loja Centro
+2025;Set;Outras Receitas;83814,33;Loja Norte
+2025;Set;Outras Receitas;88166,79;Loja Sul
+2025;Set;Receb. Clientes;1746508,42;Loja Centro
+2025;Set;Receb. Clientes;1108929,06;Loja Norte
+2025;Set;Receb. Clientes;1166515,51;Loja Sul
+2025;Set;Receita Financ.;121849,46;Loja Centro
+2025;Set;Receita Financ.;77367,2;Loja Norte
+2025;Set;Receita Financ.;81384,72;Loja Sul
+2025;Set;Receita Produtos;1198186,02;Loja Centro
+2025;Set;Receita Produtos;760776,79;Loja Norte
+2025;Set;Receita Produtos;800283,99;Loja Sul
+2025;Set;Receita Serviços;4010876,79;Loja Centro
+2025;Set;Receita Serviços;2546668,3;Loja Norte
+2025;Set;Receita Serviços;2678916,7;Loja Sul
+2026;Abr;Desp. Operacionais;1082550,18;Loja Centro
+2026;Abr;Desp. Operacionais;687617,64;Loja Norte
+2026;Abr;Desp. Operacionais;988946,54;Loja Sul
+2026;Abr;Folha;2442338,5;Loja Centro
+2026;Abr;Folha;1551332,75;Loja Norte
+2026;Abr;Folha;2231159,78;Loja Sul
+2026;Abr;Fornecedores;2179792,75;Loja Centro
+2026;Abr;Fornecedores;1407460,69;Loja Norte
+2026;Abr;Fornecedores;1909113,42;Loja Sul
+2026;Abr;Impostos;739302,41;Loja Centro
+2026;Abr;Impostos;469592,68;Loja Norte
+2026;Abr;Impostos;675378,17;Loja Sul
+2026;Abr;Investimentos;330045,85;Loja Centro
+2026;Abr;Investimentos;209639,68;Loja Norte
+2026;Abr;Investimentos;301508,13;Loja Sul
+2026;Abr;Outras Receitas;118816,5;Loja Centro
+2026;Abr;Outras Receitas;75470,26;Loja Norte
+2026;Abr;Outras Receitas;108542,87;Loja Sul
+2026;Abr;Receb. Clientes;1953870,8;Loja Centro
+2026;Abr;Receb. Clientes;1241066,14;Loja Norte
+2026;Abr;Receb. Clientes;1784927,82;Loja Sul
+2026;Abr;Receita Financ.;105614,57;Loja Centro
+2026;Abr;Receita Financ.;67084,71;Loja Norte
+2026;Abr;Receita Financ.;96482,63;Loja Sul
+2026;Abr;Receita Produtos;1267375,68;Loja Centro
+2026;Abr;Receita Produtos;805015,95;Loja Norte
+2026;Abr;Receita Produtos;1157791,08;Loja Sul
+2026;Abr;Receita Serviços;4488622,37;Loja Centro
+2026;Abr;Receita Serviços;2851098,05;Loja Norte
+2026;Abr;Receita Serviços;4100509,99;Loja Sul
+2026;Fev;Desp. Operacionais;1124775,91;Loja Centro
+2026;Fev;Desp. Operacionais;641196,32;Loja Norte
+2026;Fev;Desp. Operacionais;899090,02;Loja Sul
+2026;Fev;Folha;2530745,81;Loja Centro
+2026;Fev;Folha;1442691,79;Loja Norte
+2026;Fev;Folha;2022952,26;Loja Sul
+2026;Fev;Fornecedores;2296923,67;Loja Centro
+2026;Fev;Fornecedores;1331848,56;Loja Norte
+2026;Fev;Fornecedores;1799170,9;Loja Sul
+2026;Fev;Impostos;759223,78;Loja Centro
+2026;Fev;Impostos;432807,67;Loja Norte
+2026;Fev;Impostos;606885,82;Loja Sul
+2026;Fev;Investimentos;281193,98;Loja Centro
+2026;Fev;Investimentos;160299,15;Loja Norte
+2026;Fev;Investimentos;224772,45;Loja Sul
+2026;Fev;Outras Receitas;140596,99;Loja Centro
+2026;Fev;Outras Receitas;80149,44;Loja Norte
+2026;Fev;Outras Receitas;112386,34;Loja Sul
+2026;Fev;Receb. Clientes;2038656,34;Loja Centro
+2026;Fev;Receb. Clientes;1162168,48;Loja Norte
+2026;Fev;Receb. Clientes;1629600,54;Loja Sul
+2026;Fev;Receita Financ.;112477,67;Loja Centro
+2026;Fev;Receita Financ.;64119,61;Loja Norte
+2026;Fev;Receita Financ.;89908,93;Loja Sul
+2026;Fev;Receita Produtos;1377850,58;Loja Centro
+2026;Fev;Receita Produtos;785465,64;Loja Norte
+2026;Fev;Receita Produtos;1101385,06;Loja Sul
+2026;Fev;Receita Serviços;4639700,85;Loja Centro
+2026;Fev;Receita Serviços;2644934,99;Loja Norte
+2026;Fev;Receita Serviços;3708745,97;Loja Sul
+2026;Jan;Desp. Operacionais;1041258,26;Loja Centro
+2026;Jan;Desp. Operacionais;735397,09;Loja Norte
+2026;Jan;Desp. Operacionais;770885,07;Loja Sul
+2026;Jan;Folha;2402903,45;Loja Centro
+2026;Jan;Folha;1697070,32;Loja Norte
+2026;Jan;Folha;1778965,49;Loja Sul
+2026;Jan;Fornecedores;2116964,26;Loja Centro
+2026;Jan;Fornecedores;1612051,59;Loja Norte
+2026;Jan;Fornecedores;1554301,97;Loja Sul
+2026;Jan;Impostos;694172,17;Loja Centro
+2026;Jan;Impostos;490264,81;Loja Norte
+2026;Jan;Impostos;513923,31;Loja Sul
+2026;Jan;Investimentos;467231,21;Loja Centro
+2026;Jan;Investimentos;329986,03;Loja Norte
+2026;Jan;Investimentos;345909,9;Loja Sul
+2026;Jan;Outras Receitas;160193,56;Loja Centro
+2026;Jan;Outras Receitas;113138,07;Loja Norte
+2026;Jan;Outras Receitas;118597,67;Loja Sul
+2026;Jan;Receb. Clientes;1868924,83;Loja Centro
+2026;Jan;Receb. Clientes;1319943,58;Loja Norte
+2026;Jan;Receb. Clientes;1383639,85;Loja Sul
+2026;Jan;Receita Financ.;106795,64;Loja Centro
+2026;Jan;Receita Financ.;75425,3;Loja Norte
+2026;Jan;Receita Financ.;79065,04;Loja Sul
+2026;Jan;Receita Produtos;1268199,02;Loja Centro
+2026;Jan;Receita Produtos;895676,13;Loja Norte
+2026;Jan;Receita Produtos;938898,48;Loja Sul
+2026;Jan;Receita Serviços;4271828,48;Loja Centro
+2026;Jan;Receita Serviços;3017014,16;Loja Norte
+2026;Jan;Receita Serviços;3162605,56;Loja Sul
+2026;Jul;Desp. Operacionais;939127,84;Loja Centro
+2026;Jul;Desp. Operacionais;755941,13;Loja Norte
+2026;Jul;Desp. Operacionais;968826,76;Loja Sul
+2026;Jul;Folha;2113037,83;Loja Centro
+2026;Jul;Folha;1700867,42;Loja Norte
+2026;Jul;Folha;2179860,31;Loja Sul
+2026;Jul;Fornecedores;1997399,18;Loja Centro
+2026;Jul;Fornecedores;1736902,34;Loja Norte
+2026;Jul;Fornecedores;2014955,78;Loja Sul
+2026;Jul;Impostos;672330,24;Loja Centro
+2026;Jul;Impostos;541185,09;Loja Norte
+2026;Jul;Impostos;693591,82;Loja Sul
+2026;Jul;Investimentos;234781,96;Loja Centro
+2026;Jul;Investimentos;188985,16;Loja Norte
+2026;Jul;Investimentos;242206,79;Loja Sul
+2026;Jul;Outras Receitas;128062,92;Loja Centro
+2026;Jul;Outras Receitas;103082,79;Loja Norte
+2026;Jul;Outras Receitas;132112,78;Loja Sul
+2026;Jul;Receb. Clientes;1760864,89;Loja Centro
+2026;Jul;Receb. Clientes;1417389,44;Loja Norte
+2026;Jul;Receb. Clientes;1816550,12;Loja Sul
+2026;Jul;Receita Financ.;117390,98;Loja Centro
+2026;Jul;Receita Financ.;94492,58;Loja Norte
+2026;Jul;Receita Financ.;121103,4;Loja Sul
+2026;Jul;Receita Produtos;1195253,68;Loja Centro
+2026;Jul;Receita Produtos;962106,72;Loja Norte
+2026;Jul;Receita Produtos;1233052,31;Loja Sul
+2026;Jul;Receita Serviços;4055324,97;Loja Centro
+2026;Jul;Receita Serviços;3264290,96;Loja Norte
+2026;Jul;Receita Serviços;4183570,11;Loja Sul
+2026;Jun;Desp. Operacionais;1144193,19;Loja Centro
+2026;Jun;Desp. Operacionais;720027,98;Loja Norte
+2026;Jun;Desp. Operacionais;807612,37;Loja Sul
+2026;Jun;Folha;2624913,85;Loja Centro
+2026;Jun;Folha;1651828,8;Loja Norte
+2026;Jun;Folha;1852757,82;Loja Sul
+2026;Jun;Fornecedores;2339234,23;Loja Centro
+2026;Jun;Fornecedores;1547181,41;Loja Norte
+2026;Jun;Fornecedores;1663731,9;Loja Sul
+2026;Jun;Impostos;821126,98;Loja Centro
+2026;Jun;Impostos;516725,82;Loja Norte
+2026;Jun;Impostos;579580,65;Loja Sul
+2026;Jun;Investimentos;403832,96;Loja Centro
+2026;Jun;Investimentos;254127,45;Loja Norte
+2026;Jun;Investimentos;285039,65;Loja Sul
+2026;Jun;Outras Receitas;161533,11;Loja Centro
+2026;Jun;Outras Receitas;101651,08;Loja Norte
+2026;Jun;Outras Receitas;114015,86;Loja Sul
+2026;Jun;Receb. Clientes;2153775,6;Loja Centro
+2026;Jun;Receb. Clientes;1355346,73;Loja Norte
+2026;Jun;Receb. Clientes;1520211,6;Loja Sul
+2026;Jun;Receita Financ.;134610,99;Loja Centro
+2026;Jun;Receita Financ.;84709,23;Loja Norte
+2026;Jun;Receita Financ.;95013,14;Loja Sul
+2026;Jun;Receita Produtos;1453798,54;Loja Centro
+2026;Jun;Receita Produtos;914858,97;Loja Norte
+2026;Jun;Receita Produtos;1026142,73;Loja Sul
+2026;Jun;Receita Serviços;4980605,93;Loja Centro
+2026;Jun;Receita Serviços;3134239,14;Loja Norte
+2026;Jun;Receita Serviços;3515489,14;Loja Sul
+2026;Mai;Desp. Operacionais;1242919,68;Loja Centro
+2026;Mai;Desp. Operacionais;787441,06;Loja Norte
+2026;Mai;Desp. Operacionais;733873,61;Loja Sul
+2026;Mai;Folha;2811366,06;Loja Centro
+2026;Mai;Folha;1781116,41;Loja Norte
+2026;Mai;Folha;1659952,09;Loja Sul
+2026;Mai;Fornecedores;2482916,25;Loja Centro
+2026;Mai;Fornecedores;1595990,23;Loja Norte
+2026;Mai;Fornecedores;1399822,22;Loja Sul
+2026;Mai;Impostos;873003,15;Loja Centro
+2026;Mai;Impostos;553083,6;Loja Norte
+2026;Mai;Impostos;515458,8;Loja Sul
+2026;Mai;Investimentos;266339,99;Loja Centro
+2026;Mai;Investimentos;168737,37;Loja Norte
+2026;Mai;Investimentos;157258,57;Loja Sul
+2026;Mai;Outras Receitas;147966,57;Loja Centro
+2026;Mai;Outras Receitas;93742,98;Loja Norte
+2026;Mai;Outras Receitas;87365,97;Loja Sul
+2026;Mai;Receb. Clientes;2278686,28;Loja Centro
+2026;Mai;Receb. Clientes;1443641,67;Loja Norte
+2026;Mai;Receb. Clientes;1345434,96;Loja Sul
+2026;Mai;Receita Financ.;147966,57;Loja Centro
+2026;Mai;Receita Financ.;93742,98;Loja Norte
+2026;Mai;Receita Financ.;87365,97;Loja Sul
+2026;Mai;Receita Produtos;1538853,02;Loja Centro
+2026;Mai;Receita Produtos;974927,02;Loja Norte
+2026;Mai;Receita Produtos;908605,33;Loja Sul
+2026;Mai;Receita Serviços;5252815,59;Loja Centro
+2026;Mai;Receita Serviços;3327875,62;Loja Norte
+2026;Mai;Receita Serviços;3101489,59;Loja Sul
+2026;Mar;Desp. Operacionais;1121447,74;Loja Centro
+2026;Mar;Desp. Operacionais;685380,47;Loja Norte
+2026;Mar;Desp. Operacionais;945511,3;Loja Sul
+2026;Mar;Folha;2561331,28;Loja Centro
+2026;Mar;Folha;1565375,36;Loja Norte
+2026;Mar;Folha;2159500,91;Loja Sul
+2026;Mar;Fornecedores;2261016,08;Loja Centro
+2026;Mar;Fornecedores;1483147,35;Loja Norte
+2026;Mar;Fornecedores;1900137,43;Loja Sul
+2026;Mar;Impostos;803011,95;Loja Centro
+2026;Mar;Impostos;490766,33;Loja Norte
+2026;Mar;Impostos;677032,74;Loja Sul
+2026;Mar;Investimentos;207675,56;Loja Centro
+2026;Mar;Investimentos;126922,21;Loja Norte
+2026;Mar;Investimentos;175094,72;Loja Sul
+2026;Mar;Outras Receitas;152295,44;Loja Centro
+2026;Mar;Outras Receitas;93076,38;Loja Norte
+2026;Mar;Outras Receitas;128402,68;Loja Sul
+2026;Mar;Receb. Clientes;2076754,91;Loja Centro
+2026;Mar;Receb. Clientes;1269223,18;Loja Norte
+2026;Mar;Receb. Clientes;1750946,72;Loja Sul
+2026;Mar;Receita Financ.;124605,38;Loja Centro
+2026;Mar;Receita Financ.;76153,33;Loja Norte
+2026;Mar;Receita Financ.;105056,78;Loja Sul
+2026;Mar;Receita Produtos;1412193,48;Loja Centro
+2026;Mar;Receita Produtos;863071,84;Loja Norte
+2026;Mar;Receita Produtos;1190643,71;Loja Sul
+2026;Mar;Receita Serviços;4845761,74;Loja Centro
+2026;Mar;Receita Serviços;2961521,01;Loja Norte
+2026;Mar;Receita Serviços;4085542,35;Loja Sul

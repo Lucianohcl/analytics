@@ -1,0 +1,104 @@
+{
+  "Arrefecimento - 03/08 10:36": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "Arrefecimento",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 238,
+      "n_ok": 238,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-08-03 10:45"
+  },
+  "cenário conjunto": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "Arrefecimento",
+      "meses_pico": [
+        "Nov",
+        "Dez"
+      ],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 1,
+      "min_periodos": 4
+    },
+    "resumo": {
+      "n_produtos": 238,
+      "n_ok": 238,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-08-03 16:40"
+  },
+  "cenário conjunto (16:58:33)": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "Arrefecimento",
+      "meses_pico": [
+        "Nov",
+        "Dez"
+      ],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 238,
+      "n_ok": 238,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-08-03 16:58"
+  },
+  "cenario_conjunto": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "Arrefecimento",
+      "meses_pico": [
+        "Nov",
+        "Dez"
+      ],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 238,
+      "n_ok": 238,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-08-03 17:28"
+  },
+  "cenario_conjunto (17:52:10)": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "Arrefecimento",
+      "meses_pico": [
+        "Nov",
+        "Dez"
+      ],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 210,
+      "n_ok": 210,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-08-03 17:52"
+  }
+}

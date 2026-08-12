@@ -1,0 +1,26 @@
+﻿Produto;Filial;Fornecedor;Classe;Volatilidade;EstoqueAtual;DemandaPrevMes(un);CoberturaDias;MinDias;MaxDias;LeadTimeDias;GiroAtual;GiroAlvo;Status;QtdSugerida;CustoUnitario;ValorSugerido;FontePrevisao;ModeloUsado;CapitalParado
+PC000666;Loja Sul;Fornecedor Delta;D;Baixa;146,0;2,1;;40;75;10,0;0,17;6,35;🟡 Estoque excessivo;0,0;384,33;0,0;1-Config ML (Painel);SARIMAX;56112,18
+PC000635;Loja Sul;Fornecedor Alfa;D;Baixa;60,0;3,1;579,5;40;75;10,0;0,63;6,35;🟡 Estoque excessivo;0,0;417,81;0,0;1-Config ML (Painel);ARIMA;25068,6
+PC000690;Loja Sul;Fornecedor Beta;E;Baixa;68,0;1,0;;55;100;10,0;0,18;4,71;🟡 Estoque excessivo;0,0;346,05;0,0;1-Config ML (Painel);ARIMA;23531,4
+PC000958;Loja Sul;Fornecedor Alfa;E;Baixa;94,0;2,0;;55;100;10,0;0,26;4,71;🟡 Estoque excessivo;0,0;194,19;0,0;1-Config ML (Painel);Croston;18253,86
+PC000457;Loja Sul;Fornecedor Gamma;D;Baixa;48,0;2,6;557,8;40;75;10,0;0,65;6,35;🟡 Estoque excessivo;0,0;312,77;0,0;1-Config ML (Painel);Prophet;15012,96
+PC000935;Loja Sul;Fornecedor Delta;D;Baixa;44,0;2,5;517,8;40;75;10,0;0,7;6,35;🟡 Estoque excessivo;0,0;307,0;0,0;1-Config ML (Painel);Prophet;13508,0
+PC000900;Loja Sul;Fornecedor Gamma;D;Baixa;38,0;2,9;388,6;40;75;10,0;0,94;6,35;🟡 Estoque excessivo;0,0;354,44;0,0;1-Config ML (Painel);Ensemble;13468,72
+PC000460;Loja Sul;Fornecedor Beta;E;Baixa;35,0;1,0;;55;100;10,0;0,35;4,71;🟡 Estoque excessivo;0,0;299,23;0,0;1-Config ML (Painel);ExponentialSmoothing;10473,050000000001
+PC000057;Loja Sul;Fornecedor Beta;D;Baixa;27,0;2,0;405,0;40;75;10,0;0,9;6,35;🟡 Estoque excessivo;0,0;347,1;0,0;1-Config ML (Painel);Holt;9371,7
+PC000587;Loja Sul;Fornecedor Alfa;D;Baixa;28,0;3,0;278,6;40;75;10,0;1,31;6,35;🟡 Estoque excessivo;0,0;315,25;0,0;1-Config ML (Painel);Prophet;8827,0
+PC000172;Loja Sul;Fornecedor Gamma;D;Baixa;17,0;2,1;246,4;40;75;10,0;1,48;6,35;🟡 Estoque excessivo;0,0;441,68;0,0;1-Config ML (Painel);SARIMAX;7508,56
+PC000209;Loja Sul;Fornecedor Delta;E;Baixa;47,0;3,4;410,9;55;100;10,0;0,89;4,71;🟡 Estoque excessivo;0,0;128,94;0,0;1-Config ML (Painel);ExponentialSmoothing;6060,18
+PC000498;Loja Sul;Fornecedor Delta;E;Média;19,0;1,1;500,5;55;100;10,0;0,73;4,71;🟡 Estoque excessivo;0,0;212,86;0,0;1-Config ML (Painel);Ensemble;4044,34
+PC000939;Loja Sul;Fornecedor Delta;E;Baixa;16,0;3,0;160,0;55;100;10,0;2,28;4,71;🟡 Estoque excessivo;0,0;228,23;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);3651,68
+PC000182;Loja Sul;Fornecedor Alfa;E;Baixa;21,0;3,1;203,4;55;100;10,0;1,79;4,71;🟡 Estoque excessivo;0,0;159,11;0,0;1-Config ML (Painel);Ensemble;3341,3100000000004
+PC000459;Loja Sul;Fornecedor Gamma;E;Baixa;32,0;2,7;357,9;55;100;10,0;1,02;4,71;🟡 Estoque excessivo;0,0;103,33;0,0;1-Config ML (Painel);ExponentialSmoothing;3306,56
+PC000641;Loja Sul;Fornecedor Delta;E;Baixa;13,0;3,1;124,2;55;100;10,0;2,94;4,71;🟡 Estoque excessivo;0,0;246,66;0,0;1-Config ML (Painel);Croston;3206,58
+PC000593;Loja Sul;Fornecedor Beta;E;Baixa;38,0;3,0;379,4;55;100;10,0;0,96;4,71;🟡 Estoque excessivo;0,0;64,75;0,0;1-Config ML (Painel);ARIMA;2460,5
+PC000073;Loja Sul;Fornecedor Alfa;E;Baixa;71,0;3,2;668,7;55;100;10,0;0,55;4,71;🟡 Estoque excessivo;0,0;26,61;0,0;1-Config ML (Painel);SARIMAX;1889,31
+PC000022;Loja Sul;Fornecedor Gamma;E;Baixa;11,0;2,9;112,5;55;100;10,0;3,24;4,71;🟡 Estoque excessivo;0,0;139,43;0,0;1-Config ML (Painel);ARIMA;1533,73
+PC000100;Loja Sul;Fornecedor Beta;E;Baixa;9,0;3,1;88,2;55;100;10,0;4,14;4,71;🟢 OK;0,0;162,76;0,0;1-Config ML (Painel);Ensemble;1464,84
+PC000984;Loja Sul;Fornecedor Beta;E;Média;4,0;1,2;100,1;55;100;10,0;3,65;4,71;🟡 Estoque excessivo;0,0;221,47;0,0;1-Config ML (Painel);Ensemble;885,88
+PC000605;Loja Sul;Fornecedor Beta;E;Baixa;22,0;2,4;275,4;55;100;10,0;1,33;4,71;🟡 Estoque excessivo;0,0;38,69;0,0;1-Config ML (Painel);Prophet;851,18
+PC000577;Loja Sul;Fornecedor Alfa;E;Baixa;33,0;2,6;382,6;55;100;10,0;0,95;4,71;🟡 Estoque excessivo;0,0;18,45;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);608,85
+PC000169;Loja Sul;Fornecedor Alfa;E;Baixa;34,0;3,4;300,8;55;100;10,0;1,21;4,71;🟡 Estoque excessivo;0,0;10,82;0,0;1-Config ML (Painel);ARIMA;367,88

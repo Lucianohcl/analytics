@@ -1,0 +1,25 @@
+﻿Produto;Filial;Fornecedor;Classe;Volatilidade;EstoqueAtual;DemandaPrevMes(un);CoberturaDias;MinDias;MaxDias;LeadTimeDias;GiroAtual;GiroAlvo;Status;QtdSugerida;CustoUnitario;ValorSugerido;FontePrevisao;ModeloUsado;CapitalParado
+PC000547;Loja Norte;Fornecedor Beta;D;Baixa;62,0;2,0;930,0;40;75;10,0;0,39;6,35;🟡 Estoque excessivo;0,0;364,25;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);22583,5
+PC000357;Loja Norte;Fornecedor Delta;E;Baixa;42,0;3,0;420,0;55;100;10,0;0,87;4,71;🟡 Estoque excessivo;0,0;406,11;0,0;1-Config ML (Painel);Média Móvel;17056,62
+PC000182;Loja Norte;Fornecedor Alfa;E;Baixa;76,0;1,1;;55;100;10,0;0,17;4,71;🟡 Estoque excessivo;0,0;159,11;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);12092,36
+PC000172;Loja Norte;Fornecedor Gamma;D;Baixa;27,0;3,0;269,9;40;75;10,0;1,35;6,35;🟡 Estoque excessivo;0,0;441,68;0,0;1-Config ML (Painel);Croston;11925,36
+PC000371;Loja Norte;Fornecedor Beta;D;Baixa;24,0;1,9;379,2;40;75;10,0;0,96;6,35;🟡 Estoque excessivo;0,0;437,36;0,0;1-Config ML (Painel);ARIMA;10496,64
+PC000690;Loja Norte;Fornecedor Beta;D;Baixa;23,0;2,1;335,9;40;75;10,0;1,09;6,35;🟡 Estoque excessivo;0,0;346,05;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);7959,150000000001
+PC000032;Loja Norte;Fornecedor Gamma;E;Média;29,0;1,2;713,9;55;100;10,0;0,51;4,71;🟡 Estoque excessivo;0,0;271,55;0,0;1-Config ML (Painel);ExponentialSmoothing;7874,950000000001
+PC000704;Loja Norte;Fornecedor Alfa;D;Baixa;32,0;2,8;340,1;40;75;10,0;1,07;6,35;🟡 Estoque excessivo;0,0;231,71;0,0;1-Config ML (Painel);Ensemble;7414,72
+PC000129;Loja Norte;Fornecedor Delta;E;Baixa;42,0;3,0;425,0;55;100;10,0;0,86;4,71;🟡 Estoque excessivo;0,0;172,73;0,0;1-Config ML (Painel);ARIMA;7254,66
+PC000487;Loja Norte;Fornecedor Delta;E;Baixa;37,0;3,1;354,3;55;100;10,0;1,03;4,71;🟡 Estoque excessivo;0,0;183,11;0,0;1-Config ML (Painel);Holt;6775,070000000001
+PC000084;Loja Norte;Fornecedor Alfa;E;Baixa;17,0;3,0;170,0;55;100;10,0;2,15;4,71;🟡 Estoque excessivo;0,0;396,57;0,0;1-Config ML (Painel);Média Móvel;6741,69
+PC000431;Loja Norte;Fornecedor Gamma;D;Baixa;30,0;3,1;293,8;40;75;10,0;1,24;6,35;🟡 Estoque excessivo;0,0;209,0;0,0;1-Config ML (Painel);SARIMAX;6270,0
+PC000589;Loja Norte;Fornecedor Beta;E;Baixa;31,0;2,7;343,5;55;100;10,0;1,06;4,71;🟡 Estoque excessivo;0,0;197,26;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);6115,0599999999995
+PC000459;Loja Norte;Fornecedor Gamma;E;Baixa;54,0;3,0;540,0;55;100;10,0;0,68;4,71;🟡 Estoque excessivo;0,0;103,33;0,0;1-Config ML (Painel);Média Móvel;5579,82
+PC000030;Loja Norte;Fornecedor Beta;D;Baixa;14,0;2,2;191,5;40;75;10,0;1,91;6,35;🟡 Estoque excessivo;0,0;374,38;0,0;1-Config ML (Painel);ARIMA;5241,32
+PC000058;Loja Norte;Fornecedor Alfa;E;Baixa;26,0;1,4;566,3;55;100;10,0;0,64;4,71;🟡 Estoque excessivo;0,0;185,65;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);4826,900000000001
+PC000629;Loja Norte;Fornecedor Gamma;E;Média;85,0;1,2;;55;100;10,0;0,17;4,71;🟡 Estoque excessivo;0,0;50,73;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);4312,05
+PC000408;Loja Norte;Fornecedor Delta;D;Baixa;11,0;2,0;167,4;40;75;10,0;2,18;6,35;🟡 Estoque excessivo;0,0;364,11;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);4005,21
+PC000506;Loja Norte;Fornecedor Gamma;E;Baixa;20,0;2,7;225,0;55;100;10,0;1,62;4,71;🟡 Estoque excessivo;0,0;184,28;0,0;1-Config ML (Painel);Média Móvel;3685,6
+PC000038;Loja Norte;Fornecedor Delta;E;Baixa;5,0;1,0;150,0;55;100;10,0;2,43;4,71;🟡 Estoque excessivo;0,0;328,35;0,0;1-Config ML (Painel);ARIMA;1641,75
+PC000498;Loja Norte;Fornecedor Delta;E;Baixa;7,0;1,0;213,0;55;100;10,0;1,71;4,71;🟡 Estoque excessivo;0,0;212,86;0,0;1-Config ML (Painel);ExponentialSmoothing;1490,02
+PC000540;Loja Norte;Fornecedor Delta;E;Média;6,0;1,8;102,5;55;100;10,0;3,56;4,71;🟡 Estoque excessivo;0,0;240,12;0,0;1-Config ML (Painel);Ensemble;1440,72
+PC000577;Loja Norte;Fornecedor Alfa;E;Baixa;62,0;3,0;620,0;55;100;10,0;0,59;4,71;🟡 Estoque excessivo;0,0;18,45;0,0;1-Config ML (Painel);Holt;1143,8999999999999
+PC000776;Loja Norte;Fornecedor Beta;E;Baixa;5,0;2,4;62,7;55;100;10,0;5,82;4,71;🟢 OK;0,0;147,41;0,0;1-Config ML (Painel);Prophet;737,05
