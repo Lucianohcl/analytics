@@ -206,6 +206,11 @@ TODOS = list(dict.fromkeys(CAMPOS_DRE + CAMPOS_BAL + CAMPOS_FLUXO))
 MODELOS_ML = {"ARIMA":STATS_OK,"ExponentialSmoothing":STATS_OK,
               "SARIMAX":STATS_OK,"Holt":STATS_OK,"Prophet":PROPHET_OK,
               "Croston":True,"TSB":True,"Ensemble":True}
+# Executor único, reaproveitado em todos os treinos de modelo (em vez de criar
+# um novo a cada chamada). max_workers=4 (não 1) de propósito: se um modelo
+# travar e estourar o timeout, a thread presa não bloqueia os próximos treinos,
+# porque sobram outras vagas livres no pool.
+_ML_EXECUTOR = concurrent.futures.ThreadPoolExecutor(max_workers=4)
 CORES = ["#2176FF","#00D4AA","#FFB627","#F85149","#A371F7","#F78166","#79C0FF","#56D364"]
 
 # ═══════════════════════════════════════════════════
@@ -1874,12 +1879,11 @@ def treinar_backtest(serie,modelo,timeout_s=20):
         s=pd.to_numeric(serie,errors="coerce").dropna()
         if len(s)<14: return float("inf"),None,None
         tr,te=s.iloc[:-6],s.iloc[-6:]
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as _ex:
-            _fut=_ex.submit(treinar,tr,modelo,6)
-            try:
-                pr=_fut.result(timeout=timeout_s)
-            except concurrent.futures.TimeoutError:
-                return float("inf"),None,None
+        _fut=_ML_EXECUTOR.submit(treinar,tr,modelo,6)
+        try:
+            pr=_fut.result(timeout=timeout_s)
+        except concurrent.futures.TimeoutError:
+            return float("inf"),None,None
         if pr is None: return float("inf"),None,None
         mse=float(mean_squared_error(te.values,pr.values[:6]))
         return mse,pr.values[:6],te.values
