@@ -9806,12 +9806,21 @@ elif pg=="fluxo_compras":
                     "semana":row_sn["Semana"].strftime("%d/%m/%Y"),
                     "saldo":float(row_sn["SaldoAcumulado"])
                 } for _,row_sn in semanas_negativas_snap.iterrows()]
+                semanas_deficit_semanal_snap=resumo_real_ff[resumo_real_ff["SaidaReal"]>resumo_real_ff["EntradaReal"]]
+                lista_semanas_deficit_semanal=[{
+                    "semana":row_sd["Semana"].strftime("%d/%m/%Y"),
+                    "entrada":float(row_sd["EntradaReal"]),
+                    "saida":float(row_sd["SaidaReal"]),
+                    "diferenca":float(row_sd["EntradaReal"]-row_sd["SaidaReal"])
+                } for _,row_sd in semanas_deficit_semanal_snap.iterrows()]
                 st.session_state["fluxo_snapshot"]={
                     "saldo_final_real":float(saldo_final_real),
                     "menor_saldo":float(semana_critica_real["SaldoAcumulado"]) if semana_critica_real is not None else None,
                     "semana_critica":semana_critica_real["Semana"].strftime("%d/%m/%Y") if semana_critica_real is not None else None,
                     "semanas_negativas":lista_semanas_negativas,
                     "n_semanas_negativas":len(lista_semanas_negativas),
+                    "semanas_deficit_semanal":lista_semanas_deficit_semanal,
+                    "n_semanas_deficit_semanal":len(lista_semanas_deficit_semanal),
                     "total_entradas":float(resumo_real_ff["EntradaReal"].sum()),
                     "total_saidas":float(resumo_real_ff["SaidaReal"].sum()),
                     "n_semanas":len(resumo_real_ff),
@@ -10030,12 +10039,22 @@ elif pg=="parecer_ia":
                         _sem_neg=_sf.get('semanas_negativas',[]) if _sf else []
                         if _sem_neg:
                             _pior_sem=min(_sem_neg,key=lambda s:s['saldo'])
-                            _caixa_txt=(f"{len(_sem_neg)} semana(s) com saldo negativo, a mais crítica é {_pior_sem['semana']} "
+                            _caixa_txt=(f"{len(_sem_neg)} semana(s) com SALDO ACUMULADO negativo, a mais crítica é {_pior_sem['semana']} "
                                         f"com {fmt(_pior_sem['saldo'])}")
                         elif _sf and _sf.get('menor_saldo') is not None and _sf['menor_saldo']<0:
-                            _caixa_txt=f"menor saldo do horizonte é {fmt(_sf['menor_saldo'])} na semana de {_sf.get('semana_critica','—')}"
+                            _caixa_txt=f"menor saldo acumulado do horizonte é {fmt(_sf['menor_saldo'])} na semana de {_sf.get('semana_critica','—')}"
                         else:
-                            _caixa_txt="nenhuma semana com saldo negativo no horizonte projetado"
+                            _caixa_txt="nenhuma semana com saldo ACUMULADO negativo no horizonte projetado"
+
+                        _sem_defc=_sf.get('semanas_deficit_semanal',[]) if _sf else []
+                        if _sem_defc:
+                            _pior_defc=min(_sem_defc,key=lambda s:s['diferenca'])
+                            _caixa_txt+=(f". ALÉM DISSO: {len(_sem_defc)} semana(s) individuais tiveram SAÍDA maior que ENTRADA "
+                                        f"naquela semana específica (mesmo o saldo acumulado total podendo estar positivo) — "
+                                        f"a pior foi {_pior_defc['semana']}, com entrada de {fmt(_pior_defc['entrada'])} "
+                                        f"contra saída de {fmt(_pior_defc['saida'])} (déficit de {fmt(abs(_pior_defc['diferenca']))})"
+                                        f". Cite essas semanas de déficit semanal no parecer como um alerta à parte — "
+                                        f"são semanas de atenção mesmo que o caixa acumulado não tenha ficado negativo.")
 
                         # Fornecedores desta filial, calculado ao vivo do Motor de Compras salvo (participação + capital parado)
                         _forn_txt_p="sem dado de fornecedor calculado para esta filial"
@@ -10145,7 +10164,7 @@ Seja específico usando os números e filiais fornecidos. Não invente dados que
                             texto_parecer=resp_ia.choices[0].message.content.strip()
                         elif ANTHROPIC_OK:
                             client_ia=anthropic.Anthropic(api_key=st.session_state.api_key)
-                            resp_ia=client_ia.messages.create(model="claude-sonnet-4-6",max_tokens=4000,
+                            resp_ia=client_ia.messages.create(model="claude-sonnet-4-6",max_tokens=8000,
                                 system="Você é um consultor de Controladoria/FP&A sênior, direto, específico e rico em conexões entre os dados — especialmente entre filiais diferentes.",
                                 messages=[{"role":"user","content":prompt_parecer}])
                             texto_parecer=resp_ia.content[0].text.strip()
