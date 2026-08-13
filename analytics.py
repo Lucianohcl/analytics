@@ -20,10 +20,10 @@ warnings.filterwarnings("ignore")
 
 try:
     from openai import OpenAI; OPENAI_OK = True
-except: OPENAI_OK = False
+except Exception as _e_openai_import: OPENAI_OK = False; OPENAI_ERR = str(_e_openai_import)
 try:
     import anthropic; ANTHROPIC_OK = True
-except: ANTHROPIC_OK = False
+except Exception as _e_anthropic_import: ANTHROPIC_OK = False; ANTHROPIC_ERR = str(_e_anthropic_import)
 try:
     import pdfplumber; PDF_OK = True
 except: PDF_OK = False
@@ -10189,8 +10189,9 @@ Seja específico usando os números e filiais fornecidos. Não invente dados que
                             }
                             if st.session_state.cid: save_parecer_ia(st.session_state.cid,parecer_salvo,tipo="comercial")
                         else:
+                            _erro_import=f"OPENAI_OK={OPENAI_OK} (erro: {OPENAI_ERR if not OPENAI_OK and 'OPENAI_ERR' in dir() else 'n/a'}) | ANTHROPIC_OK={ANTHROPIC_OK} (erro: {ANTHROPIC_ERR if not ANTHROPIC_OK and 'ANTHROPIC_ERR' in dir() else 'n/a'})"
                             st.markdown(f'<div class="al-d">❌ Não foi possível gerar o parecer — resposta vazia da IA.<br>'
-                                        f'<span style="font-size:.75rem;opacity:.8">DEBUG: {_debug_resp} | tamanho do prompt: {len(prompt_parecer)} caracteres</span></div>',unsafe_allow_html=True)
+                                        f'<span style="font-size:.75rem;opacity:.8">DEBUG: {_debug_resp} | tamanho do prompt: {len(prompt_parecer)} caracteres<br>{_erro_import}</span></div>',unsafe_allow_html=True)
                     except Exception as e:
                         st.markdown(f'<div class="al-d">❌ Erro ao chamar a IA: {e}</div>',unsafe_allow_html=True)
     else:
