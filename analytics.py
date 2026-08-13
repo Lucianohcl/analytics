@@ -3108,7 +3108,7 @@ with st.sidebar:
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">GESTÃO</div>',unsafe_allow_html=True)
-    if st.button("👥 Clientes",        key="sb_clientes",   use_container_width=True): ir("clientes")
+    if st.button("🏢 Clientes",        key="sb_clientes",   use_container_width=True): ir("clientes")
     if st.button("➕ Novo Cliente",     key="sb_novo",        use_container_width=True): ir("novo")
     if st.button("⚙️ Configurações",   key="sb_config",      use_container_width=True): ir("config")
 
@@ -3117,8 +3117,8 @@ with st.sidebar:
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">IMPORTAR</div>',unsafe_allow_html=True)
     if st.button("📥 Importar Dados",  key="sb_importar",   use_container_width=True): ir("importar")
-    if st.button("🔌 Integração ERP",  key="sb_erp",         use_container_width=True): ir("erp")
-    if st.button("📥 Importar Vendas (Pareto/ML)", key="sb_importar_vendas", use_container_width=True): ir("importar_vendas")
+    if st.button("🔗 Integração ERP",  key="sb_erp",         use_container_width=True): ir("erp")
+    if st.button("🧾 Importar Vendas (Pareto/ML)", key="sb_importar_vendas", use_container_width=True): ir("importar_vendas")
 
     st.divider()
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
@@ -3127,22 +3127,22 @@ with st.sidebar:
     if st.button("📊 Dashboard Executivo", key="sb_gestao_estoque", use_container_width=True): ir("gestao_estoque")
     if st.button("📦 Gestão Comercial de Compras", key="sb_compras", use_container_width=True): ir("compras")
     if st.button("💰 Fluxo de Caixa Comercial Projetado", key="sb_fluxo_compras", use_container_width=True): ir("fluxo_compras")
-    if st.button("🎛️ Motor de Previsão Estatística Avançada - ML", key="sb_config_ml", use_container_width=True): ir("config_ml")
-    if st.button("🧮 Motor de Previsão por Participação %", key="sb_ml_produtos", use_container_width=True): ir("ml_produtos")
-    if st.button("📐 Curva de Pareto", key="sb_pareto", use_container_width=True): ir("pareto")
+    if st.button("🧠 Motor de Previsão Estatística Avançada - ML", key="sb_config_ml", use_container_width=True): ir("config_ml")
+    if st.button("📈 Motor de Previsão por Participação %", key="sb_ml_produtos", use_container_width=True): ir("ml_produtos")
+    if st.button("📉 Curva de Pareto", key="sb_pareto", use_container_width=True): ir("pareto")
 
     st.divider()
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">MÓDULO FINANCEIRO</div>',unsafe_allow_html=True)
-    if st.button("📊 DRE",             key="sb_dre",         use_container_width=True): ir("dre")
+    if st.button("📄 DRE",             key="sb_dre",         use_container_width=True): ir("dre")
     if st.button("🏦 Balanço",         key="sb_balanco",     use_container_width=True): ir("balanco")
-    if st.button("💰 Fluxo de Caixa",  key="sb_fluxo",       use_container_width=True): ir("fluxo")
-    if st.button("📈 Indicadores",     key="sb_indicadores", use_container_width=True): ir("indicadores")
-    if st.button("🚨 Alertas",         key="sb_alertas",     use_container_width=True): ir("alertas")
-    if st.button("🔮 Projeções ML - Financeiro", key="sb_ml", use_container_width=True): ir("ml")
-    if st.button("📊 Cenários FP&A",   key="sb_cenarios",    use_container_width=True): ir("cenarios")
-    if st.button("💾 Exportação",      key="sb_exportar",    use_container_width=True): ir("exportar")
+    if st.button("💵 Fluxo de Caixa",  key="sb_fluxo",       use_container_width=True): ir("fluxo")
+    if st.button("🎯 Indicadores",     key="sb_indicadores", use_container_width=True): ir("indicadores")
+    if st.button("⚠️ Alertas",         key="sb_alertas",     use_container_width=True): ir("alertas")
+    if st.button("🔭 Projeções ML - Financeiro", key="sb_ml", use_container_width=True): ir("ml")
+    if st.button("🗺️ Cenários FP&A",   key="sb_cenarios",    use_container_width=True): ir("cenarios")
+    if st.button("📤 Exportação",      key="sb_exportar",    use_container_width=True): ir("exportar")
 
     st.divider()
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
@@ -5294,8 +5294,9 @@ elif pg=="indicadores":
               yaxis=eixo,
               hovertemplate=f"<b>{nm}</b><br>%{{x}}<br>R$ %{{y:,.0f}}<extra></extra>"))
         _layout_ge1_i=_layout_graf_i("💰 Resultado Financeiro (R$)","Receita (R$)")
+        _layout_ge1_i["yaxis"]["title"]["font"]["color"]="#0EA5E9"
         _layout_ge1_i["yaxis2"]=dict(overlaying="y",side="right",showgrid=False,
-          tickfont=dict(size=9),title=dict(text="Lucro (R$)",font=dict(size=9,color="#9CA3AF")))
+          tickfont=dict(size=9),title=dict(text="Lucro (R$)",font=dict(size=9,color="#A9762F")))
         _fig_rf_i.update_layout(**_layout_ge1_i)
         st.plotly_chart(_fig_rf_i,use_container_width=True)
     with _ge2:
