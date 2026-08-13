@@ -1869,7 +1869,7 @@ def treinar(serie,modelo,n=6):
     except: pass
     return None
 
-def treinar_backtest(serie,modelo,timeout_s=20):
+def treinar_backtest(serie,modelo,timeout_s=10):
     """Treina escondendo os últimos 6 meses e devolve (mse, previsao, real) juntos —
     permite reaproveitar o resultado sem retreinar o mesmo modelo duas vezes.
     Tem limite de tempo: se o modelo não convergir em timeout_s segundos
@@ -7372,8 +7372,18 @@ elif pg=="config_ml":
                         serie_p=aplicar_correcao_precos(serie_p, reajustes_usar)
                         ultimo_p=float(serie_p.iloc[-1])
 
+                        # Croston/TSB só valem a pena testar em produto de venda intermitente
+                        # (muitos meses com zero venda). Pular eles quando o produto vende
+                        # regularmente economiza 2 treinos por produto, sem tirar nenhum
+                        # modelo que teria chance real de vencer.
+                        _pct_zeros_p=float((pd.to_numeric(serie_p,errors="coerce").fillna(0)==0).mean()) if len(serie_p)>0 else 0.0
+                        if _pct_zeros_p<0.30:
+                            modelos_cfg_p=[m for m in modelos_cfg if m not in ("Croston","TSB")]
+                        else:
+                            modelos_cfg_p=modelos_cfg
+
                         proj_p=None; melhor_p=None
-                        melhor_comparativo_p,_rank_p=melhor_modelo(serie_p,modelos_cfg)
+                        melhor_comparativo_p,_rank_p=melhor_modelo(serie_p,modelos_cfg_p)
                         exog_venceu_p=False
                         if usa_exog_cfg and len(serie_p)>=12:
                             mse_exog_p,_,_=treinar_backtest_exog(serie_p, meses_pico_usar, meses_promo_usar)
