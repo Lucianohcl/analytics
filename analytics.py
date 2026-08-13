@@ -2042,7 +2042,7 @@ def grafico_pareto_plotly(resultado, titulo, top_n=20):
     x = r[dim_col].astype(str).str.slice(0, 18)
 
     fig = go.Figure()
-    fig.add_trace(go.Bar(x=x, y=r["valor"], name="Valor", marker_color=NAVY,
+    fig.add_trace(go.Bar(x=x, y=r["valor"], name="Valor", marker_color="#0F6E56",
       marker_line_width=0, yaxis="y1",
       text=[fmt(v) for v in r["valor"]], textposition="outside",
       textfont=dict(size=10, color="#374151"),
@@ -9159,7 +9159,7 @@ elif pg=="compras":
                     fig_score.add_trace(go.Bar(
                         y=score["Fornecedor"],x=score["Total_Compra"],
                         orientation="h",name="Compras Sugeridas",
-                        marker=dict(color=["#DC2626" if p>=30 else "#14243B" for p in score["Participacao_%"]],
+                        marker=dict(color=["#DC2626" if p>=30 else "#0F6E56" for p in score["Participacao_%"]],
                             line=dict(color="white",width=0.8)),
                         text=[f"R$ {v/1e3:.0f}k · {p:.1f}%" for v,p in zip(score["Total_Compra"],score["Participacao_%"])],
                         textposition="outside",textfont=dict(size=9,color="#374151"),cliponaxis=False,
