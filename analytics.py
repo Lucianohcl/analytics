@@ -10156,18 +10156,25 @@ Seja específico usando os números e filiais fornecidos. Não invente dados que
 
                     try:
                         texto_parecer=""
+                        _debug_resp=None
                         if not st.session_state.api_key.startswith("sk-ant-") and OPENAI_OK:
                             client_ia=OpenAI(api_key=st.session_state.api_key)
                             resp_ia=client_ia.chat.completions.create(model="gpt-4o",max_tokens=6000,temperature=0.3,
                                 messages=[{"role":"system","content":"Você é um consultor de Controladoria/FP&A sênior, direto, específico e rico em conexões entre os dados — especialmente entre filiais diferentes. Nunca omita seções ou resuma o conteúdo para economizar espaço — seja completo em todas as 7 seções pedidas."},
                                           {"role":"user","content":prompt_parecer}])
                             texto_parecer=resp_ia.choices[0].message.content.strip()
+                            _debug_resp=f"finish_reason={resp_ia.choices[0].finish_reason}"
                         elif ANTHROPIC_OK:
                             client_ia=anthropic.Anthropic(api_key=st.session_state.api_key)
                             resp_ia=client_ia.messages.create(model="claude-sonnet-4-6",max_tokens=8000,
                                 system="Você é um consultor de Controladoria/FP&A sênior, direto, específico e rico em conexões entre os dados — especialmente entre filiais diferentes.",
                                 messages=[{"role":"user","content":prompt_parecer}])
-                            texto_parecer=resp_ia.content[0].text.strip()
+                            _tipos_blocos=[getattr(b,"type","?") for b in resp_ia.content]
+                            _debug_resp=f"stop_reason={resp_ia.stop_reason} | blocos={_tipos_blocos} | qtd_blocos={len(resp_ia.content)}"
+                            for _bloco in resp_ia.content:
+                                if getattr(_bloco,"type",None)=="text":
+                                    texto_parecer=_bloco.text.strip()
+                                    break
 
                         if texto_parecer:
                             st.session_state["parecer_atual"]=texto_parecer
@@ -10182,7 +10189,8 @@ Seja específico usando os números e filiais fornecidos. Não invente dados que
                             }
                             if st.session_state.cid: save_parecer_ia(st.session_state.cid,parecer_salvo,tipo="comercial")
                         else:
-                            st.markdown('<div class="al-d">❌ Não foi possível gerar o parecer — resposta vazia da IA.</div>',unsafe_allow_html=True)
+                            st.markdown(f'<div class="al-d">❌ Não foi possível gerar o parecer — resposta vazia da IA.<br>'
+                                        f'<span style="font-size:.75rem;opacity:.8">DEBUG: {_debug_resp} | tamanho do prompt: {len(prompt_parecer)} caracteres</span></div>',unsafe_allow_html=True)
                     except Exception as e:
                         st.markdown(f'<div class="al-d">❌ Erro ao chamar a IA: {e}</div>',unsafe_allow_html=True)
     else:
