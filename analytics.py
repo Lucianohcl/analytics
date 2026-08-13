@@ -9389,7 +9389,15 @@ elif pg=="fluxo_compras":
         if filial_sel_ff!="(Todas as filiais)":
             df_v_ff=df_v_ff[df_v_ff[_col_fil_ff].astype(str)==filial_sel_ff].copy()
 
+    # Só confia no calendário guardado na memória se ele for da MESMA filial que
+    # está selecionada aqui agora (ex: acabou de rodar o Motor de Compras pra essa
+    # mesma filial/escopo). Se for de outra filial (ou de "Todas as filiais" quando
+    # você quer ver uma loja sozinha, ou vice-versa), busca do disco a versão
+    # certa pra esse escopo específico — cada filial tem seu próprio arquivo salvo.
+    _escopo_memoria_ff=st.session_state.get("compras_filial_sel")
     df_cal_ff=st.session_state.get("compras_calendario")
+    if df_cal_ff is not None and not df_cal_ff.empty and _escopo_memoria_ff!=filial_sel_ff:
+        df_cal_ff=None
     if (df_cal_ff is None or df_cal_ff.empty) and st.session_state.cid:
         _,df_cal_ff,_=load_resultado_compras(st.session_state.cid,st.session_state.get("ff_filial_sel"))
 
