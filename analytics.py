@@ -3124,9 +3124,9 @@ with st.sidebar:
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">MÓDULO COMERCIAL</div>',unsafe_allow_html=True)
+    if st.button("📊 Dashboard Executivo", key="sb_gestao_estoque", use_container_width=True): ir("gestao_estoque")
     if st.button("📦 Gestão Comercial de Compras", key="sb_compras", use_container_width=True): ir("compras")
     if st.button("💰 Fluxo de Caixa Comercial Projetado", key="sb_fluxo_compras", use_container_width=True): ir("fluxo_compras")
-    if st.button("📊 Dashboard Executivo", key="sb_gestao_estoque", use_container_width=True): ir("gestao_estoque")
     if st.button("🎛️ Motor de Previsão Estatística Avançada - ML", key="sb_config_ml", use_container_width=True): ir("config_ml")
     if st.button("🧮 Motor de Previsão por Participação %", key="sb_ml_produtos", use_container_width=True): ir("ml_produtos")
     if st.button("📐 Curva de Pareto", key="sb_pareto", use_container_width=True): ir("pareto")
@@ -5282,10 +5282,10 @@ elif pg=="indicadores":
     with _ge1:
         _fig_rf_i=go.Figure()
         for c,cor_c,nm,eixo in [
-          ("receita bruta de vendas","#14243B","Receita Bruta","y"),
-          ("receita líquida","#5B7B9A","Receita Líquida","y"),
+          ("receita bruta de vendas","#0EA5E9","Receita Bruta","y"),
+          ("receita líquida","#16A34A","Receita Líquida","y"),
           ("lucro bruto","#A9762F","Lucro Bruto","y2"),
-          ("lucro líquido","#B91C1C","Lucro Líquido","y2")]:
+          ("lucro líquido","#DC2626","Lucro Líquido","y2")]:
             if c not in df_i.columns: continue
             y=pd.to_numeric(df_i[c],errors="coerce")
             _fig_rf_i.add_trace(go.Scatter(x=_x_evol_i,y=y,name=nm,mode="lines+markers",
@@ -5301,10 +5301,10 @@ elif pg=="indicadores":
     with _ge2:
         _fig_mg_i=go.Figure()
         for c,cor_c,nm in [
-          ("margem bruta %","#14243B","Margem Bruta"),
-          ("margem contrib %","#5B7B9A","Margem Contribuição"),
+          ("margem bruta %","#0EA5E9","Margem Bruta"),
+          ("margem contrib %","#16A34A","Margem Contribuição"),
           ("margem líquida %","#A9762F","Margem Líquida"),
-          ("EBITDA %","#B91C1C","EBITDA")]:
+          ("EBITDA %","#DC2626","EBITDA")]:
             if c not in df_i.columns: continue
             y=pd.to_numeric(df_i[c],errors="coerce")
             _fig_mg_i.add_trace(go.Scatter(x=_x_evol_i,y=y,name=nm,mode="lines+markers",
