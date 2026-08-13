@@ -4456,7 +4456,7 @@ elif pg=="fluxo":
         st.plotly_chart(fig_sal,use_container_width=True)
     sec("📊 Detalhamento")
     t1,t2=st.tabs(["Entradas por tipo","Saídas por Centro"])
-    CORES_LIGHT=["#0f2347","#A9762F","#059669","#2563EB","#7C3AED","#0891B2","#6b7280","#14B8A6"]
+    CORES_LIGHT=["#0F6E56","#A9762F","#059669","#2563EB","#7C3AED","#0891B2","#6b7280","#14B8A6"]
 
     # Lê do mesmo arquivo de detalhamento que alimenta o drill-down — garante que o gráfico
     # mostre exatamente as mesmas subcontas reais, com os mesmos nomes, em qualquer formato de origem
@@ -4509,7 +4509,7 @@ elif pg=="fluxo":
               labels=list(totais_ent.keys()),
               values=list(totais_ent.values()),
               marker=dict(colors=CORES_LIGHT[:len(totais_ent)],line=dict(color="white",width=2)),
-              hole=.5,textfont=dict(size=10,color="#111827"),
+              hole=.5,textfont=dict(size=10,color="#FFFFFF"),
               textinfo="percent",hovertemplate="<b>%{label}</b><br>R$ %{value:,.0f}<br>%{percent}<extra></extra>"))
             fig_pie.update_layout(
               title=dict(text="Distribuição das Entradas",font=dict(size=13,family="Georgia, serif",color="#14243B")),
@@ -5285,7 +5285,7 @@ elif pg=="indicadores":
           ("receita bruta de vendas","#14243B","Receita Bruta","y"),
           ("receita líquida","#5B7B9A","Receita Líquida","y"),
           ("lucro bruto","#A9762F","Lucro Bruto","y2"),
-          ("lucro líquido","#8B5E34","Lucro Líquido","y2")]:
+          ("lucro líquido","#B91C1C","Lucro Líquido","y2")]:
             if c not in df_i.columns: continue
             y=pd.to_numeric(df_i[c],errors="coerce")
             _fig_rf_i.add_trace(go.Scatter(x=_x_evol_i,y=y,name=nm,mode="lines+markers",
@@ -5304,7 +5304,7 @@ elif pg=="indicadores":
           ("margem bruta %","#14243B","Margem Bruta"),
           ("margem contrib %","#5B7B9A","Margem Contribuição"),
           ("margem líquida %","#A9762F","Margem Líquida"),
-          ("EBITDA %","#8B5E34","EBITDA")]:
+          ("EBITDA %","#B91C1C","EBITDA")]:
             if c not in df_i.columns: continue
             y=pd.to_numeric(df_i[c],errors="coerce")
             _fig_mg_i.add_trace(go.Scatter(x=_x_evol_i,y=y,name=nm,mode="lines+markers",
@@ -9215,7 +9215,7 @@ elif pg=="compras":
                 fig_score_h.add_trace(go.Bar(
                     y=score_h["Fornecedor"],x=score_h["Total_Compra"],
                     orientation="h",name="Horizonte de Compras",
-                    marker=dict(color=["#FFB627" if p>=30 else "#0F766E" for p in score_h["Participacao_%"]],
+                    marker=dict(color=["#FFB627" if p>=30 else "#A9762F" for p in score_h["Participacao_%"]],
                         line=dict(color="white",width=0.8)),
                     text=[f"R$ {v/1e3:.0f}k · {p:.1f}%" for v,p in zip(score_h["Total_Compra"],score_h["Participacao_%"])],
                     textposition="outside",textfont=dict(size=9,color="#374151"),cliponaxis=False,
