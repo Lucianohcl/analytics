@@ -5281,15 +5281,15 @@ elif pg=="indicadores":
                         line=dict(color="#E8ECF0",width=1))])
     with _ge1:
         _fig_rf_i=go.Figure()
-        for c,cor_c,nm,eixo in [
-          ("receita bruta de vendas","#0EA5E9","Receita Bruta","y"),
-          ("receita líquida","#16A34A","Receita Líquida","y"),
-          ("lucro bruto","#A9762F","Lucro Bruto","y2"),
-          ("lucro líquido","#DC2626","Lucro Líquido","y2")]:
+        for c,cor_c,nm,eixo,tracado in [
+          ("receita bruta de vendas","#0EA5E9","Receita Bruta","y","solid"),
+          ("receita líquida","#16A34A","Receita Líquida","y","dash"),
+          ("lucro bruto","#A9762F","Lucro Bruto","y2","solid"),
+          ("lucro líquido","#DC2626","Lucro Líquido","y2","solid")]:
             if c not in df_i.columns: continue
             y=pd.to_numeric(df_i[c],errors="coerce")
             _fig_rf_i.add_trace(go.Scatter(x=_x_evol_i,y=y,name=nm,mode="lines+markers",
-              line=dict(color=cor_c,width=2.5),
+              line=dict(color=cor_c,width=2.5,dash=tracado),
               marker=dict(size=6,color=cor_c,line=dict(color="#161B27",width=1.5)),
               yaxis=eixo,
               hovertemplate=f"<b>{nm}</b><br>%{{x}}<br>R$ %{{y:,.0f}}<extra></extra>"))
