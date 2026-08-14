@@ -2428,6 +2428,21 @@ def load_validacao_ml(cid):
     try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
     except: return None
 
+def path_mlp_categoria_pref(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_mlp_categoria_pref__{_sufixo_filial(filial)}.json")
+
+def save_mlp_categoria_pref(cid,categoria,filial=None):
+    try:
+        with open(path_mlp_categoria_pref(cid,filial),"w",encoding="utf-8") as f:
+            json.dump({"categoria":categoria},f)
+    except: pass
+
+def load_mlp_categoria_pref(cid,filial=None):
+    p=path_mlp_categoria_pref(cid,filial)
+    if not os.path.exists(p): return None
+    try:
+        with open(p,encoding="utf-8") as f: return json.load(f).get("categoria")
+    except: return None
+
 def path_ml_produtos_resultado(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_ml_produtos_resultado__{_sufixo_filial(filial)}.csv")
 
 def save_ml_produtos_resultado(cid,df,filial=None):
@@ -6687,6 +6702,9 @@ elif pg=="ml_produtos":
 
         def _on_change_categoria_mlp():
             st.session_state["mlp_categoria_sel_backup"]=st.session_state["mlp_categoria_sel"]
+            if st.session_state.cid:
+                save_mlp_categoria_pref(st.session_state.cid,st.session_state["mlp_categoria_sel"],
+                    st.session_state.get("mlp_filial_sel"))
             for _k_limpar_cat_mlp in ["ml_produtos_resultado","mlp_produto_col_atual",
                                        "mlp_metrica_col_atual","mlp_data_col_atual","vendas_raw_com_chave",
                                        "mlp_validacao_resultado"]:
@@ -6694,7 +6712,8 @@ elif pg=="ml_produtos":
                     del st.session_state[_k_limpar_cat_mlp]
 
         if "mlp_categoria_sel_backup" not in st.session_state:
-            st.session_state["mlp_categoria_sel_backup"]=_opcoes_categoria_mlp[0]
+            _cat_salva_mlp=load_mlp_categoria_pref(st.session_state.cid,st.session_state.get("mlp_filial_sel")) if st.session_state.cid else None
+            st.session_state["mlp_categoria_sel_backup"]=_cat_salva_mlp if _cat_salva_mlp else _opcoes_categoria_mlp[0]
         if st.session_state["mlp_categoria_sel_backup"] not in _opcoes_categoria_mlp:
             st.session_state["mlp_categoria_sel_backup"]=_opcoes_categoria_mlp[0]
         st.session_state["mlp_categoria_sel"]=st.session_state["mlp_categoria_sel_backup"]
@@ -9779,11 +9798,16 @@ elif pg=="fluxo_compras":
                         _cfg_ml_ff=load_cfgml_resultado(st.session_state.cid,st.session_state.get("ff_filial_sel"))
                 if _cfg_ml_ff is None:
                     st.markdown(f'<div class="al-w">⚠️ Não encontrei Cenário ML rodado para <b>{st.session_state.get("ff_filial_sel") or "(Todas as filiais)"}</b> — rode-o primeiro em <b>🎛️ Motor de Previsão</b> nessa Filial, ou o Fluxo Projetado vai ficar incompleto (sem a parte de demanda prevista).</div>',unsafe_allow_html=True)
+                # Só usa o resultado do "ML por Participação %" como reserva se ele for
+                # realmente da MESMA filial que está sendo vista aqui no Fluxo — senão
+                # pode misturar a previsão de uma filial diferente sem avisar.
                 _res_ml_ff=st.session_state.get("ml_produtos_resultado")
+                _escopo_res_ml_ff=st.session_state.get("mlp_filial_sel")
                 _fonte_prev_ff=None
                 if _cfg_ml_ff is not None and not _cfg_ml_ff.empty and "previsao" in _cfg_ml_ff.columns:
                     _fonte_prev_ff=_cfg_ml_ff
-                elif _res_ml_ff is not None and not _res_ml_ff.empty and "previsao" in _res_ml_ff.columns:
+                elif (_res_ml_ff is not None and not _res_ml_ff.empty and "previsao" in _res_ml_ff.columns
+                      and _escopo_res_ml_ff==st.session_state.get("ff_filial_sel")):
                     _fonte_prev_ff=_res_ml_ff
 
                 produtos_programados_ff=set(df_cal_ff["Produto"].unique()) if df_cal_ff is not None and not df_cal_ff.empty else set()
