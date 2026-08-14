@@ -3327,6 +3327,13 @@ if pg=="boas_vindas":
 # ── CLIENTES ────────────────────────────────────────
 elif pg=="clientes":
     hdr("👥 Clientes")
+    with st.expander("🔧 Debug: onde o app está procurando os dados"):
+        st.code(f"Pasta que o app está usando (PASTA):\n{PASTA}\n\n"
+                f"Esse arquivo específico existe aí?\n"
+                f"{os.path.join(PASTA,'empresa_sucesso.json')}\n"
+                f"Existe: {os.path.exists(os.path.join(PASTA,'empresa_sucesso.json'))}\n\n"
+                f"Quantos arquivos .json tem nessa pasta: "
+                f"{len([a for a in os.listdir(PASTA) if a.endswith('.json')]) if os.path.exists(PASTA) else 'pasta não existe'}")
     if st.session_state.get("_limpar_busca_cliente"):
         st.session_state["busca_cliente_nome"]=""
         st.session_state["_limpar_busca_cliente"]=False
