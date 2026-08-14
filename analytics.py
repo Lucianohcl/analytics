@@ -6995,7 +6995,8 @@ elif pg=="ml_produtos":
         if len(resultado_ok)>0:
             primeira_serie=serie_mensal_produto(df_v_r,produto_col_r,
               resultado_ok.iloc[0][produto_col_r],data_col_r,metrica_col_r)
-            ultimo_mes_real=str(primeira_serie.index[-1])
+            ultimo_mes_real=str(primeira_serie.index[-1]) if not primeira_serie.empty else str(pd.Timestamp.now().to_period("M"))
+        if len(resultado_ok)>0 and ultimo_mes_real is not None:
             fig_lin.add_vline(x=ultimo_mes_real,line_dash="dash",line_color="#9CA3AF",opacity=0.6)
             fig_lin.add_annotation(x=ultimo_mes_real,y=1,yref="paper",yanchor="bottom",
               text="Início da previsão",showarrow=False,font=dict(size=9,color="#9CA3AF"))
@@ -7033,6 +7034,9 @@ elif pg=="ml_produtos":
         if produtos_ok:
             prod_sel=st.selectbox("Produto",produtos_ok,key="mlp_prod_detalhe")
             serie=serie_mensal_produto(df_v_r,produto_col_r,prod_sel,data_col_r,metrica_col_r)
+            if serie.empty:
+                st.markdown('<div class="al-w">⚠️ Este produto não existe no filtro atual (filial/categoria mudou desde que o resultado foi salvo) — clique em "🚀 Rodar ML nos Produtos" de novo para atualizar.</div>',unsafe_allow_html=True)
+                st.stop()
             linha=resultado[resultado[produto_col_r]==prod_sel].iloc[0]
             proj=linha["previsao"]
             melhor_nm=linha["modelo_escolhido"]
