@@ -1,0 +1,239 @@
+﻿Produto;Fornecedor;Classe;Volatilidade;EstoqueAtual;DemandaPrevMes(un);CoberturaDias;MinDias;MaxDias;LeadTimeDias;GiroAtual;GiroAlvo;Status;QtdSugerida;CustoUnitario;ValorSugerido
+PC000563;Fornecedor Alfa;A;Baixa;39,0;71,6;16,3;15;30;15;22,34;16,22;🟢 OK;0,0;352,99;0,0
+PC000656;Fornecedor Alfa;A;Baixa;13,0;56,1;7,0;15;30;15;52,48;16,22;🚨 RUPTURA IMINENTE;43,0;422,14;18184,38
+PC000334;Fornecedor Alfa;A;Baixa;69,0;60,7;34,1;15;30;15;10,71;16,22;🟡 Estoque excessivo;0,0;448,38;0,0
+PC000084;Fornecedor Alfa;A;Baixa;22,0;56,4;11,7;15;30;15;31,21;16,22;🚨 RUPTURA IMINENTE;34,0;396,57;13652,26
+PC000611;Fornecedor Alfa;A;Baixa;57,0;61,5;27,8;15;30;15;13,12;16,22;🟢 OK;0,0;396,99;0,0
+PC000600;Fornecedor Gamma;A;Baixa;33,0;38,2;25,9;15;30;15;14,07;16,22;🟢 OK;0,0;403,23;0,0
+PC000690;Fornecedor Beta;A;Baixa;25,0;57,0;13,2;15;30;15;27,73;16,22;🚨 RUPTURA IMINENTE;32,0;346,05;11065,72
+PC000425;Fornecedor Delta;A;Baixa;153,0;52,7;87,1;15;30;15;4,19;16,22;🟡 Estoque excessivo;0,0;444,09;0,0
+PC000668;Fornecedor Beta;A;Baixa;11,0;35,1;9,4;15;30;15;38,84;16,22;🚨 RUPTURA IMINENTE;24,0;419,32;10112,38
+PC000945;Fornecedor Alfa;A;Baixa;58,0;47,5;36,6;15;30;15;9,97;16,22;🟡 Estoque excessivo;0,0;356,57;0,0
+PC000547;Fornecedor Beta;A;Baixa;38,0;47,6;24,0;15;30;15;15,23;16,22;🟢 OK;0,0;364,25;0,0
+PC000410;Fornecedor Beta;A;Baixa;10,0;42,7;7,0;15;30;15;52,0;16,22;🚨 RUPTURA IMINENTE;33,0;391,78;12828,05
+PC000755;Fornecedor Beta;A;Baixa;18,0;51,4;10,5;15;30;15;34,75;16,22;🚨 RUPTURA IMINENTE;33,0;439,34;14677,58
+PC000295;Fornecedor Alfa;A;Baixa;32,0;32,5;29,5;15;30;15;12,36;16,22;🟢 OK;0,0;361,86;0,0
+PC000666;Fornecedor Delta;A;Baixa;27,0;40,5;20,0;15;30;15;18,25;16,22;🟢 OK;0,0;384,33;0,0
+PC000773;Fornecedor Beta;A;Baixa;47,0;45,5;31,0;15;30;15;11,77;16,22;🟡 Estoque excessivo;0,0;402,3;0,0
+PC000007;Fornecedor Delta;A;Baixa;74,0;50,6;43,8;15;30;15;8,33;16,22;🟡 Estoque excessivo;0,0;313,99;0,0
+PC000477;Fornecedor Gamma;A;Baixa;8,0;41,7;5,8;15;30;15;63,44;16,22;🚨 RUPTURA IMINENTE;34,0;365,07;12307,03
+PC000255;Fornecedor Delta;A;Baixa;11,0;54,5;6,1;15;30;15;60,3;16,22;🚨 RUPTURA IMINENTE;44,0;311,02;13535,09
+PC000587;Fornecedor Alfa;A;Baixa;27,0;44,5;18,2;15;30;15;20,04;16,22;🟢 OK;0,0;315,25;0,0
+PC000312;Fornecedor Gamma;A;Baixa;33,0;30,6;32,3;15;30;15;11,29;16,22;🟡 Estoque excessivo;0,0;403,51;0,0
+PC000896;Fornecedor Beta;A;Baixa;17,0;40,0;12,7;15;30;15;28,63;16,22;🚨 RUPTURA IMINENTE;23,0;332,02;7637,92
+PC000665;Fornecedor Gamma;A;Baixa;40,0;27,7;43,3;15;30;15;8,43;16,22;🟡 Estoque excessivo;0,0;446,53;0,0
+PC000357;Fornecedor Delta;A;Baixa;43,0;32,6;39,6;15;30;15;9,23;16,22;🟡 Estoque excessivo;0,0;406,11;0,0
+PC000343;Fornecedor Delta;A;Média;9,0;46,0;5,9;15;30;15;62,23;16,22;🚨 RUPTURA IMINENTE;37,0;391,78;14507,72
+PC000355;Fornecedor Gamma;A;Baixa;99,0;60,0;49,5;15;30;15;7,37;16,22;🟡 Estoque excessivo;0,0;223,11;0,0
+PC000471;Fornecedor Beta;A;Baixa;46,0;55,7;24,8;15;30;15;14,74;16,22;🟢 OK;0,0;258,62;0,0
+PC000371;Fornecedor Beta;A;Baixa;27,0;34,4;23,6;15;30;15;15,48;16,22;🟢 OK;0,0;437,36;0,0
+PC000335;Fornecedor Delta;A;Baixa;54,0;33,5;48,4;15;30;15;7,54;16,22;🟡 Estoque excessivo;0,0;438,86;0,0
+PC000673;Fornecedor Gamma;A;Baixa;48,0;35,0;41,1;15;30;15;8,88;16,22;🟡 Estoque excessivo;0,0;391,68;0,0
+PC000172;Fornecedor Gamma;A;Baixa;31,0;24,6;37,8;15;30;15;9,65;16,22;🟡 Estoque excessivo;0,0;441,68;0,0
+PC000729;Fornecedor Alfa;A;Baixa;63,0;35,4;53,3;15;30;15;6,84;16,22;🟡 Estoque excessivo;0,0;367,77;0,0
+PC000100;Fornecedor Beta;A;Baixa;21,0;70,4;8,9;15;30;15;40,79;16,22;🚨 RUPTURA IMINENTE;49,0;162,76;8041,85
+PC000354;Fornecedor Delta;A;Baixa;128,0;41,6;92,3;15;30;15;3,96;16,22;🟡 Estoque excessivo;0,0;328,56;0,0
+PC000834;Fornecedor Beta;A;Média;19,0;39,9;14,3;15;30;15;25,54;16,22;🚨 RUPTURA IMINENTE;21,0;338,65;7072,19
+PC000889;Fornecedor Gamma;A;Baixa;46,0;40,4;34,1;15;30;15;10,7;16,22;🟡 Estoque excessivo;0,0;329,1;0,0
+PC000450;Fornecedor Alfa;A;Baixa;13,0;34,1;11,4;15;30;15;31,94;16,22;🚨 RUPTURA IMINENTE;21,0;310,0;6548,33
+PC000771;Fornecedor Delta;A;Baixa;63,0;52,6;35,9;15;30;15;10,16;16,22;🟡 Estoque excessivo;0,0;211,08;0,0
+PC000005;Fornecedor Delta;A;Baixa;13,0;48,2;8,1;15;30;15;45,13;16,22;🚨 RUPTURA IMINENTE;35,0;364,5;12838,91
+PC000408;Fornecedor Delta;A;Baixa;11,0;33,1;10,0;15;30;15;36,6;16,22;🚨 RUPTURA IMINENTE;22,0;364,11;8041,84
+PC000860;Fornecedor Beta;A;Baixa;29,0;31,8;27,4;15;30;15;13,34;16,22;🟢 OK;0,0;329,99;0,0
+PC000457;Fornecedor Gamma;A;Baixa;50,0;29,0;51,8;15;30;15;7,05;16,22;🟡 Estoque excessivo;0,0;312,77;0,0
+PC000027;Fornecedor Alfa;A;Baixa;50,0;24,4;61,4;15;30;15;5,94;16,22;🟡 Estoque excessivo;0,0;389,02;0,0
+PC000210;Fornecedor Beta;A;Baixa;37,0;24,5;45,3;15;30;15;8,07;16,22;🟡 Estoque excessivo;0,0;448,73;0,0
+PC000091;Fornecedor Beta;A;Baixa;97,0;25,9;112,5;15;30;15;3,25;16,22;🟡 Estoque excessivo;0,0;424,69;0,0
+PC000318;Fornecedor Beta;A;Baixa;16,0;20,3;23,6;15;30;15;15,47;16,22;🟢 OK;0,0;331,36;0,0
+PC000245;Fornecedor Delta;A;Baixa;27,0;37,3;21,7;15;30;15;16,79;16,22;🟢 OK;0,0;344,37;0,0
+PC000900;Fornecedor Gamma;A;Baixa;15,0;26,7;16,9;15;30;15;21,62;16,22;🟢 OK;0,0;354,44;0,0
+PC000845;Fornecedor Gamma;A;Baixa;99,0;20,0;148,6;15;30;15;2,46;16,22;🟡 Estoque excessivo;0,0;424,84;0,0
+PC000903;Fornecedor Delta;A;Baixa;82,0;26,8;91,9;15;30;15;3,97;16,22;🟡 Estoque excessivo;0,0;344,36;0,0
+PC000460;Fornecedor Beta;A;Baixa;31,0;29,6;31,4;15;30;15;11,61;16,22;🟡 Estoque excessivo;0,0;299,23;0,0
+PC000059;Fornecedor Gamma;A;Baixa;43,0;52,2;24,7;15;30;15;14,76;16,22;🟢 OK;0,0;220,11;0,0
+PC000540;Fornecedor Delta;A;Baixa;34,0;40,6;25,1;15;30;15;14,52;16,22;🟢 OK;0,0;240,12;0,0
+PC000434;Fornecedor Alfa;A;Baixa;61,0;23,5;77,9;15;30;15;4,69;16,22;🟡 Estoque excessivo;0,0;302,75;0,0
+PC000884;Fornecedor Alfa;A;Baixa;20,0;32,0;18,7;15;30;15;19,48;16,22;🟢 OK;0,0;344,42;0,0
+PC000857;Fornecedor Alfa;A;Baixa;29,0;23,4;37,2;15;30;15;9,8;16,22;🟡 Estoque excessivo;0,0;341,73;0,0
+PC000719;Fornecedor Delta;A;Média;35,0;24,6;42,7;15;30;15;8,56;16,22;🟡 Estoque excessivo;0,0;442,79;0,0
+PC000702;Fornecedor Gamma;A;Baixa;10,0;31,6;9,5;15;30;15;38,49;16,22;🚨 RUPTURA IMINENTE;22,0;199,16;4308,46
+PC000946;Fornecedor Beta;A;Baixa;91,0;46,9;58,3;15;30;15;6,27;16,22;🟡 Estoque excessivo;0,0;236,63;0,0
+PC000953;Fornecedor Alfa;A;Baixa;20,0;31,2;19,3;15;30;15;18,95;16,22;🟢 OK;0,0;272,42;0,0
+PC000207;Fornecedor Delta;A;Baixa;50,0;30,5;49,2;15;30;15;7,42;16,22;🟡 Estoque excessivo;0,0;310,02;0,0
+PC000617;Fornecedor Delta;A;Média;19,0;15,6;36,6;15;30;15;9,96;16,22;🟡 Estoque excessivo;0,0;447,41;0,0
+PC000876;Fornecedor Beta;A;Média;9,0;50,1;5,4;15;30;15;67,79;16,22;🚨 RUPTURA IMINENTE;41,0;247,67;10190,73
+PC000441;Fornecedor Beta;A;Baixa;1,0;20,1;1,5;15;30;15;244,88;16,22;🚨 RUPTURA IMINENTE;19,0;436,7;8352,89
+PC000146;Fornecedor Delta;A;Baixa;41,0;22,5;54,6;15;30;15;6,69;16,22;🟡 Estoque excessivo;0,0;396,35;0,0
+PC000704;Fornecedor Alfa;A;Baixa;76,0;29,3;77,8;15;30;15;4,69;16,22;🟡 Estoque excessivo;0,0;231,71;0,0
+PC000206;Fornecedor Delta;A;Baixa;27,0;20,5;39,4;15;30;15;9,26;16,22;🟡 Estoque excessivo;0,0;348,52;0,0
+PC000180;Fornecedor Gamma;A;Baixa;34,0;35,8;28,5;15;30;15;12,82;16,22;🟢 OK;0,0;247,24;0,0
+PC000958;Fornecedor Alfa;A;Baixa;61,0;36,0;50,9;15;30;15;7,17;16,22;🟡 Estoque excessivo;0,0;194,19;0,0
+PC000875;Fornecedor Delta;A;Baixa;29,0;25,4;34,3;15;30;15;10,64;16,22;🟡 Estoque excessivo;0,0;331,9;0,0
+PC000641;Fornecedor Delta;A;Baixa;33,0;41,6;23,8;15;30;15;15,33;16,22;🟢 OK;0,0;246,66;0,0
+PC000671;Fornecedor Beta;A;Baixa;15,0;53,0;8,5;15;30;15;42,96;16,22;🚨 RUPTURA IMINENTE;38,0;176,24;6691,8
+PC000643;Fornecedor Alfa;A;Baixa;8,0;31,5;7,6;15;30;15;47,93;16,22;🚨 RUPTURA IMINENTE;24,0;238,26;5603,1
+PC000947;Fornecedor Gamma;A;Baixa;49,0;34,5;42,6;15;30;15;8,57;16,22;🟡 Estoque excessivo;0,0;202,57;0,0
+PC000557;Fornecedor Gamma;A;Média;39,0;57,3;20,4;15;30;15;17,88;16,22;🟢 OK;0,0;278,05;0,0
+PC000006;Fornecedor Beta;A;Média;28,0;57,2;14,7;15;30;15;24,86;16,22;🚨 RUPTURA IMINENTE;29,0;299,18;8742,9
+PC000974;Fornecedor Delta;A;Média;8,0;87,7;2,7;15;30;15;133,32;16,22;🚨 RUPTURA IMINENTE;80,0;236,99;18879,58
+PC000935;Fornecedor Delta;A;Baixa;49,0;28,2;52,2;15;30;15;6,99;16,22;🟡 Estoque excessivo;0,0;307,0;0,0
+PC000153;Fornecedor Gamma;A;Baixa;73,0;25,2;86,8;15;30;15;4,21;16,22;🟡 Estoque excessivo;0,0;316,28;0,0
+PC000855;Fornecedor Beta;A;Baixa;44,0;21,2;62,3;15;30;15;5,86;16,22;🟡 Estoque excessivo;0,0;414,17;0,0
+PC000590;Fornecedor Alfa;A;Baixa;19,0;17,7;32,3;15;30;15;11,3;16,22;🟡 Estoque excessivo;0,0;325,18;0,0
+PC000057;Fornecedor Beta;A;Média;25,0;48,1;15,6;15;30;15;23,43;16,22;🟢 OK;0,0;347,1;0,0
+PC000041;Fornecedor Delta;A;Baixa;62,0;28,5;65,2;15;30;15;5,6;16,22;🟡 Estoque excessivo;0,0;246,46;0,0
+PC000785;Fornecedor Alfa;A;Baixa;45,0;23,0;58,6;15;30;15;6,23;16,22;🟡 Estoque excessivo;0,0;299,43;0,0
+PC000487;Fornecedor Delta;A;Baixa;46,0;41,1;33,6;15;30;15;10,87;16,22;🟡 Estoque excessivo;0,0;183,11;0,0
+PC000591;Fornecedor Beta;A;Baixa;28,0;20,2;41,5;15;30;15;8,8;16,22;🟡 Estoque excessivo;0,0;314,06;0,0
+PC000975;Fornecedor Delta;A;Média;45,0;67,0;20,2;15;30;15;18,11;16,22;🟢 OK;0,0;140,04;0,0
+PC000124;Fornecedor Beta;A;Média;64,0;30,3;63,4;15;30;15;5,76;16,22;🟡 Estoque excessivo;0,0;365,81;0,0
+PC000016;Fornecedor Beta;B;Alta;57,0;49,9;34,3;20;40;15;10,66;12,17;🟢 OK;0,0;416,96;0,0
+PC000883;Fornecedor Beta;B;Baixa;5,0;22,4;6,7;20;40;15;54,4;12,17;🚨 RUPTURA IMINENTE;25,0;289,24;7176,02
+PC000015;Fornecedor Alfa;B;Baixa;113,0;21,4;158,1;20;40;15;2,31;12,17;🟡 Estoque excessivo;0,0;319,86;0,0
+PC000080;Fornecedor Alfa;B;Média;14,0;18,4;22,8;20;40;15;15,98;12,17;🟢 OK;0,0;427,88;0,0
+PC000078;Fornecedor Gamma;B;Baixa;7,0;20,1;10,5;20;40;15;34,85;12,17;🚨 RUPTURA IMINENTE;20,0;308,4;6086,23
+PC000263;Fornecedor Gamma;B;Baixa;110,0;49,1;67,2;20;40;15;5,43;12,17;🟡 Estoque excessivo;0,0;145,18;0,0
+PC000149;Fornecedor Beta;B;Alta;10,0;30,8;9,7;20;40;15;37,48;12,17;🚨 RUPTURA IMINENTE;31,0;383,96;11931,16
+PC000373;Fornecedor Delta;B;Baixa;43,0;13,9;92,6;20;40;15;3,94;12,17;🟡 Estoque excessivo;0,0;385,64;0,0
+PC000291;Fornecedor Gamma;B;Baixa;48,0;39,4;36,6;20;40;15;9,98;12,17;🟢 OK;0,0;183,44;0,0
+PC000843;Fornecedor Beta;B;Baixa;7,0;27,6;7,6;20;40;15;47,91;12,17;🚨 RUPTURA IMINENTE;30,0;202,22;6016,83
+PC000727;Fornecedor Alfa;B;Baixa;109,0;37,1;88,0;20;40;15;4,15;12,17;🟡 Estoque excessivo;0,0;233,16;0,0
+PC000286;Fornecedor Delta;B;Baixa;21,0;20,8;30,3;20;40;15;12,06;12,17;🟢 OK;0,0;236,83;0,0
+PC000520;Fornecedor Beta;B;Baixa;65,0;14,1;137,8;20;40;15;2,65;12,17;🟡 Estoque excessivo;0,0;417,75;0,0
+PC000030;Fornecedor Beta;B;Baixa;17,0;17,6;29,0;20;40;15;12,59;12,17;🟢 OK;0,0;374,38;0,0
+PC000099;Fornecedor Beta;B;Baixa;50,0;16,4;91,7;20;40;15;3,98;12,17;🟡 Estoque excessivo;0,0;352,58;0,0
+PC000819;Fornecedor Alfa;B;Baixa;31,0;20,9;44,4;20;40;15;8,22;12,17;🟡 Estoque excessivo;0,0;284,1;0,0
+PC000683;Fornecedor Alfa;B;Baixa;14,0;14,9;28,1;20;40;15;12,97;12,17;🟢 OK;0,0;291,31;0,0
+PC000635;Fornecedor Alfa;B;Média;17,0;30,7;16,6;20;40;15;21,97;12,17;🔴 Comprar agora;24,0;417,81;9995,3
+PC000959;Fornecedor Alfa;B;Baixa;103,0;24,9;124,1;20;40;15;2,94;12,17;🟡 Estoque excessivo;0,0;289,19;0,0
+PC000879;Fornecedor Alfa;B;Baixa;16,0;52,0;9,2;20;40;15;39,52;12,17;🚨 RUPTURA IMINENTE;53,0;139,52;7435,11
+PC000901;Fornecedor Delta;B;Baixa;10,0;26,3;11,4;20;40;15;31,99;12,17;🚨 RUPTURA IMINENTE;25,0;252,97;6339,39
+PC000440;Fornecedor Delta;B;Baixa;13,0;19,1;20,5;20;40;15;17,84;12,17;🟢 OK;0,0;305,66;0,0
+PC000313;Fornecedor Delta;C;Baixa;27,0;16,9;48,0;30;55;15;7,61;8,59;🟢 OK;0,0;250,04;0,0
+PC000589;Fornecedor Beta;C;Alta;43,0;63,6;20,3;30;55;15;18,01;8,59;🔴 Comprar agora;74,0;197,26;14532,41
+PC000695;Fornecedor Beta;C;Baixa;11,0;30,1;11,0;30;55;15;33,32;8,59;🚨 RUPTURA IMINENTE;44,0;170,45;7538,0
+PC000730;Fornecedor Gamma;C;Média;8,0;28,2;8,5;30;55;15;42,95;8,59;🚨 RUPTURA IMINENTE;44,0;279,93;12254,07
+PC000996;Fornecedor Alfa;C;Baixa;42,0;14,8;85,2;30;55;15;4,28;8,59;🟡 Estoque excessivo;0,0;298,37;0,0
+PC000899;Fornecedor Beta;C;Baixa;28,0;29,9;28,1;30;55;15;12,99;8,59;🔴 Comprar agora;27,0;165,08;4425,12
+PC000886;Fornecedor Alfa;C;Baixa;35,0;24,3;43,2;30;55;15;8,44;8,59;🟢 OK;0,0;212,01;0,0
+PC000223;Fornecedor Alfa;C;Baixa;59,0;24,9;71,1;30;55;15;5,13;8,59;🟡 Estoque excessivo;0,0;199,09;0,0
+PC000032;Fornecedor Gamma;C;Alta;24,0;41,6;17,3;30;55;15;21,08;8,59;🔴 Comprar agora;52,0;271,55;14184,18
+PC000564;Fornecedor Alfa;C;Baixa;32,0;33,9;28,3;30;55;15;12,9;8,59;🔴 Comprar agora;30,0;129,46;3907,57
+PC000856;Fornecedor Delta;C;Baixa;62,0;30,9;60,3;30;55;15;6,06;8,59;🟡 Estoque excessivo;0,0;119,49;0,0
+PC000802;Fornecedor Gamma;C;Baixa;43,0;15,8;81,7;30;55;15;4,47;8,59;🟡 Estoque excessivo;0,0;333,98;0,0
+PC000558;Fornecedor Beta;C;Baixa;38,0;30,2;37,7;30;55;15;9,68;8,59;🟢 OK;0,0;189,67;0,0
+PC000378;Fornecedor Delta;C;Baixa;23,0;20,2;34,1;30;55;15;10,71;8,59;🟢 OK;0,0;235,55;0,0
+PC000176;Fornecedor Gamma;C;Baixa;13,0;20,0;19,5;30;55;15;18,69;8,59;🔴 Comprar agora;24,0;246,67;5826,29
+PC000473;Fornecedor Alfa;C;Alta;64,0;23,3;82,5;30;55;15;4,43;8,59;🟡 Estoque excessivo;0,0;396,3;0,0
+PC000833;Fornecedor Delta;C;Baixa;60,0;15,0;119,9;30;55;15;3,04;8,59;🟡 Estoque excessivo;0,0;265,43;0,0
+PC000983;Fornecedor Alfa;C;Baixa;36,0;18,9;57,2;30;55;15;6,38;8,59;🟡 Estoque excessivo;0,0;210,52;0,0
+PC000851;Fornecedor Alfa;C;Baixa;7,0;35,0;6,0;30;55;15;60,81;8,59;🚨 RUPTURA IMINENTE;57,0;134,37;7677,95
+PC000931;Fornecedor Alfa;C;Baixa;66,0;17,2;115,1;30;55;15;3,17;8,59;🟡 Estoque excessivo;0,0;264,35;0,0
+PC000723;Fornecedor Beta;C;Baixa;31,0;27,6;33,7;30;55;15;10,82;8,59;🟢 OK;0,0;142,05;0,0
+PC000348;Fornecedor Delta;C;Baixa;106,0;27,3;116,4;30;55;15;3,14;8,59;🟡 Estoque excessivo;0,0;172,0;0,0
+PC000118;Fornecedor Gamma;C;Média;46,0;24,2;56,9;30;55;15;6,41;8,59;🟡 Estoque excessivo;0,0;395,84;0,0
+PC000168;Fornecedor Delta;C;Baixa;46,0;24,7;55,9;30;55;15;6,53;8,59;🟡 Estoque excessivo;0,0;232,3;0,0
+PC000978;Fornecedor Gamma;C;Média;21,0;29,5;21,4;30;55;15;17,07;8,59;🔴 Comprar agora;33,0;197,91;6537,12
+PC000069;Fornecedor Delta;C;Baixa;28,0;40,8;20,6;30;55;15;17,72;8,59;🔴 Comprar agora;47,0;164,74;7704,96
+PC000761;Fornecedor Gamma;C;Baixa;31,0;18,2;51,2;30;55;15;7,13;8,59;🟢 OK;0,0;208,83;0,0
+PC000235;Fornecedor Beta;C;Baixa;80,0;12,0;200,1;30;55;15;1,82;8,59;🟡 Estoque excessivo;0,0;296,04;0,0
+PC000372;Fornecedor Delta;C;Baixa;8,0;42,4;5,7;30;55;15;64,53;8,59;🚨 RUPTURA IMINENTE;70,0;87,99;6140,6
+PC000699;Fornecedor Beta;C;Alta;21,0;21,2;29,7;30;55;15;12,27;8,59;🔴 Comprar agora;18,0;433,7;7734,82
+PC000813;Fornecedor Beta;C;Baixa;17,0;29,5;17,3;30;55;15;21,14;8,59;🔴 Comprar agora;37,0;125,15;4650,32
+PC000238;Fornecedor Gamma;C;Média;7,0;35,0;6,0;30;55;15;60,83;8,59;🚨 RUPTURA IMINENTE;57,0;217,16;12413,76
+PC000498;Fornecedor Delta;D;Baixa;22,0;14,2;46,4;40;75;15;7,87;6,35;🟢 OK;0,0;212,86;0,0
+PC000336;Fornecedor Alfa;D;Média;9,0;19,8;13,6;40;75;15;26,8;6,35;🚨 RUPTURA IMINENTE;41,0;295,44;11985,87
+PC000984;Fornecedor Beta;D;Baixa;37,0;22,8;48,6;40;75;15;7,51;6,35;🟢 OK;0,0;221,47;0,0
+PC000853;Fornecedor Alfa;D;Alta;38,0;27,9;40,9;40;75;15;8,92;6,35;🟢 OK;0,0;388,73;0,0
+PC000129;Fornecedor Delta;D;Baixa;123,0;29,7;124,2;40;75;15;2,94;6,35;🟡 Estoque excessivo;0,0;172,73;0,0
+PC000038;Fornecedor Delta;D;Baixa;45,0;17,5;77,3;40;75;15;4,72;6,35;🟡 Estoque excessivo;0,0;328,35;0,0
+PC000731;Fornecedor Beta;D;Média;23,0;64,4;10,7;40;75;15;34,04;6,35;🚨 RUPTURA IMINENTE;138,0;143,36;19768,51
+PC000776;Fornecedor Beta;D;Baixa;6,0;20,4;8,8;40;75;15;41,43;6,35;🚨 RUPTURA IMINENTE;45,0;147,41;6644,83
+PC000705;Fornecedor Alfa;D;Média;24,0;22,1;32,6;40;75;15;11,21;6,35;🔴 Comprar agora;31,0;202,26;6327,64
+PC000621;Fornecedor Gamma;D;Baixa;17,0;12,1;42,2;40;75;15;8,66;6,35;🟢 OK;0,0;213,62;0,0
+PC000603;Fornecedor Alfa;D;Baixa;18,0;30,3;17,8;40;75;15;20,49;6,35;🔴 Comprar agora;58,0;108,18;6252,11
+PC000669;Fornecedor Beta;D;Baixa;46,0;39,0;35,4;40;75;15;10,31;6,35;🔴 Comprar agora;51,0;59,43;3057,44
+PC000333;Fornecedor Gamma;D;Baixa;36,0;28,1;38,4;40;75;15;9,5;6,35;🔴 Comprar agora;34,0;108,98;3731,25
+PC000300;Fornecedor Delta;D;Baixa;42,0;10,5;120,0;40;75;15;3,04;6,35;🟡 Estoque excessivo;0,0;320,26;0,0
+PC000011;Fornecedor Beta;D;Baixa;17,0;25,7;19,8;40;75;15;18,39;6,35;🔴 Comprar agora;47,0;105,77;4996,2
+PC000588;Fornecedor Alfa;D;Baixa;60,0;15,1;119,5;40;75;15;3,06;6,35;🟡 Estoque excessivo;0,0;186,71;0,0
+PC000043;Fornecedor Gamma;D;Baixa;33,0;22,7;43,6;40;75;15;8,38;6,35;🟢 OK;0,0;148,89;0,0
+PC000058;Fornecedor Alfa;D;Baixa;26,0;17,2;45,4;40;75;15;8,05;6,35;🟢 OK;0,0;185,65;0,0
+PC000529;Fornecedor Delta;D;Média;33,0;17,2;57,4;40;75;15;6,36;6,35;🟢 OK;0,0;362,94;0,0
+PC000461;Fornecedor Beta;D;Alta;17,0;33,3;15,3;40;75;15;23,83;6,35;🔴 Comprar agora;66,0;182,09;12062,85
+PC000431;Fornecedor Gamma;D;Baixa;16,0;15,6;30,8;40;75;15;11,86;6,35;🔴 Comprar agora;23,0;209,0;4807,06
+PC000939;Fornecedor Delta;D;Média;10,0;27,1;11,1;40;75;15;33,01;6,35;🚨 RUPTURA IMINENTE;58,0;228,23;13198,08
+PC000614;Fornecedor Alfa;D;Baixa;23,0;18,4;37,5;40;75;15;9,72;6,35;🔴 Comprar agora;23,0;151,36;3472,7
+PC000937;Fornecedor Alfa;D;Baixa;60,0;12,3;145,9;40;75;15;2,5;6,35;🟡 Estoque excessivo;0,0;127,26;0,0
+PC000182;Fornecedor Alfa;D;Baixa;39,0;17,8;65,6;40;75;15;5,56;6,35;🟢 OK;0,0;159,11;0,0
+PC000765;Fornecedor Gamma;D;Baixa;46,0;35,5;38,9;40;75;15;9,39;6,35;🔴 Comprar agora;43,0;74,32;3179,01
+PC000601;Fornecedor Alfa;D;Baixa;60,0;33,8;53,3;40;75;15;6,85;6,35;🟢 OK;0,0;92,81;0,0
+PC000110;Fornecedor Alfa;D;Baixa;50,0;37,3;40,2;40;75;15;9,07;6,35;🟢 OK;0,0;76,02;0,0
+PC000375;Fornecedor Gamma;D;Baixa;53,0;23,0;69,2;40;75;15;5,27;6,35;🟢 OK;0,0;117,28;0,0
+PC000022;Fornecedor Gamma;D;Média;86,0;28,0;92,3;40;75;15;3,96;6,35;🟡 Estoque excessivo;0,0;139,43;0,0
+PC000067;Fornecedor Alfa;D;Alta;71,0;52,6;40,5;40;75;15;9,02;6,35;🟢 OK;0,0;113,54;0,0
+PC000751;Fornecedor Gamma;D;Alta;17,0;27,4;18,6;40;75;15;19,63;6,35;🔴 Comprar agora;52,0;244,61;12614,14
+PC000437;Fornecedor Gamma;D;Baixa;14,0;15,7;26,7;40;75;15;13,65;6,35;🔴 Comprar agora;25,0;144,11;3639,73
+PC000112;Fornecedor Beta;D;Baixa;30,0;24,1;37,3;40;75;15;9,77;6,35;🔴 Comprar agora;30,0;107,2;3243,45
+PC000604;Fornecedor Delta;D;Baixa;18,0;15,0;35,9;40;75;15;10,17;6,35;🔴 Comprar agora;20,0;164,91;3233,34
+PC000292;Fornecedor Delta;D;Baixa;26,0;32,7;23,9;40;75;15;15,3;6,35;🔴 Comprar agora;56,0;66,66;3716,61
+PC000209;Fornecedor Delta;D;Média;25,0;25,2;29,8;40;75;15;12,25;6,35;🔴 Comprar agora;38,0;128,94;4890,89
+PC000401;Fornecedor Beta;D;Baixa;66,0;22,7;87,1;40;75;15;4,19;6,35;🟡 Estoque excessivo;0,0;81,83;0,0
+PC000369;Fornecedor Beta;D;Baixa;25,0;13,9;54,0;40;75;15;6,76;6,35;🟢 OK;0,0;87,42;0,0
+PC000260;Fornecedor Gamma;D;Baixa;49,0;5,6;263,6;40;75;15;1,38;6,35;🟡 Estoque excessivo;0,0;265,23;0,0
+PC000562;Fornecedor Beta;D;Baixa;32,0;22,5;42,7;40;75;15;8,54;6,35;🟢 OK;0,0;112,7;0,0
+PC000033;Fornecedor Gamma;E;Baixa;42,0;17,0;74,0;55;100;15;4,93;4,71;🟢 OK;0,0;109,66;0,0
+PC000847;Fornecedor Gamma;E;Baixa;63,0;33,8;55,9;55;100;15;6,53;4,71;🟢 OK;0,0;61,7;0,0
+PC000459;Fornecedor Gamma;E;Baixa;36,0;16,0;67,3;55;100;15;5,42;4,71;🟢 OK;0,0;103,33;0,0
+PC000841;Fornecedor Beta;E;Alta;19,0;24,5;23,3;55;100;15;15,69;4,71;🔴 Comprar agora;63,0;172,5;10813,1
+PC000822;Fornecedor Alfa;E;Baixa;44,0;34,8;38,0;55;100;15;9,62;4,71;🔴 Comprar agora;72,0;61,65;4434,05
+PC000868;Fornecedor Gamma;E;Baixa;64,0;25,8;74,5;55;100;15;4,9;4,71;🟢 OK;0,0;80,85;0,0
+PC000722;Fornecedor Alfa;E;Baixa;19,0;25,6;22,2;55;100;15;16,41;4,71;🔴 Comprar agora;66,0;61,65;4094,23
+PC000593;Fornecedor Beta;E;Baixa;80,0;27,1;88,5;55;100;15;4,12;4,71;🟢 OK;0,0;64,75;0,0
+PC000370;Fornecedor Delta;E;Média;19,0;28,3;20,1;55;100;15;18,13;4,71;🔴 Comprar agora;75,0;112,99;8515,66
+PC000381;Fornecedor Beta;E;Baixa;50,0;16,0;93,8;55;100;15;3,89;4,71;🟢 OK;0,0;80,28;0,0
+PC000072;Fornecedor Alfa;E;Baixa;26,0;14,2;54,8;55;100;15;6,65;4,71;🔴 Comprar agora;21,0;111,25;2381,23
+PC000920;Fornecedor Alfa;E;Baixa;24,0;7,4;97,9;55;100;15;3,73;4,71;🟢 OK;0,0;190,38;0,0
+PC000388;Fornecedor Gamma;E;Baixa;30,0;23,5;38,4;55;100;15;9,51;4,71;🔴 Comprar agora;48,0;65,85;3174,22
+PC000599;Fornecedor Beta;E;Baixa;53,0;43,1;36,9;55;100;15;9,9;4,71;🔴 Comprar agora;91,0;45,86;4162,31
+PC000165;Fornecedor Beta;E;Baixa;50,0;22,2;67,6;55;100;15;5,4;4,71;🟢 OK;0,0;79,06;0,0
+PC000506;Fornecedor Gamma;E;Média;36,0;18,1;59,6;55;100;15;6,13;4,71;🟢 OK;0,0;184,28;0,0
+PC000791;Fornecedor Alfa;E;Média;28,0;30,7;27,4;55;100;15;13,33;4,71;🔴 Comprar agora;74,0;74,37;5520,94
+PC000645;Fornecedor Delta;E;Baixa;123,0;21,2;174,0;55;100;15;2,1;4,71;🟡 Estoque excessivo;0,0;47,39;0,0
+PC000298;Fornecedor Beta;E;Baixa;63,0;20,9;90,5;55;100;15;4,03;4,71;🟢 OK;0,0;54,22;0,0
+PC000926;Fornecedor Beta;E;Baixa;38,0;21,4;53,2;55;100;15;6,85;4,71;🔴 Comprar agora;33,0;49,1;1638,29
+PC000795;Fornecedor Alfa;E;Baixa;37,0;44,3;25,0;55;100;15;14,58;4,71;🔴 Comprar agora;111,0;26,42;2928,19
+PC000133;Fornecedor Delta;E;Baixa;30,0;24,1;37,3;55;100;15;9,78;4,71;🔴 Comprar agora;50,0;43,82;2206,81
+PC000515;Fornecedor Gamma;E;Baixa;6,0;14,4;12,5;55;100;15;29,2;4,71;🚨 RUPTURA IMINENTE;42,0;94,53;3969,68
+PC000203;Fornecedor Delta;E;Baixa;77,0;61,8;37,4;55;100;15;9,76;4,71;🔴 Comprar agora;129,0;17,78;2293,47
+PC000430;Fornecedor Alfa;E;Alta;20,0;15,9;37,7;55;100;15;9,69;4,71;🔴 Comprar agora;33,0;391,62;12969,58
+PC000494;Fornecedor Delta;E;Baixa;24,0;33,7;21,4;55;100;15;17,07;4,71;🔴 Comprar agora;88,0;40,35;3559,29
+PC000240;Fornecedor Alfa;E;Baixa;79,0;15,6;151,9;55;100;15;2,4;4,71;🟡 Estoque excessivo;0,0;90,0;0,0
+PC000607;Fornecedor Gamma;E;Baixa;85,0;34,8;73,3;55;100;15;4,98;4,71;🟢 OK;0,0;37,88;0,0
+PC000622;Fornecedor Gamma;E;Baixa;71,0;24,8;85,7;55;100;15;4,26;4,71;🟢 OK;0,0;34,58;0,0
+PC000961;Fornecedor Delta;E;Baixa;70,0;23,8;88,2;55;100;15;4,14;4,71;🟢 OK;0,0;60,3;0,0
+PC000101;Fornecedor Beta;E;Baixa;8,0;25,2;9,5;55;100;15;38,36;4,71;🚨 RUPTURA IMINENTE;76,0;33,57;2554,2
+PC000191;Fornecedor Delta;E;Baixa;21,0;20,1;31,3;55;100;15;11,65;4,71;🔴 Comprar agora;46,0;37,77;1737,69
+PC000455;Fornecedor Gamma;E;Baixa;52,0;34,2;45,7;55;100;15;7,99;4,71;🔴 Comprar agora;62,0;21,43;1326,22
+PC000867;Fornecedor Alfa;E;Baixa;56,0;27,5;61,0;55;100;15;5,98;4,71;🟢 OK;0,0;27,08;0,0
+PC000423;Fornecedor Alfa;E;Baixa;23,0;25,5;27,0;55;100;15;13,51;4,71;🔴 Comprar agora;62,0;26,38;1639,42
+PC000319;Fornecedor Beta;E;Baixa;50,0;13,8;108,4;55;100;15;3,37;4,71;🟡 Estoque excessivo;0,0;44,08;0,0
+PC000598;Fornecedor Alfa;E;Baixa;23,0;18,9;36,5;55;100;15;10,01;4,71;🔴 Comprar agora;40,0;43,1;1727,67
+PC000014;Fornecedor Alfa;E;Baixa;45,0;26,0;52,0;55;100;15;7,02;4,71;🔴 Comprar agora;42,0;25,43;1055,5
+PC000998;Fornecedor Gamma;E;Média;42,0;28,4;44,4;55;100;15;8,22;4,71;🔴 Comprar agora;53,0;38,48;2021,45
+PC000169;Fornecedor Alfa;E;Baixa;22,0;55,4;11,9;55;100;15;30,65;4,71;🚨 RUPTURA IMINENTE;163,0;10,82;1761,05
+PC000605;Fornecedor Beta;E;Média;14,0;26,2;16,0;55;100;15;22,77;4,71;🔴 Comprar agora;73,0;38,69;2837,8
+PC000651;Fornecedor Gamma;E;Baixa;65,0;27,4;71,3;55;100;15;5,12;4,71;🟢 OK;0,0;23,98;0,0
+PC000677;Fornecedor Gamma;E;Baixa;17,0;11,0;46,5;55;100;15;7,85;4,71;🔴 Comprar agora;20,0;43,77;857,01
+PC000301;Fornecedor Delta;E;Baixa;73,0;25,8;84,8;55;100;15;4,31;4,71;🟢 OK;0,0;21,96;0,0
+PC000516;Fornecedor Delta;E;Baixa;48,0;41,2;35,0;55;100;15;10,43;4,71;🔴 Comprar agora;89,0;11,34;1011,55
+PC000202;Fornecedor Beta;E;Baixa;62,0;29,8;62,5;55;100;15;5,84;4,71;🟢 OK;0,0;18,87;0,0
+PC000435;Fornecedor Delta;E;Média;21,0;7,1;88,6;55;100;15;4,12;4,71;🟢 OK;0,0;69,73;0,0
+PC000629;Fornecedor Gamma;E;Alta;8,0;16,2;14,8;55;100;15;24,7;4,71;🚨 RUPTURA IMINENTE;46,0;50,73;2340,97
+PC000810;Fornecedor Delta;E;Alta;38,0;22,2;51,4;55;100;15;7,1;4,71;🔴 Comprar agora;36,0;51,49;1850,19
+PC000340;Fornecedor Gamma;E;Baixa;44,0;16,9;78,3;55;100;15;4,66;4,71;🟢 OK;0,0;21,55;0,0
+PC000050;Fornecedor Delta;E;Média;64,0;25,9;74,2;55;100;15;4,92;4,71;🟢 OK;0,0;17,4;0,0
+PC000577;Fornecedor Alfa;E;Baixa;65,0;9,5;205,7;55;100;15;1,77;4,71;🟡 Estoque excessivo;0,0;18,45;0,0
+PC000902;Fornecedor Alfa;E;Baixa;34,0;30,0;34,0;55;100;15;10,75;4,71;🔴 Comprar agora;66,0;10,31;681,96
+PC000284;Fornecedor Beta;E;Baixa;73,0;17,6;124,7;55;100;15;2,93;4,71;🟡 Estoque excessivo;0,0;12,32;0,0
+PC000073;Fornecedor Alfa;E;Baixa;15,0;6,5;69,0;55;100;15;5,29;4,71;🟢 OK;0,0;26,61;0,0

@@ -1,0 +1,2197 @@
+{
+  "ARREFECIMENTO - 17/07 11:42": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 117,
+      "n_ok": 117,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-17 11:49"
+  },
+  "ARREFECIMENTO - 17/07 12:05": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 117,
+      "n_ok": 117,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-17 12:08"
+  },
+  "ARREFECIMENTO - 17/07 12:10": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 118,
+      "n_ok": 118,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-17 12:15"
+  },
+  "PC000001, PC000003... - 20/07 09:10": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000003",
+        "PC000002",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 8,
+      "n_ok": 8,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-20 09:11"
+  },
+  "PC000001, PC000002... - 20/07 15:12": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 8,
+      "n_ok": 8,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-20 15:16"
+  },
+  "PC000001, PC000002... - 20/07 16:26": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-20 16:28"
+  },
+  "PC000001, PC000002... - 23/07 12:12": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-23 12:13"
+  },
+  "PC000001, PC000002... - 23/07 12:40": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 5,
+      "n_ok": 5,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-23 12:40"
+  },
+  "PC000001, PC000002... - 23/07 12:42": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 5,
+      "n_ok": 5,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-23 12:42"
+  },
+  "PC000001, PC000002... - 23/07 12:50": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 5,
+      "n_ok": 5,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-23 12:51"
+  },
+  "PC000001 - 23/07 14:02": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 5,
+      "n_ok": 5,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-23 14:03"
+  },
+  "ARREFECIMENTO - 23/07 14:34": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 737,
+      "n_ok": 737,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-23 14:49"
+  },
+  "MOTOR - 23/07 15:13": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "MOTOR",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 1164,
+      "n_ok": 1164,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-23 15:35"
+  },
+  "ARREFECIMENTO - 24/07 09:18": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 737,
+      "n_ok": 737,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-24 09:36"
+  },
+  "ARREFECIMENTO - 24/07 10:34": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 871,
+      "n_ok": 871,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-24 10:55"
+  },
+  "PC000001, PC000002... - 25/07 13:22": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 5,
+      "n_ok": 5,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-25 13:22"
+  },
+  "PC000001, PC000002... - 25/07 13:22 (13:46:47)": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 737,
+      "n_ok": 737,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-25 13:46"
+  },
+  "ARREFECIMENTO - 25/07 15:24": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 737,
+      "n_ok": 737,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-25 15:41"
+  },
+  "ARREFECIMENTO - 26/07 11:48": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 737,
+      "n_ok": 737,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-26 12:33"
+  },
+  "ARREFECIMENTO - 26/07 13:00": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 737,
+      "n_ok": 737,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-26 13:23"
+  },
+  "PC000001, PC000002... - 27/07 09:55": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 5,
+      "n_ok": 5,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 09:55"
+  },
+  "PC000001, PC000002... - 27/07 10:00": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 5,
+      "n_ok": 5,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 10:00"
+  },
+  "PC000001, PC000002... - 27/07 10:00 (10:13:08)": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011",
+        "PC000012",
+        "PC000013",
+        "PC000014",
+        "PC000015",
+        "PC000016",
+        "PC000017",
+        "PC000018",
+        "PC000019",
+        "PC000020"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 15,
+      "n_ok": 15,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 10:13"
+  },
+  "PC000001, PC000002... - 27/07 10:20": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011",
+        "PC000012",
+        "PC000013",
+        "PC000014",
+        "PC000015",
+        "PC000016",
+        "PC000017",
+        "PC000018",
+        "PC000019",
+        "PC000020",
+        "PC000021",
+        "PC000022",
+        "PC000023",
+        "PC000024",
+        "PC000025",
+        "PC000026",
+        "PC000027",
+        "PC000028",
+        "PC000029",
+        "PC000030"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 22,
+      "n_ok": 22,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 10:21"
+  },
+  "PC000001, PC000002... - 27/07 10:30": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011",
+        "PC000012",
+        "PC000013",
+        "PC000014",
+        "PC000015",
+        "PC000016",
+        "PC000017",
+        "PC000018",
+        "PC000019",
+        "PC000020",
+        "PC000021",
+        "PC000022",
+        "PC000023",
+        "PC000024",
+        "PC000025",
+        "PC000026",
+        "PC000027",
+        "PC000028",
+        "PC000029",
+        "PC000030"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 22,
+      "n_ok": 22,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 10:32"
+  },
+  "ARREFECIMENTO - 27/07 10:39": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 737,
+      "n_ok": 737,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 10:59"
+  },
+  "PC000001, PC000002... - 27/07 14:41": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011",
+        "PC000012",
+        "PC000013",
+        "PC000014",
+        "PC000015",
+        "PC000016",
+        "PC000017",
+        "PC000018",
+        "PC000019",
+        "PC000020"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 15,
+      "n_ok": 15,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 14:42"
+  },
+  "PC000001, PC000002... - 27/07 15:00": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 8,
+      "n_ok": 8,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 15:01"
+  },
+  "PC000001, PC000002... - 27/07 15:06": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 15:07"
+  },
+  "PC000001, PC000002... - 27/07 15:33": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 15:33"
+  },
+  "PC000001, PC000002... - 27/07 15:45": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011",
+        "PC000012",
+        "PC000013",
+        "PC000014",
+        "PC000015",
+        "PC000016",
+        "PC000017",
+        "PC000018",
+        "PC000019",
+        "PC000020",
+        "PC000021",
+        "PC000022",
+        "PC000023",
+        "PC000024",
+        "PC000025",
+        "PC000026",
+        "PC000027",
+        "PC000028",
+        "PC000029",
+        "PC000030"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 22,
+      "n_ok": 22,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 15:46"
+  },
+  "PC000001, PC000002... - 27/07 15:59": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011",
+        "PC000012",
+        "PC000013",
+        "PC000014",
+        "PC000015",
+        "PC000016",
+        "PC000017",
+        "PC000018",
+        "PC000019",
+        "PC000020",
+        "PC000021",
+        "PC000022",
+        "PC000023",
+        "PC000024",
+        "PC000025",
+        "PC000026",
+        "PC000027",
+        "PC000028",
+        "PC000029",
+        "PC000030",
+        "PC000031",
+        "PC000032",
+        "PC000033",
+        "PC000034",
+        "PC000035",
+        "PC000036",
+        "PC000037",
+        "PC000038",
+        "PC000039",
+        "PC000040"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 36,
+      "n_ok": 36,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 16:01"
+  },
+  "PC000343, PC000344 - 27/07 16:19": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000343",
+        "PC000344",
+        "PC000345",
+        "PC000346",
+        "PC000347",
+        "PC000348",
+        "PC000349",
+        "PC000350",
+        "PC000351",
+        "PC000352",
+        "PC000353",
+        "PC000354",
+        "PC000355",
+        "PC000356",
+        "PC000357",
+        "PC000358",
+        "PC000359",
+        "PC000360",
+        "PC000361",
+        "PC000362"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 18
+    },
+    "resumo": {
+      "n_produtos": 16,
+      "n_ok": 16,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 16:20"
+  },
+  "ARREFECIMENTO - 27/07 16:55": {
+    "config": {
+      "escopo_tipo": "🏷️ Categoria/Grupo inteiro",
+      "escopo_valor": "ARREFECIMENTO",
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 871,
+      "n_ok": 871,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 17:18"
+  },
+  "PC000746, PC002579... - 27/07 19:08": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000746",
+        "PC002579",
+        "PC005963",
+        "PC003283",
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 15,
+      "n_ok": 15,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 19:09"
+  },
+  "PC000746, PC002579... - 27/07 19:22": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000746",
+        "PC002579",
+        "PC003283",
+        "PC005963",
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 15,
+      "n_ok": 15,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 19:22"
+  },
+  "PC000746, PC002579... - 27/07 19:35": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000746",
+        "PC002579",
+        "PC003283",
+        "PC005963",
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 15,
+      "n_ok": 15,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 19:35"
+  },
+  "PC000746, PC002579... - 27/07 19:46": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000746",
+        "PC002579",
+        "PC003283",
+        "PC005963",
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010",
+        "PC000011"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 15,
+      "n_ok": 15,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-27 19:47"
+  },
+  "PC000001, PC000002... - 28/07 08:54": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 08:55"
+  },
+  "PC000001, PC000002... - 28/07 09:16": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 09:16"
+  },
+  "PC000001, PC000002... - 28/07 11:10": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 11:10"
+  },
+  "PC000001, PC000002... - 28/07 12:47": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 12:47"
+  },
+  "PC000001, PC000002... - 28/07 13:20": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 13:20"
+  },
+  "PC000001, PC000002... - 28/07 13:34": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 13:34"
+  },
+  "PC000001, PC000002... - 28/07 13:36": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 13:36"
+  },
+  "PC000001, PC000002... - 28/07 15:48": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 15:48"
+  },
+  "PC000001, PC000002... - 28/07 17:04": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 17:05"
+  },
+  "PC000001, PC000002... - 28/07 17:10": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 17:11"
+  },
+  "PC000001, PC000002... - 28/07 19:13": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-28 19:14"
+  },
+  "PC000001, PC000002... - 29/07 11:46": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 11:47"
+  },
+  "PC000001, PC000002... - 29/07 13:19": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 13:19"
+  },
+  "PC000001, PC000002... - 29/07 13:49": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 13:50"
+  },
+  "PC000001, PC000002... - 29/07 13:49 (13:51:01)": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 13:51"
+  },
+  "PC000001, PC000002... - 29/07 14:28": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 14:29"
+  },
+  "PC000001, PC000002 - 29/07 15:34": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 15:35"
+  },
+  "PC000001, PC000002... - 29/07 15:54": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 15:55"
+  },
+  "PC000001, PC000002... - 29/07 16:10": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 16:11"
+  },
+  "PC000001, PC000002... - 29/07 16:19": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 16:19"
+  },
+  "PC000001, PC000002... - 29/07 16:32": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 16:33"
+  },
+  "PC000001, PC000002... - 29/07 16:43": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 16:43"
+  },
+  "PC000001, PC000002... - 29/07 18:02": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 18:03"
+  },
+  "PC000001, PC000002... - 29/07 18:08": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 18:08"
+  },
+  "PC000001, PC000002... - 29/07 18:17": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 18:17"
+  },
+  "PC000001, PC000002... - 29/07 18:38": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 18:38"
+  },
+  "PC000001, PC000002... - 29/07 19:00": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 19:00"
+  },
+  "PC000001, PC000002... - 29/07 19:18": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 19:19"
+  },
+  "PC000001 - 29/07 19:23": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 19:24"
+  },
+  "PC000001, PC000002... - 29/07 19:47": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-29 19:47"
+  },
+  "PC000001, PC000002... - 30/07 09:41": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-30 09:41"
+  },
+  "PC000001, PC000002... - 30/07 09:55": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-30 09:56"
+  },
+  "PC000001, PC000002... - 30/07 10:43": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 3,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-30 10:44"
+  },
+  "PC000001, PC000002... - 30/07 10:43 (10:44:40)": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-30 10:44"
+  },
+  "PC000001, PC000002... - 30/07 10:45": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-30 10:45"
+  },
+  "PC000001, PC000002... - 30/07 10:52": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-30 10:53"
+  },
+  "PC000001, PC000002... - 30/07 11:01": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-30 11:01"
+  },
+  "PC000001, PC000002... - 30/07 11:53": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-30 11:54"
+  },
+  "PC000001, PC000002... - 30/07 11:58": {
+    "config": {
+      "escopo_tipo": "📦 Produto específico",
+      "escopo_valor": [
+        "PC000001",
+        "PC000002",
+        "PC000003",
+        "PC000004",
+        "PC000005",
+        "PC000006",
+        "PC000007",
+        "PC000008",
+        "PC000009",
+        "PC000010"
+      ],
+      "meses_pico": [],
+      "meses_promo": [],
+      "meses_excluir": [],
+      "reajustes": [],
+      "meses_previsao": 6,
+      "min_periodos": 12
+    },
+    "resumo": {
+      "n_produtos": 10,
+      "n_ok": 10,
+      "erro_medio_pct": null
+    },
+    "criado_em": "2026-07-30 11:59"
+  }
+}

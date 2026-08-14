@@ -1,0 +1,2073 @@
+﻿ano;mes;campo_pai;subconta;valor;filial
+2024;jan;contas a receber saldo;Receb. Clientes;44197,23;Loja Sul
+2024;fev;contas a receber saldo;Receb. Clientes;45127,29;Loja Sul
+2024;mar;contas a receber saldo;Receb. Clientes;48801,62;Loja Sul
+2024;abr;contas a receber saldo;Receb. Clientes;45544,62;Loja Sul
+2024;mai;contas a receber saldo;Receb. Clientes;51147,15;Loja Sul
+2024;jun;contas a receber saldo;Receb. Clientes;56632,9;Loja Sul
+2024;jul;contas a receber saldo;Receb. Clientes;48016,29;Loja Sul
+2024;ago;contas a receber saldo;Receb. Clientes;46860,34;Loja Sul
+2024;set;contas a receber saldo;Receb. Clientes;48307,42;Loja Sul
+2024;out;contas a receber saldo;Receb. Clientes;47702,64;Loja Sul
+2024;nov;contas a receber saldo;Receb. Clientes;51009,38;Loja Sul
+2024;dez;contas a receber saldo;Receb. Clientes;62639,21;Loja Sul
+2025;jan;contas a receber saldo;Receb. Clientes;52357,67;Loja Sul
+2025;fev;contas a receber saldo;Receb. Clientes;59454,97;Loja Sul
+2025;mar;contas a receber saldo;Receb. Clientes;64798,04;Loja Sul
+2025;abr;contas a receber saldo;Receb. Clientes;58142,94;Loja Sul
+2025;mai;contas a receber saldo;Receb. Clientes;59432,69;Loja Sul
+2025;jun;contas a receber saldo;Receb. Clientes;60056,87;Loja Sul
+2025;jul;contas a receber saldo;Receb. Clientes;56788,57;Loja Sul
+2025;ago;contas a receber saldo;Receb. Clientes;60783,09;Loja Sul
+2025;set;contas a receber saldo;Receb. Clientes;58669,12;Loja Sul
+2025;out;contas a receber saldo;Receb. Clientes;71062,48;Loja Sul
+2025;nov;contas a receber saldo;Receb. Clientes;72495,32;Loja Sul
+2025;dez;contas a receber saldo;Receb. Clientes;66280,0;Loja Sul
+2026;jan;contas a receber saldo;Receb. Clientes;60498,45;Loja Sul
+2026;fev;contas a receber saldo;Receb. Clientes;69555,28;Loja Sul
+2026;mar;contas a receber saldo;Receb. Clientes;74109,18;Loja Sul
+2026;abr;contas a receber saldo;Receb. Clientes;75496,8;Loja Sul
+2026;mai;contas a receber saldo;Receb. Clientes;58255,23;Loja Sul
+2026;jun;contas a receber saldo;Receb. Clientes;69657,34;Loja Sul
+2026;jul;contas a receber saldo;Receb. Clientes;86745,56;Loja Sul
+2022;jan;Disponibilidades entradas;Receita Serviços;320000,0;
+2022;jan;Disponibilidades entradas;Receita Produtos;95000,0;
+2022;jan;Disponibilidades entradas;Recebimento Clientes;140000,0;
+2022;jan;Disponibilidades entradas;Receita Financeira/Outras;125000,0;
+2022;jan;Disponibilidades Saida;Folha;180000,0;
+2022;jan;Disponibilidades Saida;Fornecedores;125000,0;
+2022;jan;Disponibilidades Saida;Impostos/Operacionais;130000,0;
+2022;jan;Disponibilidades Saida;Investimentos;35000,0;
+2022;fev;Disponibilidades entradas;Receita Serviços;330000,0;
+2022;fev;Disponibilidades entradas;Receita Produtos;98000,0;
+2022;fev;Disponibilidades entradas;Recebimento Clientes;145000,0;
+2022;fev;Disponibilidades entradas;Receita Financeira/Outras;147000,0;
+2022;fev;Disponibilidades Saida;Folha;180000,0;
+2022;fev;Disponibilidades Saida;Fornecedores;128000,0;
+2022;fev;Disponibilidades Saida;Impostos/Operacionais;134000,0;
+2022;fev;Disponibilidades Saida;Investimentos;20000,0;
+2022;mar;Disponibilidades entradas;Receita Serviços;350000,0;
+2022;mar;Disponibilidades entradas;Receita Produtos;102000,0;
+2022;mar;Disponibilidades entradas;Recebimento Clientes;150000,0;
+2022;mar;Disponibilidades entradas;Receita Financeira/Outras;171000,0;
+2022;mar;Disponibilidades Saida;Folha;185000,0;
+2022;mar;Disponibilidades Saida;Fornecedores;132000,0;
+2022;mar;Disponibilidades Saida;Impostos/Operacionais;139000,0;
+2022;mar;Disponibilidades Saida;Investimentos;15000,0;
+2022;abr;Disponibilidades entradas;Receita Serviços;340000,0;
+2022;abr;Disponibilidades entradas;Receita Produtos;96000,0;
+2022;abr;Disponibilidades entradas;Recebimento Clientes;148000,0;
+2022;abr;Disponibilidades entradas;Receita Financeira/Outras;140000,0;
+2022;abr;Disponibilidades Saida;Folha;185000,0;
+2022;abr;Disponibilidades Saida;Fornecedores;130000,0;
+2022;abr;Disponibilidades Saida;Impostos/Operacionais;138000,0;
+2022;abr;Disponibilidades Saida;Investimentos;25000,0;
+2022;mai;Disponibilidades entradas;Receita Serviços;355000,0;
+2022;mai;Disponibilidades entradas;Receita Produtos;104000,0;
+2022;mai;Disponibilidades entradas;Recebimento Clientes;154000,0;
+2022;mai;Disponibilidades entradas;Receita Financeira/Outras;168000,0;
+2022;mai;Disponibilidades Saida;Folha;190000,0;
+2022;mai;Disponibilidades Saida;Fornecedores;134000,0;
+2022;mai;Disponibilidades Saida;Impostos/Operacionais;143000,0;
+2022;mai;Disponibilidades Saida;Investimentos;18000,0;
+2022;jun;Disponibilidades entradas;Receita Serviços;370000,0;
+2022;jun;Disponibilidades entradas;Receita Produtos;108000,0;
+2022;jun;Disponibilidades entradas;Recebimento Clientes;160000,0;
+2022;jun;Disponibilidades entradas;Receita Financeira/Outras;171000,0;
+2022;jun;Disponibilidades Saida;Folha;195000,0;
+2022;jun;Disponibilidades Saida;Fornecedores;140000,0;
+2022;jun;Disponibilidades Saida;Impostos/Operacionais;146000,0;
+2022;jun;Disponibilidades Saida;Investimentos;30000,0;
+2022;jul;Disponibilidades entradas;Receita Serviços;380000,0;
+2022;jul;Disponibilidades entradas;Receita Produtos;112000,0;
+2022;jul;Disponibilidades entradas;Recebimento Clientes;165000,0;
+2022;jul;Disponibilidades entradas;Receita Financeira/Outras;187000,0;
+2022;jul;Disponibilidades Saida;Folha;198000,0;
+2022;jul;Disponibilidades Saida;Fornecedores;145000,0;
+2022;jul;Disponibilidades Saida;Impostos/Operacionais;151000,0;
+2022;jul;Disponibilidades Saida;Investimentos;22000,0;
+2022;ago;Disponibilidades entradas;Receita Serviços;390000,0;
+2022;ago;Disponibilidades entradas;Receita Produtos;115000,0;
+2022;ago;Disponibilidades entradas;Recebimento Clientes;170000,0;
+2022;ago;Disponibilidades entradas;Receita Financeira/Outras;198000,0;
+2022;ago;Disponibilidades Saida;Folha;200000,0;
+2022;ago;Disponibilidades Saida;Fornecedores;148000,0;
+2022;ago;Disponibilidades Saida;Impostos/Operacionais;154000,0;
+2022;ago;Disponibilidades Saida;Investimentos;25000,0;
+2022;set;Disponibilidades entradas;Receita Serviços;395000,0;
+2022;set;Disponibilidades entradas;Receita Produtos;118000,0;
+2022;set;Disponibilidades entradas;Recebimento Clientes;172000,0;
+2022;set;Disponibilidades entradas;Receita Financeira/Outras;207000,0;
+2022;set;Disponibilidades Saida;Folha;202000,0;
+2022;set;Disponibilidades Saida;Fornecedores;150000,0;
+2022;set;Disponibilidades Saida;Impostos/Operacionais;156000,0;
+2022;set;Disponibilidades Saida;Investimentos;20000,0;
+2022;out;Disponibilidades entradas;Receita Serviços;405000,0;
+2022;out;Disponibilidades entradas;Receita Produtos;120000,0;
+2022;out;Disponibilidades entradas;Recebimento Clientes;175000,0;
+2022;out;Disponibilidades entradas;Receita Financeira/Outras;203000,0;
+2022;out;Disponibilidades Saida;Folha;205000,0;
+2022;out;Disponibilidades Saida;Fornecedores;154000,0;
+2022;out;Disponibilidades Saida;Impostos/Operacionais;160000,0;
+2022;out;Disponibilidades Saida;Investimentos;28000,0;
+2022;nov;Disponibilidades entradas;Receita Serviços;420000,0;
+2022;nov;Disponibilidades entradas;Receita Produtos;125000,0;
+2022;nov;Disponibilidades entradas;Recebimento Clientes;180000,0;
+2022;nov;Disponibilidades entradas;Receita Financeira/Outras;219000,0;
+2022;nov;Disponibilidades Saida;Folha;208000,0;
+2022;nov;Disponibilidades Saida;Fornecedores;158000,0;
+2022;nov;Disponibilidades Saida;Impostos/Operacionais;164000,0;
+2022;nov;Disponibilidades Saida;Investimentos;30000,0;
+2022;dez;Disponibilidades entradas;Receita Serviços;450000,0;
+2022;dez;Disponibilidades entradas;Receita Produtos;135000,0;
+2022;dez;Disponibilidades entradas;Recebimento Clientes;190000,0;
+2022;dez;Disponibilidades entradas;Receita Financeira/Outras;237000,0;
+2022;dez;Disponibilidades Saida;Folha;220000,0;
+2022;dez;Disponibilidades Saida;Fornecedores;165000,0;
+2022;dez;Disponibilidades Saida;Impostos/Operacionais;173000,0;
+2022;dez;Disponibilidades Saida;Investimentos;40000,0;
+2023;jan;Disponibilidades entradas;Receita Serviços;384000,0;
+2023;jan;Disponibilidades entradas;Receita Produtos;114000,0;
+2023;jan;Disponibilidades entradas;Recebimento Clientes;168000,0;
+2023;jan;Disponibilidades entradas;Receita Financeira/Outras;150000,0;
+2023;jan;Disponibilidades Saida;Folha;216000,0;
+2023;jan;Disponibilidades Saida;Fornecedores;150000,0;
+2023;jan;Disponibilidades Saida;Impostos/Operacionais;156000,0;
+2023;jan;Disponibilidades Saida;Investimentos;42000,0;
+2023;fev;Disponibilidades entradas;Receita Serviços;396000,0;
+2023;fev;Disponibilidades entradas;Receita Produtos;117600,0;
+2023;fev;Disponibilidades entradas;Recebimento Clientes;174000,0;
+2023;fev;Disponibilidades entradas;Receita Financeira/Outras;176400,0;
+2023;fev;Disponibilidades Saida;Folha;216000,0;
+2023;fev;Disponibilidades Saida;Fornecedores;153600,0;
+2023;fev;Disponibilidades Saida;Impostos/Operacionais;160800,0;
+2023;fev;Disponibilidades Saida;Investimentos;24000,0;
+2023;mar;Disponibilidades entradas;Receita Serviços;420000,0;
+2023;mar;Disponibilidades entradas;Receita Produtos;122400,0;
+2023;mar;Disponibilidades entradas;Recebimento Clientes;180000,0;
+2023;mar;Disponibilidades entradas;Receita Financeira/Outras;205200,0;
+2023;mar;Disponibilidades Saida;Folha;222000,0;
+2023;mar;Disponibilidades Saida;Fornecedores;158400,0;
+2023;mar;Disponibilidades Saida;Impostos/Operacionais;166800,0;
+2023;mar;Disponibilidades Saida;Investimentos;18000,0;
+2023;abr;Disponibilidades entradas;Receita Serviços;408000,0;
+2023;abr;Disponibilidades entradas;Receita Produtos;115200,0;
+2023;abr;Disponibilidades entradas;Recebimento Clientes;177600,0;
+2023;abr;Disponibilidades entradas;Receita Financeira/Outras;168000,0;
+2023;abr;Disponibilidades Saida;Folha;222000,0;
+2023;abr;Disponibilidades Saida;Fornecedores;156000,0;
+2023;abr;Disponibilidades Saida;Impostos/Operacionais;165600,0;
+2023;abr;Disponibilidades Saida;Investimentos;30000,0;
+2023;mai;Disponibilidades entradas;Receita Serviços;426000,0;
+2023;mai;Disponibilidades entradas;Receita Produtos;124800,0;
+2023;mai;Disponibilidades entradas;Recebimento Clientes;184800,0;
+2023;mai;Disponibilidades entradas;Receita Financeira/Outras;201600,0;
+2023;mai;Disponibilidades Saida;Folha;228000,0;
+2023;mai;Disponibilidades Saida;Fornecedores;160800,0;
+2023;mai;Disponibilidades Saida;Impostos/Operacionais;171600,0;
+2023;mai;Disponibilidades Saida;Investimentos;21600,0;
+2023;jun;Disponibilidades entradas;Receita Serviços;444000,0;
+2023;jun;Disponibilidades entradas;Receita Produtos;129600,0;
+2023;jun;Disponibilidades entradas;Recebimento Clientes;192000,0;
+2023;jun;Disponibilidades entradas;Receita Financeira/Outras;205200,0;
+2023;jun;Disponibilidades Saida;Folha;234000,0;
+2023;jun;Disponibilidades Saida;Fornecedores;168000,0;
+2023;jun;Disponibilidades Saida;Impostos/Operacionais;175200,0;
+2023;jun;Disponibilidades Saida;Investimentos;36000,0;
+2023;jul;Disponibilidades entradas;Receita Serviços;456000,0;
+2023;jul;Disponibilidades entradas;Receita Produtos;134400,0;
+2023;jul;Disponibilidades entradas;Recebimento Clientes;198000,0;
+2023;jul;Disponibilidades entradas;Receita Financeira/Outras;224400,0;
+2023;jul;Disponibilidades Saida;Folha;237600,0;
+2023;jul;Disponibilidades Saida;Fornecedores;174000,0;
+2023;jul;Disponibilidades Saida;Impostos/Operacionais;181200,0;
+2023;jul;Disponibilidades Saida;Investimentos;26400,0;
+2023;ago;Disponibilidades entradas;Receita Serviços;468000,0;
+2023;ago;Disponibilidades entradas;Receita Produtos;138000,0;
+2023;ago;Disponibilidades entradas;Recebimento Clientes;204000,0;
+2023;ago;Disponibilidades entradas;Receita Financeira/Outras;237600,0;
+2023;ago;Disponibilidades Saida;Folha;240000,0;
+2023;ago;Disponibilidades Saida;Fornecedores;177600,0;
+2023;ago;Disponibilidades Saida;Impostos/Operacionais;184800,0;
+2023;ago;Disponibilidades Saida;Investimentos;30000,0;
+2023;set;Disponibilidades entradas;Receita Serviços;474000,0;
+2023;set;Disponibilidades entradas;Receita Produtos;141600,0;
+2023;set;Disponibilidades entradas;Recebimento Clientes;206400,0;
+2023;set;Disponibilidades entradas;Receita Financeira/Outras;248400,0;
+2023;set;Disponibilidades Saida;Folha;242400,0;
+2023;set;Disponibilidades Saida;Fornecedores;180000,0;
+2023;set;Disponibilidades Saida;Impostos/Operacionais;187200,0;
+2023;set;Disponibilidades Saida;Investimentos;24000,0;
+2023;out;Disponibilidades entradas;Receita Serviços;486000,0;
+2023;out;Disponibilidades entradas;Receita Produtos;144000,0;
+2023;out;Disponibilidades entradas;Recebimento Clientes;210000,0;
+2023;out;Disponibilidades entradas;Receita Financeira/Outras;243600,0;
+2023;out;Disponibilidades Saida;Folha;246000,0;
+2023;out;Disponibilidades Saida;Fornecedores;184800,0;
+2023;out;Disponibilidades Saida;Impostos/Operacionais;192000,0;
+2023;out;Disponibilidades Saida;Investimentos;33600,0;
+2023;nov;Disponibilidades entradas;Receita Serviços;504000,0;
+2023;nov;Disponibilidades entradas;Receita Produtos;150000,0;
+2023;nov;Disponibilidades entradas;Recebimento Clientes;216000,0;
+2023;nov;Disponibilidades entradas;Receita Financeira/Outras;262800,0;
+2023;nov;Disponibilidades Saida;Folha;249600,0;
+2023;nov;Disponibilidades Saida;Fornecedores;189600,0;
+2023;nov;Disponibilidades Saida;Impostos/Operacionais;196800,0;
+2023;nov;Disponibilidades Saida;Investimentos;36000,0;
+2023;dez;Disponibilidades entradas;Receita Serviços;540000,0;
+2023;dez;Disponibilidades entradas;Receita Produtos;162000,0;
+2023;dez;Disponibilidades entradas;Recebimento Clientes;228000,0;
+2023;dez;Disponibilidades entradas;Receita Financeira/Outras;284400,0;
+2023;dez;Disponibilidades Saida;Folha;264000,0;
+2023;dez;Disponibilidades Saida;Fornecedores;198000,0;
+2023;dez;Disponibilidades Saida;Impostos/Operacionais;207600,0;
+2023;dez;Disponibilidades Saida;Investimentos;48000,0;
+2024;jan;Disponibilidades entradas;Receita Serviços;464000,0;
+2024;jan;Disponibilidades entradas;Receita Produtos;137750,0;
+2024;jan;Disponibilidades entradas;Recebimento Clientes;203000,0;
+2024;jan;Disponibilidades entradas;Receita Financeira/Outras;181250,0;
+2024;jan;Disponibilidades Saida;Folha;261000,0;
+2024;jan;Disponibilidades Saida;Fornecedores;181250,0;
+2024;jan;Disponibilidades Saida;Impostos/Operacionais;188500,0;
+2024;jan;Disponibilidades Saida;Investimentos;50750,0;
+2024;fev;Disponibilidades entradas;Receita Serviços;478500,0;
+2024;fev;Disponibilidades entradas;Receita Produtos;142100,0;
+2024;fev;Disponibilidades entradas;Recebimento Clientes;210250,0;
+2024;fev;Disponibilidades entradas;Receita Financeira/Outras;213150,0;
+2024;fev;Disponibilidades Saida;Folha;261000,0;
+2024;fev;Disponibilidades Saida;Fornecedores;185600,0;
+2024;fev;Disponibilidades Saida;Impostos/Operacionais;194300,0;
+2024;fev;Disponibilidades Saida;Investimentos;29000,0;
+2024;mar;Disponibilidades entradas;Receita Serviços;507500,0;
+2024;mar;Disponibilidades entradas;Receita Produtos;147900,0;
+2024;mar;Disponibilidades entradas;Recebimento Clientes;217500,0;
+2024;mar;Disponibilidades entradas;Receita Financeira/Outras;247950,0;
+2024;mar;Disponibilidades Saida;Folha;268250,0;
+2024;mar;Disponibilidades Saida;Fornecedores;191400,0;
+2024;mar;Disponibilidades Saida;Impostos/Operacionais;201550,0;
+2024;mar;Disponibilidades Saida;Investimentos;21750,0;
+2024;abr;Disponibilidades entradas;Receita Serviços;493000,0;
+2024;abr;Disponibilidades entradas;Receita Produtos;139200,0;
+2024;abr;Disponibilidades entradas;Recebimento Clientes;214600,0;
+2024;abr;Disponibilidades entradas;Receita Financeira/Outras;203000,0;
+2024;abr;Disponibilidades Saida;Folha;268250,0;
+2024;abr;Disponibilidades Saida;Fornecedores;188500,0;
+2024;abr;Disponibilidades Saida;Impostos/Operacionais;200100,0;
+2024;abr;Disponibilidades Saida;Investimentos;36250,0;
+2024;mai;Disponibilidades entradas;Receita Serviços;514750,0;
+2024;mai;Disponibilidades entradas;Receita Produtos;150800,0;
+2024;mai;Disponibilidades entradas;Recebimento Clientes;223300,0;
+2024;mai;Disponibilidades entradas;Receita Financeira/Outras;243600,0;
+2024;mai;Disponibilidades Saida;Folha;275500,0;
+2024;mai;Disponibilidades Saida;Fornecedores;194300,0;
+2024;mai;Disponibilidades Saida;Impostos/Operacionais;207350,0;
+2024;mai;Disponibilidades Saida;Investimentos;26100,0;
+2024;jun;Disponibilidades entradas;Receita Serviços;536500,0;
+2024;jun;Disponibilidades entradas;Receita Produtos;156600,0;
+2024;jun;Disponibilidades entradas;Recebimento Clientes;232000,0;
+2024;jun;Disponibilidades entradas;Receita Financeira/Outras;247950,0;
+2024;jun;Disponibilidades Saida;Folha;282750,0;
+2024;jun;Disponibilidades Saida;Fornecedores;203000,0;
+2024;jun;Disponibilidades Saida;Impostos/Operacionais;211700,0;
+2024;jun;Disponibilidades Saida;Investimentos;43500,0;
+2024;jul;Disponibilidades entradas;Receita Serviços;551000,0;
+2024;jul;Disponibilidades entradas;Receita Produtos;162400,0;
+2024;jul;Disponibilidades entradas;Recebimento Clientes;239250,0;
+2024;jul;Disponibilidades entradas;Receita Financeira/Outras;271150,0;
+2024;jul;Disponibilidades Saida;Folha;287100,0;
+2024;jul;Disponibilidades Saida;Fornecedores;210250,0;
+2024;jul;Disponibilidades Saida;Impostos/Operacionais;218950,0;
+2024;jul;Disponibilidades Saida;Investimentos;31900,0;
+2024;ago;Disponibilidades entradas;Receita Serviços;565500,0;
+2024;ago;Disponibilidades entradas;Receita Produtos;166750,0;
+2024;ago;Disponibilidades entradas;Recebimento Clientes;246500,0;
+2024;ago;Disponibilidades entradas;Receita Financeira/Outras;287100,0;
+2024;ago;Disponibilidades Saida;Folha;290000,0;
+2024;ago;Disponibilidades Saida;Fornecedores;214600,0;
+2024;ago;Disponibilidades Saida;Impostos/Operacionais;223300,0;
+2024;ago;Disponibilidades Saida;Investimentos;36250,0;
+2024;set;Disponibilidades entradas;Receita Serviços;572750,0;
+2024;set;Disponibilidades entradas;Receita Produtos;171100,0;
+2024;set;Disponibilidades entradas;Recebimento Clientes;249400,0;
+2024;set;Disponibilidades entradas;Receita Financeira/Outras;300150,0;
+2024;set;Disponibilidades Saida;Folha;292900,0;
+2024;set;Disponibilidades Saida;Fornecedores;217500,0;
+2024;set;Disponibilidades Saida;Impostos/Operacionais;226200,0;
+2024;set;Disponibilidades Saida;Investimentos;29000,0;
+2024;out;Disponibilidades entradas;Receita Serviços;587250,0;
+2024;out;Disponibilidades entradas;Receita Produtos;174000,0;
+2024;out;Disponibilidades entradas;Recebimento Clientes;253750,0;
+2024;out;Disponibilidades entradas;Receita Financeira/Outras;294350,0;
+2024;out;Disponibilidades Saida;Folha;297250,0;
+2024;out;Disponibilidades Saida;Fornecedores;223300,0;
+2024;out;Disponibilidades Saida;Impostos/Operacionais;232000,0;
+2024;out;Disponibilidades Saida;Investimentos;40600,0;
+2024;nov;Disponibilidades entradas;Receita Serviços;609000,0;
+2024;nov;Disponibilidades entradas;Receita Produtos;181250,0;
+2024;nov;Disponibilidades entradas;Recebimento Clientes;261000,0;
+2024;nov;Disponibilidades entradas;Receita Financeira/Outras;317550,0;
+2024;nov;Disponibilidades Saida;Folha;301600,0;
+2024;nov;Disponibilidades Saida;Fornecedores;229100,0;
+2024;nov;Disponibilidades Saida;Impostos/Operacionais;237800,0;
+2024;nov;Disponibilidades Saida;Investimentos;43500,0;
+2024;dez;Disponibilidades entradas;Receita Serviços;652500,0;
+2024;dez;Disponibilidades entradas;Receita Produtos;195750,0;
+2024;dez;Disponibilidades entradas;Recebimento Clientes;275500,0;
+2024;dez;Disponibilidades entradas;Receita Financeira/Outras;343650,0;
+2024;dez;Disponibilidades Saida;Folha;319000,0;
+2024;dez;Disponibilidades Saida;Fornecedores;239250,0;
+2024;dez;Disponibilidades Saida;Impostos/Operacionais;250850,0;
+2024;dez;Disponibilidades Saida;Investimentos;58000,0;
+2022;dez;CMV (custo da mercadoria vendida);CMV;3825966,73;Loja Sul
+2022;nov;CMV (custo da mercadoria vendida);CMV;3183140,1;Loja Sul
+2022;out;CMV (custo da mercadoria vendida);CMV;2269323,88;Loja Sul
+2022;set;CMV (custo da mercadoria vendida);CMV;2241493,69;Loja Sul
+2023;abr;CMV (custo da mercadoria vendida);CMV;2660736,5;Loja Sul
+2023;ago;CMV (custo da mercadoria vendida);CMV;2320268,1;Loja Sul
+2023;dez;CMV (custo da mercadoria vendida);CMV;3896775,35;Loja Sul
+2023;fev;CMV (custo da mercadoria vendida);CMV;2652720,63;Loja Sul
+2023;jan;CMV (custo da mercadoria vendida);CMV;2559636,51;Loja Sul
+2023;jul;CMV (custo da mercadoria vendida);CMV;2393546,12;Loja Sul
+2023;jun;CMV (custo da mercadoria vendida);CMV;2481443,61;Loja Sul
+2023;mai;CMV (custo da mercadoria vendida);CMV;2586931,21;Loja Sul
+2023;mar;CMV (custo da mercadoria vendida);CMV;2654095,4;Loja Sul
+2023;nov;CMV (custo da mercadoria vendida);CMV;3243068,4;Loja Sul
+2023;out;CMV (custo da mercadoria vendida);CMV;2336760,64;Loja Sul
+2023;set;CMV (custo da mercadoria vendida);CMV;2318602,01;Loja Sul
+2026;ago;CMV (custo da mercadoria vendida);CMV;2817404,66;Loja Sul
+2024;abr;despesas administrativas;Aluguel;57689,91;Loja Sul
+2024;abr;CMV (custo da mercadoria vendida);CMV;2693401,96;Loja Sul
+2024;abr;provisão para contribuição social;CSLL;48152,98;Loja Sul
+2024;abr;despesas comerciais;Comissões;120500,81;Loja Sul
+2024;abr;despesas administrativas;Contabilidade;14480,56;Loja Sul
+2024;abr;despesas com depreciações e amortizações;Depreciação;48050,55;Loja Sul
+2024;abr;despesas financeiras líquidas;Despesas Financeiras;19263,38;Loja Sul
+2024;abr;devoluções de vendas;Devoluções;47878,31;Loja Sul
+2024;abr;despesas administrativas;Energia Elétrica;19250,97;Loja Sul
+2024;abr;CMV (custo da mercadoria vendida);Fretes de Produção;96685,73;Loja Sul
+2024;abr;provisão para imposto de renda;IRPJ;144357,73;Loja Sul
+2024;abr;despesas administrativas;Internet e Telefonia;9640,33;Loja Sul
+2024;abr;receitas não operacionais;Juros Ativos;4728,57;Loja Sul
+2024;abr;despesas financeiras líquidas;Juros Bancários;9674,63;Loja Sul
+2024;abr;despesas administrativas;Manutenção;9641,79;Loja Sul
+2024;abr;despesas comerciais;Marketing e Publicidade;95222,83;Loja Sul
+2024;abr;CMV (custo da mercadoria vendida);Materiais e Insumos;241547,07;Loja Sul
+2024;abr;despesas administrativas;Material de Escritório;4804,23;Loja Sul
+2024;abr;CMV (custo da mercadoria vendida);Mão de Obra Direta;386107,21;Loja Sul
+2024;abr;receita bruta de vendas;Outras Receitas Operacionais;48011,87;Loja Sul
+2024;abr;despesas administrativas;Pró-Labore;71863,68;Loja Sul
+2024;abr;receita bruta de vendas;Receita de Serviços;336207,42;Loja Sul
+2024;abr;receita bruta de vendas;Receita de Vendas;4398986,79;Loja Sul
+2024;abr;receitas não operacionais;Receitas Financeiras;14264,76;Loja Sul
+2024;abr;despesas administrativas;Salários Administrativos;240405,07;Loja Sul
+2024;abr;despesas comerciais;Salários Comerciais;193296,04;Loja Sul
+2024;abr;despesas administrativas;Seguros;9715,75;Loja Sul
+2024;abr;despesas administrativas;Sistemas e Licenças;19557,03;Loja Sul
+2024;abr;despesas financeiras líquidas;Tarifas Bancárias;2421,46;Loja Sul
+2024;abr;despesas administrativas;Treinamentos;4807,39;Loja Sul
+2024;abr;despesas comerciais;Viagens Comerciais;24202,39;Loja Sul
+2024;ago;despesas administrativas;Aluguel;50939,83;Loja Sul
+2024;ago;CMV (custo da mercadoria vendida);CMV;2391889,52;Loja Sul
+2024;ago;provisão para contribuição social;CSLL;42545,42;Loja Sul
+2024;ago;despesas comerciais;Comissões;106980,95;Loja Sul
+2024;ago;despesas administrativas;Contabilidade;12728,05;Loja Sul
+2024;ago;despesas com depreciações e amortizações;Depreciação;42503,86;Loja Sul
+2024;ago;despesas financeiras líquidas;Despesas Financeiras;17085,58;Loja Sul
+2024;ago;devoluções de vendas;Devoluções;42765,28;Loja Sul
+2024;ago;despesas administrativas;Energia Elétrica;16932,22;Loja Sul
+2024;ago;CMV (custo da mercadoria vendida);Fretes de Produção;85631,56;Loja Sul
+2024;ago;provisão para imposto de renda;IRPJ;127415,15;Loja Sul
+2024;ago;despesas administrativas;Internet e Telefonia;8489,59;Loja Sul
+2024;ago;receitas não operacionais;Juros Ativos;4232,02;Loja Sul
+2024;ago;despesas financeiras líquidas;Juros Bancários;8523,46;Loja Sul
+2024;ago;despesas administrativas;Manutenção;8546,12;Loja Sul
+2024;ago;despesas comerciais;Marketing e Publicidade;84300,96;Loja Sul
+2024;ago;CMV (custo da mercadoria vendida);Materiais e Insumos;213738,29;Loja Sul
+2024;ago;despesas administrativas;Material de Escritório;4281,06;Loja Sul
+2024;ago;CMV (custo da mercadoria vendida);Mão de Obra Direta;341618,52;Loja Sul
+2024;ago;receita bruta de vendas;Outras Receitas Operacionais;42711,67;Loja Sul
+2024;ago;despesas administrativas;Pró-Labore;63348,69;Loja Sul
+2024;ago;receita bruta de vendas;Receita de Serviços;294329,87;Loja Sul
+2024;ago;receita bruta de vendas;Receita de Vendas;3905277,11;Loja Sul
+2024;ago;receitas não operacionais;Receitas Financeiras;12636,82;Loja Sul
+2024;ago;despesas administrativas;Salários Administrativos;212641,48;Loja Sul
+2024;ago;despesas comerciais;Salários Comerciais;167536,49;Loja Sul
+2024;ago;despesas administrativas;Seguros;8397,12;Loja Sul
+2024;ago;despesas administrativas;Sistemas e Licenças;17042,36;Loja Sul
+2024;ago;despesas financeiras líquidas;Tarifas Bancárias;2109,46;Loja Sul
+2024;ago;despesas administrativas;Treinamentos;4273,58;Loja Sul
+2024;ago;despesas comerciais;Viagens Comerciais;21304,92;Loja Sul
+2024;dez;despesas administrativas;Aluguel;84031,64;Loja Sul
+2024;dez;CMV (custo da mercadoria vendida);CMV;3989186,74;Loja Sul
+2024;dez;provisão para contribuição social;CSLL;70113,03;Loja Sul
+2024;dez;despesas comerciais;Comissões;175291,8;Loja Sul
+2024;dez;despesas administrativas;Contabilidade;20885,64;Loja Sul
+2024;dez;despesas com depreciações e amortizações;Depreciação;70269,45;Loja Sul
+2024;dez;despesas financeiras líquidas;Despesas Financeiras;27998,69;Loja Sul
+2024;dez;devoluções de vendas;Devoluções;70114,71;Loja Sul
+2024;dez;despesas administrativas;Energia Elétrica;27999,36;Loja Sul
+2024;dez;CMV (custo da mercadoria vendida);Fretes de Produção;140037,4;Loja Sul
+2024;dez;provisão para imposto de renda;IRPJ;209486,12;Loja Sul
+2024;dez;despesas administrativas;Internet e Telefonia;13871,28;Loja Sul
+2024;dez;receitas não operacionais;Juros Ativos;7059,34;Loja Sul
+2024;dez;despesas financeiras líquidas;Juros Bancários;13886,05;Loja Sul
+2024;dez;despesas administrativas;Manutenção;13825,96;Loja Sul
+2024;dez;despesas comerciais;Marketing e Publicidade;138897,44;Loja Sul
+2024;dez;CMV (custo da mercadoria vendida);Materiais e Insumos;350628,25;Loja Sul
+2024;dez;despesas administrativas;Material de Escritório;6941,85;Loja Sul
+2024;dez;CMV (custo da mercadoria vendida);Mão de Obra Direta;564097,88;Loja Sul
+2024;dez;receita bruta de vendas;Outras Receitas Operacionais;71560,48;Loja Sul
+2024;dez;despesas administrativas;Pró-Labore;106055,23;Loja Sul
+2024;dez;receita bruta de vendas;Receita de Serviços;499368,48;Loja Sul
+2024;dez;receita bruta de vendas;Receita de Vendas;6515877,9;Loja Sul
+2024;dez;receitas não operacionais;Receitas Financeiras;21016,55;Loja Sul
+2024;dez;despesas administrativas;Salários Administrativos;344730,03;Loja Sul
+2024;dez;despesas comerciais;Salários Comerciais;281093,93;Loja Sul
+2024;dez;despesas administrativas;Seguros;13972,66;Loja Sul
+2024;dez;despesas administrativas;Sistemas e Licenças;27954,04;Loja Sul
+2024;dez;despesas financeiras líquidas;Tarifas Bancárias;3507,85;Loja Sul
+2024;dez;despesas administrativas;Treinamentos;7074,11;Loja Sul
+2024;dez;despesas comerciais;Viagens Comerciais;34751,88;Loja Sul
+2024;fev;despesas administrativas;Aluguel;57598,05;Loja Sul
+2024;fev;CMV (custo da mercadoria vendida);CMV;2687995,14;Loja Sul
+2024;fev;provisão para contribuição social;CSLL;47410,86;Loja Sul
+2024;fev;despesas comerciais;Comissões;119551,69;Loja Sul
+2024;fev;despesas administrativas;Contabilidade;14462,44;Loja Sul
+2024;fev;despesas com depreciações e amortizações;Depreciação;47794,66;Loja Sul
+2024;fev;despesas financeiras líquidas;Despesas Financeiras;19115,03;Loja Sul
+2024;fev;devoluções de vendas;Devoluções;47612,09;Loja Sul
+2024;fev;despesas administrativas;Energia Elétrica;19110,05;Loja Sul
+2024;fev;CMV (custo da mercadoria vendida);Fretes de Produção;95402,27;Loja Sul
+2024;fev;provisão para imposto de renda;IRPJ;144985,08;Loja Sul
+2024;fev;despesas administrativas;Internet e Telefonia;9487,0;Loja Sul
+2024;fev;receitas não operacionais;Juros Ativos;4783,42;Loja Sul
+2024;fev;despesas financeiras líquidas;Juros Bancários;9620,57;Loja Sul
+2024;fev;despesas administrativas;Manutenção;9573,31;Loja Sul
+2024;fev;despesas comerciais;Marketing e Publicidade;96892,94;Loja Sul
+2024;fev;CMV (custo da mercadoria vendida);Materiais e Insumos;239950,33;Loja Sul
+2024;fev;despesas administrativas;Material de Escritório;4747,6;Loja Sul
+2024;fev;CMV (custo da mercadoria vendida);Mão de Obra Direta;383387,78;Loja Sul
+2024;fev;receita bruta de vendas;Outras Receitas Operacionais;48649,31;Loja Sul
+2024;fev;despesas administrativas;Pró-Labore;71232,45;Loja Sul
+2024;fev;receita bruta de vendas;Receita de Serviços;336489,07;Loja Sul
+2024;fev;receita bruta de vendas;Receita de Vendas;4391905,61;Loja Sul
+2024;fev;receitas não operacionais;Receitas Financeiras;14337,08;Loja Sul
+2024;fev;despesas administrativas;Salários Administrativos;239795,12;Loja Sul
+2024;fev;despesas comerciais;Salários Comerciais;192040,01;Loja Sul
+2024;fev;despesas administrativas;Seguros;9493,71;Loja Sul
+2024;fev;despesas administrativas;Sistemas e Licenças;19157,56;Loja Sul
+2024;fev;despesas financeiras líquidas;Tarifas Bancárias;2393,58;Loja Sul
+2024;fev;despesas administrativas;Treinamentos;4790,39;Loja Sul
+2024;fev;despesas comerciais;Viagens Comerciais;24030,53;Loja Sul
+2024;jan;despesas administrativas;Aluguel;56671,42;Loja Sul
+2024;jan;CMV (custo da mercadoria vendida);CMV;2622538,8;Loja Sul
+2024;jan;provisão para contribuição social;CSLL;47646,75;Loja Sul
+2024;jan;despesas comerciais;Comissões;118377,07;Loja Sul
+2024;jan;despesas administrativas;Contabilidade;14209,85;Loja Sul
+2024;jan;despesas com depreciações e amortizações;Depreciação;47353,0;Loja Sul
+2024;jan;despesas financeiras líquidas;Despesas Financeiras;19036,32;Loja Sul
+2024;jan;devoluções de vendas;Devoluções;47728,28;Loja Sul
+2024;jan;despesas administrativas;Energia Elétrica;19095,86;Loja Sul
+2024;jan;CMV (custo da mercadoria vendida);Fretes de Produção;95832,08;Loja Sul
+2024;jan;provisão para imposto de renda;IRPJ;141480,15;Loja Sul
+2024;jan;despesas administrativas;Internet e Telefonia;9409,33;Loja Sul
+2024;jan;receitas não operacionais;Juros Ativos;4732,34;Loja Sul
+2024;jan;despesas financeiras líquidas;Juros Bancários;9568,68;Loja Sul
+2024;jan;despesas administrativas;Manutenção;9478,01;Loja Sul
+2024;jan;despesas comerciais;Marketing e Publicidade;94940,46;Loja Sul
+2024;jan;CMV (custo da mercadoria vendida);Materiais e Insumos;238067,73;Loja Sul
+2024;jan;despesas administrativas;Material de Escritório;4714,3;Loja Sul
+2024;jan;CMV (custo da mercadoria vendida);Mão de Obra Direta;376450,8;Loja Sul
+2024;jan;receita bruta de vendas;Outras Receitas Operacionais;46519,93;Loja Sul
+2024;jan;despesas administrativas;Pró-Labore;71124,12;Loja Sul
+2024;jan;receita bruta de vendas;Receita de Serviços;329783,63;Loja Sul
+2024;jan;receita bruta de vendas;Receita de Vendas;4280748,39;Loja Sul
+2024;jan;receitas não operacionais;Receitas Financeiras;14117,7;Loja Sul
+2024;jan;despesas administrativas;Salários Administrativos;238928,47;Loja Sul
+2024;jan;despesas comerciais;Salários Comerciais;192777,14;Loja Sul
+2024;jan;despesas administrativas;Seguros;9540,27;Loja Sul
+2024;jan;despesas administrativas;Sistemas e Licenças;19156,14;Loja Sul
+2024;jan;despesas financeiras líquidas;Tarifas Bancárias;2356,16;Loja Sul
+2024;jan;despesas administrativas;Treinamentos;4696,02;Loja Sul
+2024;jan;despesas comerciais;Viagens Comerciais;23765,69;Loja Sul
+2024;jul;despesas administrativas;Aluguel;54155,35;Loja Sul
+2024;jul;CMV (custo da mercadoria vendida);CMV;2462969,12;Loja Sul
+2024;jul;provisão para contribuição social;CSLL;45153,24;Loja Sul
+2024;jul;despesas comerciais;Comissões;112866,59;Loja Sul
+2024;jul;despesas administrativas;Contabilidade;13355,79;Loja Sul
+2024;jul;despesas com depreciações e amortizações;Depreciação;45668,24;Loja Sul
+2024;jul;despesas financeiras líquidas;Despesas Financeiras;18033,75;Loja Sul
+2024;jul;devoluções de vendas;Devoluções;45410,41;Loja Sul
+2024;jul;despesas administrativas;Energia Elétrica;18159,95;Loja Sul
+2024;jul;CMV (custo da mercadoria vendida);Fretes de Produção;89653,13;Loja Sul
+2024;jul;provisão para imposto de renda;IRPJ;136034,01;Loja Sul
+2024;jul;despesas administrativas;Internet e Telefonia;9066,18;Loja Sul
+2024;jul;receitas não operacionais;Juros Ativos;4370,19;Loja Sul
+2024;jul;despesas financeiras líquidas;Juros Bancários;9065,53;Loja Sul
+2024;jul;despesas administrativas;Manutenção;9111,58;Loja Sul
+2024;jul;despesas comerciais;Marketing e Publicidade;90551,71;Loja Sul
+2024;jul;CMV (custo da mercadoria vendida);Materiais e Insumos;222738,13;Loja Sul
+2024;jul;despesas administrativas;Material de Escritório;4469,02;Loja Sul
+2024;jul;CMV (custo da mercadoria vendida);Mão de Obra Direta;360290,64;Loja Sul
+2024;jul;receita bruta de vendas;Outras Receitas Operacionais;43888,23;Loja Sul
+2024;jul;despesas administrativas;Pró-Labore;67223,55;Loja Sul
+2024;jul;receita bruta de vendas;Receita de Serviços;306540,38;Loja Sul
+2024;jul;receita bruta de vendas;Receita de Vendas;4023373,73;Loja Sul
+2024;jul;receitas não operacionais;Receitas Financeiras;13202,0;Loja Sul
+2024;jul;despesas administrativas;Salários Administrativos;224653,46;Loja Sul
+2024;jul;despesas comerciais;Salários Comerciais;182327,15;Loja Sul
+2024;jul;despesas administrativas;Seguros;9143,73;Loja Sul
+2024;jul;despesas administrativas;Sistemas e Licenças;18085,88;Loja Sul
+2024;jul;despesas financeiras líquidas;Tarifas Bancárias;2255,03;Loja Sul
+2024;jul;despesas administrativas;Treinamentos;4495,73;Loja Sul
+2024;jul;despesas comerciais;Viagens Comerciais;22517,97;Loja Sul
+2024;jun;despesas administrativas;Aluguel;55303,86;Loja Sul
+2024;jun;CMV (custo da mercadoria vendida);CMV;2520133,1;Loja Sul
+2024;jun;provisão para contribuição social;CSLL;45733,85;Loja Sul
+2024;jun;despesas comerciais;Comissões;115499,88;Loja Sul
+2024;jun;despesas administrativas;Contabilidade;13751,46;Loja Sul
+2024;jun;despesas com depreciações e amortizações;Depreciação;46242,14;Loja Sul
+2024;jun;despesas financeiras líquidas;Despesas Financeiras;18358,79;Loja Sul
+2024;jun;devoluções de vendas;Devoluções;45991,58;Loja Sul
+2024;jun;despesas administrativas;Energia Elétrica;18413,87;Loja Sul
+2024;jun;CMV (custo da mercadoria vendida);Fretes de Produção;91553,9;Loja Sul
+2024;jun;provisão para imposto de renda;IRPJ;138646,7;Loja Sul
+2024;jun;despesas administrativas;Internet e Telefonia;9132,93;Loja Sul
+2024;jun;receitas não operacionais;Juros Ativos;4451,48;Loja Sul
+2024;jun;despesas financeiras líquidas;Juros Bancários;9142,34;Loja Sul
+2024;jun;despesas administrativas;Manutenção;9199,21;Loja Sul
+2024;jun;despesas comerciais;Marketing e Publicidade;91583,91;Loja Sul
+2024;jun;CMV (custo da mercadoria vendida);Materiais e Insumos;228445,99;Loja Sul
+2024;jun;despesas administrativas;Material de Escritório;4562,32;Loja Sul
+2024;jun;CMV (custo da mercadoria vendida);Mão de Obra Direta;365306,72;Loja Sul
+2024;jun;receita bruta de vendas;Outras Receitas Operacionais;44736,52;Loja Sul
+2024;jun;despesas administrativas;Pró-Labore;69716,78;Loja Sul
+2024;jun;receita bruta de vendas;Receita de Serviços;314998,01;Loja Sul
+2024;jun;receita bruta de vendas;Receita de Vendas;4118166,68;Loja Sul
+2024;jun;receitas não operacionais;Receitas Financeiras;13345,49;Loja Sul
+2024;jun;despesas administrativas;Salários Administrativos;231078,59;Loja Sul
+2024;jun;despesas comerciais;Salários Comerciais;184915,04;Loja Sul
+2024;jun;despesas administrativas;Seguros;9161,37;Loja Sul
+2024;jun;despesas administrativas;Sistemas e Licenças;18403,12;Loja Sul
+2024;jun;despesas financeiras líquidas;Tarifas Bancárias;2280,38;Loja Sul
+2024;jun;despesas administrativas;Treinamentos;4606,88;Loja Sul
+2024;jun;despesas comerciais;Viagens Comerciais;22714,66;Loja Sul
+2024;mai;despesas administrativas;Aluguel;57878,55;Loja Sul
+2024;mai;CMV (custo da mercadoria vendida);CMV;2620546,42;Loja Sul
+2024;mai;provisão para contribuição social;CSLL;48034,54;Loja Sul
+2024;mai;despesas comerciais;Comissões;121123,63;Loja Sul
+2024;mai;despesas administrativas;Contabilidade;14519,5;Loja Sul
+2024;mai;despesas com depreciações e amortizações;Depreciação;47786,01;Loja Sul
+2024;mai;despesas financeiras líquidas;Despesas Financeiras;19097,27;Loja Sul
+2024;mai;devoluções de vendas;Devoluções;47667,3;Loja Sul
+2024;mai;despesas administrativas;Energia Elétrica;19187,43;Loja Sul
+2024;mai;CMV (custo da mercadoria vendida);Fretes de Produção;96745,97;Loja Sul
+2024;mai;provisão para imposto de renda;IRPJ;143832,19;Loja Sul
+2024;mai;despesas administrativas;Internet e Telefonia;9645,52;Loja Sul
+2024;mai;receitas não operacionais;Juros Ativos;4642,68;Loja Sul
+2024;mai;despesas financeiras líquidas;Juros Bancários;9588,17;Loja Sul
+2024;mai;despesas administrativas;Manutenção;9599,26;Loja Sul
+2024;mai;despesas comerciais;Marketing e Publicidade;96634,81;Loja Sul
+2024;mai;CMV (custo da mercadoria vendida);Materiais e Insumos;241649,91;Loja Sul
+2024;mai;despesas administrativas;Material de Escritório;4767,53;Loja Sul
+2024;mai;CMV (custo da mercadoria vendida);Mão de Obra Direta;384074,27;Loja Sul
+2024;mai;receita bruta de vendas;Outras Receitas Operacionais;46704,58;Loja Sul
+2024;mai;despesas administrativas;Pró-Labore;72289,95;Loja Sul
+2024;mai;receita bruta de vendas;Receita de Serviços;326427,01;Loja Sul
+2024;mai;receita bruta de vendas;Receita de Vendas;4281395,25;Loja Sul
+2024;mai;receitas não operacionais;Receitas Financeiras;14125,82;Loja Sul
+2024;mai;despesas administrativas;Salários Administrativos;241745,5;Loja Sul
+2024;mai;despesas comerciais;Salários Comerciais;193681,46;Loja Sul
+2024;mai;despesas administrativas;Seguros;9569,76;Loja Sul
+2024;mai;despesas administrativas;Sistemas e Licenças;19215,99;Loja Sul
+2024;mai;despesas financeiras líquidas;Tarifas Bancárias;2383,53;Loja Sul
+2024;mai;despesas administrativas;Treinamentos;4815,68;Loja Sul
+2024;mai;despesas comerciais;Viagens Comerciais;23995,08;Loja Sul
+2024;mar;despesas administrativas;Aluguel;58688,92;Loja Sul
+2024;mar;CMV (custo da mercadoria vendida);CMV;2716562,96;Loja Sul
+2024;mar;provisão para contribuição social;CSLL;48803,66;Loja Sul
+2024;mar;despesas comerciais;Comissões;122867,64;Loja Sul
+2024;mar;despesas administrativas;Contabilidade;14634,27;Loja Sul
+2024;mar;despesas com depreciações e amortizações;Depreciação;48940,55;Loja Sul
+2024;mar;despesas financeiras líquidas;Despesas Financeiras;19675,76;Loja Sul
+2024;mar;devoluções de vendas;Devoluções;48764,51;Loja Sul
+2024;mar;despesas administrativas;Energia Elétrica;19541,36;Loja Sul
+2024;mar;CMV (custo da mercadoria vendida);Fretes de Produção;97826,25;Loja Sul
+2024;mar;provisão para imposto de renda;IRPJ;148722,15;Loja Sul
+2024;mar;despesas administrativas;Internet e Telefonia;9865,56;Loja Sul
+2024;mar;receitas não operacionais;Juros Ativos;4874,43;Loja Sul
+2024;mar;despesas financeiras líquidas;Juros Bancários;9748,36;Loja Sul
+2024;mar;despesas administrativas;Manutenção;9820,92;Loja Sul
+2024;mar;despesas comerciais;Marketing e Publicidade;97740,72;Loja Sul
+2024;mar;CMV (custo da mercadoria vendida);Materiais e Insumos;244432,21;Loja Sul
+2024;mar;despesas administrativas;Material de Escritório;4879,92;Loja Sul
+2024;mar;CMV (custo da mercadoria vendida);Mão de Obra Direta;393690,46;Loja Sul
+2024;mar;receita bruta de vendas;Outras Receitas Operacionais;48601,69;Loja Sul
+2024;mar;despesas administrativas;Pró-Labore;73791,45;Loja Sul
+2024;mar;receita bruta de vendas;Receita de Serviços;339246,88;Loja Sul
+2024;mar;receita bruta de vendas;Receita de Vendas;4437244,33;Loja Sul
+2024;mar;receitas não operacionais;Receitas Financeiras;14479,92;Loja Sul
+2024;mar;despesas administrativas;Salários Administrativos;244615,23;Loja Sul
+2024;mar;despesas comerciais;Salários Comerciais;195044,84;Loja Sul
+2024;mar;despesas administrativas;Seguros;9737,39;Loja Sul
+2024;mar;despesas administrativas;Sistemas e Licenças;19588,49;Loja Sul
+2024;mar;despesas financeiras líquidas;Tarifas Bancárias;2463,02;Loja Sul
+2024;mar;despesas administrativas;Treinamentos;4940,26;Loja Sul
+2024;mar;despesas comerciais;Viagens Comerciais;24576,87;Loja Sul
+2024;nov;despesas administrativas;Aluguel;68737,5;Loja Sul
+2024;nov;CMV (custo da mercadoria vendida);CMV;3305734,1;Loja Sul
+2024;nov;provisão para contribuição social;CSLL;57848,31;Loja Sul
+2024;nov;despesas comerciais;Comissões;144583,09;Loja Sul
+2024;nov;despesas administrativas;Contabilidade;17466,16;Loja Sul
+2024;nov;despesas com depreciações e amortizações;Depreciação;57687,41;Loja Sul
+2024;nov;despesas financeiras líquidas;Despesas Financeiras;23126,46;Loja Sul
+2024;nov;devoluções de vendas;Devoluções;57756,24;Loja Sul
+2024;nov;despesas administrativas;Energia Elétrica;23102,67;Loja Sul
+2024;nov;CMV (custo da mercadoria vendida);Fretes de Produção;115136,87;Loja Sul
+2024;nov;provisão para imposto de renda;IRPJ;174412,58;Loja Sul
+2024;nov;despesas administrativas;Internet e Telefonia;11493,12;Loja Sul
+2024;nov;receitas não operacionais;Juros Ativos;5939,04;Loja Sul
+2024;nov;despesas financeiras líquidas;Juros Bancários;11519,47;Loja Sul
+2024;nov;despesas administrativas;Manutenção;11542,98;Loja Sul
+2024;nov;despesas comerciais;Marketing e Publicidade;116168,26;Loja Sul
+2024;nov;CMV (custo da mercadoria vendida);Materiais e Insumos;290338,64;Loja Sul
+2024;nov;despesas administrativas;Material de Escritório;5734,24;Loja Sul
+2024;nov;CMV (custo da mercadoria vendida);Mão de Obra Direta;464587,77;Loja Sul
+2024;nov;receita bruta de vendas;Outras Receitas Operacionais;59093,56;Loja Sul
+2024;nov;despesas administrativas;Pró-Labore;85675,07;Loja Sul
+2024;nov;receita bruta de vendas;Receita de Serviços;417636,58;Loja Sul
+2024;nov;receita bruta de vendas;Receita de Vendas;5403492,3;Loja Sul
+2024;nov;receitas não operacionais;Receitas Financeiras;17923,64;Loja Sul
+2024;nov;despesas administrativas;Salários Administrativos;286262,66;Loja Sul
+2024;nov;despesas comerciais;Salários Comerciais;231807,37;Loja Sul
+2024;nov;despesas administrativas;Seguros;11567,91;Loja Sul
+2024;nov;despesas administrativas;Sistemas e Licenças;22962,17;Loja Sul
+2024;nov;despesas financeiras líquidas;Tarifas Bancárias;2904,65;Loja Sul
+2024;nov;despesas administrativas;Treinamentos;5781,83;Loja Sul
+2024;nov;despesas comerciais;Viagens Comerciais;29036,04;Loja Sul
+2024;out;despesas administrativas;Aluguel;50290,73;Loja Sul
+2024;out;CMV (custo da mercadoria vendida);CMV;2365199,7;Loja Sul
+2024;out;provisão para contribuição social;CSLL;41988,05;Loja Sul
+2024;out;despesas comerciais;Comissões;104142,21;Loja Sul
+2024;out;despesas administrativas;Contabilidade;12574,11;Loja Sul
+2024;out;despesas com depreciações e amortizações;Depreciação;42356,21;Loja Sul
+2024;out;despesas financeiras líquidas;Despesas Financeiras;16493,04;Loja Sul
+2024;out;devoluções de vendas;Devoluções;41909,28;Loja Sul
+2024;out;despesas administrativas;Energia Elétrica;16902,92;Loja Sul
+2024;out;CMV (custo da mercadoria vendida);Fretes de Produção;82829,07;Loja Sul
+2024;out;provisão para imposto de renda;IRPJ;125300,88;Loja Sul
+2024;out;despesas administrativas;Internet e Telefonia;8397,73;Loja Sul
+2024;out;receitas não operacionais;Juros Ativos;4167,63;Loja Sul
+2024;out;despesas financeiras líquidas;Juros Bancários;8473,85;Loja Sul
+2024;out;despesas administrativas;Manutenção;8386,13;Loja Sul
+2024;out;despesas comerciais;Marketing e Publicidade;84448,86;Loja Sul
+2024;out;CMV (custo da mercadoria vendida);Materiais e Insumos;209201,87;Loja Sul
+2024;out;despesas administrativas;Material de Escritório;4140,76;Loja Sul
+2024;out;CMV (custo da mercadoria vendida);Mão de Obra Direta;338039,06;Loja Sul
+2024;out;receita bruta de vendas;Outras Receitas Operacionais;42069,25;Loja Sul
+2024;out;despesas administrativas;Pró-Labore;62229,67;Loja Sul
+2024;out;receita bruta de vendas;Receita de Serviços;295524,31;Loja Sul
+2024;out;receita bruta de vendas;Receita de Vendas;3861642,91;Loja Sul
+2024;out;receitas não operacionais;Receitas Financeiras;12636,79;Loja Sul
+2024;out;despesas administrativas;Salários Administrativos;209496,56;Loja Sul
+2024;out;despesas comerciais;Salários Comerciais;168015,68;Loja Sul
+2024;out;despesas administrativas;Seguros;8403,02;Loja Sul
+2024;out;despesas administrativas;Sistemas e Licenças;16655,44;Loja Sul
+2024;out;despesas financeiras líquidas;Tarifas Bancárias;2099,08;Loja Sul
+2024;out;despesas administrativas;Treinamentos;4172,31;Loja Sul
+2024;out;despesas comerciais;Viagens Comerciais;20713,17;Loja Sul
+2024;set;despesas administrativas;Aluguel;49472,5;Loja Sul
+2024;set;CMV (custo da mercadoria vendida);CMV;2342288,99;Loja Sul
+2024;set;provisão para contribuição social;CSLL;41241,45;Loja Sul
+2024;set;despesas comerciais;Comissões;102177,43;Loja Sul
+2024;set;despesas administrativas;Contabilidade;12452,77;Loja Sul
+2024;set;despesas com depreciações e amortizações;Depreciação;40916,09;Loja Sul
+2024;set;despesas financeiras líquidas;Despesas Financeiras;16430,0;Loja Sul
+2024;set;devoluções de vendas;Devoluções;41151,42;Loja Sul
+2024;set;despesas administrativas;Energia Elétrica;16339,57;Loja Sul
+2024;set;CMV (custo da mercadoria vendida);Fretes de Produção;81970,57;Loja Sul
+2024;set;provisão para imposto de renda;IRPJ;122519,64;Loja Sul
+2024;set;despesas administrativas;Internet e Telefonia;8236,95;Loja Sul
+2024;set;receitas não operacionais;Juros Ativos;4211,35;Loja Sul
+2024;set;despesas financeiras líquidas;Juros Bancários;8196,1;Loja Sul
+2024;set;despesas administrativas;Manutenção;8185,74;Loja Sul
+2024;set;despesas comerciais;Marketing e Publicidade;82696,07;Loja Sul
+2024;set;CMV (custo da mercadoria vendida);Materiais e Insumos;205909,71;Loja Sul
+2024;set;despesas administrativas;Material de Escritório;4122,13;Loja Sul
+2024;set;CMV (custo da mercadoria vendida);Mão de Obra Direta;323714,83;Loja Sul
+2024;set;receita bruta de vendas;Outras Receitas Operacionais;41594,03;Loja Sul
+2024;set;despesas administrativas;Pró-Labore;61951,08;Loja Sul
+2024;set;receita bruta de vendas;Receita de Serviços;292907,56;Loja Sul
+2024;set;receita bruta de vendas;Receita de Vendas;3824764,21;Loja Sul
+2024;set;receitas não operacionais;Receitas Financeiras;12518,61;Loja Sul
+2024;set;despesas administrativas;Salários Administrativos;205253,11;Loja Sul
+2024;set;despesas comerciais;Salários Comerciais;165027,76;Loja Sul
+2024;set;despesas administrativas;Seguros;8144,08;Loja Sul
+2024;set;despesas administrativas;Sistemas e Licenças;16336,32;Loja Sul
+2024;set;despesas financeiras líquidas;Tarifas Bancárias;2031,19;Loja Sul
+2024;set;despesas administrativas;Treinamentos;4176,39;Loja Sul
+2024;set;despesas comerciais;Viagens Comerciais;20422,28;Loja Sul
+2025;abr;despesas administrativas;Aluguel;59815,4;Loja Sul
+2025;abr;CMV (custo da mercadoria vendida);CMV;2769952,2;Loja Sul
+2025;abr;provisão para contribuição social;CSLL;50226,55;Loja Sul
+2025;abr;despesas comerciais;Comissões;124238,32;Loja Sul
+2025;abr;despesas administrativas;Contabilidade;14871,74;Loja Sul
+2025;abr;despesas com depreciações e amortizações;Depreciação;50386,59;Loja Sul
+2025;abr;despesas financeiras líquidas;Despesas Financeiras;20022,36;Loja Sul
+2025;abr;devoluções de vendas;Devoluções;50180,73;Loja Sul
+2025;abr;despesas administrativas;Energia Elétrica;19824,63;Loja Sul
+2025;abr;CMV (custo da mercadoria vendida);Fretes de Produção;101945,16;Loja Sul
+2025;abr;provisão para imposto de renda;IRPJ;149131,4;Loja Sul
+2025;abr;despesas administrativas;Internet e Telefonia;9969,87;Loja Sul
+2025;abr;receitas não operacionais;Juros Ativos;4964,4;Loja Sul
+2025;abr;despesas financeiras líquidas;Juros Bancários;9924,05;Loja Sul
+2025;abr;despesas administrativas;Manutenção;10018,63;Loja Sul
+2025;abr;despesas comerciais;Marketing e Publicidade;99750,42;Loja Sul
+2025;abr;CMV (custo da mercadoria vendida);Materiais e Insumos;248512,76;Loja Sul
+2025;abr;despesas administrativas;Material de Escritório;5005,93;Loja Sul
+2025;abr;CMV (custo da mercadoria vendida);Mão de Obra Direta;402542,65;Loja Sul
+2025;abr;receita bruta de vendas;Outras Receitas Operacionais;49107,18;Loja Sul
+2025;abr;despesas administrativas;Pró-Labore;74260,29;Loja Sul
+2025;abr;receita bruta de vendas;Receita de Serviços;345127,84;Loja Sul
+2025;abr;receita bruta de vendas;Receita de Vendas;4525109,46;Loja Sul
+2025;abr;receitas não operacionais;Receitas Financeiras;14723,67;Loja Sul
+2025;abr;despesas administrativas;Salários Administrativos;248905,98;Loja Sul
+2025;abr;despesas comerciais;Salários Comerciais;199897,44;Loja Sul
+2025;abr;despesas administrativas;Seguros;9918,41;Loja Sul
+2025;abr;despesas administrativas;Sistemas e Licenças;20025,52;Loja Sul
+2025;abr;despesas financeiras líquidas;Tarifas Bancárias;2526,55;Loja Sul
+2025;abr;despesas administrativas;Treinamentos;4949,72;Loja Sul
+2025;abr;despesas comerciais;Viagens Comerciais;25073,89;Loja Sul
+2025;ago;despesas administrativas;Aluguel;54547,99;Loja Sul
+2025;ago;CMV (custo da mercadoria vendida);CMV;2532488,32;Loja Sul
+2025;ago;provisão para contribuição social;CSLL;45588,66;Loja Sul
+2025;ago;despesas comerciais;Comissões;114197,78;Loja Sul
+2025;ago;despesas administrativas;Contabilidade;13747,13;Loja Sul
+2025;ago;despesas com depreciações e amortizações;Depreciação;45324,26;Loja Sul
+2025;ago;despesas financeiras líquidas;Despesas Financeiras;18460,36;Loja Sul
+2025;ago;devoluções de vendas;Devoluções;45671,57;Loja Sul
+2025;ago;despesas administrativas;Energia Elétrica;18319,72;Loja Sul
+2025;ago;CMV (custo da mercadoria vendida);Fretes de Produção;90886,74;Loja Sul
+2025;ago;provisão para imposto de renda;IRPJ;136119,56;Loja Sul
+2025;ago;despesas administrativas;Internet e Telefonia;9157,28;Loja Sul
+2025;ago;receitas não operacionais;Juros Ativos;4526,38;Loja Sul
+2025;ago;despesas financeiras líquidas;Juros Bancários;9136,06;Loja Sul
+2025;ago;despesas administrativas;Manutenção;9210,24;Loja Sul
+2025;ago;despesas comerciais;Marketing e Publicidade;90803,63;Loja Sul
+2025;ago;CMV (custo da mercadoria vendida);Materiais e Insumos;226224,99;Loja Sul
+2025;ago;despesas administrativas;Material de Escritório;4586,28;Loja Sul
+2025;ago;CMV (custo da mercadoria vendida);Mão de Obra Direta;363985,12;Loja Sul
+2025;ago;receita bruta de vendas;Outras Receitas Operacionais;45212,59;Loja Sul
+2025;ago;despesas administrativas;Pró-Labore;68727,53;Loja Sul
+2025;ago;receita bruta de vendas;Receita de Serviços;320763,58;Loja Sul
+2025;ago;receita bruta de vendas;Receita de Vendas;4142128,4;Loja Sul
+2025;ago;receitas não operacionais;Receitas Financeiras;13523,59;Loja Sul
+2025;ago;despesas administrativas;Salários Administrativos;231965,08;Loja Sul
+2025;ago;despesas comerciais;Salários Comerciais;183864,7;Loja Sul
+2025;ago;despesas administrativas;Seguros;9218,38;Loja Sul
+2025;ago;despesas administrativas;Sistemas e Licenças;18410,77;Loja Sul
+2025;ago;despesas financeiras líquidas;Tarifas Bancárias;2292,35;Loja Sul
+2025;ago;despesas administrativas;Treinamentos;4624,96;Loja Sul
+2025;ago;despesas comerciais;Viagens Comerciais;22791,16;Loja Sul
+2025;dez;despesas administrativas;Aluguel;91053,75;Loja Sul
+2025;dez;CMV (custo da mercadoria vendida);CMV;4423538,53;Loja Sul
+2025;dez;provisão para contribuição social;CSLL;77080,81;Loja Sul
+2025;dez;despesas comerciais;Comissões;192653,06;Loja Sul
+2025;dez;despesas administrativas;Contabilidade;23003,67;Loja Sul
+2025;dez;despesas com depreciações e amortizações;Depreciação;77481,52;Loja Sul
+2025;dez;despesas financeiras líquidas;Despesas Financeiras;30758,8;Loja Sul
+2025;dez;devoluções de vendas;Devoluções;76492,82;Loja Sul
+2025;dez;despesas administrativas;Energia Elétrica;30406,4;Loja Sul
+2025;dez;CMV (custo da mercadoria vendida);Fretes de Produção;153593,15;Loja Sul
+2025;dez;provisão para imposto de renda;IRPJ;231544,21;Loja Sul
+2025;dez;despesas administrativas;Internet e Telefonia;15388,5;Loja Sul
+2025;dez;receitas não operacionais;Juros Ativos;7873,59;Loja Sul
+2025;dez;despesas financeiras líquidas;Juros Bancários;15498,69;Loja Sul
+2025;dez;despesas administrativas;Manutenção;15452,03;Loja Sul
+2025;dez;despesas comerciais;Marketing e Publicidade;153067,36;Loja Sul
+2025;dez;CMV (custo da mercadoria vendida);Materiais e Insumos;388117,38;Loja Sul
+2025;dez;despesas administrativas;Material de Escritório;7678,04;Loja Sul
+2025;dez;CMV (custo da mercadoria vendida);Mão de Obra Direta;614175,39;Loja Sul
+2025;dez;receita bruta de vendas;Outras Receitas Operacionais;78278,31;Loja Sul
+2025;dez;despesas administrativas;Pró-Labore;115450,81;Loja Sul
+2025;dez;receita bruta de vendas;Receita de Serviços;543367,65;Loja Sul
+2025;dez;receita bruta de vendas;Receita de Vendas;7234668,65;Loja Sul
+2025;dez;receitas não operacionais;Receitas Financeiras;23662,8;Loja Sul
+2025;dez;despesas administrativas;Salários Administrativos;386819,29;Loja Sul
+2025;dez;despesas comerciais;Salários Comerciais;305647,65;Loja Sul
+2025;dez;despesas administrativas;Seguros;15385,85;Loja Sul
+2025;dez;despesas administrativas;Sistemas e Licenças;31215,1;Loja Sul
+2025;dez;despesas financeiras líquidas;Tarifas Bancárias;3929,02;Loja Sul
+2025;dez;despesas administrativas;Treinamentos;7675,72;Loja Sul
+2025;dez;despesas comerciais;Viagens Comerciais;38425,59;Loja Sul
+2025;fev;despesas administrativas;Aluguel;59924,48;Loja Sul
+2025;fev;CMV (custo da mercadoria vendida);CMV;2759783,42;Loja Sul
+2025;fev;provisão para contribuição social;CSLL;50524,21;Loja Sul
+2025;fev;despesas comerciais;Comissões;124412,06;Loja Sul
+2025;fev;despesas administrativas;Contabilidade;15077,82;Loja Sul
+2025;fev;despesas com depreciações e amortizações;Depreciação;49878,68;Loja Sul
+2025;fev;despesas financeiras líquidas;Despesas Financeiras;20151,58;Loja Sul
+2025;fev;devoluções de vendas;Devoluções;49664,86;Loja Sul
+2025;fev;despesas administrativas;Energia Elétrica;19980,39;Loja Sul
+2025;fev;CMV (custo da mercadoria vendida);Fretes de Produção;100654,38;Loja Sul
+2025;fev;provisão para imposto de renda;IRPJ;150191,58;Loja Sul
+2025;fev;despesas administrativas;Internet e Telefonia;10040,61;Loja Sul
+2025;fev;receitas não operacionais;Juros Ativos;4868,06;Loja Sul
+2025;fev;despesas financeiras líquidas;Juros Bancários;10069,7;Loja Sul
+2025;fev;despesas administrativas;Manutenção;10007,22;Loja Sul
+2025;fev;despesas comerciais;Marketing e Publicidade;99230,26;Loja Sul
+2025;fev;CMV (custo da mercadoria vendida);Materiais e Insumos;247149,19;Loja Sul
+2025;fev;despesas administrativas;Material de Escritório;4979,48;Loja Sul
+2025;fev;CMV (custo da mercadoria vendida);Mão de Obra Direta;404137,28;Loja Sul
+2025;fev;receita bruta de vendas;Outras Receitas Operacionais;48475,31;Loja Sul
+2025;fev;despesas administrativas;Pró-Labore;74222,8;Loja Sul
+2025;fev;receita bruta de vendas;Receita de Serviços;338474,58;Loja Sul
+2025;fev;receita bruta de vendas;Receita de Vendas;4507138,18;Loja Sul
+2025;fev;receitas não operacionais;Receitas Financeiras;14504,7;Loja Sul
+2025;fev;despesas administrativas;Salários Administrativos;249323,95;Loja Sul
+2025;fev;despesas comerciais;Salários Comerciais;201421,99;Loja Sul
+2025;fev;despesas administrativas;Seguros;9927,83;Loja Sul
+2025;fev;despesas administrativas;Sistemas e Licenças;19913,85;Loja Sul
+2025;fev;despesas financeiras líquidas;Tarifas Bancárias;2482,63;Loja Sul
+2025;fev;despesas administrativas;Treinamentos;4935,27;Loja Sul
+2025;fev;despesas comerciais;Viagens Comerciais;25015,58;Loja Sul
+2025;jan;despesas administrativas;Aluguel;57617,69;Loja Sul
+2025;jan;CMV (custo da mercadoria vendida);CMV;2660056,4;Loja Sul
+2025;jan;provisão para contribuição social;CSLL;47794,03;Loja Sul
+2025;jan;despesas comerciais;Comissões;119828,79;Loja Sul
+2025;jan;despesas administrativas;Contabilidade;14463,04;Loja Sul
+2025;jan;despesas com depreciações e amortizações;Depreciação;48058,93;Loja Sul
+2025;jan;despesas financeiras líquidas;Despesas Financeiras;19169,26;Loja Sul
+2025;jan;devoluções de vendas;Devoluções;48032,06;Loja Sul
+2025;jan;despesas administrativas;Energia Elétrica;19101,31;Loja Sul
+2025;jan;CMV (custo da mercadoria vendida);Fretes de Produção;95940,44;Loja Sul
+2025;jan;provisão para imposto de renda;IRPJ;146178,72;Loja Sul
+2025;jan;despesas administrativas;Internet e Telefonia;9591,62;Loja Sul
+2025;jan;receitas não operacionais;Juros Ativos;4777,27;Loja Sul
+2025;jan;despesas financeiras líquidas;Juros Bancários;9613,83;Loja Sul
+2025;jan;despesas administrativas;Manutenção;9565,2;Loja Sul
+2025;jan;despesas comerciais;Marketing e Publicidade;95348,25;Loja Sul
+2025;jan;CMV (custo da mercadoria vendida);Materiais e Insumos;241334,46;Loja Sul
+2025;jan;despesas administrativas;Material de Escritório;4801,25;Loja Sul
+2025;jan;CMV (custo da mercadoria vendida);Mão de Obra Direta;383100,29;Loja Sul
+2025;jan;receita bruta de vendas;Outras Receitas Operacionais;47454,97;Loja Sul
+2025;jan;despesas administrativas;Pró-Labore;71054,66;Loja Sul
+2025;jan;receita bruta de vendas;Receita de Serviços;327400,17;Loja Sul
+2025;jan;receita bruta de vendas;Receita de Vendas;4343617,71;Loja Sul
+2025;jan;receitas não operacionais;Receitas Financeiras;14225,9;Loja Sul
+2025;jan;despesas administrativas;Salários Administrativos;240559,08;Loja Sul
+2025;jan;despesas comerciais;Salários Comerciais;192012,33;Loja Sul
+2025;jan;despesas administrativas;Seguros;9566,75;Loja Sul
+2025;jan;despesas administrativas;Sistemas e Licenças;19202,79;Loja Sul
+2025;jan;despesas financeiras líquidas;Tarifas Bancárias;2400,74;Loja Sul
+2025;jan;despesas administrativas;Treinamentos;4768,83;Loja Sul
+2025;jan;despesas comerciais;Viagens Comerciais;23877,47;Loja Sul
+2025;jul;despesas administrativas;Aluguel;53681,29;Loja Sul
+2025;jul;CMV (custo da mercadoria vendida);CMV;2570043,5;Loja Sul
+2025;jul;provisão para contribuição social;CSLL;44336,06;Loja Sul
+2025;jul;despesas comerciais;Comissões;111427,85;Loja Sul
+2025;jul;despesas administrativas;Contabilidade;13392,38;Loja Sul
+2025;jul;despesas com depreciações e amortizações;Depreciação;44773,24;Loja Sul
+2025;jul;despesas financeiras líquidas;Despesas Financeiras;17860,8;Loja Sul
+2025;jul;devoluções de vendas;Devoluções;44373,11;Loja Sul
+2025;jul;despesas administrativas;Energia Elétrica;17724,68;Loja Sul
+2025;jul;CMV (custo da mercadoria vendida);Fretes de Produção;88413,16;Loja Sul
+2025;jul;provisão para imposto de renda;IRPJ;132680,95;Loja Sul
+2025;jul;despesas administrativas;Internet e Telefonia;8935,24;Loja Sul
+2025;jul;receitas não operacionais;Juros Ativos;4545,55;Loja Sul
+2025;jul;despesas financeiras líquidas;Juros Bancários;8823,47;Loja Sul
+2025;jul;despesas administrativas;Manutenção;8844,42;Loja Sul
+2025;jul;despesas comerciais;Marketing e Publicidade;88814,69;Loja Sul
+2025;jul;CMV (custo da mercadoria vendida);Materiais e Insumos;221993,63;Loja Sul
+2025;jul;despesas administrativas;Material de Escritório;4400,96;Loja Sul
+2025;jul;CMV (custo da mercadoria vendida);Mão de Obra Direta;352006,42;Loja Sul
+2025;jul;receita bruta de vendas;Outras Receitas Operacionais;45656,85;Loja Sul
+2025;jul;despesas administrativas;Pró-Labore;66203,54;Loja Sul
+2025;jul;receita bruta de vendas;Receita de Serviços;322403,06;Loja Sul
+2025;jul;receita bruta de vendas;Receita de Vendas;4206043,02;Loja Sul
+2025;jul;receitas não operacionais;Receitas Financeiras;13626,78;Loja Sul
+2025;jul;despesas administrativas;Salários Administrativos;222834,76;Loja Sul
+2025;jul;despesas comerciais;Salários Comerciais;175585,06;Loja Sul
+2025;jul;despesas administrativas;Seguros;8789,64;Loja Sul
+2025;jul;despesas administrativas;Sistemas e Licenças;17878,32;Loja Sul
+2025;jul;despesas financeiras líquidas;Tarifas Bancárias;2204,01;Loja Sul
+2025;jul;despesas administrativas;Treinamentos;4410,63;Loja Sul
+2025;jul;despesas comerciais;Viagens Comerciais;22136,72;Loja Sul
+2025;jun;despesas administrativas;Aluguel;54551,98;Loja Sul
+2025;jun;CMV (custo da mercadoria vendida);CMV;2635945,53;Loja Sul
+2025;jun;provisão para contribuição social;CSLL;45663,21;Loja Sul
+2025;jun;despesas comerciais;Comissões;114209,71;Loja Sul
+2025;jun;despesas administrativas;Contabilidade;13651,75;Loja Sul
+2025;jun;despesas com depreciações e amortizações;Depreciação;45038,15;Loja Sul
+2025;jun;despesas financeiras líquidas;Despesas Financeiras;18176,39;Loja Sul
+2025;jun;devoluções de vendas;Devoluções;45455,83;Loja Sul
+2025;jun;despesas administrativas;Energia Elétrica;18134,75;Loja Sul
+2025;jun;CMV (custo da mercadoria vendida);Fretes de Produção;90908,1;Loja Sul
+2025;jun;provisão para imposto de renda;IRPJ;135252,97;Loja Sul
+2025;jun;despesas administrativas;Internet e Telefonia;9032,32;Loja Sul
+2025;jun;receitas não operacionais;Juros Ativos;4693,09;Loja Sul
+2025;jun;despesas financeiras líquidas;Juros Bancários;9058,48;Loja Sul
+2025;jun;despesas administrativas;Manutenção;9140,51;Loja Sul
+2025;jun;despesas comerciais;Marketing e Publicidade;91235,39;Loja Sul
+2025;jun;CMV (custo da mercadoria vendida);Materiais e Insumos;229737,34;Loja Sul
+2025;jun;despesas administrativas;Material de Escritório;4569,63;Loja Sul
+2025;jun;CMV (custo da mercadoria vendida);Mão de Obra Direta;365234,3;Loja Sul
+2025;jun;receita bruta de vendas;Outras Receitas Operacionais;47221,99;Loja Sul
+2025;jun;despesas administrativas;Pró-Labore;68244,75;Loja Sul
+2025;jun;receita bruta de vendas;Receita de Serviços;330325,84;Loja Sul
+2025;jun;receita bruta de vendas;Receita de Vendas;4306855,23;Loja Sul
+2025;jun;receitas não operacionais;Receitas Financeiras;13938,65;Loja Sul
+2025;jun;despesas administrativas;Salários Administrativos;228197,6;Loja Sul
+2025;jun;despesas comerciais;Salários Comerciais;181878,78;Loja Sul
+2025;jun;despesas administrativas;Seguros;9172,11;Loja Sul
+2025;jun;despesas administrativas;Sistemas e Licenças;18142,91;Loja Sul
+2025;jun;despesas financeiras líquidas;Tarifas Bancárias;2270,06;Loja Sul
+2025;jun;despesas administrativas;Treinamentos;4554,14;Loja Sul
+2025;jun;despesas comerciais;Viagens Comerciais;22847,3;Loja Sul
+2025;mai;despesas administrativas;Aluguel;58307,5;Loja Sul
+2025;mai;CMV (custo da mercadoria vendida);CMV;2729577,14;Loja Sul
+2025;mai;provisão para contribuição social;CSLL;48555,37;Loja Sul
+2025;mai;despesas comerciais;Comissões;122273,88;Loja Sul
+2025;mai;despesas administrativas;Contabilidade;14501,93;Loja Sul
+2025;mai;despesas com depreciações e amortizações;Depreciação;48693,01;Loja Sul
+2025;mai;despesas financeiras líquidas;Despesas Financeiras;19399,35;Loja Sul
+2025;mai;devoluções de vendas;Devoluções;49094,23;Loja Sul
+2025;mai;despesas administrativas;Energia Elétrica;19496,02;Loja Sul
+2025;mai;CMV (custo da mercadoria vendida);Fretes de Produção;97738,47;Loja Sul
+2025;mai;provisão para imposto de renda;IRPJ;145699,06;Loja Sul
+2025;mai;despesas administrativas;Internet e Telefonia;9784,64;Loja Sul
+2025;mai;receitas não operacionais;Juros Ativos;4829,79;Loja Sul
+2025;mai;despesas financeiras líquidas;Juros Bancários;9765,13;Loja Sul
+2025;mai;despesas administrativas;Manutenção;9601,48;Loja Sul
+2025;mai;despesas comerciais;Marketing e Publicidade;96925,2;Loja Sul
+2025;mai;CMV (custo da mercadoria vendida);Materiais e Insumos;240689,26;Loja Sul
+2025;mai;despesas administrativas;Material de Escritório;4842,57;Loja Sul
+2025;mai;CMV (custo da mercadoria vendida);Mão de Obra Direta;391392,38;Loja Sul
+2025;mai;receita bruta de vendas;Outras Receitas Operacionais;48518,31;Loja Sul
+2025;mai;despesas administrativas;Pró-Labore;72902,2;Loja Sul
+2025;mai;receita bruta de vendas;Receita de Serviços;338318,92;Loja Sul
+2025;mai;receita bruta de vendas;Receita de Vendas;4458267,52;Loja Sul
+2025;mai;receitas não operacionais;Receitas Financeiras;14459,45;Loja Sul
+2025;mai;despesas administrativas;Salários Administrativos;241463,3;Loja Sul
+2025;mai;despesas comerciais;Salários Comerciais;193469,77;Loja Sul
+2025;mai;despesas administrativas;Seguros;9723,08;Loja Sul
+2025;mai;despesas administrativas;Sistemas e Licenças;19380,7;Loja Sul
+2025;mai;despesas financeiras líquidas;Tarifas Bancárias;2430,07;Loja Sul
+2025;mai;despesas administrativas;Treinamentos;4869,67;Loja Sul
+2025;mai;despesas comerciais;Viagens Comerciais;24065,05;Loja Sul
+2025;mar;despesas administrativas;Aluguel;60103,48;Loja Sul
+2025;mar;CMV (custo da mercadoria vendida);CMV;2785851,26;Loja Sul
+2025;mar;provisão para contribuição social;CSLL;50180,73;Loja Sul
+2025;mar;despesas comerciais;Comissões;127586,01;Loja Sul
+2025;mar;despesas administrativas;Contabilidade;15204,58;Loja Sul
+2025;mar;despesas com depreciações e amortizações;Depreciação;50205,37;Loja Sul
+2025;mar;despesas financeiras líquidas;Despesas Financeiras;20139,39;Loja Sul
+2025;mar;devoluções de vendas;Devoluções;50181,18;Loja Sul
+2025;mar;despesas administrativas;Energia Elétrica;20140,52;Loja Sul
+2025;mar;CMV (custo da mercadoria vendida);Fretes de Produção;100278,27;Loja Sul
+2025;mar;provisão para imposto de renda;IRPJ;150392,31;Loja Sul
+2025;mar;despesas administrativas;Internet e Telefonia;10025,16;Loja Sul
+2025;mar;receitas não operacionais;Juros Ativos;4896,38;Loja Sul
+2025;mar;despesas financeiras líquidas;Juros Bancários;10086,88;Loja Sul
+2025;mar;despesas administrativas;Manutenção;10075,57;Loja Sul
+2025;mar;despesas comerciais;Marketing e Publicidade;100653,31;Loja Sul
+2025;mar;CMV (custo da mercadoria vendida);Materiais e Insumos;250484,52;Loja Sul
+2025;mar;despesas administrativas;Material de Escritório;5055,31;Loja Sul
+2025;mar;CMV (custo da mercadoria vendida);Mão de Obra Direta;405268,18;Loja Sul
+2025;mar;receita bruta de vendas;Outras Receitas Operacionais;49073,91;Loja Sul
+2025;mar;despesas administrativas;Pró-Labore;75176,26;Loja Sul
+2025;mar;receita bruta de vendas;Receita de Serviços;342021,47;Loja Sul
+2025;mar;receita bruta de vendas;Receita de Vendas;4550841,07;Loja Sul
+2025;mar;receitas não operacionais;Receitas Financeiras;14671,06;Loja Sul
+2025;mar;despesas administrativas;Salários Administrativos;248356,1;Loja Sul
+2025;mar;despesas comerciais;Salários Comerciais;203450,64;Loja Sul
+2025;mar;despesas administrativas;Seguros;10116,04;Loja Sul
+2025;mar;despesas administrativas;Sistemas e Licenças;20097,57;Loja Sul
+2025;mar;despesas financeiras líquidas;Tarifas Bancárias;2506,4;Loja Sul
+2025;mar;despesas administrativas;Treinamentos;4998,79;Loja Sul
+2025;mar;despesas comerciais;Viagens Comerciais;24986,04;Loja Sul
+2025;nov;despesas administrativas;Aluguel;77259,8;Loja Sul
+2025;nov;CMV (custo da mercadoria vendida);CMV;3662267,84;Loja Sul
+2025;nov;provisão para contribuição social;CSLL;64114,97;Loja Sul
+2025;nov;despesas comerciais;Comissões;162822,51;Loja Sul
+2025;nov;despesas administrativas;Contabilidade;19243,6;Loja Sul
+2025;nov;despesas com depreciações e amortizações;Depreciação;64864,58;Loja Sul
+2025;nov;despesas financeiras líquidas;Despesas Financeiras;26100,31;Loja Sul
+2025;nov;devoluções de vendas;Devoluções;64050,29;Loja Sul
+2025;nov;despesas administrativas;Energia Elétrica;25773,53;Loja Sul
+2025;nov;CMV (custo da mercadoria vendida);Fretes de Produção;128450,11;Loja Sul
+2025;nov;provisão para imposto de renda;IRPJ;194317,23;Loja Sul
+2025;nov;despesas administrativas;Internet e Telefonia;12863,86;Loja Sul
+2025;nov;receitas não operacionais;Juros Ativos;6504,67;Loja Sul
+2025;nov;despesas financeiras líquidas;Juros Bancários;12905,23;Loja Sul
+2025;nov;despesas administrativas;Manutenção;12847,48;Loja Sul
+2025;nov;despesas comerciais;Marketing e Publicidade;130057,61;Loja Sul
+2025;nov;CMV (custo da mercadoria vendida);Materiais e Insumos;319414,65;Loja Sul
+2025;nov;despesas administrativas;Material de Escritório;6466,91;Loja Sul
+2025;nov;CMV (custo da mercadoria vendida);Mão de Obra Direta;516202,26;Loja Sul
+2025;nov;receita bruta de vendas;Outras Receitas Operacionais;65355,44;Loja Sul
+2025;nov;despesas administrativas;Pró-Labore;95900,66;Loja Sul
+2025;nov;receita bruta de vendas;Receita de Serviços;461234,19;Loja Sul
+2025;nov;receita bruta de vendas;Receita de Vendas;5986988,92;Loja Sul
+2025;nov;receitas não operacionais;Receitas Financeiras;19268,31;Loja Sul
+2025;nov;despesas administrativas;Salários Administrativos;324832,94;Loja Sul
+2025;nov;despesas comerciais;Salários Comerciais;257276,7;Loja Sul
+2025;nov;despesas administrativas;Seguros;13026,0;Loja Sul
+2025;nov;despesas administrativas;Sistemas e Licenças;25733,83;Loja Sul
+2025;nov;despesas financeiras líquidas;Tarifas Bancárias;3261,91;Loja Sul
+2025;nov;despesas administrativas;Treinamentos;6513,0;Loja Sul
+2025;nov;despesas comerciais;Viagens Comerciais;32226,84;Loja Sul
+2025;out;despesas administrativas;Aluguel;56307,2;Loja Sul
+2025;out;CMV (custo da mercadoria vendida);CMV;2589318,76;Loja Sul
+2025;out;provisão para contribuição social;CSLL;47261,11;Loja Sul
+2025;out;despesas comerciais;Comissões;118538,47;Loja Sul
+2025;out;despesas administrativas;Contabilidade;14119,38;Loja Sul
+2025;out;despesas com depreciações e amortizações;Depreciação;46930,81;Loja Sul
+2025;out;despesas financeiras líquidas;Despesas Financeiras;18781,37;Loja Sul
+2025;out;devoluções de vendas;Devoluções;47097,95;Loja Sul
+2025;out;despesas administrativas;Energia Elétrica;18808,57;Loja Sul
+2025;out;CMV (custo da mercadoria vendida);Fretes de Produção;94584,16;Loja Sul
+2025;out;provisão para imposto de renda;IRPJ;140749,15;Loja Sul
+2025;out;despesas administrativas;Internet e Telefonia;9482,2;Loja Sul
+2025;out;receitas não operacionais;Juros Ativos;4542,7;Loja Sul
+2025;out;despesas financeiras líquidas;Juros Bancários;9444,68;Loja Sul
+2025;out;despesas administrativas;Manutenção;9469,69;Loja Sul
+2025;out;despesas comerciais;Marketing e Publicidade;94346,95;Loja Sul
+2025;out;CMV (custo da mercadoria vendida);Materiais e Insumos;232502,29;Loja Sul
+2025;out;despesas administrativas;Material de Escritório;4678,27;Loja Sul
+2025;out;CMV (custo da mercadoria vendida);Mão de Obra Direta;374818,6;Loja Sul
+2025;out;receita bruta de vendas;Outras Receitas Operacionais;45731,07;Loja Sul
+2025;out;despesas administrativas;Pró-Labore;69745,92;Loja Sul
+2025;out;receita bruta de vendas;Receita de Serviços;318945,32;Loja Sul
+2025;out;receita bruta de vendas;Receita de Vendas;4234438,17;Loja Sul
+2025;out;receitas não operacionais;Receitas Financeiras;13808,73;Loja Sul
+2025;out;despesas administrativas;Salários Administrativos;236469,53;Loja Sul
+2025;out;despesas comerciais;Salários Comerciais;190306,33;Loja Sul
+2025;out;despesas administrativas;Seguros;9369,05;Loja Sul
+2025;out;despesas administrativas;Sistemas e Licenças;18891,15;Loja Sul
+2025;out;despesas financeiras líquidas;Tarifas Bancárias;2359,98;Loja Sul
+2025;out;despesas administrativas;Treinamentos;4635,2;Loja Sul
+2025;out;despesas comerciais;Viagens Comerciais;23544,21;Loja Sul
+2025;set;despesas administrativas;Aluguel;56123,82;Loja Sul
+2025;set;CMV (custo da mercadoria vendida);CMV;2580702,92;Loja Sul
+2025;set;provisão para contribuição social;CSLL;47009,47;Loja Sul
+2025;set;despesas comerciais;Comissões;116384,09;Loja Sul
+2025;set;despesas administrativas;Contabilidade;14042,74;Loja Sul
+2025;set;despesas com depreciações e amortizações;Depreciação;46441,41;Loja Sul
+2025;set;despesas financeiras líquidas;Despesas Financeiras;18968,54;Loja Sul
+2025;set;devoluções de vendas;Devoluções;46923,97;Loja Sul
+2025;set;despesas administrativas;Energia Elétrica;18822,4;Loja Sul
+2025;set;CMV (custo da mercadoria vendida);Fretes de Produção;93197,97;Loja Sul
+2025;set;provisão para imposto de renda;IRPJ;140230,11;Loja Sul
+2025;set;despesas administrativas;Internet e Telefonia;9321,33;Loja Sul
+2025;set;receitas não operacionais;Juros Ativos;4596,94;Loja Sul
+2025;set;despesas financeiras líquidas;Juros Bancários;9407,22;Loja Sul
+2025;set;despesas administrativas;Manutenção;9160,48;Loja Sul
+2025;set;despesas comerciais;Marketing e Publicidade;93746,15;Loja Sul
+2025;set;CMV (custo da mercadoria vendida);Materiais e Insumos;235063,26;Loja Sul
+2025;set;despesas administrativas;Material de Escritório;4702,32;Loja Sul
+2025;set;CMV (custo da mercadoria vendida);Mão de Obra Direta;377036,11;Loja Sul
+2025;set;receita bruta de vendas;Outras Receitas Operacionais;45838,56;Loja Sul
+2025;set;despesas administrativas;Pró-Labore;70703,39;Loja Sul
+2025;set;receita bruta de vendas;Receita de Serviços;321821,74;Loja Sul
+2025;set;receita bruta de vendas;Receita de Vendas;4219590,07;Loja Sul
+2025;set;receitas não operacionais;Receitas Financeiras;13556,99;Loja Sul
+2025;set;despesas administrativas;Salários Administrativos;233690,54;Loja Sul
+2025;set;despesas comerciais;Salários Comerciais;189252,73;Loja Sul
+2025;set;despesas administrativas;Seguros;9405,83;Loja Sul
+2025;set;despesas administrativas;Sistemas e Licenças;18687,79;Loja Sul
+2025;set;despesas financeiras líquidas;Tarifas Bancárias;2332,67;Loja Sul
+2025;set;despesas administrativas;Treinamentos;4654,2;Loja Sul
+2025;set;despesas comerciais;Viagens Comerciais;23294,27;Loja Sul
+2026;abr;despesas administrativas;Aluguel;69447,27;Loja Sul
+2026;abr;CMV (custo da mercadoria vendida);CMV;3194451,31;Loja Sul
+2026;abr;provisão para contribuição social;CSLL;57883,05;Loja Sul
+2026;abr;despesas comerciais;Comissões;145186,74;Loja Sul
+2026;abr;despesas administrativas;Contabilidade;17294,2;Loja Sul
+2026;abr;despesas com depreciações e amortizações;Depreciação;58229,65;Loja Sul
+2026;abr;despesas financeiras líquidas;Despesas Financeiras;23431,78;Loja Sul
+2026;abr;devoluções de vendas;Devoluções;57894,4;Loja Sul
+2026;abr;despesas administrativas;Energia Elétrica;23204,81;Loja Sul
+2026;abr;CMV (custo da mercadoria vendida);Fretes de Produção;114451,59;Loja Sul
+2026;abr;provisão para imposto de renda;IRPJ;173282,46;Loja Sul
+2026;abr;despesas administrativas;Internet e Telefonia;11653,35;Loja Sul
+2026;abr;receitas não operacionais;Juros Ativos;5808,24;Loja Sul
+2026;abr;despesas financeiras líquidas;Juros Bancários;11659,5;Loja Sul
+2026;abr;despesas administrativas;Manutenção;11702,53;Loja Sul
+2026;abr;despesas comerciais;Marketing e Publicidade;115554,74;Loja Sul
+2026;abr;CMV (custo da mercadoria vendida);Materiais e Insumos;292319,03;Loja Sul
+2026;abr;despesas administrativas;Material de Escritório;5809,18;Loja Sul
+2026;abr;CMV (custo da mercadoria vendida);Mão de Obra Direta;466282,86;Loja Sul
+2026;abr;receita bruta de vendas;Outras Receitas Operacionais;57933,88;Loja Sul
+2026;abr;despesas administrativas;Pró-Labore;86665,58;Loja Sul
+2026;abr;receita bruta de vendas;Receita de Serviços;402642,88;Loja Sul
+2026;abr;receita bruta de vendas;Receita de Vendas;5229125,6;Loja Sul
+2026;abr;receitas não operacionais;Receitas Financeiras;17217,13;Loja Sul
+2026;abr;despesas administrativas;Salários Administrativos;296935,45;Loja Sul
+2026;abr;despesas comerciais;Salários Comerciais;231402,18;Loja Sul
+2026;abr;despesas administrativas;Seguros;11641,53;Loja Sul
+2026;abr;despesas administrativas;Sistemas e Licenças;23426,1;Loja Sul
+2026;abr;despesas financeiras líquidas;Tarifas Bancárias;2925,28;Loja Sul
+2026;abr;despesas administrativas;Treinamentos;5881,53;Loja Sul
+2026;abr;despesas comerciais;Viagens Comerciais;29207,39;Loja Sul
+2026;fev;despesas administrativas;Aluguel;67233,08;Loja Sul
+2026;fev;CMV (custo da mercadoria vendida);CMV;3130694,06;Loja Sul
+2026;fev;provisão para contribuição social;CSLL;56184,74;Loja Sul
+2026;fev;despesas comerciais;Comissões;138065,3;Loja Sul
+2026;fev;despesas administrativas;Contabilidade;16629,8;Loja Sul
+2026;fev;despesas com depreciações e amortizações;Depreciação;55418,85;Loja Sul
+2026;fev;despesas financeiras líquidas;Despesas Financeiras;22049,13;Loja Sul
+2026;fev;devoluções de vendas;Devoluções;55853,45;Loja Sul
+2026;fev;despesas administrativas;Energia Elétrica;22099,03;Loja Sul
+2026;fev;CMV (custo da mercadoria vendida);Fretes de Produção;111116,97;Loja Sul
+2026;fev;provisão para imposto de renda;IRPJ;167262,81;Loja Sul
+2026;fev;despesas administrativas;Internet e Telefonia;11068,49;Loja Sul
+2026;fev;receitas não operacionais;Juros Ativos;5629,49;Loja Sul
+2026;fev;despesas financeiras líquidas;Juros Bancários;11120,51;Loja Sul
+2026;fev;despesas administrativas;Manutenção;11207,19;Loja Sul
+2026;fev;despesas comerciais;Marketing e Publicidade;111685,12;Loja Sul
+2026;fev;CMV (custo da mercadoria vendida);Materiais e Insumos;277087,67;Loja Sul
+2026;fev;despesas administrativas;Material de Escritório;5583,33;Loja Sul
+2026;fev;CMV (custo da mercadoria vendida);Mão de Obra Direta;442591,21;Loja Sul
+2026;fev;receita bruta de vendas;Outras Receitas Operacionais;56122,18;Loja Sul
+2026;fev;despesas administrativas;Pró-Labore;84305,45;Loja Sul
+2026;fev;receita bruta de vendas;Receita de Serviços;394033,97;Loja Sul
+2026;fev;receita bruta de vendas;Receita de Vendas;5119955,38;Loja Sul
+2026;fev;receitas não operacionais;Receitas Financeiras;16764,05;Loja Sul
+2026;fev;despesas administrativas;Salários Administrativos;278620,16;Loja Sul
+2026;fev;despesas comerciais;Salários Comerciais;221104,19;Loja Sul
+2026;fev;despesas administrativas;Seguros;11059,36;Loja Sul
+2026;fev;despesas administrativas;Sistemas e Licenças;22483,5;Loja Sul
+2026;fev;despesas financeiras líquidas;Tarifas Bancárias;2792,49;Loja Sul
+2026;fev;despesas administrativas;Treinamentos;5591,53;Loja Sul
+2026;fev;despesas comerciais;Viagens Comerciais;27845,19;Loja Sul
+2026;jan;despesas administrativas;Aluguel;63197,14;Loja Sul
+2026;jan;CMV (custo da mercadoria vendida);CMV;3013535,56;Loja Sul
+2026;jan;provisão para contribuição social;CSLL;53377,62;Loja Sul
+2026;jan;despesas comerciais;Comissões;131867,23;Loja Sul
+2026;jan;despesas administrativas;Contabilidade;15949,32;Loja Sul
+2026;jan;despesas com depreciações e amortizações;Depreciação;53257,09;Loja Sul
+2026;jan;despesas financeiras líquidas;Despesas Financeiras;21341,08;Loja Sul
+2026;jan;devoluções de vendas;Devoluções;53043,94;Loja Sul
+2026;jan;despesas administrativas;Energia Elétrica;21336,5;Loja Sul
+2026;jan;CMV (custo da mercadoria vendida);Fretes de Produção;105478,37;Loja Sul
+2026;jan;provisão para imposto de renda;IRPJ;159949,66;Loja Sul
+2026;jan;despesas administrativas;Internet e Telefonia;10620,91;Loja Sul
+2026;jan;receitas não operacionais;Juros Ativos;5325,66;Loja Sul
+2026;jan;despesas financeiras líquidas;Juros Bancários;10701,87;Loja Sul
+2026;jan;despesas administrativas;Manutenção;10622,51;Loja Sul
+2026;jan;despesas comerciais;Marketing e Publicidade;106464,32;Loja Sul
+2026;jan;CMV (custo da mercadoria vendida);Materiais e Insumos;266388,83;Loja Sul
+2026;jan;despesas administrativas;Material de Escritório;5308,05;Loja Sul
+2026;jan;CMV (custo da mercadoria vendida);Mão de Obra Direta;417982,46;Loja Sul
+2026;jan;receita bruta de vendas;Outras Receitas Operacionais;53751,33;Loja Sul
+2026;jan;despesas administrativas;Pró-Labore;80746,03;Loja Sul
+2026;jan;receita bruta de vendas;Receita de Serviços;378389,91;Loja Sul
+2026;jan;receita bruta de vendas;Receita de Vendas;4928961,08;Loja Sul
+2026;jan;receitas não operacionais;Receitas Financeiras;16144,63;Loja Sul
+2026;jan;despesas administrativas;Salários Administrativos;263201,8;Loja Sul
+2026;jan;despesas comerciais;Salários Comerciais;211703,69;Loja Sul
+2026;jan;despesas administrativas;Seguros;10646,75;Loja Sul
+2026;jan;despesas administrativas;Sistemas e Licenças;21227,64;Loja Sul
+2026;jan;despesas financeiras líquidas;Tarifas Bancárias;2662,6;Loja Sul
+2026;jan;despesas administrativas;Treinamentos;5329,32;Loja Sul
+2026;jan;despesas comerciais;Viagens Comerciais;26485,37;Loja Sul
+2026;jul;despesas administrativas;Aluguel;61030,83;Loja Sul
+2026;jul;CMV (custo da mercadoria vendida);CMV;2911495,26;Loja Sul
+2026;jul;provisão para contribuição social;CSLL;50972,39;Loja Sul
+2026;jul;despesas comerciais;Comissões;126262,87;Loja Sul
+2026;jul;despesas administrativas;Contabilidade;15220,85;Loja Sul
+2026;jul;despesas com depreciações e amortizações;Depreciação;51222,01;Loja Sul
+2026;jul;despesas financeiras líquidas;Despesas Financeiras;20419,91;Loja Sul
+2026;jul;devoluções de vendas;Devoluções;50594,4;Loja Sul
+2026;jul;despesas administrativas;Energia Elétrica;20349,33;Loja Sul
+2026;jul;CMV (custo da mercadoria vendida);Fretes de Produção;102849,22;Loja Sul
+2026;jul;provisão para imposto de renda;IRPJ;151753,25;Loja Sul
+2026;jul;despesas administrativas;Internet e Telefonia;10171,53;Loja Sul
+2026;jul;receitas não operacionais;Juros Ativos;5241,57;Loja Sul
+2026;jul;despesas financeiras líquidas;Juros Bancários;10178,44;Loja Sul
+2026;jul;despesas administrativas;Manutenção;10140,53;Loja Sul
+2026;jul;despesas comerciais;Marketing e Publicidade;101768,03;Loja Sul
+2026;jul;CMV (custo da mercadoria vendida);Materiais e Insumos;254297,37;Loja Sul
+2026;jul;despesas administrativas;Material de Escritório;5078,22;Loja Sul
+2026;jul;CMV (custo da mercadoria vendida);Mão de Obra Direta;400879,63;Loja Sul
+2026;jul;receita bruta de vendas;Outras Receitas Operacionais;51891,49;Loja Sul
+2026;jul;despesas administrativas;Pró-Labore;75950,76;Loja Sul
+2026;jul;receita bruta de vendas;Receita de Serviços;364288,56;Loja Sul
+2026;jul;receita bruta de vendas;Receita de Vendas;4769734,56;Loja Sul
+2026;jul;receitas não operacionais;Receitas Financeiras;15814,74;Loja Sul
+2026;jul;despesas administrativas;Salários Administrativos;255428,81;Loja Sul
+2026;jul;despesas comerciais;Salários Comerciais;202128,82;Loja Sul
+2026;jul;despesas administrativas;Seguros;10273,09;Loja Sul
+2026;jul;despesas administrativas;Sistemas e Licenças;20552,25;Loja Sul
+2026;jul;despesas financeiras líquidas;Tarifas Bancárias;2567,38;Loja Sul
+2026;jul;despesas administrativas;Treinamentos;5087,02;Loja Sul
+2026;jul;despesas comerciais;Viagens Comerciais;25436,35;Loja Sul
+2026;jun;despesas administrativas;Aluguel;64671,69;Loja Sul
+2026;jun;CMV (custo da mercadoria vendida);CMV;3038996,15;Loja Sul
+2026;jun;provisão para contribuição social;CSLL;54458,65;Loja Sul
+2026;jun;despesas comerciais;Comissões;137758,12;Loja Sul
+2026;jun;despesas administrativas;Contabilidade;16509,31;Loja Sul
+2026;jun;despesas com depreciações e amortizações;Depreciação;53939,46;Loja Sul
+2026;jun;despesas financeiras líquidas;Despesas Financeiras;21768,93;Loja Sul
+2026;jun;devoluções de vendas;Devoluções;54702,43;Loja Sul
+2026;jun;despesas administrativas;Energia Elétrica;21634,71;Loja Sul
+2026;jun;CMV (custo da mercadoria vendida);Fretes de Produção;108091,26;Loja Sul
+2026;jun;provisão para imposto de renda;IRPJ;163040,3;Loja Sul
+2026;jun;despesas administrativas;Internet e Telefonia;10932,37;Loja Sul
+2026;jun;receitas não operacionais;Juros Ativos;5434,21;Loja Sul
+2026;jun;despesas financeiras líquidas;Juros Bancários;10960,96;Loja Sul
+2026;jun;despesas administrativas;Manutenção;10756,9;Loja Sul
+2026;jun;despesas comerciais;Marketing e Publicidade;109084,26;Loja Sul
+2026;jun;CMV (custo da mercadoria vendida);Materiais e Insumos;272850,65;Loja Sul
+2026;jun;despesas administrativas;Material de Escritório;5393,18;Loja Sul
+2026;jun;CMV (custo da mercadoria vendida);Mão de Obra Direta;436783,12;Loja Sul
+2026;jun;receita bruta de vendas;Outras Receitas Operacionais;53982,23;Loja Sul
+2026;jun;despesas administrativas;Pró-Labore;81803,86;Loja Sul
+2026;jun;receita bruta de vendas;Receita de Serviços;378516,15;Loja Sul
+2026;jun;receita bruta de vendas;Receita de Vendas;4978187,36;Loja Sul
+2026;jun;receitas não operacionais;Receitas Financeiras;16259,64;Loja Sul
+2026;jun;despesas administrativas;Salários Administrativos;274181,05;Loja Sul
+2026;jun;despesas comerciais;Salários Comerciais;217541,73;Loja Sul
+2026;jun;despesas administrativas;Seguros;11029,92;Loja Sul
+2026;jun;despesas administrativas;Sistemas e Licenças;21711,31;Loja Sul
+2026;jun;despesas financeiras líquidas;Tarifas Bancárias;2705,54;Loja Sul
+2026;jun;despesas administrativas;Treinamentos;5429,19;Loja Sul
+2026;jun;despesas comerciais;Viagens Comerciais;27327,97;Loja Sul
+2026;mai;despesas administrativas;Aluguel;69370,17;Loja Sul
+2026;mai;CMV (custo da mercadoria vendida);CMV;3154884,43;Loja Sul
+2026;mai;provisão para contribuição social;CSLL;57979,92;Loja Sul
+2026;mai;despesas comerciais;Comissões;146427,0;Loja Sul
+2026;mai;despesas administrativas;Contabilidade;17111,01;Loja Sul
+2026;mai;despesas com depreciações e amortizações;Depreciação;58394,49;Loja Sul
+2026;mai;despesas financeiras líquidas;Despesas Financeiras;23101,3;Loja Sul
+2026;mai;devoluções de vendas;Devoluções;58206,95;Loja Sul
+2026;mai;despesas administrativas;Energia Elétrica;23602,7;Loja Sul
+2026;mai;CMV (custo da mercadoria vendida);Fretes de Produção;115753,14;Loja Sul
+2026;mai;provisão para imposto de renda;IRPJ;176057,86;Loja Sul
+2026;mai;despesas administrativas;Internet e Telefonia;11547,53;Loja Sul
+2026;mai;receitas não operacionais;Juros Ativos;5691,66;Loja Sul
+2026;mai;despesas financeiras líquidas;Juros Bancários;11659,08;Loja Sul
+2026;mai;despesas administrativas;Manutenção;11631,83;Loja Sul
+2026;mai;despesas comerciais;Marketing e Publicidade;116535,39;Loja Sul
+2026;mai;CMV (custo da mercadoria vendida);Materiais e Insumos;288535,59;Loja Sul
+2026;mai;despesas administrativas;Material de Escritório;5775,73;Loja Sul
+2026;mai;CMV (custo da mercadoria vendida);Mão de Obra Direta;459955,64;Loja Sul
+2026;mai;receita bruta de vendas;Outras Receitas Operacionais;56856,79;Loja Sul
+2026;mai;despesas administrativas;Pró-Labore;86746,78;Loja Sul
+2026;mai;receita bruta de vendas;Receita de Serviços;399171,46;Loja Sul
+2026;mai;receita bruta de vendas;Receita de Vendas;5169561,73;Loja Sul
+2026;mai;receitas não operacionais;Receitas Financeiras;16951,42;Loja Sul
+2026;mai;despesas administrativas;Salários Administrativos;288730,75;Loja Sul
+2026;mai;despesas comerciais;Salários Comerciais;232551,82;Loja Sul
+2026;mai;despesas administrativas;Seguros;11570,86;Loja Sul
+2026;mai;despesas administrativas;Sistemas e Licenças;23271,74;Loja Sul
+2026;mai;despesas financeiras líquidas;Tarifas Bancárias;2901,95;Loja Sul
+2026;mai;despesas administrativas;Treinamentos;5801,6;Loja Sul
+2026;mai;despesas comerciais;Viagens Comerciais;28993,89;Loja Sul
+2026;mar;despesas administrativas;Aluguel;68762,57;Loja Sul
+2026;mar;CMV (custo da mercadoria vendida);CMV;3207226,48;Loja Sul
+2026;mar;provisão para contribuição social;CSLL;57212,95;Loja Sul
+2026;mar;despesas comerciais;Comissões;143769,65;Loja Sul
+2026;mar;despesas administrativas;Contabilidade;17091,94;Loja Sul
+2026;mar;despesas com depreciações e amortizações;Depreciação;57171,37;Loja Sul
+2026;mar;despesas financeiras líquidas;Despesas Financeiras;22888,96;Loja Sul
+2026;mar;devoluções de vendas;Devoluções;57615,31;Loja Sul
+2026;mar;despesas administrativas;Energia Elétrica;22880,69;Loja Sul
+2026;mar;CMV (custo da mercadoria vendida);Fretes de Produção;115515,09;Loja Sul
+2026;mar;provisão para imposto de renda;IRPJ;174246,53;Loja Sul
+2026;mar;despesas administrativas;Internet e Telefonia;11449,21;Loja Sul
+2026;mar;receitas não operacionais;Juros Ativos;5664,47;Loja Sul
+2026;mar;despesas financeiras líquidas;Juros Bancários;11699,88;Loja Sul
+2026;mar;despesas administrativas;Manutenção;11514,65;Loja Sul
+2026;mar;despesas comerciais;Marketing e Publicidade;114969,79;Loja Sul
+2026;mar;CMV (custo da mercadoria vendida);Materiais e Insumos;287233,1;Loja Sul
+2026;mar;despesas administrativas;Material de Escritório;5700,15;Loja Sul
+2026;mar;CMV (custo da mercadoria vendida);Mão de Obra Direta;457611,01;Loja Sul
+2026;mar;receita bruta de vendas;Outras Receitas Operacionais;56509,83;Loja Sul
+2026;mar;despesas administrativas;Pró-Labore;84879,92;Loja Sul
+2026;mar;receita bruta de vendas;Receita de Serviços;401276,02;Loja Sul
+2026;mar;receita bruta de vendas;Receita de Vendas;5245069,38;Loja Sul
+2026;mar;receitas não operacionais;Receitas Financeiras;17240,32;Loja Sul
+2026;mar;despesas administrativas;Salários Administrativos;286601,56;Loja Sul
+2026;mar;despesas comerciais;Salários Comerciais;228860,32;Loja Sul
+2026;mar;despesas administrativas;Seguros;11446,84;Loja Sul
+2026;mar;despesas administrativas;Sistemas e Licenças;22943,78;Loja Sul
+2026;mar;despesas financeiras líquidas;Tarifas Bancárias;2871,81;Loja Sul
+2026;mar;despesas administrativas;Treinamentos;5762,29;Loja Sul
+2026;mar;despesas comerciais;Viagens Comerciais;28634,47;Loja Sul
+2024;abr;disponibilidades saldo;Aplicações Financeiras;16903601,95;(Todas as filiais)
+2024;abr;disponibilidades saldo;Caixa e Bancos;7564798,49;Loja Sul
+2024;abr;PL;Capital Social;49716469,17;(Todas as filiais)
+2024;abr;contas a receber saldo;Clientes;12833834,97;Loja Sul
+2024;abr;Passivos Financeiros;Empréstimos CP;14914952,89;(Todas as filiais)
+2024;abr;Passivo NC;Empréstimos LP;43750497,73;(Todas as filiais)
+2024;abr;estoque final do mês de mercadorias para revenda saldo;Estoques;5984296,21;Loja Sul
+2024;abr;contas a pagar de fornecedores saldo;Fornecedores;9052511,0;Loja Sul
+2024;abr;Ativo NC;Imobilizado;83523673,06;(Todas as filiais)
+2024;abr;Outros PC;Impostos a Recolher;2139456,84;Loja Sul
+2024;abr;Outros AC;Impostos a Recuperar;728413,88;Loja Sul
+2024;abr;PL;Lucros Acumulados;25852559,12;(Todas as filiais)
+2024;abr;PL;Reservas;19488857,86;(Todas as filiais)
+2024;abr;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;abr;Outros PC;Salários e Encargos;1754788,69;Loja Sul
+2024;ago;disponibilidades saldo;Aplicações Financeiras;14801228,06;(Todas as filiais)
+2024;ago;disponibilidades saldo;Caixa e Bancos;7183533,48;Loja Sul
+2024;ago;PL;Capital Social;43533033,4;(Todas as filiais)
+2024;ago;contas a receber saldo;Clientes;12007777,23;Loja Sul
+2024;ago;Passivos Financeiros;Empréstimos CP;13059905,9;(Todas as filiais)
+2024;ago;Passivo NC;Empréstimos LP;38309066,92;(Todas as filiais)
+2024;ago;estoque final do mês de mercadorias para revenda saldo;Estoques;5603242,36;Loja Sul
+2024;ago;contas a pagar de fornecedores saldo;Fornecedores;7839703,64;Loja Sul
+2024;ago;Ativo NC;Imobilizado;73135510,1;(Todas as filiais)
+2024;ago;Outros PC;Impostos a Recolher;1866261,28;Loja Sul
+2024;ago;Outros AC;Impostos a Recuperar;687331,48;Loja Sul
+2024;ago;PL;Lucros Acumulados;22637188,07;(Todas as filiais)
+2024;ago;PL;Reservas;17064953,04;(Todas as filiais)
+2024;ago;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;ago;Outros PC;Salários e Encargos;1538113,93;Loja Sul
+2024;dez;disponibilidades saldo;Aplicações Financeiras;24619690,91;(Todas as filiais)
+2024;dez;disponibilidades saldo;Caixa e Bancos;11487696,19;Loja Sul
+2024;dez;PL;Capital Social;72410863,42;(Todas as filiais)
+2024;dez;contas a receber saldo;Clientes;19159013,92;Loja Sul
+2024;dez;Passivos Financeiros;Empréstimos CP;21723272,29;(Todas as filiais)
+2024;dez;Passivo NC;Empréstimos LP;63721541,23;(Todas as filiais)
+2024;dez;estoque final do mês de mercadorias para revenda saldo;Estoques;8940729,14;Loja Sul
+2024;dez;contas a pagar de fornecedores saldo;Fornecedores;14038785,03;Loja Sul
+2024;dez;Ativo NC;Imobilizado;121650245,2;(Todas as filiais)
+2024;dez;Outros PC;Impostos a Recolher;3274888,24;Loja Sul
+2024;dez;Outros AC;Impostos a Recuperar;1102262,84;Loja Sul
+2024;dez;PL;Lucros Acumulados;37653641,02;(Todas as filiais)
+2024;dez;PL;Reservas;28385055,01;(Todas as filiais)
+2024;dez;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;dez;Outros PC;Salários e Encargos;2698499,8;Loja Sul
+2024;fev;disponibilidades saldo;Aplicações Financeiras;16937126,76;(Todas as filiais)
+2024;fev;disponibilidades saldo;Caixa e Bancos;7866816,94;Loja Sul
+2024;fev;PL;Capital Social;49815078,71;(Todas as filiais)
+2024;fev;contas a receber saldo;Clientes;13261917,9;Loja Sul
+2024;fev;Passivos Financeiros;Empréstimos CP;14944523,61;(Todas as filiais)
+2024;fev;Passivo NC;Empréstimos LP;43837269,27;(Todas as filiais)
+2024;fev;estoque final do mês de mercadorias para revenda saldo;Estoques;6177473,44;Loja Sul
+2024;fev;contas a pagar de fornecedores saldo;Fornecedores;9304356,89;Loja Sul
+2024;fev;Ativo NC;Imobilizado;83689332,23;(Todas as filiais)
+2024;fev;Outros PC;Impostos a Recolher;2228111,49;Loja Sul
+2024;fev;Outros AC;Impostos a Recuperar;750027,25;Loja Sul
+2024;fev;PL;Lucros Acumulados;25903840,93;(Todas as filiais)
+2024;fev;PL;Reservas;19527510,85;(Todas as filiais)
+2024;fev;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;fev;Outros PC;Salários e Encargos;1834683,77;Loja Sul
+2024;jan;disponibilidades saldo;Aplicações Financeiras;16469963,64;(Todas as filiais)
+2024;jan;disponibilidades saldo;Caixa e Bancos;7730191,09;Loja Sul
+2024;jan;PL;Capital Social;48441069,54;(Todas as filiais)
+2024;jan;contas a receber saldo;Clientes;13204280,08;Loja Sul
+2024;jan;Passivos Financeiros;Empréstimos CP;14532320,86;(Todas as filiais)
+2024;jan;Passivo NC;Empréstimos LP;42628141,19;(Todas as filiais)
+2024;jan;estoque final do mês de mercadorias para revenda saldo;Estoques;6097272,48;Loja Sul
+2024;jan;contas a pagar de fornecedores saldo;Fornecedores;8932996,31;Loja Sul
+2024;jan;Ativo NC;Imobilizado;81380996,82;(Todas as filiais)
+2024;jan;Outros PC;Impostos a Recolher;2114750,16;Loja Sul
+2024;jan;Outros AC;Impostos a Recuperar;750698,62;Loja Sul
+2024;jan;PL;Lucros Acumulados;25189356,16;(Todas as filiais)
+2024;jan;PL;Reservas;18988899,26;(Todas as filiais)
+2024;jan;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;jan;Outros PC;Salários e Encargos;1747964,39;Loja Sul
+2024;jul;disponibilidades saldo;Aplicações Financeiras;15243198,13;(Todas as filiais)
+2024;jul;disponibilidades saldo;Caixa e Bancos;7214475,77;Loja Sul
+2024;jul;PL;Capital Social;44832931,91;(Todas as filiais)
+2024;jul;contas a receber saldo;Clientes;12038189,72;Loja Sul
+2024;jul;Passivos Financeiros;Empréstimos CP;13449873,16;(Todas as filiais)
+2024;jul;Passivo NC;Empréstimos LP;39452978,37;(Todas as filiais)
+2024;jul;estoque final do mês de mercadorias para revenda saldo;Estoques;5721021,72;Loja Sul
+2024;jul;contas a pagar de fornecedores saldo;Fornecedores;7994917,56;Loja Sul
+2024;jul;Ativo NC;Imobilizado;75319306,8;(Todas as filiais)
+2024;jul;Outros PC;Impostos a Recolher;1941479,66;Loja Sul
+2024;jul;Outros AC;Impostos a Recuperar;695661,87;Loja Sul
+2024;jul;PL;Lucros Acumulados;23313117,75;(Todas as filiais)
+2024;jul;PL;Reservas;17574512,04;(Todas as filiais)
+2024;jul;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;jul;Outros PC;Salários e Encargos;1605281,09;Loja Sul
+2024;jun;disponibilidades saldo;Aplicações Financeiras;15788313,65;(Todas as filiais)
+2024;jun;disponibilidades saldo;Caixa e Bancos;7168227,35;Loja Sul
+2024;jun;PL;Capital Social;46436190,38;(Todas as filiais)
+2024;jun;contas a receber saldo;Clientes;12024569,18;Loja Sul
+2024;jun;Passivos Financeiros;Empréstimos CP;13930857,11;(Todas as filiais)
+2024;jun;Passivo NC;Empréstimos LP;40863843,07;(Todas as filiais)
+2024;jun;estoque final do mês de mercadorias para revenda saldo;Estoques;5722063,4;Loja Sul
+2024;jun;contas a pagar de fornecedores saldo;Fornecedores;8688005,24;Loja Sul
+2024;jun;Ativo NC;Imobilizado;78012817,69;(Todas as filiais)
+2024;jun;Outros PC;Impostos a Recolher;2119337,35;Loja Sul
+2024;jun;Outros AC;Impostos a Recuperar;698479,91;Loja Sul
+2024;jun;PL;Lucros Acumulados;24146823,46;(Todas as filiais)
+2024;jun;PL;Reservas;18202993,77;(Todas as filiais)
+2024;jun;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;jun;Outros PC;Salários e Encargos;1690796,5;Loja Sul
+2024;mai;disponibilidades saldo;Aplicações Financeiras;16434726,66;(Todas as filiais)
+2024;mai;disponibilidades saldo;Caixa e Bancos;7644073,63;Loja Sul
+2024;mai;PL;Capital Social;48337395,56;(Todas as filiais)
+2024;mai;contas a receber saldo;Clientes;12932302,49;Loja Sul
+2024;mai;Passivos Financeiros;Empréstimos CP;14501228,03;(Todas as filiais)
+2024;mai;Passivo NC;Empréstimos LP;42536899,67;(Todas as filiais)
+2024;mai;estoque final do mês de mercadorias para revenda saldo;Estoques;5968015,9;Loja Sul
+2024;mai;contas a pagar de fornecedores saldo;Fornecedores;8582311,0;Loja Sul
+2024;mai;Ativo NC;Imobilizado;81206825,48;(Todas as filiais)
+2024;mai;Outros PC;Impostos a Recolher;2144041,98;Loja Sul
+2024;mai;Outros AC;Impostos a Recuperar;732552,3;Loja Sul
+2024;mai;PL;Lucros Acumulados;25135435,39;(Todas as filiais)
+2024;mai;PL;Reservas;18948267,86;(Todas as filiais)
+2024;mai;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;mai;Outros PC;Salários e Encargos;1748840,72;Loja Sul
+2024;mar;disponibilidades saldo;Aplicações Financeiras;17094725,59;(Todas as filiais)
+2024;mar;disponibilidades saldo;Caixa e Bancos;7722034,78;Loja Sul
+2024;mar;PL;Capital Social;50278569,73;(Todas as filiais)
+2024;mar;contas a receber saldo;Clientes;12939812,78;Loja Sul
+2024;mar;Passivos Financeiros;Empréstimos CP;15083561,02;(Todas as filiais)
+2024;mar;Passivo NC;Empréstimos LP;44245150,27;(Todas as filiais)
+2024;mar;estoque final do mês de mercadorias para revenda saldo;Estoques;6074734,7;Loja Sul
+2024;mar;contas a pagar de fornecedores saldo;Fornecedores;8999911,41;Loja Sul
+2024;mar;Ativo NC;Imobilizado;84467996,16;(Todas as filiais)
+2024;mar;Outros PC;Impostos a Recolher;2165274,7;Loja Sul
+2024;mar;Outros AC;Impostos a Recuperar;741169,19;Loja Sul
+2024;mar;PL;Lucros Acumulados;26144867,15;(Todas as filiais)
+2024;mar;PL;Reservas;19709194,98;(Todas as filiais)
+2024;mar;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;mar;Outros PC;Salários e Encargos;1795589,37;Loja Sul
+2024;nov;disponibilidades saldo;Aplicações Financeiras;20631441,04;(Todas as filiais)
+2024;nov;disponibilidades saldo;Caixa e Bancos;9555962,57;Loja Sul
+2024;nov;PL;Capital Social;60680700,7;(Todas as filiais)
+2024;nov;contas a receber saldo;Clientes;15988815,14;Loja Sul
+2024;nov;Passivos Financeiros;Empréstimos CP;18204196,2;(Todas as filiais)
+2024;nov;Passivo NC;Empréstimos LP;53398994,2;(Todas as filiais)
+2024;nov;estoque final do mês de mercadorias para revenda saldo;Estoques;7492813,95;Loja Sul
+2024;nov;contas a pagar de fornecedores saldo;Fornecedores;12013442,36;Loja Sul
+2024;nov;Ativo NC;Imobilizado;101943554,8;(Todas as filiais)
+2024;nov;Outros PC;Impostos a Recolher;2790501,22;Loja Sul
+2024;nov;Outros AC;Impostos a Recuperar;919650,57;Loja Sul
+2024;nov;PL;Lucros Acumulados;31553958,76;(Todas as filiais)
+2024;nov;PL;Reservas;23786836,91;(Todas as filiais)
+2024;nov;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;nov;Outros PC;Salários e Encargos;2283818,08;Loja Sul
+2024;out;disponibilidades saldo;Aplicações Financeiras;14712752,13;(Todas as filiais)
+2024;out;disponibilidades saldo;Caixa e Bancos;6924278,82;Loja Sul
+2024;out;PL;Capital Social;43272818,16;(Todas as filiais)
+2024;out;contas a receber saldo;Clientes;11713850,18;Loja Sul
+2024;out;Passivos Financeiros;Empréstimos CP;12981855,52;(Todas as filiais)
+2024;out;Passivo NC;Empréstimos LP;38080088,03;(Todas as filiais)
+2024;out;estoque final do mês de mercadorias para revenda saldo;Estoques;5393496,93;Loja Sul
+2024;out;contas a pagar de fornecedores saldo;Fornecedores;8371339,25;Loja Sul
+2024;out;Ativo NC;Imobilizado;72698342,56;(Todas as filiais)
+2024;out;Outros PC;Impostos a Recolher;1952111,6;Loja Sul
+2024;out;Outros AC;Impostos a Recuperar;669940,04;Loja Sul
+2024;out;PL;Lucros Acumulados;22501857,39;(Todas as filiais)
+2024;out;PL;Reservas;16962935,86;(Todas as filiais)
+2024;out;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;out;Outros PC;Salários e Encargos;1620792,27;Loja Sul
+2024;set;disponibilidades saldo;Aplicações Financeiras;14568402,95;(Todas as filiais)
+2024;set;disponibilidades saldo;Caixa e Bancos;6797283,79;Loja Sul
+2024;set;PL;Capital Social;42848260,52;(Todas as filiais)
+2024;set;contas a receber saldo;Clientes;11516205,31;Loja Sul
+2024;set;Passivos Financeiros;Empréstimos CP;12854486,2;(Todas as filiais)
+2024;set;Passivo NC;Empréstimos LP;37706470,07;(Todas as filiais)
+2024;set;estoque final do mês de mercadorias para revenda saldo;Estoques;5331977,4;Loja Sul
+2024;set;contas a pagar de fornecedores saldo;Fornecedores;8137243,86;Loja Sul
+2024;set;Ativo NC;Imobilizado;71985066,42;(Todas as filiais)
+2024;set;Outros PC;Impostos a Recolher;1894946,06;Loja Sul
+2024;set;Outros AC;Impostos a Recuperar;662417,01;Loja Sul
+2024;set;PL;Lucros Acumulados;22281098,69;(Todas as filiais)
+2024;set;PL;Reservas;16796524,88;(Todas as filiais)
+2024;set;PL;Resultado Exercício;0,0;(Todas as filiais)
+2024;set;Outros PC;Salários e Encargos;1564225,39;Loja Sul
+2025;abr;disponibilidades saldo;Aplicações Financeiras;17051753,3;(Todas as filiais)
+2025;abr;disponibilidades saldo;Caixa e Bancos;7559798,54;Loja Sul
+2025;abr;PL;Capital Social;50152201,2;(Todas as filiais)
+2025;abr;contas a receber saldo;Clientes;12725367,15;Loja Sul
+2025;abr;Passivos Financeiros;Empréstimos CP;15045658,14;(Todas as filiais)
+2025;abr;Passivo NC;Empréstimos LP;44133937,95;(Todas as filiais)
+2025;abr;estoque final do mês de mercadorias para revenda saldo;Estoques;5883459,95;Loja Sul
+2025;abr;contas a pagar de fornecedores saldo;Fornecedores;9314132,43;Loja Sul
+2025;abr;Ativo NC;Imobilizado;84255707,81;(Todas as filiais)
+2025;abr;Outros PC;Impostos a Recolher;2224119,77;Loja Sul
+2025;abr;Outros AC;Impostos a Recuperar;716388,68;Loja Sul
+2025;abr;PL;Lucros Acumulados;26079148,19;(Todas as filiais)
+2025;abr;PL;Reservas;19659674,8;(Todas as filiais)
+2025;abr;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;abr;Outros PC;Salários e Encargos;1869852,05;Loja Sul
+2025;ago;disponibilidades saldo;Aplicações Financeiras;15466491,27;(Todas as filiais)
+2025;ago;disponibilidades saldo;Caixa e Bancos;7446971,8;Loja Sul
+2025;ago;PL;Capital Social;45489704,35;(Todas as filiais)
+2025;ago;contas a receber saldo;Clientes;12331566,74;Loja Sul
+2025;ago;Passivos Financeiros;Empréstimos CP;13646913,26;(Todas as filiais)
+2025;ago;Passivo NC;Empréstimos LP;40030931,23;(Todas as filiais)
+2025;ago;estoque final do mês de mercadorias para revenda saldo;Estoques;5742998,2;Loja Sul
+2025;ago;contas a pagar de fornecedores saldo;Fornecedores;8168387,8;Loja Sul
+2025;ago;Ativo NC;Imobilizado;76422686,89;(Todas as filiais)
+2025;ago;Outros PC;Impostos a Recolher;1980300,34;Loja Sul
+2025;ago;Outros AC;Impostos a Recuperar;718127,25;Loja Sul
+2025;ago;PL;Lucros Acumulados;23654650,96;(Todas as filiais)
+2025;ago;PL;Reservas;17831966,14;(Todas as filiais)
+2025;ago;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;ago;Outros PC;Salários e Encargos;1643262,63;Loja Sul
+2025;dez;disponibilidades saldo;Aplicações Financeiras;27009112,85;(Todas as filiais)
+2025;dez;disponibilidades saldo;Caixa e Bancos;12573879,86;Loja Sul
+2025;dez;PL;Capital Social;79438516,64;(Todas as filiais)
+2025;dez;contas a receber saldo;Clientes;20717130,13;Loja Sul
+2025;dez;Passivos Financeiros;Empréstimos CP;23831568,22;(Todas as filiais)
+2025;dez;Passivo NC;Empréstimos LP;69905915,81;(Todas as filiais)
+2025;dez;estoque final do mês de mercadorias para revenda saldo;Estoques;9733672,88;Loja Sul
+2025;dez;contas a pagar de fornecedores saldo;Fornecedores;14604651,56;Loja Sul
+2025;dez;Ativo NC;Imobilizado;133456709,3;(Todas as filiais)
+2025;dez;Outros PC;Impostos a Recolher;3394186,02;Loja Sul
+2025;dez;Outros AC;Impostos a Recuperar;1189850,75;Loja Sul
+2025;dez;PL;Lucros Acumulados;41308047,17;(Todas as filiais)
+2025;dez;PL;Reservas;31139910,96;(Todas as filiais)
+2025;dez;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;dez;Outros PC;Salários e Encargos;2774720,31;Loja Sul
+2025;fev;disponibilidades saldo;Aplicações Financeiras;17088656,68;(Todas as filiais)
+2025;fev;disponibilidades saldo;Caixa e Bancos;7869694,53;Loja Sul
+2025;fev;PL;Capital Social;50260769,6;(Todas as filiais)
+2025;fev;contas a receber saldo;Clientes;13219233,29;Loja Sul
+2025;fev;Passivos Financeiros;Empréstimos CP;15078233,15;(Todas as filiais)
+2025;fev;Passivo NC;Empréstimos LP;44229476,34;(Todas as filiais)
+2025;fev;estoque final do mês de mercadorias para revenda saldo;Estoques;6196231,79;Loja Sul
+2025;fev;contas a pagar de fornecedores saldo;Fornecedores;9101042,03;Loja Sul
+2025;fev;Ativo NC;Imobilizado;84438082,96;(Todas as filiais)
+2025;fev;Outros PC;Impostos a Recolher;2215405,72;Loja Sul
+2025;fev;Outros AC;Impostos a Recuperar;750356,14;Loja Sul
+2025;fev;PL;Lucros Acumulados;26135596,57;(Todas as filiais)
+2025;fev;PL;Reservas;19702223,13;(Todas as filiais)
+2025;fev;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;fev;Outros PC;Salários e Encargos;1847482,37;Loja Sul
+2025;jan;disponibilidades saldo;Aplicações Financeiras;16539771,97;(Todas as filiais)
+2025;jan;disponibilidades saldo;Caixa e Bancos;7868498,85;Loja Sul
+2025;jan;PL;Capital Social;48646399,85;(Todas as filiais)
+2025;jan;contas a receber saldo;Clientes;13130975,32;Loja Sul
+2025;jan;Passivos Financeiros;Empréstimos CP;14593917,75;(Todas as filiais)
+2025;jan;Passivo NC;Empréstimos LP;42808837,18;(Todas as filiais)
+2025;jan;estoque final do mês de mercadorias para revenda saldo;Estoques;6150649,66;Loja Sul
+2025;jan;contas a pagar de fornecedores saldo;Fornecedores;9129247,41;Loja Sul
+2025;jan;Ativo NC;Imobilizado;81725965,9;(Todas as filiais)
+2025;jan;Outros PC;Impostos a Recolher;2221177,95;Loja Sul
+2025;jan;Outros AC;Impostos a Recuperar;756238,58;Loja Sul
+2025;jan;PL;Lucros Acumulados;25296127,04;(Todas as filiais)
+2025;jan;PL;Reservas;19069402,36;(Todas as filiais)
+2025;jan;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;jan;Outros PC;Salários e Encargos;1798290,09;Loja Sul
+2025;jul;disponibilidades saldo;Aplicações Financeiras;15800444,84;(Todas as filiais)
+2025;jul;disponibilidades saldo;Caixa e Bancos;7161607,22;Loja Sul
+2025;jul;PL;Capital Social;46471914,36;(Todas as filiais)
+2025;jul;contas a receber saldo;Clientes;12127120,25;Loja Sul
+2025;jul;Passivos Financeiros;Empréstimos CP;13941584,38;(Todas as filiais)
+2025;jul;Passivo NC;Empréstimos LP;40895292,69;(Todas as filiais)
+2025;jul;estoque final do mês de mercadorias para revenda saldo;Estoques;5576819,08;Loja Sul
+2025;jul;contas a pagar de fornecedores saldo;Fornecedores;8542083,2;Loja Sul
+2025;jul;Ativo NC;Imobilizado;78072824,19;(Todas as filiais)
+2025;jul;Outros PC;Impostos a Recolher;1962568,64;Loja Sul
+2025;jul;Outros AC;Impostos a Recuperar;691833,11;Loja Sul
+2025;jul;PL;Lucros Acumulados;24165407,55;(Todas as filiais)
+2025;jul;PL;Reservas;18217001,7;(Todas as filiais)
+2025;jul;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;jul;Outros PC;Salários e Encargos;1615504,07;Loja Sul
+2025;jun;disponibilidades saldo;Aplicações Financeiras;16228604,7;(Todas as filiais)
+2025;jun;disponibilidades saldo;Caixa e Bancos;7410065,83;Loja Sul
+2025;jun;PL;Capital Social;47731200,09;(Todas as filiais)
+2025;jun;contas a receber saldo;Clientes;12468400,7;Loja Sul
+2025;jun;Passivos Financeiros;Empréstimos CP;14319355,86;(Todas as filiais)
+2025;jun;Passivo NC;Empréstimos LP;42003453,58;(Todas as filiais)
+2025;jun;estoque final do mês de mercadorias para revenda saldo;Estoques;5839457,14;Loja Sul
+2025;jun;contas a pagar de fornecedores saldo;Fornecedores;8856755,27;Loja Sul
+2025;jun;Ativo NC;Imobilizado;80188430,33;(Todas as filiais)
+2025;jun;Outros PC;Impostos a Recolher;2014860,06;Loja Sul
+2025;jun;Outros AC;Impostos a Recuperar;705909,98;Loja Sul
+2025;jun;PL;Lucros Acumulados;24820234,89;(Todas as filiais)
+2025;jun;PL;Reservas;18710638,61;(Todas as filiais)
+2025;jun;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;jun;Outros PC;Salários e Encargos;1661015,61;Loja Sul
+2025;mai;disponibilidades saldo;Aplicações Financeiras;16727407,39;(Todas as filiais)
+2025;mai;disponibilidades saldo;Caixa e Bancos;7539396,33;Loja Sul
+2025;mai;PL;Capital Social;49198235,36;(Todas as filiais)
+2025;mai;contas a receber saldo;Clientes;12812028,85;Loja Sul
+2025;mai;Passivos Financeiros;Empréstimos CP;14759477,11;(Todas as filiais)
+2025;mai;Passivo NC;Empréstimos LP;43294444,52;(Todas as filiais)
+2025;mai;estoque final do mês de mercadorias para revenda saldo;Estoques;5950334,43;Loja Sul
+2025;mai;contas a pagar de fornecedores saldo;Fornecedores;8819416,23;Loja Sul
+2025;mai;Ativo NC;Imobilizado;82653028,48;(Todas as filiais)
+2025;mai;Outros PC;Impostos a Recolher;2100264,06;Loja Sul
+2025;mai;Outros AC;Impostos a Recuperar;725384,39;Loja Sul
+2025;mai;PL;Lucros Acumulados;25583072,0;(Todas as filiais)
+2025;mai;PL;Reservas;19285708,09;(Todas as filiais)
+2025;mai;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;mai;Outros PC;Salários e Encargos;1725584,75;Loja Sul
+2025;mar;disponibilidades saldo;Aplicações Financeiras;17127391,49;(Todas as filiais)
+2025;mar;disponibilidades saldo;Caixa e Bancos;7782697,76;Loja Sul
+2025;mar;PL;Capital Social;50374671,59;(Todas as filiais)
+2025;mar;contas a receber saldo;Clientes;12851155,21;Loja Sul
+2025;mar;Passivos Financeiros;Empréstimos CP;15112408,23;(Todas as filiais)
+2025;mar;Passivo NC;Empréstimos LP;44329721,81;(Todas as filiais)
+2025;mar;estoque final do mês de mercadorias para revenda saldo;Estoques;6063227,87;Loja Sul
+2025;mar;contas a pagar de fornecedores saldo;Fornecedores;9178408,06;Loja Sul
+2025;mar;Ativo NC;Imobilizado;84629454,57;(Todas as filiais)
+2025;mar;Outros PC;Impostos a Recolher;2181856,34;Loja Sul
+2025;mar;Outros AC;Impostos a Recuperar;744697,34;Loja Sul
+2025;mar;PL;Lucros Acumulados;26194827,42;(Todas as filiais)
+2025;mar;PL;Reservas;19746862,97;(Todas as filiais)
+2025;mar;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;mar;Outros PC;Salários e Encargos;1800679,87;Loja Sul
+2025;nov;disponibilidades saldo;Aplicações Financeiras;22302122,9;(Todas as filiais)
+2025;nov;disponibilidades saldo;Caixa e Bancos;10391729,68;Loja Sul
+2025;nov;PL;Capital Social;65594509,88;(Todas as filiais)
+2025;nov;contas a receber saldo;Clientes;17219612,2;Loja Sul
+2025;nov;Passivos Financeiros;Empréstimos CP;19678350,21;(Todas as filiais)
+2025;nov;Passivo NC;Empréstimos LP;57723164,29;(Todas as filiais)
+2025;nov;estoque final do mês de mercadorias para revenda saldo;Estoques;8151118,5;Loja Sul
+2025;nov;contas a pagar de fornecedores saldo;Fornecedores;11827894,39;Loja Sul
+2025;nov;Ativo NC;Imobilizado;110198755,7;(Todas as filiais)
+2025;nov;Outros PC;Impostos a Recolher;2766713,56;Loja Sul
+2025;nov;Outros AC;Impostos a Recuperar;1004390,76;Loja Sul
+2025;nov;PL;Lucros Acumulados;34109127,52;(Todas as filiais)
+2025;nov;PL;Reservas;25713043,91;(Todas as filiais)
+2025;nov;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;nov;Outros PC;Salários e Encargos;2317864,59;Loja Sul
+2025;out;disponibilidades saldo;Aplicações Financeiras;15847472,97;(Todas as filiais)
+2025;out;disponibilidades saldo;Caixa e Bancos;7272880,75;Loja Sul
+2025;out;PL;Capital Social;46610230,85;(Todas as filiais)
+2025;out;contas a receber saldo;Clientes;12239411,81;Loja Sul
+2025;out;Passivos Financeiros;Empréstimos CP;13983077,14;(Todas as filiais)
+2025;out;Passivo NC;Empréstimos LP;41017003,94;(Todas as filiais)
+2025;out;estoque final do mês de mercadorias para revenda saldo;Estoques;5701692,58;Loja Sul
+2025;out;contas a pagar de fornecedores saldo;Fornecedores;8099789,39;Loja Sul
+2025;out;Ativo NC;Imobilizado;78305196,5;(Todas as filiais)
+2025;out;Outros PC;Impostos a Recolher;1979171,34;Loja Sul
+2025;out;Outros AC;Impostos a Recuperar;696288,86;Loja Sul
+2025;out;PL;Lucros Acumulados;24237323,2;(Todas as filiais)
+2025;out;PL;Reservas;18271221,06;(Todas as filiais)
+2025;out;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;out;Outros PC;Salários e Encargos;1616794,38;Loja Sul
+2025;set;disponibilidades saldo;Aplicações Financeiras;15569487,35;(Todas as filiais)
+2025;set;disponibilidades saldo;Caixa e Bancos;7133582,16;Loja Sul
+2025;set;PL;Capital Social;45792582,29;(Todas as filiais)
+2025;set;contas a receber saldo;Clientes;12127048,68;Loja Sul
+2025;set;Passivos Financeiros;Empréstimos CP;13737766,88;(Todas as filiais)
+2025;set;Passivo NC;Empréstimos LP;40297479,44;(Todas as filiais)
+2025;set;estoque final do mês de mercadorias para revenda saldo;Estoques;5673766,61;Loja Sul
+2025;set;contas a pagar de fornecedores saldo;Fornecedores;8242512,46;Loja Sul
+2025;set;Ativo NC;Imobilizado;76931537,46;(Todas as filiais)
+2025;set;Outros PC;Impostos a Recolher;1998910,08;Loja Sul
+2025;set;Outros AC;Impostos a Recuperar;691524,03;Loja Sul
+2025;set;PL;Lucros Acumulados;23812151,38;(Todas as filiais)
+2025;set;PL;Reservas;17950692,73;(Todas as filiais)
+2025;set;PL;Resultado Exercício;0,0;(Todas as filiais)
+2025;set;Outros PC;Salários e Encargos;1636876,45;Loja Sul
+2026;abr;disponibilidades saldo;Aplicações Financeiras;19541001,73;(Todas as filiais)
+2026;abr;disponibilidades saldo;Caixa e Bancos;9119549,19;Loja Sul
+2026;abr;PL;Capital Social;57473499,06;(Todas as filiais)
+2026;abr;contas a receber saldo;Clientes;15339142,25;Loja Sul
+2026;abr;Passivos Financeiros;Empréstimos CP;17242058,99;(Todas as filiais)
+2026;abr;Passivo NC;Empréstimos LP;50576694,0;(Todas as filiais)
+2026;abr;estoque final do mês de mercadorias para revenda saldo;Estoques;7175606,16;Loja Sul
+2026;abr;contas a pagar de fornecedores saldo;Fornecedores;10361253,6;Loja Sul
+2026;abr;Ativo NC;Imobilizado;96555502,52;(Todas as filiais)
+2026;abr;Outros PC;Impostos a Recolher;2551848,77;Loja Sul
+2026;abr;Outros AC;Impostos a Recuperar;877785,74;Loja Sul
+2026;abr;PL;Lucros Acumulados;29886232,49;(Todas as filiais)
+2026;abr;PL;Reservas;22529606,44;(Todas as filiais)
+2026;abr;PL;Resultado Exercício;0,0;(Todas as filiais)
+2026;abr;Outros PC;Salários e Encargos;2080508,32;Loja Sul
+2026;fev;disponibilidades saldo;Aplicações Financeiras;19148012,55;(Todas as filiais)
+2026;fev;disponibilidades saldo;Caixa e Bancos;8992135,18;Loja Sul
+2026;fev;PL;Capital Social;56317689,4;(Todas as filiais)
+2026;fev;contas a receber saldo;Clientes;15040332,18;Loja Sul
+2026;fev;Passivos Financeiros;Empréstimos CP;16895316,05;(Todas as filiais)
+2026;fev;Passivo NC;Empréstimos LP;49559576,82;(Todas as filiais)
+2026;fev;estoque final do mês de mercadorias para revenda saldo;Estoques;7064479,32;Loja Sul
+2026;fev;contas a pagar de fornecedores saldo;Fornecedores;10547270,21;Loja Sul
+2026;fev;Ativo NC;Imobilizado;94613737,57;(Todas as filiais)
+2026;fev;Outros PC;Impostos a Recolher;2509390,58;Loja Sul
+2026;fev;Outros AC;Impostos a Recuperar;851504,15;Loja Sul
+2026;fev;PL;Lucros Acumulados;29285192,95;(Todas as filiais)
+2026;fev;PL;Reservas;22076536,46;(Todas as filiais)
+2026;fev;PL;Resultado Exercício;0,0;(Todas as filiais)
+2026;fev;Outros PC;Salários e Encargos;2054730,69;Loja Sul
+2026;jan;disponibilidades saldo;Aplicações Financeiras;18485960,51;(Todas as filiais)
+2026;jan;disponibilidades saldo;Caixa e Bancos;8865734,35;Loja Sul
+2026;jan;PL;Capital Social;54370445,68;(Todas as filiais)
+2026;jan;contas a receber saldo;Clientes;14753155,87;Loja Sul
+2026;jan;Passivos Financeiros;Empréstimos CP;16311133,71;(Todas as filiais)
+2026;jan;Passivo NC;Empréstimos LP;47846010,16;(Todas as filiais)
+2026;jan;estoque final do mês de mercadorias para revenda saldo;Estoques;6965630,03;Loja Sul
+2026;jan;contas a pagar de fornecedores saldo;Fornecedores;10319847,71;Loja Sul
+2026;jan;Ativo NC;Imobilizado;91342366,71;(Todas as filiais)
+2026;jan;Outros PC;Impostos a Recolher;2437037,11;Loja Sul
+2026;jan;Outros AC;Impostos a Recuperar;854706,07;Loja Sul
+2026;jan;PL;Lucros Acumulados;28272636,25;(Todas as filiais)
+2026;jan;PL;Reservas;21313212,91;(Todas as filiais)
+2026;jan;PL;Resultado Exercício;0,0;(Todas as filiais)
+2026;jan;Outros PC;Salários e Encargos;1989311,81;Loja Sul
+2026;jul;disponibilidades saldo;Aplicações Financeiras;17866154,7;(Todas as filiais)
+2026;jul;disponibilidades saldo;Caixa e Bancos;8550883,99;Loja Sul
+2026;jul;PL;Capital Social;52547543,02;(Todas as filiais)
+2026;jul;contas a receber saldo;Clientes;14349569,38;Loja Sul
+2026;jul;Passivos Financeiros;Empréstimos CP;15764250,49;(Todas as filiais)
+2026;jul;Passivo NC;Empréstimos LP;46241830,41;(Todas as filiais)
+2026;jul;estoque final do mês de mercadorias para revenda saldo;Estoques;6679250,11;Loja Sul
+2026;jul;contas a pagar de fornecedores saldo;Fornecedores;9709183,05;Loja Sul
+2026;jul;Ativo NC;Imobilizado;88279852,41;(Todas as filiais)
+2026;jul;Outros PC;Impostos a Recolher;2288395,47;Loja Sul
+2026;jul;Outros AC;Impostos a Recuperar;808713,8;Loja Sul
+2026;jul;PL;Lucros Acumulados;27324713,27;(Todas as filiais)
+2026;jul;PL;Reservas;20598632,23;(Todas as filiais)
+2026;jul;PL;Resultado Exercício;0,0;(Todas as filiais)
+2026;jul;Outros PC;Salários e Encargos;1879694,75;Loja Sul
+2026;jun;disponibilidades saldo;Aplicações Financeiras;18583847,49;(Todas as filiais)
+2026;jun;disponibilidades saldo;Caixa e Bancos;8654439,66;Loja Sul
+2026;jun;PL;Capital Social;54658380,07;(Todas as filiais)
+2026;jun;contas a receber saldo;Clientes;14607910,56;Loja Sul
+2026;jun;Passivos Financeiros;Empréstimos CP;16397522,7;(Todas as filiais)
+2026;jun;Passivo NC;Empréstimos LP;48099384,0;(Todas as filiais)
+2026;jun;estoque final do mês de mercadorias para revenda saldo;Estoques;6803462,04;Loja Sul
+2026;jun;contas a pagar de fornecedores saldo;Fornecedores;10083898,42;Loja Sul
+2026;jun;Ativo NC;Imobilizado;91826096,73;(Todas as filiais)
+2026;jun;Outros PC;Impostos a Recolher;2368126,61;Loja Sul
+2026;jun;Outros AC;Impostos a Recuperar;833552,76;Loja Sul
+2026;jun;PL;Lucros Acumulados;28422352,43;(Todas as filiais)
+2026;jun;PL;Reservas;21426095,74;(Todas as filiais)
+2026;jun;PL;Resultado Exercício;0,0;(Todas as filiais)
+2026;jun;Outros PC;Salários e Encargos;1962854,94;Loja Sul
+2026;mai;disponibilidades saldo;Aplicações Financeiras;19315452,14;(Todas as filiais)
+2026;mai;disponibilidades saldo;Caixa e Bancos;8704118,0;Loja Sul
+2026;mai;PL;Capital Social;56810181,44;(Todas as filiais)
+2026;mai;contas a receber saldo;Clientes;14697173,9;Loja Sul
+2026;mai;Passivos Financeiros;Empréstimos CP;17043056,7;(Todas as filiais)
+2026;mai;Passivo NC;Empréstimos LP;49992949,67;(Todas as filiais)
+2026;mai;estoque final do mês de mercadorias para revenda saldo;Estoques;6900464,42;Loja Sul
+2026;mai;contas a pagar de fornecedores saldo;Fornecedores;9901483,2;Loja Sul
+2026;mai;Ativo NC;Imobilizado;95441108,45;(Todas as filiais)
+2026;mai;Outros PC;Impostos a Recolher;2435702,5;Loja Sul
+2026;mai;Outros AC;Impostos a Recuperar;848572,67;Loja Sul
+2026;mai;PL;Lucros Acumulados;29541299,8;(Todas as filiais)
+2026;mai;PL;Reservas;22269593,49;(Todas as filiais)
+2026;mai;PL;Resultado Exercício;0,0;(Todas as filiais)
+2026;mai;Outros PC;Salários e Encargos;2001696,53;Loja Sul
+2026;mar;disponibilidades saldo;Aplicações Financeiras;19622168,68;(Todas as filiais)
+2026;mar;disponibilidades saldo;Caixa e Bancos;8978123,42;Loja Sul
+2026;mar;PL;Capital Social;57712278,77;(Todas as filiais)
+2026;mar;contas a receber saldo;Clientes;15348699,44;Loja Sul
+2026;mar;Passivos Financeiros;Empréstimos CP;17313690,67;(Todas as filiais)
+2026;mar;Passivo NC;Empréstimos LP;50786821,27;(Todas as filiais)
+2026;mar;estoque final do mês de mercadorias para revenda saldo;Estoques;7053225,27;Loja Sul
+2026;mar;contas a pagar de fornecedores saldo;Fornecedores;10846808,85;Loja Sul
+2026;mar;Ativo NC;Imobilizado;96956639,6;(Todas as filiais)
+2026;mar;Outros PC;Impostos a Recolher;2589209,16;Loja Sul
+2026;mar;Outros AC;Impostos a Recuperar;859269,3;Loja Sul
+2026;mar;PL;Lucros Acumulados;30010378,39;(Todas as filiais)
+2026;mar;PL;Reservas;22623225,29;(Todas as filiais)
+2026;mar;PL;Resultado Exercício;0,0;(Todas as filiais)
+2026;mar;Outros PC;Salários e Encargos;2132124,79;Loja Sul
+2024;abr;Centro de Custos Saidas 3;Desp. Operacionais;613919,88;Loja Sul
+2024;abr;Centro de Custos Saidas 1;Folha;1385063,1;Loja Sul
+2024;abr;Centro de Custos Saidas 2;Fornecedores;1214868,11;Loja Sul
+2024;abr;Centro de Custos Saidas 3;Impostos;419262,39;Loja Sul
+2024;abr;Centro de Custos Saidas 4;Investimentos;187170,75;Loja Sul
+2024;abr;Centro de Custos Entradas 4;Outras Receitas;67381,33;Loja Sul
+2024;abr;Centro de Custos Entradas 3;Receb. Clientes;1108050,58;Loja Sul
+2024;abr;Centro de Custos Entradas 4;Receita Financ.;59894,59;Loja Sul
+2024;abr;Centro de Custos Entradas 2;Receita Produtos;718735,36;Loja Sul
+2024;abr;Centro de Custos Entradas 1;Receita Serviços;2545521,29;Loja Sul
+2024;ago;Centro de Custos Saidas 3;Desp. Operacionais;509811,26;Loja Sul
+2024;ago;Centro de Custos Saidas 1;Folha;1145643,07;Loja Sul
+2024;ago;Centro de Custos Saidas 2;Fornecedores;1060214,8;Loja Sul
+2024;ago;Centro de Custos Saidas 3;Impostos;372334,03;Loja Sul
+2024;ago;Centro de Custos Saidas 4;Investimentos;143205,46;Loja Sul
+2024;ago;Centro de Custos Entradas 4;Outras Receitas;80195,08;Loja Sul
+2024;ago;Centro de Custos Entradas 3;Receb. Clientes;973796,64;Loja Sul
+2024;ago;Centro de Custos Entradas 4;Receita Financ.;63010,38;Loja Sul
+2024;ago;Centro de Custos Entradas 2;Receita Produtos;658744,75;Loja Sul
+2024;ago;Centro de Custos Entradas 1;Receita Serviços;2234004,0;Loja Sul
+2024;dez;Centro de Custos Saidas 3;Desp. Operacionais;1084534,94;Loja Sul
+2024;dez;Centro de Custos Saidas 1;Folha;2434669,86;Loja Sul
+2024;dez;Centro de Custos Saidas 2;Fornecedores;2313007,27;Loja Sul
+2024;dez;Centro de Custos Saidas 3;Impostos;830000,97;Loja Sul
+2024;dez;Centro de Custos Saidas 4;Investimentos;442667,19;Loja Sul
+2024;dez;Centro de Custos Entradas 4;Outras Receitas;166000,19;Loja Sul
+2024;dez;Centro de Custos Entradas 3;Receb. Clientes;2102669,47;Loja Sul
+2024;dez;Centro de Custos Entradas 4;Receita Financ.;166000,19;Loja Sul
+2024;dez;Centro de Custos Entradas 2;Receita Produtos;1494002,09;Loja Sul
+2024;dez;Centro de Custos Entradas 1;Receita Serviços;4980006,85;Loja Sul
+2024;fev;Centro de Custos Saidas 3;Desp. Operacionais;619295,42;Loja Sul
+2024;fev;Centro de Custos Saidas 1;Folha;1393414,88;Loja Sul
+2024;fev;Centro de Custos Saidas 2;Fornecedores;1228477,26;Loja Sul
+2024;fev;Centro de Custos Saidas 3;Impostos;418024,37;Loja Sul
+2024;fev;Centro de Custos Saidas 4;Investimentos;154823,79;Loja Sul
+2024;fev;Centro de Custos Entradas 4;Outras Receitas;77412,02;Loja Sul
+2024;fev;Centro de Custos Entradas 3;Receb. Clientes;1122473,18;Loja Sul
+2024;fev;Centro de Custos Entradas 4;Receita Financ.;61929,52;Loja Sul
+2024;fev;Centro de Custos Entradas 2;Receita Produtos;758636,96;Loja Sul
+2024;fev;Centro de Custos Entradas 1;Receita Serviços;2554593,95;Loja Sul
+2024;jan;Centro de Custos Saidas 3;Desp. Operacionais;608352,04;Loja Sul
+2024;jan;Centro de Custos Saidas 1;Folha;1403889,38;Loja Sul
+2024;jan;Centro de Custos Saidas 2;Fornecedores;1193793,97;Loja Sul
+2024;jan;Centro de Custos Saidas 3;Impostos;405568,19;Loja Sul
+2024;jan;Centro de Custos Saidas 4;Investimentos;272978,55;Loja Sul
+2024;jan;Centro de Custos Entradas 4;Outras Receitas;93592,53;Loja Sul
+2024;jan;Centro de Custos Entradas 3;Receb. Clientes;1091913,96;Loja Sul
+2024;jan;Centro de Custos Entradas 4;Receita Financ.;62395,18;Loja Sul
+2024;jan;Centro de Custos Entradas 2;Receita Produtos;740941,68;Loja Sul
+2024;jan;Centro de Custos Entradas 1;Receita Serviços;2495803,6;Loja Sul
+2024;jul;Centro de Custos Saidas 3;Desp. Operacionais;556236,4;Loja Sul
+2024;jul;Centro de Custos Saidas 1;Folha;1251531,83;Loja Sul
+2024;jul;Centro de Custos Saidas 2;Fornecedores;1114655,8;Loja Sul
+2024;jul;Centro de Custos Saidas 3;Impostos;398214,61;Loja Sul
+2024;jul;Centro de Custos Saidas 4;Investimentos;139059,04;Loja Sul
+2024;jul;Centro de Custos Entradas 4;Outras Receitas;75850,33;Loja Sul
+2024;jul;Centro de Custos Entradas 3;Receb. Clientes;1042943,16;Loja Sul
+2024;jul;Centro de Custos Entradas 4;Receita Financ.;69529,63;Loja Sul
+2024;jul;Centro de Custos Entradas 2;Receita Produtos;707937,05;Loja Sul
+2024;jul;Centro de Custos Entradas 1;Receita Serviços;2401929,68;Loja Sul
+2024;jun;Centro de Custos Saidas 3;Desp. Operacionais;673683,94;Loja Sul
+2024;jun;Centro de Custos Saidas 1;Folha;1545510,18;Loja Sul
+2024;jun;Centro de Custos Saidas 2;Fornecedores;1361371,05;Loja Sul
+2024;jun;Centro de Custos Saidas 3;Impostos;483467,2;Loja Sul
+2024;jun;Centro de Custos Saidas 4;Investimentos;237770,81;Loja Sul
+2024;jun;Centro de Custos Entradas 4;Outras Receitas;95108,37;Loja Sul
+2024;jun;Centro de Custos Entradas 3;Receb. Clientes;1268110,86;Loja Sul
+2024;jun;Centro de Custos Entradas 4;Receita Financ.;79257,01;Loja Sul
+2024;jun;Centro de Custos Entradas 2;Receita Produtos;855974,89;Loja Sul
+2024;jun;Centro de Custos Entradas 1;Receita Serviços;2932506,57;Loja Sul
+2024;mai;Centro de Custos Saidas 3;Desp. Operacionais;658449,04;Loja Sul
+2024;mai;Centro de Custos Saidas 1;Folha;1489349,14;Loja Sul
+2024;mai;Centro de Custos Saidas 2;Fornecedores;1265307,33;Loja Sul
+2024;mai;Centro de Custos Saidas 3;Impostos;462482,23;Loja Sul
+2024;mai;Centro de Custos Saidas 4;Investimentos;141096,29;Loja Sul
+2024;mai;Centro de Custos Entradas 4;Outras Receitas;78386,72;Loja Sul
+2024;mai;Centro de Custos Entradas 3;Receb. Clientes;1207156,8;Loja Sul
+2024;mai;Centro de Custos Entradas 4;Receita Financ.;78386,72;Loja Sul
+2024;mai;Centro de Custos Entradas 2;Receita Produtos;815222,72;Loja Sul
+2024;mai;Centro de Custos Entradas 1;Receita Serviços;2782731,48;Loja Sul
+2024;mar;Centro de Custos Saidas 3;Desp. Operacionais;657094,03;Loja Sul
+2024;mar;Centro de Custos Saidas 1;Folha;1500770,16;Loja Sul
+2024;mar;Centro de Custos Saidas 2;Fornecedores;1307734,82;Loja Sul
+2024;mar;Centro de Custos Saidas 3;Impostos;470511,69;Loja Sul
+2024;mar;Centro de Custos Saidas 4;Investimentos;121684,01;Loja Sul
+2024;mar;Centro de Custos Entradas 4;Outras Receitas;89235,09;Loja Sul
+2024;mar;Centro de Custos Entradas 3;Receb. Clientes;1216840,56;Loja Sul
+2024;mar;Centro de Custos Entradas 4;Receita Financ.;73010,5;Loja Sul
+2024;mar;Centro de Custos Entradas 2;Receita Produtos;827451,54;Loja Sul
+2024;mar;Centro de Custos Entradas 1;Receita Serviços;2839294,73;Loja Sul
+2024;nov;Centro de Custos Saidas 3;Desp. Operacionais;754581,66;Loja Sul
+2024;nov;Centro de Custos Saidas 1;Folha;1669712,94;Loja Sul
+2024;nov;Centro de Custos Saidas 2;Fornecedores;1630546,27;Loja Sul
+2024;nov;Centro de Custos Saidas 3;Impostos;561922,52;Loja Sul
+2024;nov;Centro de Custos Saidas 4;Investimentos;240823,86;Loja Sul
+2024;nov;Centro de Custos Entradas 4;Outras Receitas;112384,62;Loja Sul
+2024;nov;Centro de Custos Entradas 3;Receb. Clientes;1444943,71;Loja Sul
+2024;nov;Centro de Custos Entradas 4;Receita Financ.;104357,02;Loja Sul
+2024;nov;Centro de Custos Entradas 2;Receita Produtos;1003433,11;Loja Sul
+2024;nov;Centro de Custos Entradas 1;Receita Serviços;3371535,41;Loja Sul
+2024;out;Centro de Custos Saidas 3;Desp. Operacionais;510379,69;Loja Sul
+2024;out;Centro de Custos Saidas 1;Folha;1137259,15;Loja Sul
+2024;out;Centro de Custos Saidas 2;Fornecedores;1082008,14;Loja Sul
+2024;out;Centro de Custos Saidas 3;Impostos;377237,09;Loja Sul
+2024;out;Centro de Custos Saidas 4;Investimentos;155332,9;Loja Sul
+2024;out;Centro de Custos Entradas 4;Outras Receitas;72118,77;Loja Sul
+2024;out;Centro de Custos Entradas 3;Receb. Clientes;970830,9;Loja Sul
+2024;out;Centro de Custos Entradas 4;Receita Financ.;66571,3;Loja Sul
+2024;out;Centro de Custos Entradas 2;Receita Produtos;665712,58;Loja Sul
+2024;out;Centro de Custos Entradas 1;Receita Serviços;2246780,12;Loja Sul
+2024;set;Centro de Custos Saidas 3;Desp. Operacionais;513684,31;Loja Sul
+2024;set;Centro de Custos Saidas 1;Folha;1152935,96;Loja Sul
+2024;set;Centro de Custos Saidas 2;Fornecedores;1087278,73;Loja Sul
+2024;set;Centro de Custos Saidas 3;Impostos;376701,84;Loja Sul
+2024;set;Centro de Custos Saidas 4;Investimentos;114152,02;Loja Sul
+2024;set;Centro de Custos Entradas 4;Outras Receitas;74198,79;Loja Sul
+2024;set;Centro de Custos Entradas 3;Receb. Clientes;981707,72;Loja Sul
+2024;set;Centro de Custos Entradas 4;Receita Financ.;68491,34;Loja Sul
+2024;set;Centro de Custos Entradas 2;Receita Produtos;673497,22;Loja Sul
+2024;set;Centro de Custos Entradas 1;Receita Serviços;2254503,37;Loja Sul
+2025;abr;Centro de Custos Saidas 3;Desp. Operacionais;727161,69;Loja Sul
+2025;abr;Centro de Custos Saidas 1;Folha;1640547,91;Loja Sul
+2025;abr;Centro de Custos Saidas 2;Fornecedores;1415916,02;Loja Sul
+2025;abr;Centro de Custos Saidas 3;Impostos;496598,22;Loja Sul
+2025;abr;Centro de Custos Saidas 4;Investimentos;221695,59;Loja Sul
+2025;abr;Centro de Custos Entradas 4;Outras Receitas;79810,45;Loja Sul
+2025;abr;Centro de Custos Entradas 3;Receb. Clientes;1312438,24;Loja Sul
+2025;abr;Centro de Custos Entradas 4;Receita Financ.;70942,57;Loja Sul
+2025;abr;Centro de Custos Entradas 2;Receita Produtos;851311,3;Loja Sul
+2025;abr;Centro de Custos Entradas 1;Receita Serviços;3015061,07;Loja Sul
+2025;ago;Centro de Custos Saidas 3;Desp. Operacionais;631188,3;Loja Sul
+2025;ago;Centro de Custos Saidas 1;Folha;1418400,51;Loja Sul
+2025;ago;Centro de Custos Saidas 2;Fornecedores;1276544,05;Loja Sul
+2025;ago;Centro de Custos Saidas 3;Impostos;460980,09;Loja Sul
+2025;ago;Centro de Custos Saidas 4;Investimentos;177300,06;Loja Sul
+2025;ago;Centro de Custos Entradas 4;Outras Receitas;99288,11;Loja Sul
+2025;ago;Centro de Custos Entradas 3;Receb. Clientes;1205640,39;Loja Sul
+2025;ago;Centro de Custos Entradas 4;Receita Financ.;78011,96;Loja Sul
+2025;ago;Centro de Custos Entradas 2;Receita Produtos;815580,21;Loja Sul
+2025;ago;Centro de Custos Entradas 1;Receita Serviços;2765880,91;Loja Sul
+2025;dez;Centro de Custos Saidas 3;Desp. Operacionais;1131207,61;Loja Sul
+2025;dez;Centro de Custos Saidas 1;Folha;2539445,29;Loja Sul
+2025;dez;Centro de Custos Saidas 2;Fornecedores;2397198,18;Loja Sul
+2025;dez;Centro de Custos Saidas 3;Impostos;865720,09;Loja Sul
+2025;dez;Centro de Custos Saidas 4;Investimentos;461717,2;Loja Sul
+2025;dez;Centro de Custos Entradas 4;Outras Receitas;173143,95;Loja Sul
+2025;dez;Centro de Custos Entradas 3;Receb. Clientes;2193157,38;Loja Sul
+2025;dez;Centro de Custos Entradas 4;Receita Financ.;173143,95;Loja Sul
+2025;dez;Centro de Custos Entradas 2;Receita Produtos;1558295,9;Loja Sul
+2025;dez;Centro de Custos Entradas 1;Receita Serviços;5194319,87;Loja Sul
+2025;fev;Centro de Custos Saidas 3;Desp. Operacionais;739867,36;Loja Sul
+2025;fev;Centro de Custos Saidas 1;Folha;1664701,68;Loja Sul
+2025;fev;Centro de Custos Saidas 2;Fornecedores;1441514,03;Loja Sul
+2025;fev;Centro de Custos Saidas 3;Impostos;499410,48;Loja Sul
+2025;fev;Centro de Custos Saidas 4;Investimentos;184966,95;Loja Sul
+2025;fev;Centro de Custos Entradas 4;Outras Receitas;92483,36;Loja Sul
+2025;fev;Centro de Custos Entradas 3;Receb. Clientes;1341009,68;Loja Sul
+2025;fev;Centro de Custos Entradas 4;Receita Financ.;73986,65;Loja Sul
+2025;fev;Centro de Custos Entradas 2;Receita Produtos;906337,6;Loja Sul
+2025;fev;Centro de Custos Entradas 1;Receita Serviços;3051953,27;Loja Sul
+2025;jan;Centro de Custos Saidas 3;Desp. Operacionais;647717,14;Loja Sul
+2025;jan;Centro de Custos Saidas 1;Folha;1494732,09;Loja Sul
+2025;jan;Centro de Custos Saidas 2;Fornecedores;1279607,24;Loja Sul
+2025;jan;Centro de Custos Saidas 3;Impostos;431811,58;Loja Sul
+2025;jan;Centro de Custos Saidas 4;Investimentos;290642,38;Loja Sul
+2025;jan;Centro de Custos Entradas 4;Outras Receitas;99648,79;Loja Sul
+2025;jan;Centro de Custos Entradas 3;Receb. Clientes;1162569,3;Loja Sul
+2025;jan;Centro de Custos Entradas 4;Receita Financ.;66432,6;Loja Sul
+2025;jan;Centro de Custos Entradas 2;Receita Produtos;788886,34;Loja Sul
+2025;jan;Centro de Custos Entradas 1;Receita Serviços;2657301,39;Loja Sul
+2025;jul;Centro de Custos Saidas 3;Desp. Operacionais;609897,25;Loja Sul
+2025;jul;Centro de Custos Saidas 1;Folha;1372268,62;Loja Sul
+2025;jul;Centro de Custos Saidas 2;Fornecedores;1298700,16;Loja Sul
+2025;jul;Centro de Custos Saidas 3;Impostos;436630,98;Loja Sul
+2025;jul;Centro de Custos Saidas 4;Investimentos;152474,31;Loja Sul
+2025;jul;Centro de Custos Entradas 4;Outras Receitas;83167,84;Loja Sul
+2025;jul;Centro de Custos Entradas 3;Receb. Clientes;1143557,25;Loja Sul
+2025;jul;Centro de Custos Entradas 4;Receita Financ.;76237,06;Loja Sul
+2025;jul;Centro de Custos Entradas 2;Receita Produtos;776232,74;Loja Sul
+2025;jul;Centro de Custos Entradas 1;Receita Serviços;2633647,05;Loja Sul
+2025;jun;Centro de Custos Saidas 3;Desp. Operacionais;667650,83;Loja Sul
+2025;jun;Centro de Custos Saidas 1;Folha;1531669,65;Loja Sul
+2025;jun;Centro de Custos Saidas 2;Fornecedores;1414910,46;Loja Sul
+2025;jun;Centro de Custos Saidas 3;Impostos;479137,65;Loja Sul
+2025;jun;Centro de Custos Saidas 4;Investimentos;235641,42;Loja Sul
+2025;jun;Centro de Custos Entradas 4;Outras Receitas;94256,69;Loja Sul
+2025;jun;Centro de Custos Entradas 3;Receb. Clientes;1256754,59;Loja Sul
+2025;jun;Centro de Custos Entradas 4;Receita Financ.;78547,07;Loja Sul
+2025;jun;Centro de Custos Entradas 2;Receita Produtos;848309,41;Loja Sul
+2025;jun;Centro de Custos Entradas 1;Receita Serviços;2906245,17;Loja Sul
+2025;mai;Centro de Custos Saidas 3;Desp. Operacionais;702680,15;Loja Sul
+2025;mai;Centro de Custos Saidas 1;Folha;1589395,71;Loja Sul
+2025;mai;Centro de Custos Saidas 2;Fornecedores;1404446,53;Loja Sul
+2025;mai;Centro de Custos Saidas 3;Impostos;493549,23;Loja Sul
+2025;mai;Centro de Custos Saidas 4;Investimentos;150574,36;Loja Sul
+2025;mai;Centro de Custos Entradas 4;Outras Receitas;83652,5;Loja Sul
+2025;mai;Centro de Custos Entradas 3;Receb. Clientes;1288246,98;Loja Sul
+2025;mai;Centro de Custos Entradas 4;Receita Financ.;83652,5;Loja Sul
+2025;mai;Centro de Custos Entradas 2;Receita Produtos;869985,14;Loja Sul
+2025;mai;Centro de Custos Entradas 1;Receita Serviços;2969660,49;Loja Sul
+2025;mar;Centro de Custos Saidas 3;Desp. Operacionais;791029,06;Loja Sul
+2025;mar;Centro de Custos Saidas 1;Folha;1806671,55;Loja Sul
+2025;mar;Centro de Custos Saidas 2;Fornecedores;1590298,4;Loja Sul
+2025;mar;Centro de Custos Saidas 3;Impostos;566415,84;Loja Sul
+2025;mar;Centro de Custos Saidas 4;Investimentos;146486,78;Loja Sul
+2025;mar;Centro de Custos Entradas 4;Outras Receitas;107423,79;Loja Sul
+2025;mar;Centro de Custos Entradas 3;Receb. Clientes;1464868,69;Loja Sul
+2025;mar;Centro de Custos Entradas 4;Receita Financ.;87892,07;Loja Sul
+2025;mar;Centro de Custos Entradas 2;Receita Produtos;996110,77;Loja Sul
+2025;mar;Centro de Custos Entradas 1;Receita Serviços;3418027,01;Loja Sul
+2025;nov;Centro de Custos Saidas 3;Desp. Operacionais;1051082,85;Loja Sul
+2025;nov;Centro de Custos Saidas 1;Folha;2325800,19;Loja Sul
+2025;nov;Centro de Custos Saidas 2;Fornecedores;2223347,0;Loja Sul
+2025;nov;Centro de Custos Saidas 3;Impostos;782721,09;Loja Sul
+2025;nov;Centro de Custos Saidas 4;Investimentos;335451,86;Loja Sul
+2025;nov;Centro de Custos Entradas 4;Outras Receitas;156544,11;Loja Sul
+2025;nov;Centro de Custos Entradas 3;Receb. Clientes;2012711,7;Loja Sul
+2025;nov;Centro de Custos Entradas 4;Receita Financ.;145362,42;Loja Sul
+2025;nov;Centro de Custos Entradas 2;Receita Produtos;1397716,39;Loja Sul
+2025;nov;Centro de Custos Entradas 1;Receita Serviços;4696327,38;Loja Sul
+2025;out;Centro de Custos Saidas 3;Desp. Operacionais;741571,32;Loja Sul
+2025;out;Centro de Custos Saidas 1;Folha;1652414,4;Loja Sul
+2025;out;Centro de Custos Saidas 2;Fornecedores;1504494,51;Loja Sul
+2025;out;Centro de Custos Saidas 3;Impostos;548117,96;Loja Sul
+2025;out;Centro de Custos Saidas 4;Investimentos;225695,69;Loja Sul
+2025;out;Centro de Custos Entradas 4;Outras Receitas;104787,31;Loja Sul
+2025;out;Centro de Custos Entradas 3;Receb. Clientes;1410597,65;Loja Sul
+2025;out;Centro de Custos Entradas 4;Receita Financ.;96726,78;Loja Sul
+2025;out;Centro de Custos Entradas 2;Receita Produtos;967267,0;Loja Sul
+2025;out;Centro de Custos Entradas 1;Receita Serviços;3264525,74;Loja Sul
+2025;set;Centro de Custos Saidas 3;Desp. Operacionais;610386,06;Loja Sul
+2025;set;Centro de Custos Saidas 1;Folha;1369977,6;Loja Sul
+2025;set;Centro de Custos Saidas 2;Fornecedores;1240951,27;Loja Sul
+2025;set;Centro de Custos Saidas 3;Impostos;447616,43;Loja Sul
+2025;set;Centro de Custos Saidas 4;Investimentos;135641,32;Loja Sul
+2025;set;Centro de Custos Entradas 4;Outras Receitas;88166,79;Loja Sul
+2025;set;Centro de Custos Entradas 3;Receb. Clientes;1166515,51;Loja Sul
+2025;set;Centro de Custos Entradas 4;Receita Financ.;81384,72;Loja Sul
+2025;set;Centro de Custos Entradas 2;Receita Produtos;800283,99;Loja Sul
+2025;set;Centro de Custos Entradas 1;Receita Serviços;2678916,7;Loja Sul
+2026;abr;Centro de Custos Saidas 3;Desp. Operacionais;988946,54;Loja Sul
+2026;abr;Centro de Custos Saidas 1;Folha;2231159,78;Loja Sul
+2026;abr;Centro de Custos Saidas 2;Fornecedores;1909113,42;Loja Sul
+2026;abr;Centro de Custos Saidas 3;Impostos;675378,17;Loja Sul
+2026;abr;Centro de Custos Saidas 4;Investimentos;301508,13;Loja Sul
+2026;abr;Centro de Custos Entradas 4;Outras Receitas;108542,87;Loja Sul
+2026;abr;Centro de Custos Entradas 3;Receb. Clientes;1784927,82;Loja Sul
+2026;abr;Centro de Custos Entradas 4;Receita Financ.;96482,63;Loja Sul
+2026;abr;Centro de Custos Entradas 2;Receita Produtos;1157791,08;Loja Sul
+2026;abr;Centro de Custos Entradas 1;Receita Serviços;4100509,99;Loja Sul
+2026;fev;Centro de Custos Saidas 3;Desp. Operacionais;899090,02;Loja Sul
+2026;fev;Centro de Custos Saidas 1;Folha;2022952,26;Loja Sul
+2026;fev;Centro de Custos Saidas 2;Fornecedores;1799170,9;Loja Sul
+2026;fev;Centro de Custos Saidas 3;Impostos;606885,82;Loja Sul
+2026;fev;Centro de Custos Saidas 4;Investimentos;224772,45;Loja Sul
+2026;fev;Centro de Custos Entradas 4;Outras Receitas;112386,34;Loja Sul
+2026;fev;Centro de Custos Entradas 3;Receb. Clientes;1629600,54;Loja Sul
+2026;fev;Centro de Custos Entradas 4;Receita Financ.;89908,93;Loja Sul
+2026;fev;Centro de Custos Entradas 2;Receita Produtos;1101385,06;Loja Sul
+2026;fev;Centro de Custos Entradas 1;Receita Serviços;3708745,97;Loja Sul
+2026;jan;Centro de Custos Saidas 3;Desp. Operacionais;770885,07;Loja Sul
+2026;jan;Centro de Custos Saidas 1;Folha;1778965,49;Loja Sul
+2026;jan;Centro de Custos Saidas 2;Fornecedores;1554301,97;Loja Sul
+2026;jan;Centro de Custos Saidas 3;Impostos;513923,31;Loja Sul
+2026;jan;Centro de Custos Saidas 4;Investimentos;345909,9;Loja Sul
+2026;jan;Centro de Custos Entradas 4;Outras Receitas;118597,67;Loja Sul
+2026;jan;Centro de Custos Entradas 3;Receb. Clientes;1383639,85;Loja Sul
+2026;jan;Centro de Custos Entradas 4;Receita Financ.;79065,04;Loja Sul
+2026;jan;Centro de Custos Entradas 2;Receita Produtos;938898,48;Loja Sul
+2026;jan;Centro de Custos Entradas 1;Receita Serviços;3162605,56;Loja Sul
+2026;jul;Centro de Custos Saidas 3;Desp. Operacionais;968826,76;Loja Sul
+2026;jul;Centro de Custos Saidas 1;Folha;2179860,31;Loja Sul
+2026;jul;Centro de Custos Saidas 2;Fornecedores;2014955,78;Loja Sul
+2026;jul;Centro de Custos Saidas 3;Impostos;693591,82;Loja Sul
+2026;jul;Centro de Custos Saidas 4;Investimentos;242206,79;Loja Sul
+2026;jul;Centro de Custos Entradas 4;Outras Receitas;132112,78;Loja Sul
+2026;jul;Centro de Custos Entradas 3;Receb. Clientes;1816550,12;Loja Sul
+2026;jul;Centro de Custos Entradas 4;Receita Financ.;121103,4;Loja Sul
+2026;jul;Centro de Custos Entradas 2;Receita Produtos;1233052,31;Loja Sul
+2026;jul;Centro de Custos Entradas 1;Receita Serviços;4183570,11;Loja Sul
+2026;jun;Centro de Custos Saidas 3;Desp. Operacionais;807612,37;Loja Sul
+2026;jun;Centro de Custos Saidas 1;Folha;1852757,82;Loja Sul
+2026;jun;Centro de Custos Saidas 2;Fornecedores;1663731,9;Loja Sul
+2026;jun;Centro de Custos Saidas 3;Impostos;579580,65;Loja Sul
+2026;jun;Centro de Custos Saidas 4;Investimentos;285039,65;Loja Sul
+2026;jun;Centro de Custos Entradas 4;Outras Receitas;114015,86;Loja Sul
+2026;jun;Centro de Custos Entradas 3;Receb. Clientes;1520211,6;Loja Sul
+2026;jun;Centro de Custos Entradas 4;Receita Financ.;95013,14;Loja Sul
+2026;jun;Centro de Custos Entradas 2;Receita Produtos;1026142,73;Loja Sul
+2026;jun;Centro de Custos Entradas 1;Receita Serviços;3515489,14;Loja Sul
+2026;mai;Centro de Custos Saidas 3;Desp. Operacionais;733873,61;Loja Sul
+2026;mai;Centro de Custos Saidas 1;Folha;1659952,09;Loja Sul
+2026;mai;Centro de Custos Saidas 2;Fornecedores;1399822,22;Loja Sul
+2026;mai;Centro de Custos Saidas 3;Impostos;515458,8;Loja Sul
+2026;mai;Centro de Custos Saidas 4;Investimentos;157258,57;Loja Sul
+2026;mai;Centro de Custos Entradas 4;Outras Receitas;87365,97;Loja Sul
+2026;mai;Centro de Custos Entradas 3;Receb. Clientes;1345434,96;Loja Sul
+2026;mai;Centro de Custos Entradas 4;Receita Financ.;87365,97;Loja Sul
+2026;mai;Centro de Custos Entradas 2;Receita Produtos;908605,33;Loja Sul
+2026;mai;Centro de Custos Entradas 1;Receita Serviços;3101489,59;Loja Sul
+2026;mar;Centro de Custos Saidas 3;Desp. Operacionais;945511,3;Loja Sul
+2026;mar;Centro de Custos Saidas 1;Folha;2159500,91;Loja Sul
+2026;mar;Centro de Custos Saidas 2;Fornecedores;1900137,43;Loja Sul
+2026;mar;Centro de Custos Saidas 3;Impostos;677032,74;Loja Sul
+2026;mar;Centro de Custos Saidas 4;Investimentos;175094,72;Loja Sul
+2026;mar;Centro de Custos Entradas 4;Outras Receitas;128402,68;Loja Sul
+2026;mar;Centro de Custos Entradas 3;Receb. Clientes;1750946,72;Loja Sul
+2026;mar;Centro de Custos Entradas 4;Receita Financ.;105056,78;Loja Sul
+2026;mar;Centro de Custos Entradas 2;Receita Produtos;1190643,71;Loja Sul
+2026;mar;Centro de Custos Entradas 1;Receita Serviços;4085542,35;Loja Sul

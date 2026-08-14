@@ -1,0 +1,1258 @@
+﻿Produto;Filial;DataEvento;MesHorizonte;QtdComprar;ValorCompra;Urgencia;Classe;Fornecedor;CicloDias;FrequenciaAno
+PC000931;Loja Centro;28/08/2026;1;32,0;8446,32;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;7,0;50,3
+PC000931;Loja Centro;13/09/2026;2;38,0;10036,73;🟡 Planejado;A;Fornecedor Alfa;7,0;54,1
+PC000931;Loja Centro;29/09/2026;2;36,0;9407,63;🟡 Planejado;A;Fornecedor Alfa;7,0;54,1
+PC000931;Loja Centro;13/10/2026;3;59,0;15476,8;🟡 Planejado;A;Fornecedor Alfa;5,0;75,6
+PC000931;Loja Centro;28/10/2026;3;47,0;12325,36;🟡 Planejado;A;Fornecedor Alfa;5,0;75,6
+PC000931;Loja Centro;12/11/2026;4;63,0;16565,8;🟡 Planejado;A;Fornecedor Alfa;4,0;88,2
+PC000931;Loja Centro;28/11/2026;4;58,0;15335,66;🟡 Planejado;A;Fornecedor Alfa;4,0;88,2
+PC000931;Loja Centro;22/12/2026;5;39,0;10417,12;🟡 Planejado;A;Fornecedor Alfa;6,0;60,0
+PC000931;Loja Centro;06/01/2027;5;37,0;9772,41;🟡 Planejado;A;Fornecedor Alfa;6,0;60,0
+PC000931;Loja Centro;21/01/2027;6;39,0;10243,96;🟡 Planejado;A;Fornecedor Alfa;6,0;61,0
+PC000931;Loja Centro;05/02/2027;6;38,0;9944,93;🟡 Planejado;A;Fornecedor Alfa;6,0;61,0
+PC000588;Loja Centro;14/08/2026;1;43,0;7991,4;🚨 Urgente (até 7 dias);A;Fornecedor Alfa;6,0;61,1
+PC000588;Loja Centro;30/08/2026;1;40,0;7497,42;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;6,0;61,1
+PC000588;Loja Centro;17/09/2026;2;33,0;6126,16;🟡 Planejado;A;Fornecedor Alfa;7,0;52,5
+PC000588;Loja Centro;02/10/2026;2;32,0;6039,5;🟡 Planejado;A;Fornecedor Alfa;7,0;52,5
+PC000588;Loja Centro;13/10/2026;3;53,0;9817,5;🟡 Planejado;A;Fornecedor Alfa;5,0;75,1
+PC000588;Loja Centro;29/10/2026;3;49,0;9223,31;🟡 Planejado;A;Fornecedor Alfa;5,0;75,1
+PC000588;Loja Centro;12/11/2026;4;71,0;13247,17;🟡 Planejado;A;Fornecedor Alfa;4,0;96,9
+PC000588;Loja Centro;28/11/2026;4;64,0;11895,19;🟡 Planejado;A;Fornecedor Alfa;4,0;96,9
+PC000588;Loja Centro;21/12/2026;5;42,0;7884,32;🟡 Planejado;A;Fornecedor Alfa;5,0;66,9
+PC000588;Loja Centro;05/01/2027;5;41,0;7696,11;🟡 Planejado;A;Fornecedor Alfa;5,0;66,9
+PC000588;Loja Centro;21/01/2027;6;44,0;8133,98;🟡 Planejado;A;Fornecedor Alfa;5,0;66,6
+PC000588;Loja Centro;06/02/2027;6;44,0;8179,84;🟡 Planejado;A;Fornecedor Alfa;5,0;66,6
+PC000210;Loja Centro;14/08/2026;1;30,0;13520,45;🚨 Urgente (até 7 dias);A;Fornecedor Beta;11,0;33,1
+PC000210;Loja Centro;29/08/2026;1;20,0;9147,68;🔴 Prioritário (até 30 dias);A;Fornecedor Beta;11,0;33,1
+PC000210;Loja Centro;14/09/2026;2;21,0;9430,07;🟡 Planejado;A;Fornecedor Beta;11,0;32,5
+PC000210;Loja Centro;29/09/2026;2;20,0;8994,19;🟡 Planejado;A;Fornecedor Beta;11,0;32,5
+PC000210;Loja Centro;15/10/2026;3;21,0;9405,76;🟡 Planejado;A;Fornecedor Beta;11,0;32,2
+PC000210;Loja Centro;30/10/2026;3;20,0;8908,71;🟡 Planejado;A;Fornecedor Beta;11,0;32,2
+PC000210;Loja Centro;15/11/2026;4;21,0;9394,75;🟡 Planejado;A;Fornecedor Beta;11,0;32,0
+PC000210;Loja Centro;30/11/2026;4;20,0;8861,12;🟡 Planejado;A;Fornecedor Beta;11,0;32,0
+PC000210;Loja Centro;16/12/2026;5;21,0;9390,02;🟡 Planejado;A;Fornecedor Beta;11,0;31,9
+PC000210;Loja Centro;01/01/2027;5;21,0;9423,59;🟡 Planejado;A;Fornecedor Beta;11,0;31,9
+PC000210;Loja Centro;17/01/2027;6;21,0;9387,18;🟡 Planejado;A;Fornecedor Beta;11,0;31,9
+PC000210;Loja Centro;02/02/2027;6;21,0;9407,85;🟡 Planejado;A;Fornecedor Beta;11,0;31,9
+PC000819;Loja Centro;27/08/2026;1;21,0;5951,98;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;11,0;32,6
+PC000819;Loja Centro;11/09/2026;1;20,0;5709,47;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;11,0;32,6
+PC000819;Loja Centro;25/09/2026;2;22,0;6151,92;🟡 Planejado;A;Fornecedor Alfa;11,0;34,2
+PC000819;Loja Centro;10/10/2026;2;21,0;5996,59;🟡 Planejado;A;Fornecedor Alfa;11,0;34,2
+PC000819;Loja Centro;18/10/2026;3;30,0;8639,53;🟡 Planejado;A;Fornecedor Alfa;8,0;47,2
+PC000819;Loja Centro;02/11/2026;3;29,0;8263,82;🟡 Planejado;A;Fornecedor Alfa;8,0;47,2
+PC000819;Loja Centro;14/11/2026;4;36,0;10344,07;🟡 Planejado;A;Fornecedor Alfa;6,0;56,9
+PC000819;Loja Centro;29/11/2026;4;35,0;9960,65;🟡 Planejado;A;Fornecedor Alfa;6,0;56,9
+PC000819;Loja Centro;26/12/2026;5;22,0;6183,11;🟡 Planejado;A;Fornecedor Alfa;11,0;34,5
+PC000819;Loja Centro;10/01/2027;5;21,0;6045,29;🟡 Planejado;A;Fornecedor Alfa;11,0;34,5
+PC000819;Loja Centro;24/01/2027;6;24,0;6908,66;🟡 Planejado;A;Fornecedor Alfa;10,0;37,0
+PC000819;Loja Centro;09/02/2027;6;24,0;6908,82;🟡 Planejado;A;Fornecedor Alfa;10,0;37,0
+PC000016;Loja Centro;19/09/2026;2;17,0;7280,67;🟡 Planejado;A;Fornecedor Beta;14,0;26,8
+PC000016;Loja Centro;04/10/2026;2;17,0;6884,5;🟡 Planejado;A;Fornecedor Beta;14,0;26,8
+PC000016;Loja Centro;15/10/2026;3;22,0;9060,64;🟡 Planejado;A;Fornecedor Beta;11,0;33,9
+PC000016;Loja Centro;31/10/2026;3;22,0;9288,68;🟡 Planejado;A;Fornecedor Beta;11,0;33,9
+PC000016;Loja Centro;13/11/2026;4;25,0;10255,15;🟡 Planejado;A;Fornecedor Beta;9,0;38,8
+PC000016;Loja Centro;28/11/2026;4;24,0;9977,56;🟡 Planejado;A;Fornecedor Beta;9,0;38,8
+PC000016;Loja Centro;19/12/2026;5;18,0;7632,14;🟡 Planejado;A;Fornecedor Beta;13,0;29,1
+PC000016;Loja Centro;03/01/2027;5;18,0;7476,33;🟡 Planejado;A;Fornecedor Beta;13,0;29,1
+PC000016;Loja Centro;19/01/2027;6;18,0;7685,86;🟡 Planejado;A;Fornecedor Beta;13,0;28,7
+PC000016;Loja Centro;04/02/2027;6;19,0;7856,23;🟡 Planejado;A;Fornecedor Beta;13,0;28,7
+PC000690;Loja Centro;25/10/2026;3;18,0;6108,14;🟡 Planejado;A;Fornecedor Beta;13,0;28,6
+PC000690;Loja Centro;10/11/2026;3;19,0;6509,8;🟡 Planejado;A;Fornecedor Beta;13,0;28,6
+PC000690;Loja Centro;25/11/2026;4;18,0;6116,24;🟡 Planejado;A;Fornecedor Beta;13,0;28,6
+PC000690;Loja Centro;10/12/2026;4;18,0;6107,47;🟡 Planejado;A;Fornecedor Beta;13,0;28,6
+PC000690;Loja Centro;25/12/2026;5;18,0;6111,56;🟡 Planejado;A;Fornecedor Beta;13,0;28,6
+PC000690;Loja Centro;10/01/2027;5;19,0;6516,12;🟡 Planejado;A;Fornecedor Beta;13,0;28,6
+PC000690;Loja Centro;25/01/2027;6;18,0;6110,15;🟡 Planejado;A;Fornecedor Beta;13,0;28,6
+PC000690;Loja Centro;09/02/2027;6;18,0;6109,29;🟡 Planejado;A;Fornecedor Beta;13,0;28,6
+PC000295;Loja Centro;14/10/2026;3;16,0;5814,36;🟡 Planejado;A;Fornecedor Alfa;15,0;24,8
+PC000295;Loja Centro;29/10/2026;3;15,0;5530,48;🟡 Planejado;A;Fornecedor Alfa;15,0;24,8
+PC000295;Loja Centro;14/11/2026;4;16,0;5872,81;🟡 Planejado;A;Fornecedor Alfa;15,0;24,7
+PC000295;Loja Centro;30/11/2026;4;16,0;5886,39;🟡 Planejado;A;Fornecedor Alfa;15,0;24,7
+PC000295;Loja Centro;16/12/2026;5;16,0;5867,02;🟡 Planejado;A;Fornecedor Alfa;15,0;24,7
+PC000295;Loja Centro;31/12/2026;5;15,0;5510,19;🟡 Planejado;A;Fornecedor Alfa;15,0;24,7
+PC000295;Loja Centro;16/01/2027;6;16,0;5863,74;🟡 Planejado;A;Fornecedor Alfa;15,0;24,7
+PC000295;Loja Centro;01/02/2027;6;16,0;5871,4;🟡 Planejado;A;Fornecedor Alfa;15,0;24,7
+PC000007;Loja Centro;14/08/2026;1;25,0;7956,14;🚨 Urgente (até 7 dias);A;Fornecedor Delta;12,0;30,1
+PC000007;Loja Centro;29/08/2026;1;19,0;5824,85;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;12,0;30,1
+PC000007;Loja Centro;13/09/2026;2;19,0;5839,26;🟡 Planejado;A;Fornecedor Delta;12,0;30,1
+PC000007;Loja Centro;29/09/2026;2;20,0;6220,61;🟡 Planejado;A;Fornecedor Delta;12,0;30,1
+PC000007;Loja Centro;14/10/2026;3;19,0;5838,29;🟡 Planejado;A;Fornecedor Delta;12,0;30,1
+PC000007;Loja Centro;30/10/2026;3;20,0;6223,84;🟡 Planejado;A;Fornecedor Delta;12,0;30,1
+PC000007;Loja Centro;14/11/2026;4;19,0;5837,76;🟡 Planejado;A;Fornecedor Delta;12,0;30,2
+PC000007;Loja Centro;29/11/2026;4;19,0;5836,17;🟡 Planejado;A;Fornecedor Delta;12,0;30,2
+PC000007;Loja Centro;14/12/2026;5;19,0;5837,43;🟡 Planejado;A;Fornecedor Delta;12,0;30,2
+PC000007;Loja Centro;30/12/2026;5;20,0;6225,86;🟡 Planejado;A;Fornecedor Delta;12,0;30,2
+PC000007;Loja Centro;14/01/2027;6;19,0;5837,32;🟡 Planejado;A;Fornecedor Delta;12,0;30,2
+PC000007;Loja Centro;30/01/2027;6;20,0;6226,13;🟡 Planejado;A;Fornecedor Delta;12,0;30,2
+PC000425;Loja Centro;15/10/2026;3;16,0;7124,73;🟡 Planejado;A;Fornecedor Delta;14,0;25,8
+PC000425;Loja Centro;31/10/2026;3;17,0;7535,51;🟡 Planejado;A;Fornecedor Delta;14,0;25,8
+PC000425;Loja Centro;13/11/2026;4;20,0;8745,6;🟡 Planejado;A;Fornecedor Delta;12,0;30,3
+PC000425;Loja Centro;28/11/2026;4;19,0;8294,07;🟡 Planejado;A;Fornecedor Delta;12,0;30,3
+PC000425;Loja Centro;21/12/2026;5;14,0;6168,68;🟡 Planejado;A;Fornecedor Delta;17,0;21,3
+PC000425;Loja Centro;05/01/2027;5;13,0;5838,24;🟡 Planejado;A;Fornecedor Delta;17,0;21,3
+PC000425;Loja Centro;20/01/2027;6;13,0;5851,87;🟡 Planejado;A;Fornecedor Delta;17,0;21,3
+PC000425;Loja Centro;05/02/2027;6;14,0;6232,91;🟡 Planejado;A;Fornecedor Delta;17,0;21,3
+PC000730;Loja Centro;20/08/2026;1;15,0;4142,18;🚨 Urgente (até 7 dias);A;Fornecedor Gamma;16,0;23,5
+PC000730;Loja Centro;05/09/2026;1;15,0;4333,28;🔴 Prioritário (até 30 dias);A;Fornecedor Gamma;16,0;23,5
+PC000730;Loja Centro;19/09/2026;2;16,0;4512,81;🟡 Planejado;A;Fornecedor Gamma;14,0;25,2
+PC000730;Loja Centro;05/10/2026;2;17,0;4645,15;🟡 Planejado;A;Fornecedor Gamma;14,0;25,2
+PC000730;Loja Centro;13/10/2026;3;27,0;7431,71;🟡 Planejado;A;Fornecedor Gamma;9,0;39,6
+PC000730;Loja Centro;28/10/2026;3;24,0;6826,99;🟡 Planejado;A;Fornecedor Gamma;9,0;39,6
+PC000730;Loja Centro;12/11/2026;4;35,0;9665,42;🟡 Planejado;A;Fornecedor Gamma;8,0;47,5
+PC000730;Loja Centro;28/11/2026;4;31,0;8747,12;🟡 Planejado;A;Fornecedor Gamma;8,0;47,5
+PC000730;Loja Centro;24/12/2026;5;19,0;5371,47;🟡 Planejado;A;Fornecedor Gamma;12,0;29,6
+PC000730;Loja Centro;09/01/2027;5;19,0;5456,85;🟡 Planejado;A;Fornecedor Gamma;12,0;29,6
+PC000730;Loja Centro;27/01/2027;6;18,0;5095,48;🟡 Planejado;A;Fornecedor Gamma;13,0;27,7
+PC000357;Loja Centro;14/08/2026;1;12,0;4985,29;🚨 Urgente (até 7 dias);A;Fornecedor Delta;19,0;19,1
+PC000357;Loja Centro;30/08/2026;1;13,0;5088,31;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;19,0;19,1
+PC000357;Loja Centro;14/09/2026;2;12,0;4997,69;🟡 Planejado;A;Fornecedor Delta;19,0;19,5
+PC000357;Loja Centro;30/09/2026;2;13,0;5202,01;🟡 Planejado;A;Fornecedor Delta;19,0;19,5
+PC000357;Loja Centro;13/10/2026;3;20,0;8082,92;🟡 Planejado;A;Fornecedor Delta;14,0;26,9
+PC000357;Loja Centro;28/10/2026;3;17,0;6742,83;🟡 Planejado;A;Fornecedor Delta;14,0;26,9
+PC000357;Loja Centro;12/11/2026;4;20,0;8097,76;🟡 Planejado;A;Fornecedor Delta;12,0;29,6
+PC000357;Loja Centro;28/11/2026;4;19,0;7891,67;🟡 Planejado;A;Fornecedor Delta;12,0;29,6
+PC000357;Loja Centro;19/12/2026;5;14,0;5590,88;🟡 Planejado;A;Fornecedor Delta;17,0;22,0
+PC000357;Loja Centro;04/01/2027;5;14,0;5884,54;🟡 Planejado;A;Fornecedor Delta;17,0;22,0
+PC000357;Loja Centro;18/01/2027;6;14,0;5778,25;🟡 Planejado;A;Fornecedor Delta;16,0;23,0
+PC000357;Loja Centro;02/02/2027;6;14,0;5765,15;🟡 Planejado;A;Fornecedor Delta;16,0;23,0
+PC000845;Loja Centro;05/10/2026;2;15,0;6261,07;🟡 Planejado;A;Fornecedor Gamma;15,0;23,6
+PC000845;Loja Centro;21/10/2026;3;15,0;6540,66;🟡 Planejado;A;Fornecedor Gamma;16,0;23,5
+PC000845;Loja Centro;06/11/2026;3;15,0;6570,87;🟡 Planejado;A;Fornecedor Gamma;16,0;23,5
+PC000845;Loja Centro;22/11/2026;4;15,0;6550,68;🟡 Planejado;A;Fornecedor Gamma;16,0;23,5
+PC000845;Loja Centro;08/12/2026;4;15,0;6562,99;🟡 Planejado;A;Fornecedor Gamma;16,0;23,5
+PC000845;Loja Centro;24/12/2026;5;15,0;6555,05;🟡 Planejado;A;Fornecedor Gamma;16,0;23,5
+PC000845;Loja Centro;09/01/2027;5;15,0;6560,03;🟡 Planejado;A;Fornecedor Gamma;16,0;23,5
+PC000845;Loja Centro;25/01/2027;6;15,0;6556,92;🟡 Planejado;A;Fornecedor Gamma;16,0;23,5
+PC000845;Loja Centro;09/02/2027;6;14,0;6148,99;🟡 Planejado;A;Fornecedor Gamma;16,0;23,5
+PC000896;Loja Centro;14/08/2026;1;30,0;9926,22;🚨 Urgente (até 7 dias);A;Fornecedor Beta;14,0;26,6
+PC000896;Loja Centro;30/08/2026;1;17,0;5808,67;🔴 Prioritário (até 30 dias);A;Fornecedor Beta;14,0;26,6
+PC000896;Loja Centro;14/09/2026;2;17,0;5600,77;🟡 Planejado;A;Fornecedor Beta;14,0;27,0
+PC000896;Loja Centro;30/09/2026;2;18,0;5886,24;🟡 Planejado;A;Fornecedor Beta;14,0;27,0
+PC000896;Loja Centro;15/10/2026;3;17,0;5605,63;🟡 Planejado;A;Fornecedor Beta;13,0;27,2
+PC000896;Loja Centro;30/10/2026;3;17,0;5558,02;🟡 Planejado;A;Fornecedor Beta;13,0;27,2
+PC000896;Loja Centro;14/11/2026;4;17,0;5605,63;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000896;Loja Centro;30/11/2026;4;18,0;5951,64;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000896;Loja Centro;15/12/2026;5;17,0;5606,43;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000896;Loja Centro;31/12/2026;5;18,0;5964,23;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000896;Loja Centro;15/01/2027;6;17,0;5606,49;🟡 Planejado;A;Fornecedor Beta;13,0;27,4
+PC000896;Loja Centro;31/01/2027;6;18,0;5971,1;🟡 Planejado;A;Fornecedor Beta;13,0;27,4
+PC000547;Loja Centro;25/09/2026;2;17,0;6323,04;🟡 Planejado;A;Fornecedor Beta;13,0;27,2
+PC000547;Loja Centro;10/10/2026;2;17,0;6102,82;🟡 Planejado;A;Fornecedor Beta;13,0;27,2
+PC000547;Loja Centro;25/10/2026;3;17,0;6153,81;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000547;Loja Centro;10/11/2026;3;18,0;6528,65;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000547;Loja Centro;25/11/2026;4;17,0;6149,01;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000547;Loja Centro;11/12/2026;4;18,0;6538,98;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000547;Loja Centro;26/12/2026;5;17,0;6146,12;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000547;Loja Centro;10/01/2027;5;17,0;6135,57;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000547;Loja Centro;25/01/2027;6;17,0;6144,18;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000547;Loja Centro;09/02/2027;6;17,0;6138,44;🟡 Planejado;A;Fornecedor Beta;13,0;27,3
+PC000773;Loja Centro;23/12/2026;5;13,0;5343,17;🟡 Planejado;A;Fornecedor Beta;17,0;21,1
+PC000773;Loja Centro;08/01/2027;5;14,0;5585,48;🟡 Planejado;A;Fornecedor Beta;17,0;21,1
+PC000773;Loja Centro;23/01/2027;6;13,0;5311,86;🟡 Planejado;A;Fornecedor Beta;17,0;21,2
+PC000773;Loja Centro;08/02/2027;6;14,0;5613,56;🟡 Planejado;A;Fornecedor Beta;17,0;21,2
+PC000883;Loja Centro;17/08/2026;1;17,0;4861,38;🚨 Urgente (até 7 dias);A;Fornecedor Beta;13,0;27,1
+PC000883;Loja Centro;01/09/2026;1;17,0;4824,45;🔴 Prioritário (até 30 dias);A;Fornecedor Beta;13,0;27,1
+PC000883;Loja Centro;18/09/2026;2;16,0;4644,26;🟡 Planejado;A;Fornecedor Beta;15,0;25,1
+PC000883;Loja Centro;04/10/2026;2;17,0;4780,1;🟡 Planejado;A;Fornecedor Beta;15,0;25,1
+PC000883;Loja Centro;13/10/2026;3;25,0;7352,46;🟡 Planejado;A;Fornecedor Beta;10,0;37,8
+PC000883;Loja Centro;29/10/2026;3;25,0;7187,15;🟡 Planejado;A;Fornecedor Beta;10,0;37,8
+PC000883;Loja Centro;12/11/2026;4;29,0;8514,09;🟡 Planejado;A;Fornecedor Beta;8,0;43,8
+PC000883;Loja Centro;28/11/2026;4;29,0;8335,71;🟡 Planejado;A;Fornecedor Beta;8,0;43,8
+PC000883;Loja Centro;21/12/2026;5;19,0;5359,6;🟡 Planejado;A;Fornecedor Beta;12,0;29,9
+PC000883;Loja Centro;06/01/2027;5;20,0;5686,52;🟡 Planejado;A;Fornecedor Beta;12,0;29,9
+PC000883;Loja Centro;22/01/2027;6;19,0;5380,6;🟡 Planejado;A;Fornecedor Beta;12,0;29,3
+PC000883;Loja Centro;07/02/2027;6;19,0;5569,98;🟡 Planejado;A;Fornecedor Beta;12,0;29,3
+PC000802;Loja Centro;10/09/2026;1;14,0;4831,64;🔴 Prioritário (até 30 dias);A;Fornecedor Gamma;17,0;22,0
+PC000802;Loja Centro;30/09/2026;2;13,0;4180,36;🟡 Planejado;A;Fornecedor Gamma;19,0;19,2
+PC000802;Loja Centro;13/10/2026;3;22,0;7506,91;🟡 Planejado;A;Fornecedor Gamma;13,0;28,8
+PC000802;Loja Centro;28/10/2026;3;18,0;5925,87;🟡 Planejado;A;Fornecedor Gamma;13,0;28,8
+PC000802;Loja Centro;12/11/2026;4;25,0;8378,93;🟡 Planejado;A;Fornecedor Gamma;11,0;34,5
+PC000802;Loja Centro;27/11/2026;4;21,0;7112,83;🟡 Planejado;A;Fornecedor Gamma;11,0;34,5
+PC000802;Loja Centro;19/12/2026;5;15,0;5135,15;🟡 Planejado;A;Fornecedor Gamma;15,0;24,4
+PC000802;Loja Centro;04/01/2027;5;16,0;5356,7;🟡 Planejado;A;Fornecedor Gamma;15,0;24,4
+PC000802;Loja Centro;20/01/2027;6;16,0;5224,13;🟡 Planejado;A;Fornecedor Gamma;15,0;24,2
+PC000802;Loja Centro;04/02/2027;6;15,0;4972,19;🟡 Planejado;A;Fornecedor Gamma;15,0;24,2
+PC000903;Loja Centro;18/08/2026;1;14,0;4974,56;🚨 Urgente (até 7 dias);A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;03/09/2026;1;15,0;5265,1;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;19/09/2026;2;15,0;5265,08;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;04/10/2026;2;14,0;4936,02;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;20/10/2026;3;15,0;5265,06;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;04/11/2026;3;14,0;4936,01;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;20/11/2026;4;15,0;5265,06;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;06/12/2026;4;15,0;5265,07;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;22/12/2026;5;15,0;5265,05;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;06/01/2027;5;14,0;4936,0;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;22/01/2027;6;15,0;5265,04;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000903;Loja Centro;07/02/2027;6;15,0;5265,06;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000460;Loja Centro;31/08/2026;1;17,0;5124,13;🔴 Prioritário (até 30 dias);A;Fornecedor Beta;13,0;27,4
+PC000460;Loja Centro;15/09/2026;2;17,0;5105,45;🟡 Planejado;A;Fornecedor Beta;13,0;27,5
+PC000460;Loja Centro;30/09/2026;2;17,0;5081,28;🟡 Planejado;A;Fornecedor Beta;13,0;27,5
+PC000460;Loja Centro;15/10/2026;3;17,0;5096,46;🟡 Planejado;A;Fornecedor Beta;13,0;27,6
+PC000460;Loja Centro;30/10/2026;3;17,0;5088,18;🟡 Planejado;A;Fornecedor Beta;13,0;27,6
+PC000460;Loja Centro;14/11/2026;4;17,0;5093,39;🟡 Planejado;A;Fornecedor Beta;13,0;27,6
+PC000460;Loja Centro;29/11/2026;4;17,0;5090,55;🟡 Planejado;A;Fornecedor Beta;13,0;27,6
+PC000460;Loja Centro;14/12/2026;5;17,0;5092,33;🟡 Planejado;A;Fornecedor Beta;13,0;27,6
+PC000460;Loja Centro;30/12/2026;5;18,0;5430,78;🟡 Planejado;A;Fornecedor Beta;13,0;27,6
+PC000460;Loja Centro;14/01/2027;6;17,0;5091,99;🟡 Planejado;A;Fornecedor Beta;13,0;27,6
+PC000460;Loja Centro;29/01/2027;6;17,0;5091,64;🟡 Planejado;A;Fornecedor Beta;13,0;27,6
+PC000520;Loja Centro;25/12/2026;5;12,0;4964,27;🟡 Planejado;A;Fornecedor Beta;19,0;18,9
+PC000520;Loja Centro;09/01/2027;5;12,0;4866,03;🟡 Planejado;A;Fornecedor Beta;19,0;18,9
+PC000520;Loja Centro;22/01/2027;6;13,0;5359,7;🟡 Planejado;A;Fornecedor Beta;18,0;20,5
+PC000520;Loja Centro;07/02/2027;6;13,0;5625,66;🟡 Planejado;A;Fornecedor Beta;18,0;20,5
+PC000080;Loja Centro;14/10/2026;3;10,0;4076,53;🟡 Planejado;A;Fornecedor Alfa;24,0;15,0
+PC000080;Loja Centro;30/10/2026;3;10,0;4229,42;🟡 Planejado;A;Fornecedor Alfa;24,0;15,0
+PC000080;Loja Centro;14/11/2026;4;9,0;3983,68;🟡 Planejado;A;Fornecedor Alfa;24,0;15,1
+PC000080;Loja Centro;30/11/2026;4;10,0;4238,44;🟡 Planejado;A;Fornecedor Alfa;24,0;15,1
+PC000080;Loja Centro;15/12/2026;5;9,0;3983,26;🟡 Planejado;A;Fornecedor Alfa;24,0;15,1
+PC000080;Loja Centro;30/12/2026;5;9,0;3977,82;🟡 Planejado;A;Fornecedor Alfa;24,0;15,1
+PC000080;Loja Centro;14/01/2027;6;9,0;3982,76;🟡 Planejado;A;Fornecedor Alfa;24,0;15,1
+PC000080;Loja Centro;30/01/2027;6;10,0;4245,34;🟡 Planejado;A;Fornecedor Alfa;24,0;15,1
+PC000015;Loja Centro;28/08/2026;1;12,0;3799,02;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;20,0;18,3
+PC000015;Loja Centro;13/09/2026;2;12,0;3998,15;🟡 Planejado;A;Fornecedor Alfa;20,0;18,7
+PC000015;Loja Centro;29/09/2026;2;12,0;3927,81;🟡 Planejado;A;Fornecedor Alfa;20,0;18,7
+PC000015;Loja Centro;13/10/2026;3;24,0;7583,0;🟡 Planejado;A;Fornecedor Alfa;13,0;28,9
+PC000015;Loja Centro;29/10/2026;3;19,0;6067,77;🟡 Planejado;A;Fornecedor Alfa;13,0;28,9
+PC000015;Loja Centro;13/11/2026;4;18,0;5859,07;🟡 Planejado;A;Fornecedor Alfa;12,0;29,3
+PC000015;Loja Centro;28/11/2026;4;18,0;5768,47;🟡 Planejado;A;Fornecedor Alfa;12,0;29,3
+PC000015;Loja Centro;20/12/2026;5;13,0;4243,16;🟡 Planejado;A;Fornecedor Alfa;17,0;21,0
+PC000015;Loja Centro;05/01/2027;5;14,0;4422,88;🟡 Planejado;A;Fornecedor Alfa;17,0;21,0
+PC000015;Loja Centro;19/01/2027;6;14,0;4511,2;🟡 Planejado;A;Fornecedor Alfa;16,0;22,3
+PC000015;Loja Centro;04/02/2027;6;15,0;4685,92;🟡 Planejado;A;Fornecedor Alfa;16,0;22,3
+PC000785;Loja Centro;14/09/2026;2;12,0;3452,21;🟡 Planejado;A;Fornecedor Alfa;21,0;17,7
+PC000785;Loja Centro;30/09/2026;2;12,0;3484,3;🟡 Planejado;A;Fornecedor Alfa;21,0;17,7
+PC000785;Loja Centro;13/10/2026;3;16,0;4793,0;🟡 Planejado;A;Fornecedor Alfa;16,0;22,8
+PC000785;Loja Centro;28/10/2026;3;14,0;4215,89;🟡 Planejado;A;Fornecedor Alfa;16,0;22,8
+PC000785;Loja Centro;12/11/2026;4;27,0;8210,86;🟡 Planejado;A;Fornecedor Alfa;11,0;33,3
+PC000785;Loja Centro;27/11/2026;4;21,0;6148,94;🟡 Planejado;A;Fornecedor Alfa;11,0;33,3
+PC000785;Loja Centro;23/12/2026;5;13,0;3953,11;🟡 Planejado;A;Fornecedor Alfa;18,0;20,3
+PC000785;Loja Centro;07/01/2027;5;13,0;3754,28;🟡 Planejado;A;Fornecedor Alfa;18,0;20,3
+PC000785;Loja Centro;22/01/2027;6;14,0;4062,62;🟡 Planejado;A;Fornecedor Alfa;17,0;20,9
+PC000785;Loja Centro;07/02/2027;6;14,0;4122,03;🟡 Planejado;A;Fornecedor Alfa;17,0;20,9
+PC000335;Loja Centro;04/12/2026;4;14,0;6187,28;🟡 Planejado;A;Fornecedor Delta;16,0;22,6
+PC000335;Loja Centro;30/12/2026;5;10,0;4210,67;🟡 Planejado;A;Fornecedor Delta;24,0;15,4
+PC000335;Loja Centro;13/01/2027;6;11,0;4637,31;🟡 Planejado;A;Fornecedor Delta;22,0;16,6
+PC000335;Loja Centro;29/01/2027;6;11,0;4802,18;🟡 Planejado;A;Fornecedor Delta;22,0;16,6
+PC000900;Loja Centro;24/10/2026;3;12,0;4395,05;🟡 Planejado;A;Fornecedor Gamma;18,0;19,8
+PC000900;Loja Centro;09/11/2026;3;13,0;4616,56;🟡 Planejado;A;Fornecedor Gamma;18,0;19,8
+PC000900;Loja Centro;18/11/2026;4;16,0;5795,59;🟡 Planejado;A;Fornecedor Gamma;14,0;25,7
+PC000900;Loja Centro;04/12/2026;4;17,0;5999,81;🟡 Planejado;A;Fornecedor Gamma;14,0;25,7
+PC000900;Loja Centro;02/01/2027;5;10,0;3714,22;🟡 Planejado;A;Fornecedor Gamma;22,0;16,3
+PC000900;Loja Centro;15/01/2027;6;12,0;4324,25;🟡 Planejado;A;Fornecedor Gamma;19,0;18,7
+PC000900;Loja Centro;31/01/2027;6;12,0;4363,23;🟡 Planejado;A;Fornecedor Gamma;19,0;18,7
+PC000450;Loja Centro;22/09/2026;2;14,0;4344,28;🟡 Planejado;A;Fornecedor Alfa;17,0;21,3
+PC000450;Loja Centro;07/10/2026;2;13,0;4078,47;🟡 Planejado;A;Fornecedor Alfa;17,0;21,3
+PC000450;Loja Centro;17/10/2026;3;17,0;5118,97;🟡 Planejado;A;Fornecedor Alfa;14,0;26,7
+PC000450;Loja Centro;01/11/2026;3;16,0;5107,04;🟡 Planejado;A;Fornecedor Alfa;14,0;26,7
+PC000450;Loja Centro;12/11/2026;4;25,0;7693,7;🟡 Planejado;A;Fornecedor Alfa;10,0;36,7
+PC000450;Loja Centro;28/11/2026;4;24,0;7485,46;🟡 Planejado;A;Fornecedor Alfa;10,0;36,7
+PC000450;Loja Centro;21/12/2026;5;16,0;5113,37;🟡 Planejado;A;Fornecedor Alfa;14,0;25,6
+PC000450;Loja Centro;05/01/2027;5;16,0;4900,0;🟡 Planejado;A;Fornecedor Alfa;14,0;25,6
+PC000450;Loja Centro;21/01/2027;6;16,0;5031,2;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000450;Loja Centro;05/02/2027;6;16,0;4828,49;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000032;Loja Centro;25/08/2026;1;16,0;4344,77;🔴 Prioritário (até 30 dias);A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;09/09/2026;1;15,0;4170,22;🔴 Prioritário (até 30 dias);A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;25/09/2026;2;16,0;4448,23;🟡 Planejado;A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;11/10/2026;2;16,0;4448,23;🟡 Planejado;A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;27/10/2026;3;16,0;4448,23;🟡 Planejado;A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;12/11/2026;4;16,0;4448,23;🟡 Planejado;A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;28/11/2026;4;16,0;4448,23;🟡 Planejado;A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;14/12/2026;5;16,0;4448,23;🟡 Planejado;A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;30/12/2026;5;16,0;4448,23;🟡 Planejado;A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;15/01/2027;6;16,0;4448,23;🟡 Planejado;A;Fornecedor Gamma;15,0;24,9
+PC000032;Loja Centro;31/01/2027;6;16,0;4448,23;🟡 Planejado;A;Fornecedor Gamma;15,0;24,9
+PC000591;Loja Centro;08/09/2026;1;12,0;3916,88;🔴 Prioritário (até 30 dias);A;Fornecedor Beta;18,0;20,2
+PC000591;Loja Centro;25/09/2026;2;12,0;3816,73;🟡 Planejado;A;Fornecedor Beta;19,0;19,1
+PC000591;Loja Centro;11/10/2026;2;13,0;3941,56;🟡 Planejado;A;Fornecedor Beta;19,0;19,1
+PC000591;Loja Centro;18/10/2026;3;17,0;5330,12;🟡 Planejado;A;Fornecedor Beta;14,0;26,8
+PC000591;Loja Centro;03/11/2026;3;18,0;5544,09;🟡 Planejado;A;Fornecedor Beta;14,0;26,8
+PC000591;Loja Centro;13/11/2026;4;24,0;7580,3;🟡 Planejado;A;Fornecedor Beta;10,0;36,8
+PC000591;Loja Centro;29/11/2026;4;24,0;7601,71;🟡 Planejado;A;Fornecedor Beta;10,0;36,8
+PC000591;Loja Centro;26/12/2026;5;15,0;4641,28;🟡 Planejado;A;Fornecedor Beta;16,0;22,7
+PC000591;Loja Centro;10/01/2027;5;14,0;4397,73;🟡 Planejado;A;Fornecedor Beta;16,0;22,7
+PC000591;Loja Centro;29/01/2027;6;12,0;3910,02;🟡 Planejado;A;Fornecedor Beta;18,0;20,1
+PC000884;Loja Centro;18/09/2026;2;10,0;3331,45;🟡 Planejado;A;Fornecedor Alfa;23,0;15,6
+PC000884;Loja Centro;04/10/2026;2;10,0;3524,59;🟡 Planejado;A;Fornecedor Alfa;23,0;15,6
+PC000884;Loja Centro;14/10/2026;3;13,0;4552,54;🟡 Planejado;A;Fornecedor Alfa;18,0;20,8
+PC000884;Loja Centro;30/10/2026;3;14,0;4699,43;🟡 Planejado;A;Fornecedor Alfa;18,0;20,8
+PC000884;Loja Centro;12/11/2026;4;17,0;5960,94;🟡 Planejado;A;Fornecedor Alfa;14,0;25,6
+PC000884;Loja Centro;28/11/2026;4;17,0;5805,31;🟡 Planejado;A;Fornecedor Alfa;14,0;25,6
+PC000884;Loja Centro;25/12/2026;5;10,0;3287,04;🟡 Planejado;A;Fornecedor Alfa;24,0;15,2
+PC000884;Loja Centro;10/01/2027;5;10,0;3438,25;🟡 Planejado;A;Fornecedor Alfa;24,0;15,2
+PC000884;Loja Centro;23/01/2027;6;11,0;3713,64;🟡 Planejado;A;Fornecedor Alfa;22,0;16,7
+PC000884;Loja Centro;08/02/2027;6;11,0;3780,6;🟡 Planejado;A;Fornecedor Alfa;22,0;16,7
+PC000641;Loja Centro;12/10/2026;2;15,0;3627,99;🟡 Planejado;A;Fornecedor Delta;16,0;23,3
+PC000641;Loja Centro;27/10/2026;3;15,0;3641,94;🟡 Planejado;A;Fornecedor Delta;16,0;23,5
+PC000641;Loja Centro;12/11/2026;4;16,0;3847,33;🟡 Planejado;A;Fornecedor Delta;15,0;23,6
+PC000641;Loja Centro;27/11/2026;4;15,0;3593,01;🟡 Planejado;A;Fornecedor Delta;15,0;23,6
+PC000641;Loja Centro;12/12/2026;5;15,0;3607,2;🟡 Planejado;A;Fornecedor Delta;15,0;23,7
+PC000641;Loja Centro;28/12/2026;5;16,0;3839,87;🟡 Planejado;A;Fornecedor Delta;15,0;23,7
+PC000641;Loja Centro;12/01/2027;6;15,0;3606,68;🟡 Planejado;A;Fornecedor Delta;15,0;23,7
+PC000641;Loja Centro;27/01/2027;6;15,0;3603,06;🟡 Planejado;A;Fornecedor Delta;15,0;23,7
+PC000378;Loja Centro;16/09/2026;2;13,0;2973,97;🟡 Planejado;A;Fornecedor Delta;18,0;19,7
+PC000378;Loja Centro;02/10/2026;2;13,0;3057,67;🟡 Planejado;A;Fornecedor Delta;18,0;19,7
+PC000378;Loja Centro;13/10/2026;3;18,0;4256,53;🟡 Planejado;A;Fornecedor Delta;14,0;26,9
+PC000378;Loja Centro;28/10/2026;3;17,0;3909,01;🟡 Planejado;A;Fornecedor Delta;14,0;26,9
+PC000378;Loja Centro;12/11/2026;4;24,0;5766,04;🟡 Planejado;A;Fornecedor Delta;11,0;33,1
+PC000378;Loja Centro;27/11/2026;4;20,0;4807,58;🟡 Planejado;A;Fornecedor Delta;11,0;33,1
+PC000378;Loja Centro;20/12/2026;5;14,0;3310,22;🟡 Planejado;A;Fornecedor Delta;16,0;22,4
+PC000378;Loja Centro;05/01/2027;5;15,0;3461,87;🟡 Planejado;A;Fornecedor Delta;16,0;22,4
+PC000378;Loja Centro;19/01/2027;6;15,0;3600,24;🟡 Planejado;A;Fornecedor Delta;15,0;23,9
+PC000378;Loja Centro;03/02/2027;6;15,0;3465,16;🟡 Planejado;A;Fornecedor Delta;15,0;23,9
+PC000146;Loja Centro;23/08/2026;1;8,0;3144,78;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;07/09/2026;1;7,0;2962,87;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;23/09/2026;2;8,0;3148,56;🟡 Planejado;A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;09/10/2026;2;8,0;3155,77;🟡 Planejado;A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;25/10/2026;3;8,0;3150,26;🟡 Planejado;A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;10/11/2026;3;8,0;3153,72;🟡 Planejado;A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;26/11/2026;4;8,0;3151,17;🟡 Planejado;A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;12/12/2026;5;8,0;3152,03;🟡 Planejado;A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;28/12/2026;5;8,0;3152,41;🟡 Planejado;A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;13/01/2027;6;8,0;3152,04;🟡 Planejado;A;Fornecedor Delta;30,0;12,1
+PC000146;Loja Centro;28/01/2027;6;7,0;2955,22;🟡 Planejado;A;Fornecedor Delta;30,0;12,1
+PC000370;Loja Centro;14/08/2026;1;45,0;5112,44;🚨 Urgente (até 7 dias);A;Fornecedor Delta;7,0;49,6
+PC000370;Loja Centro;29/08/2026;1;31,0;3457,87;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;7,0;49,6
+PC000370;Loja Centro;13/09/2026;2;32,0;3567,57;🟡 Planejado;A;Fornecedor Delta;7,0;50,4
+PC000370;Loja Centro;28/09/2026;2;31,0;3510,95;🟡 Planejado;A;Fornecedor Delta;7,0;50,4
+PC000370;Loja Centro;13/10/2026;3;36,0;4047,9;🟡 Planejado;A;Fornecedor Delta;7,0;54,1
+PC000370;Loja Centro;28/10/2026;3;33,0;3770,77;🟡 Planejado;A;Fornecedor Delta;7,0;54,1
+PC000370;Loja Centro;12/11/2026;4;36,0;4121,32;🟡 Planejado;A;Fornecedor Delta;6,0;56,6
+PC000370;Loja Centro;28/11/2026;4;37,0;4203,08;🟡 Planejado;A;Fornecedor Delta;6,0;56,6
+PC000370;Loja Centro;15/12/2026;5;32,0;3628,6;🟡 Planejado;A;Fornecedor Delta;7,0;51,3
+PC000370;Loja Centro;31/12/2026;5;34,0;3809,12;🟡 Planejado;A;Fornecedor Delta;7,0;51,3
+PC000370;Loja Centro;15/01/2027;6;34,0;3877,02;🟡 Planejado;A;Fornecedor Delta;7,0;53,2
+PC000370;Loja Centro;31/01/2027;6;35,0;3948,99;🟡 Planejado;A;Fornecedor Delta;7,0;53,2
+PC000336;Loja Centro;09/11/2026;3;16,0;4614,44;🟡 Planejado;A;Fornecedor Alfa;15,0;24,1
+PC000336;Loja Centro;21/11/2026;4;17,0;5086,16;🟡 Planejado;A;Fornecedor Alfa;13,0;27,4
+PC000336;Loja Centro;07/12/2026;4;18,0;5314,17;🟡 Planejado;A;Fornecedor Alfa;13,0;27,4
+PC000336;Loja Centro;31/12/2026;5;13,0;3927,92;🟡 Planejado;A;Fornecedor Alfa;18,0;20,7
+PC000336;Loja Centro;16/01/2027;6;14,0;4005,43;🟡 Planejado;A;Fornecedor Alfa;18,0;20,7
+PC000336;Loja Centro;01/02/2027;6;14,0;4013,69;🟡 Planejado;A;Fornecedor Alfa;18,0;20,7
+PC000540;Loja Centro;20/08/2026;1;11,0;2731,68;🚨 Urgente (até 7 dias);A;Fornecedor Delta;21,0;17,3
+PC000540;Loja Centro;05/09/2026;1;11,0;2738,8;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;21,0;17,3
+PC000540;Loja Centro;19/09/2026;2;11,0;2757,01;🟡 Planejado;A;Fornecedor Delta;20,0;18,3
+PC000540;Loja Centro;04/10/2026;2;11,0;2713,8;🟡 Planejado;A;Fornecedor Delta;20,0;18,3
+PC000540;Loja Centro;19/10/2026;3;12,0;2897,77;🟡 Planejado;A;Fornecedor Delta;19,0;18,8
+PC000540;Loja Centro;04/11/2026;3;12,0;2974,28;🟡 Planejado;A;Fornecedor Delta;19,0;18,8
+PC000540;Loja Centro;19/11/2026;4;12,0;2884,79;🟡 Planejado;A;Fornecedor Delta;19,0;19,1
+PC000540;Loja Centro;05/12/2026;4;13,0;3014,87;🟡 Planejado;A;Fornecedor Delta;19,0;19,1
+PC000540;Loja Centro;20/12/2026;5;12,0;2876,92;🟡 Planejado;A;Fornecedor Delta;19,0;19,2
+PC000540;Loja Centro;05/01/2027;5;13,0;3035,58;🟡 Planejado;A;Fornecedor Delta;19,0;19,2
+PC000540;Loja Centro;20/01/2027;6;12,0;2872,27;🟡 Planejado;A;Fornecedor Delta;19,0;19,3
+PC000540;Loja Centro;05/02/2027;6;13,0;3046,14;🟡 Planejado;A;Fornecedor Delta;19,0;19,3
+PC000727;Loja Centro;31/08/2026;1;12,0;2890,36;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;19,0;19,0
+PC000727;Loja Centro;15/09/2026;2;12,0;2823,6;🟡 Planejado;A;Fornecedor Alfa;19,0;19,3
+PC000727;Loja Centro;30/09/2026;2;12,0;2769,71;🟡 Planejado;A;Fornecedor Alfa;19,0;19,3
+PC000727;Loja Centro;13/10/2026;3;22,0;5013,85;🟡 Planejado;A;Fornecedor Alfa;13,0;28,1
+PC000727;Loja Centro;28/10/2026;3;17,0;4034,27;🟡 Planejado;A;Fornecedor Alfa;13,0;28,1
+PC000727;Loja Centro;12/11/2026;4;19,0;4390,12;🟡 Planejado;A;Fornecedor Alfa;12,0;29,3
+PC000727;Loja Centro;28/11/2026;4;19,0;4486,89;🟡 Planejado;A;Fornecedor Alfa;12,0;29,3
+PC000727;Loja Centro;20/12/2026;5;14,0;3198,17;🟡 Planejado;A;Fornecedor Alfa;17,0;21,3
+PC000727;Loja Centro;05/01/2027;5;14,0;3267,89;🟡 Planejado;A;Fornecedor Alfa;17,0;21,3
+PC000727;Loja Centro;18/01/2027;6;15,0;3382,74;🟡 Planejado;A;Fornecedor Alfa;16,0;23,3
+PC000727;Loja Centro;03/02/2027;6;15,0;3574,24;🟡 Planejado;A;Fornecedor Alfa;16,0;23,3
+PC000856;Loja Centro;14/08/2026;1;41,0;4925,76;🚨 Urgente (até 7 dias);A;Fornecedor Delta;9,0;41,0
+PC000856;Loja Centro;29/08/2026;1;25,0;3019,43;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;9,0;41,0
+PC000856;Loja Centro;14/09/2026;2;26,0;3134,73;🟡 Planejado;A;Fornecedor Delta;9,0;40,4
+PC000856;Loja Centro;30/09/2026;2;27,0;3177,72;🟡 Planejado;A;Fornecedor Delta;9,0;40,4
+PC000856;Loja Centro;16/10/2026;3;26,0;3135,54;🟡 Planejado;A;Fornecedor Delta;9,0;40,2
+PC000856;Loja Centro;31/10/2026;3;25,0;2960,51;🟡 Planejado;A;Fornecedor Delta;9,0;40,2
+PC000856;Loja Centro;16/11/2026;4;26,0;3137,83;🟡 Planejado;A;Fornecedor Delta;9,0;40,1
+PC000856;Loja Centro;02/12/2026;4;26,0;3148,71;🟡 Planejado;A;Fornecedor Delta;9,0;40,1
+PC000856;Loja Centro;18/12/2026;5;26,0;3138,93;🟡 Planejado;A;Fornecedor Delta;9,0;40,0
+PC000856;Loja Centro;02/01/2027;5;25,0;2947,95;🟡 Planejado;A;Fornecedor Delta;9,0;40,0
+PC000856;Loja Centro;18/01/2027;6;26,0;3139,84;🟡 Planejado;A;Fornecedor Delta;9,0;40,0
+PC000856;Loja Centro;02/02/2027;6;25,0;2946,12;🟡 Planejado;A;Fornecedor Delta;9,0;40,0
+PC000875;Loja Centro;20/08/2026;1;10,0;3215,0;🚨 Urgente (até 7 dias);A;Fornecedor Delta;23,0;15,6
+PC000875;Loja Centro;04/09/2026;1;10,0;3187,14;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;23,0;15,6
+PC000875;Loja Centro;19/09/2026;2;10,0;3250,73;🟡 Planejado;A;Fornecedor Delta;23,0;15,7
+PC000875;Loja Centro;04/10/2026;2;10,0;3212,92;🟡 Planejado;A;Fornecedor Delta;23,0;15,7
+PC000875;Loja Centro;18/10/2026;3;11,0;3657,91;🟡 Planejado;A;Fornecedor Delta;21,0;17,0
+PC000875;Loja Centro;02/11/2026;3;11,0;3487,58;🟡 Planejado;A;Fornecedor Delta;21,0;17,0
+PC000875;Loja Centro;16/11/2026;4;12,0;3900,11;🟡 Planejado;A;Fornecedor Delta;20,0;18,4
+PC000875;Loja Centro;02/12/2026;4;12,0;4014,96;🟡 Planejado;A;Fornecedor Delta;20,0;18,4
+PC000875;Loja Centro;20/12/2026;5;10,0;3478,42;🟡 Planejado;A;Fornecedor Delta;22,0;16,4
+PC000875;Loja Centro;05/01/2027;5;11,0;3588,94;🟡 Planejado;A;Fornecedor Delta;22,0;16,4
+PC000875;Loja Centro;20/01/2027;6;11,0;3540,73;🟡 Planejado;A;Fornecedor Delta;22,0;16,8
+PC000875;Loja Centro;04/02/2027;6;10,0;3430,67;🟡 Planejado;A;Fornecedor Delta;22,0;16,8
+PC000091;Loja Centro;27/09/2026;2;7,0;2924,75;🟡 Planejado;A;Fornecedor Beta;34,0;10,8
+PC000091;Loja Centro;13/10/2026;3;7,0;3147,14;🟡 Planejado;A;Fornecedor Beta;33,0;11,1
+PC000091;Loja Centro;28/10/2026;3;7,0;2894,61;🟡 Planejado;A;Fornecedor Beta;33,0;11,1
+PC000091;Loja Centro;12/11/2026;4;7,0;2964,9;🟡 Planejado;A;Fornecedor Beta;33,0;11,2
+PC000091;Loja Centro;28/11/2026;4;7,0;3123,86;🟡 Planejado;A;Fornecedor Beta;33,0;11,2
+PC000091;Loja Centro;13/12/2026;5;7,0;2970,05;🟡 Planejado;A;Fornecedor Beta;32,0;11,3
+PC000091;Loja Centro;29/12/2026;5;7,0;3144,58;🟡 Planejado;A;Fornecedor Beta;32,0;11,3
+PC000091;Loja Centro;13/01/2027;6;7,0;2972,44;🟡 Planejado;A;Fornecedor Beta;32,0;11,3
+PC000091;Loja Centro;29/01/2027;6;7,0;3156,41;🟡 Planejado;A;Fornecedor Beta;32,0;11,3
+PC000587;Loja Centro;09/09/2026;1;9,0;2931,16;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;25,0;14,6
+PC000587;Loja Centro;24/09/2026;2;10,0;3064,52;🟡 Planejado;A;Fornecedor Alfa;24,0;15,0
+PC000587;Loja Centro;10/10/2026;2;10,0;3118,55;🟡 Planejado;A;Fornecedor Alfa;24,0;15,0
+PC000587;Loja Centro;25/10/2026;3;10,0;3029,6;🟡 Planejado;A;Fornecedor Alfa;24,0;15,2
+PC000587;Loja Centro;09/11/2026;3;9,0;2960,6;🟡 Planejado;A;Fornecedor Alfa;24,0;15,2
+PC000587;Loja Centro;24/11/2026;4;10,0;3010,64;🟡 Planejado;A;Fornecedor Alfa;24,0;15,3
+PC000587;Loja Centro;09/12/2026;4;9,0;2978,06;🟡 Planejado;A;Fornecedor Alfa;24,0;15,3
+PC000587;Loja Centro;24/12/2026;5;10,0;3001,69;🟡 Planejado;A;Fornecedor Alfa;24,0;15,4
+PC000587;Loja Centro;08/01/2027;5;9,0;2986,3;🟡 Planejado;A;Fornecedor Alfa;24,0;15,4
+PC000587;Loja Centro;23/01/2027;6;10,0;2997,46;🟡 Planejado;A;Fornecedor Alfa;24,0;15,4
+PC000587;Loja Centro;07/02/2027;6;9,0;2990,19;🟡 Planejado;A;Fornecedor Alfa;24,0;15,4
+PC000006;Loja Centro;05/11/2026;3;13,0;4012,32;🟡 Planejado;A;Fornecedor Beta;18,0;20,6
+PC000006;Loja Centro;18/11/2026;4;15,0;4504,89;🟡 Planejado;A;Fornecedor Beta;16,0;23,3
+PC000006;Loja Centro;03/12/2026;4;14,0;4288,46;🟡 Planejado;A;Fornecedor Beta;16,0;23,3
+PC000006;Loja Centro;29/12/2026;5;10,0;2983,79;🟡 Planejado;A;Fornecedor Beta;23,0;15,7
+PC000006;Loja Centro;12/01/2027;6;11,0;3385,93;🟡 Planejado;A;Fornecedor Beta;21,0;17,4
+PC000006;Loja Centro;27/01/2027;6;11,0;3217,27;🟡 Planejado;A;Fornecedor Beta;21,0;17,4
+PC000334;Loja Centro;08/09/2026;1;20,0;9097,4;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;12,0;31,4
+PC000334;Loja Centro;24/09/2026;2;20,0;9123,56;🟡 Planejado;A;Fornecedor Alfa;12,0;31,2
+PC000334;Loja Centro;09/10/2026;2;19,0;8633,04;🟡 Planejado;A;Fornecedor Alfa;12,0;31,2
+PC000334;Loja Centro;25/10/2026;3;20,0;9096,09;🟡 Planejado;A;Fornecedor Alfa;12,0;31,1
+PC000334;Loja Centro;09/11/2026;3;19,0;8593,8;🟡 Planejado;A;Fornecedor Alfa;12,0;31,1
+PC000334;Loja Centro;25/11/2026;4;20,0;9074,64;🟡 Planejado;A;Fornecedor Alfa;12,0;31,0
+PC000334;Loja Centro;11/12/2026;4;20,0;9133,24;🟡 Planejado;A;Fornecedor Alfa;12,0;31,0
+PC000334;Loja Centro;27/12/2026;5;20,0;9056,22;🟡 Planejado;A;Fornecedor Alfa;12,0;30,9
+PC000334;Loja Centro;12/01/2027;6;20,0;9063,59;🟡 Planejado;A;Fornecedor Alfa;12,0;30,8
+PC000334;Loja Centro;28/01/2027;6;20,0;9085,02;🟡 Planejado;A;Fornecedor Alfa;12,0;30,8
+PC000860;Loja Centro;08/09/2026;1;9,0;2941,1;🔴 Prioritário (até 30 dias);A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;23/09/2026;2;9,0;2838,96;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;08/10/2026;2;9,0;2827,42;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;23/10/2026;3;9,0;2835,07;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;07/11/2026;3;9,0;2830,22;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;22/11/2026;4;9,0;2833,42;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;07/12/2026;4;9,0;2831,39;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;22/12/2026;5;9,0;2832,74;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;07/01/2027;5;9,0;3020,68;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;22/01/2027;6;9,0;2832,46;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000860;Loja Centro;07/02/2027;6;9,0;3020,9;🟡 Planejado;A;Fornecedor Beta;26,0;13,9
+PC000371;Loja Centro;10/10/2026;2;5,0;2387,64;🟡 Planejado;A;Fornecedor Beta;42,0;8,7
+PC000371;Loja Centro;15/10/2026;3;8,0;3671,95;🟡 Planejado;A;Fornecedor Beta;27,0;13,6
+PC000371;Loja Centro;30/10/2026;3;8,0;3660,75;🟡 Planejado;A;Fornecedor Beta;27,0;13,6
+PC000371;Loja Centro;12/11/2026;4;10,0;4378,42;🟡 Planejado;A;Fornecedor Beta;23,0;15,7
+PC000371;Loja Centro;28/11/2026;4;10,0;4527,13;🟡 Planejado;A;Fornecedor Beta;23,0;15,7
+PC000371;Loja Centro;22/12/2026;5;6,0;2806,32;🟡 Planejado;A;Fornecedor Beta;35,0;10,3
+PC000371;Loja Centro;07/01/2027;5;7,0;2972,25;🟡 Planejado;A;Fornecedor Beta;35,0;10,3
+PC000371;Loja Centro;21/01/2027;6;7,0;3118,7;🟡 Planejado;A;Fornecedor Beta;33,0;11,0
+PC000371;Loja Centro;06/02/2027;6;7,0;3174,39;🟡 Planejado;A;Fornecedor Beta;33,0;11,0
+PC000719;Loja Centro;12/11/2026;4;9,0;3962,77;🟡 Planejado;A;Fornecedor Delta;28,0;13,2
+PC000719;Loja Centro;27/11/2026;4;8,0;3603,04;🟡 Planejado;A;Fornecedor Delta;28,0;13,2
+PC000719;Loja Centro;21/12/2026;5;6,0;2550,87;🟡 Planejado;A;Fornecedor Delta;42,0;8,8
+PC000719;Loja Centro;05/01/2027;5;5,0;2397,79;🟡 Planejado;A;Fornecedor Delta;42,0;8,8
+PC000719;Loja Centro;19/01/2027;6;6,0;2655,87;🟡 Planejado;A;Fornecedor Delta;39,0;9,4
+PC000719;Loja Centro;04/02/2027;6;6,0;2729,1;🟡 Planejado;A;Fornecedor Delta;39,0;9,4
+PC000030;Loja Centro;13/10/2026;3;7,0;2757,04;🟡 Planejado;A;Fornecedor Beta;31,0;11,6
+PC000030;Loja Centro;28/10/2026;3;7,0;2676,05;🟡 Planejado;A;Fornecedor Beta;31,0;11,6
+PC000030;Loja Centro;13/11/2026;4;8,0;2854,45;🟡 Planejado;A;Fornecedor Beta;31,0;11,6
+PC000030;Loja Centro;28/11/2026;4;7,0;2676,05;🟡 Planejado;A;Fornecedor Beta;31,0;11,6
+PC000030;Loja Centro;13/12/2026;5;7,0;2676,05;🟡 Planejado;A;Fornecedor Beta;31,0;11,6
+PC000030;Loja Centro;28/12/2026;5;7,0;2676,05;🟡 Planejado;A;Fornecedor Beta;31,0;11,6
+PC000030;Loja Centro;12/01/2027;6;7,0;2676,05;🟡 Planejado;A;Fornecedor Beta;31,0;11,6
+PC000030;Loja Centro;27/01/2027;6;7,0;2676,05;🟡 Planejado;A;Fornecedor Beta;31,0;11,6
+PC000408;Loja Centro;18/09/2026;2;7,0;2649,03;🟡 Planejado;A;Fornecedor Delta;32,0;11,4
+PC000408;Loja Centro;03/10/2026;2;7,0;2553,82;🟡 Planejado;A;Fornecedor Delta;32,0;11,4
+PC000408;Loja Centro;13/10/2026;3;9,0;3407,85;🟡 Planejado;A;Fornecedor Delta;24,0;15,1
+PC000408;Loja Centro;29/10/2026;3;10,0;3604,23;🟡 Planejado;A;Fornecedor Delta;24,0;15,1
+PC000408;Loja Centro;12/11/2026;4;11,0;3958,06;🟡 Planejado;A;Fornecedor Delta;22,0;16,8
+PC000408;Loja Centro;28/11/2026;4;11,0;4019,39;🟡 Planejado;A;Fornecedor Delta;22,0;16,8
+PC000408;Loja Centro;18/12/2026;5;8,0;2941,62;🟡 Planejado;A;Fornecedor Delta;28,0;13,0
+PC000408;Loja Centro;02/01/2027;5;8,0;2923,87;🟡 Planejado;A;Fornecedor Delta;28,0;13,0
+PC000408;Loja Centro;17/01/2027;6;8,0;3084,95;🟡 Planejado;A;Fornecedor Delta;27,0;13,3
+PC000408;Loja Centro;02/02/2027;6;9,0;3188,45;🟡 Planejado;A;Fornecedor Delta;27,0;13,3
+PC000729;Loja Centro;05/11/2026;3;7,0;2557,06;🟡 Planejado;A;Fornecedor Alfa;33,0;11,0
+PC000729;Loja Centro;15/11/2026;4;9,0;3181,61;🟡 Planejado;A;Fornecedor Alfa;26,0;13,9
+PC000729;Loja Centro;30/11/2026;4;9,0;3160,26;🟡 Planejado;A;Fornecedor Alfa;26,0;13,9
+PC000729;Loja Centro;24/12/2026;5;6,0;2275,89;🟡 Planejado;A;Fornecedor Alfa;38,0;9,7
+PC000729;Loja Centro;08/01/2027;5;6,0;2190,31;🟡 Planejado;A;Fornecedor Alfa;38,0;9,7
+PC000729;Loja Centro;24/01/2027;6;6,0;2276,66;🟡 Planejado;A;Fornecedor Alfa;38,0;9,6
+PC000729;Loja Centro;09/02/2027;6;6,0;2314,63;🟡 Planejado;A;Fornecedor Alfa;38,0;9,6
+PC000761;Loja Centro;05/10/2026;2;15,0;3035,08;🟡 Planejado;A;Fornecedor Gamma;16,0;22,8
+PC000761;Loja Centro;15/10/2026;3;19,0;3982,1;🟡 Planejado;A;Fornecedor Gamma;12,0;30,0
+PC000761;Loja Centro;31/10/2026;3;20,0;4112,78;🟡 Planejado;A;Fornecedor Gamma;12,0;30,0
+PC000761;Loja Centro;13/11/2026;4;23,0;4835,58;🟡 Planejado;A;Fornecedor Gamma;10,0;35,4
+PC000761;Loja Centro;29/11/2026;4;23,0;4859,75;🟡 Planejado;A;Fornecedor Gamma;10,0;35,4
+PC000761;Loja Centro;24/12/2026;5;14,0;2974,48;🟡 Planejado;A;Fornecedor Gamma;16,0;22,9
+PC000761;Loja Centro;09/01/2027;5;15,0;3141,1;🟡 Planejado;A;Fornecedor Gamma;16,0;22,9
+PC000761;Loja Centro;21/01/2027;6;17,0;3538,57;🟡 Planejado;A;Fornecedor Gamma;14,0;26,2
+PC000761;Loja Centro;05/02/2027;6;16,0;3377,49;🟡 Planejado;A;Fornecedor Gamma;14,0;26,2
+PC000843;Loja Centro;08/09/2026;1;11,0;2296,43;🔴 Prioritário (até 30 dias);A;Fornecedor Beta;21,0;17,5
+PC000843;Loja Centro;23/09/2026;2;11,0;2234,86;🟡 Planejado;A;Fornecedor Beta;21,0;17,7
+PC000843;Loja Centro;08/10/2026;2;11,0;2203,83;🟡 Planejado;A;Fornecedor Beta;21,0;17,7
+PC000843;Loja Centro;20/10/2026;3;13,0;2537,3;🟡 Planejado;A;Fornecedor Beta;18,0;20,1
+PC000843;Loja Centro;05/11/2026;3;13,0;2676,75;🟡 Planejado;A;Fornecedor Beta;18,0;20,1
+PC000843;Loja Centro;19/11/2026;4;13,0;2663,36;🟡 Planejado;A;Fornecedor Beta;17,0;21,1
+PC000843;Loja Centro;05/12/2026;4;14,0;2811,99;🟡 Planejado;A;Fornecedor Beta;17,0;21,1
+PC000843;Loja Centro;23/12/2026;5;12,0;2354,29;🟡 Planejado;A;Fornecedor Beta;19,0;18,8
+PC000843;Loja Centro;08/01/2027;5;12,0;2503,72;🟡 Planejado;A;Fornecedor Beta;19,0;18,8
+PC000843;Loja Centro;25/01/2027;6;12,0;2326,05;🟡 Planejado;A;Fornecedor Beta;20,0;17,9
+PC000843;Loja Centro;09/02/2027;6;11,0;2235,86;🟡 Planejado;A;Fornecedor Beta;20,0;17,9
+PC000600;Loja Centro;31/08/2026;1;6,0;2405,99;🔴 Prioritário (até 30 dias);A;Fornecedor Gamma;40,0;9,1
+PC000600;Loja Centro;16/09/2026;2;6,0;2395,6;🟡 Planejado;A;Fornecedor Gamma;40,0;9,1
+PC000600;Loja Centro;02/10/2026;2;6,0;2405,83;🟡 Planejado;A;Fornecedor Gamma;40,0;9,1
+PC000600;Loja Centro;13/10/2026;3;9,0;3523,21;🟡 Planejado;A;Fornecedor Gamma;29,0;12,7
+PC000600;Loja Centro;28/10/2026;3;8,0;3159,92;🟡 Planejado;A;Fornecedor Gamma;29,0;12,7
+PC000600;Loja Centro;12/11/2026;4;12,0;4907,54;🟡 Planejado;A;Fornecedor Gamma;23,0;16,1
+PC000600;Loja Centro;28/11/2026;4;11,0;4272,58;🟡 Planejado;A;Fornecedor Gamma;23,0;16,1
+PC000600;Loja Centro;20/12/2026;5;8,0;3044,99;🟡 Planejado;A;Fornecedor Gamma;31,0;11,7
+PC000600;Loja Centro;04/01/2027;5;7,0;2917,15;🟡 Planejado;A;Fornecedor Gamma;31,0;11,7
+PC000600;Loja Centro;22/01/2027;6;7,0;2822,06;🟡 Planejado;A;Fornecedor Gamma;34,0;10,8
+PC000600;Loja Centro;06/02/2027;6;7,0;2674,82;🟡 Planejado;A;Fornecedor Gamma;34,0;10,8
+PC000665;Loja Centro;28/10/2026;3;8,0;3735,65;🟡 Planejado;A;Fornecedor Gamma;28,0;12,9
+PC000665;Loja Centro;12/11/2026;4;11,0;5006,55;🟡 Planejado;A;Fornecedor Gamma;24,0;15,4
+PC000665;Loja Centro;27/11/2026;4;10,0;4251,89;🟡 Planejado;A;Fornecedor Gamma;24,0;15,4
+PC000665;Loja Centro;16/12/2026;5;8,0;3478,82;🟡 Planejado;A;Fornecedor Gamma;29,0;12,5
+PC000665;Loja Centro;01/01/2027;5;8,0;3663,62;🟡 Planejado;A;Fornecedor Gamma;29,0;12,5
+PC000665;Loja Centro;21/01/2027;6;6,0;2850,48;🟡 Planejado;A;Fornecedor Gamma;36,0;10,2
+PC000665;Loja Centro;05/02/2027;6;6,0;2802,07;🟡 Planejado;A;Fornecedor Gamma;36,0;10,2
+PC000027;Loja Centro;14/08/2026;1;10,0;3708,55;🚨 Urgente (até 7 dias);A;Fornecedor Alfa;34,0;10,6
+PC000027;Loja Centro;30/08/2026;1;7,0;2717,23;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;34,0;10,6
+PC000027;Loja Centro;14/09/2026;2;7,0;2566,5;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000027;Loja Centro;29/09/2026;2;7,0;2556,35;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000027;Loja Centro;14/10/2026;3;7,0;2565,46;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000027;Loja Centro;30/10/2026;3;7,0;2731,33;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000027;Loja Centro;14/11/2026;4;7,0;2565,11;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000027;Loja Centro;29/11/2026;4;7,0;2562,66;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000027;Loja Centro;14/12/2026;5;7,0;2564,8;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000027;Loja Centro;30/12/2026;5;7,0;2734,54;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000027;Loja Centro;14/01/2027;6;7,0;2564,68;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000027;Loja Centro;30/01/2027;6;7,0;2735,04;🟡 Planejado;A;Fornecedor Alfa;34,0;10,7
+PC000477;Loja Centro;19/09/2026;2;7,0;2387,07;🟡 Planejado;A;Fornecedor Gamma;35,0;10,3
+PC000477;Loja Centro;05/10/2026;2;7,0;2479,36;🟡 Planejado;A;Fornecedor Gamma;35,0;10,3
+PC000477;Loja Centro;14/10/2026;3;9,0;3331,29;🟡 Planejado;A;Fornecedor Gamma;25,0;14,4
+PC000477;Loja Centro;29/10/2026;3;9,0;3232,21;🟡 Planejado;A;Fornecedor Gamma;25,0;14,4
+PC000477;Loja Centro;12/11/2026;4;14,0;5286,74;🟡 Planejado;A;Fornecedor Gamma;19,0;19,2
+PC000477;Loja Centro;27/11/2026;4;12,0;4330,6;🟡 Planejado;A;Fornecedor Gamma;19,0;19,2
+PC000477;Loja Centro;22/12/2026;5;8,0;2745,07;🟡 Planejado;A;Fornecedor Gamma;30,0;12,0
+PC000477;Loja Centro;07/01/2027;5;8,0;2873,9;🟡 Planejado;A;Fornecedor Gamma;30,0;12,0
+PC000477;Loja Centro;22/01/2027;6;8,0;2759,78;🟡 Planejado;A;Fornecedor Gamma;30,0;12,1
+PC000477;Loja Centro;07/02/2027;6;8,0;2898,85;🟡 Planejado;A;Fornecedor Gamma;30,0;12,1
+PC000939;Loja Centro;29/09/2026;2;11,0;2474,79;🟡 Planejado;A;Fornecedor Delta;21,0;17,1
+PC000939;Loja Centro;13/10/2026;3;18,0;4065,73;🟡 Planejado;A;Fornecedor Delta;16,0;23,4
+PC000939;Loja Centro;28/10/2026;3;14,0;3288,11;🟡 Planejado;A;Fornecedor Delta;16,0;23,4
+PC000939;Loja Centro;12/11/2026;4;17,0;3873,54;🟡 Planejado;A;Fornecedor Delta;14,0;25,4
+PC000939;Loja Centro;28/11/2026;4;17,0;3809,48;🟡 Planejado;A;Fornecedor Delta;14,0;25,4
+PC000939;Loja Centro;18/12/2026;5;12,0;2772,24;🟡 Planejado;A;Fornecedor Delta;19,0;19,7
+PC000939;Loja Centro;02/01/2027;5;12,0;2764,79;🟡 Planejado;A;Fornecedor Delta;19,0;19,7
+PC000939;Loja Centro;19/01/2027;6;12,0;2706,05;🟡 Planejado;A;Fornecedor Delta;20,0;18,5
+PC000939;Loja Centro;03/02/2027;6;11,0;2600,41;🟡 Planejado;A;Fornecedor Delta;20,0;18,5
+PC000410;Loja Centro;10/12/2026;4;8,0;3327,17;🟡 Planejado;A;Fornecedor Beta;27,0;13,3
+PC000410;Loja Centro;02/01/2027;5;6,0;2543,64;🟡 Planejado;A;Fornecedor Beta;35,0;10,5
+PC000410;Loja Centro;18/01/2027;6;7,0;2573,04;🟡 Planejado;A;Fornecedor Beta;36,0;10,3
+PC000410;Loja Centro;03/02/2027;6;7,0;2646,15;🟡 Planejado;A;Fornecedor Beta;36,0;10,3
+PC000260;Loja Centro;05/10/2026;2;8,0;2187,31;🟡 Planejado;A;Fornecedor Gamma;28,0;12,9
+PC000260;Loja Centro;16/10/2026;3;10,0;2581,32;🟡 Planejado;A;Fornecedor Gamma;23,0;15,7
+PC000260;Loja Centro;01/11/2026;3;10,0;2737,02;🟡 Planejado;A;Fornecedor Gamma;23,0;15,7
+PC000260;Loja Centro;12/11/2026;4;14,0;3649,88;🟡 Planejado;A;Fornecedor Gamma;17,0;20,9
+PC000260;Loja Centro;27/11/2026;4;13,0;3421,53;🟡 Planejado;A;Fornecedor Gamma;17,0;20,9
+PC000260;Loja Centro;21/12/2026;5;9,0;2391,44;🟡 Planejado;A;Fornecedor Gamma;26,0;13,9
+PC000260;Loja Centro;05/01/2027;5;9,0;2265,4;🟡 Planejado;A;Fornecedor Gamma;26,0;13,9
+PC000260;Loja Centro;19/01/2027;6;9,0;2389,96;🟡 Planejado;A;Fornecedor Gamma;25,0;14,5
+PC000260;Loja Centro;04/02/2027;6;10,0;2529,49;🟡 Planejado;A;Fornecedor Gamma;25,0;14,5
+PC000755;Loja Centro;22/12/2026;5;5,0;2190,93;🟡 Planejado;A;Fornecedor Beta;46,0;8,0
+PC000755;Loja Centro;06/01/2027;5;5,0;2168,4;🟡 Planejado;A;Fornecedor Beta;46,0;8,0
+PC000755;Loja Centro;22/01/2027;6;5,0;2312,52;🟡 Planejado;A;Fornecedor Beta;46,0;8,0
+PC000755;Loja Centro;07/02/2027;6;5,0;2312,79;🟡 Planejado;A;Fornecedor Beta;46,0;8,0
+PC000059;Loja Centro;05/09/2026;1;11,0;2360,07;🔴 Prioritário (até 30 dias);A;Fornecedor Gamma;22,0;16,9
+PC000059;Loja Centro;21/09/2026;2;11,0;2418,39;🟡 Planejado;A;Fornecedor Gamma;22,0;16,8
+PC000059;Loja Centro;07/10/2026;2;11,0;2431,21;🟡 Planejado;A;Fornecedor Gamma;22,0;16,8
+PC000059;Loja Centro;23/10/2026;3;11,0;2423,08;🟡 Planejado;A;Fornecedor Gamma;22,0;16,8
+PC000059;Loja Centro;08/11/2026;3;11,0;2428,04;🟡 Planejado;A;Fornecedor Gamma;22,0;16,8
+PC000059;Loja Centro;24/11/2026;4;11,0;2425,01;🟡 Planejado;A;Fornecedor Gamma;22,0;16,8
+PC000059;Loja Centro;09/12/2026;4;10,0;2275,23;🟡 Planejado;A;Fornecedor Gamma;22,0;16,8
+PC000059;Loja Centro;25/12/2026;5;11,0;2425,81;🟡 Planejado;A;Fornecedor Gamma;22,0;16,8
+PC000059;Loja Centro;10/01/2027;5;11,0;2426,51;🟡 Planejado;A;Fornecedor Gamma;22,0;16,8
+PC000059;Loja Centro;26/01/2027;6;11,0;2426,11;🟡 Planejado;A;Fornecedor Gamma;22,0;16,8
+PC000590;Loja Centro;24/11/2026;4;9,0;3067,64;🟡 Planejado;A;Fornecedor Alfa;24,0;14,9
+PC000590;Loja Centro;09/12/2026;4;9,0;2987,15;🟡 Planejado;A;Fornecedor Alfa;24,0;14,9
+PC000590;Loja Centro;11/01/2027;6;8,0;2632,32;🟡 Planejado;A;Fornecedor Alfa;33,0;11,2
+PC000590;Loja Centro;26/01/2027;6;7,0;2242,49;🟡 Planejado;A;Fornecedor Alfa;33,0;11,2
+PC000937;Loja Centro;28/08/2026;1;16,0;2061,92;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;14,0;25,5
+PC000937;Loja Centro;12/09/2026;1;16,0;2002,33;🔴 Prioritário (até 30 dias);A;Fornecedor Alfa;14,0;25,5
+PC000937;Loja Centro;28/09/2026;2;16,0;2096,5;🟡 Planejado;A;Fornecedor Alfa;14,0;25,4
+PC000937;Loja Centro;14/10/2026;3;17,0;2111,77;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000937;Loja Centro;30/10/2026;3;17,0;2116,95;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000937;Loja Centro;15/11/2026;4;17,0;2112,78;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000937;Loja Centro;01/12/2026;4;17,0;2114,99;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000937;Loja Centro;17/12/2026;5;17,0;2113,32;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000937;Loja Centro;02/01/2027;5;17,0;2114,25;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000937;Loja Centro;18/01/2027;6;17,0;2113,58;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000937;Loja Centro;03/02/2027;6;17,0;2113,96;🟡 Planejado;A;Fornecedor Alfa;14,0;25,3
+PC000833;Loja Centro;12/09/2026;1;8,0;2106,22;🔴 Prioritário (até 30 dias);A;Fornecedor Delta;29,0;12,5
+PC000833;Loja Centro;29/09/2026;2;7,0;1966,61;🟡 Planejado;A;Fornecedor Delta;31,0;11,8
+PC000833;Loja Centro;13/10/2026;3;14,0;3654,34;🟡 Planejado;A;Fornecedor Delta;21,0;17,3
+PC000833;Loja Centro;28/10/2026;3;11,0;2830,96;🟡 Planejado;A;Fornecedor Delta;21,0;17,3
+PC000833;Loja Centro;12/11/2026;4;14,0;3664,26;🟡 Planejado;A;Fornecedor Delta;18,0;19,8
+PC000833;Loja Centro;28/11/2026;4;13,0;3449,78;🟡 Planejado;A;Fornecedor Delta;18,0;19,8
+PC000833;Loja Centro;22/12/2026;5;9,0;2324,62;🟡 Planejado;A;Fornecedor Delta;27,0;13,4
+PC000833;Loja Centro;06/01/2027;5;8,0;2191,47;🟡 Planejado;A;Fornecedor Delta;27,0;13,4
+PC000833;Loja Centro;23/01/2027;6;8,0;2153,19;🟡 Planejado;A;Fornecedor Delta;29,0;12,7
+PC000833;Loja Centro;07/02/2027;6;8,0;2076,19;🟡 Planejado;A;Fornecedor Delta;29,0;12,7
+PC000457;Loja Centro;02/09/2026;1;7,0;2279,99;🔴 Prioritário (até 30 dias);A;Fornecedor Gamma;32,0;11,3
+PC000457;Loja Centro;17/09/2026;2;7,0;2230,78;🟡 Planejado;A;Fornecedor Gamma;32,0;11,4
+PC000457;Loja Centro;02/10/2026;2;7,0;2204,79;🟡 Planejado;A;Fornecedor Gamma;32,0;11,4
+PC000457;Loja Centro;13/10/2026;3;10,0;3006,9;🟡 Planejado;A;Fornecedor Gamma;24,0;14,9
+PC000457;Loja Centro;29/10/2026;3;10,0;3069,22;🟡 Planejado;A;Fornecedor Gamma;24,0;14,9
+PC000457;Loja Centro;12/11/2026;4;11,0;3410,88;🟡 Planejado;A;Fornecedor Gamma;22,0;16,7
+PC000457;Loja Centro;28/11/2026;4;11,0;3443,58;🟡 Planejado;A;Fornecedor Gamma;22,0;16,7
+PC000457;Loja Centro;18/12/2026;5;8,0;2520,06;🟡 Planejado;A;Fornecedor Gamma;28,0;13,0
+PC000457;Loja Centro;03/01/2027;5;9,0;2671,94;🟡 Planejado;A;Fornecedor Gamma;28,0;13,0
+PC000457;Loja Centro;18/01/2027;6;9,0;2686,65;🟡 Planejado;A;Fornecedor Gamma;27,0;13,4
+PC000457;Loja Centro;03/02/2027;6;9,0;2748,45;🟡 Planejado;A;Fornecedor Gamma;27,0;13,4
+PC000078;Loja Centro;27/08/2026;1;8,0;2420,44;🔴 Prioritário (até 30 dias);A;Fornecedor Gamma;29,0;12,6
+PC000078;Loja Centro;11/09/2026;1;8,0;2402,2;🔴 Prioritário (até 30 dias);A;Fornecedor Gamma;29,0;12,6
+PC000078;Loja Centro;28/09/2026;2;7,0;2285,77;🟡 Planejado;A;Fornecedor Gamma;31,0;11,9
+PC000078;Loja Centro;13/10/2026;3;13,0;3872,21;🟡 Planejado;A;Fornecedor Gamma;23,0;16,0
+PC000078;Loja Centro;28/10/2026;3;10,0;3039,99;🟡 Planejado;A;Fornecedor Gamma;23,0;16,0
+PC000078;Loja Centro;12/11/2026;4;17,0;5132,52;🟡 Planejado;A;Fornecedor Gamma;17,0;21,3
+PC000078;Loja Centro;28/11/2026;4;14,0;4322,67;🟡 Planejado;A;Fornecedor Gamma;17,0;21,3
+PC000078;Loja Centro;24/12/2026;5;8,0;2511,41;🟡 Planejado;A;Fornecedor Gamma;28,0;13,0
+PC000078;Loja Centro;09/01/2027;5;9,0;2643,44;🟡 Planejado;A;Fornecedor Gamma;28,0;13,0
+PC000078;Loja Centro;26/01/2027;6;8,0;2340,4;🟡 Planejado;A;Fornecedor Gamma;30,0;12,2
+PC000312;Loja Centro;04/02/2027;6;8,0;3340,03;🟡 Planejado;B;Fornecedor Gamma;49,0;7,4
+PC000666;Loja Centro;29/11/2026;4;12,0;4776,25;🟡 Planejado;B;Fornecedor Delta;33,0;11,1
+PC000666;Loja Centro;01/01/2027;5;9,0;3416,55;🟡 Planejado;B;Fornecedor Delta;47,0;7,8
+PC000666;Loja Centro;21/01/2027;6;9,0;3429,41;🟡 Planejado;B;Fornecedor Delta;46,0;7,9
+PC000022;Loja Centro;13/10/2026;3;30,0;4231,07;🟡 Planejado;B;Fornecedor Gamma;17,0;21,1
+PC000022;Loja Centro;02/11/2026;3;23,0;3221,0;🟡 Planejado;B;Fornecedor Gamma;17,0;21,1
+PC000022;Loja Centro;19/11/2026;4;26,0;3598,9;🟡 Planejado;B;Fornecedor Gamma;16,0;23,4
+PC000022;Loja Centro;10/12/2026;4;27,0;3758,76;🟡 Planejado;B;Fornecedor Gamma;16,0;23,4
+PC000022;Loja Centro;14/01/2027;6;20,0;2771,81;🟡 Planejado;B;Fornecedor Gamma;21,0;17,7
+PC000022;Loja Centro;03/02/2027;6;19,0;2700,49;🟡 Planejado;B;Fornecedor Gamma;21,0;17,7
+PC000841;Loja Centro;14/08/2026;1;19,0;3284,58;🚨 Urgente (até 7 dias);B;Fornecedor Beta;28,0;12,9
+PC000841;Loja Centro;03/09/2026;1;14,0;2443,7;🔴 Prioritário (até 30 dias);B;Fornecedor Beta;28,0;12,9
+PC000841;Loja Centro;24/09/2026;2;15,0;2559,89;🟡 Planejado;B;Fornecedor Beta;28,0;12,9
+PC000841;Loja Centro;13/10/2026;3;20,0;3417,64;🟡 Planejado;B;Fornecedor Beta;23,0;15,7
+PC000841;Loja Centro;02/11/2026;3;17,0;2977,16;🟡 Planejado;B;Fornecedor Beta;23,0;15,7
+PC000841;Loja Centro;16/11/2026;4;23,0;3924,45;🟡 Planejado;B;Fornecedor Beta;18,0;20,1
+PC000841;Loja Centro;06/12/2026;4;22,0;3795,13;🟡 Planejado;B;Fornecedor Beta;18,0;20,1
+PC000841;Loja Centro;14/01/2027;6;16,0;2806,06;🟡 Planejado;B;Fornecedor Beta;26,0;14,2
+PC000841;Loja Centro;03/02/2027;6;16,0;2690,65;🟡 Planejado;B;Fornecedor Beta;26,0;14,2
+PC000124;Loja Centro;12/11/2026;4;7,0;2622,15;🟡 Planejado;B;Fornecedor Beta;57,0;6,4
+PC000124;Loja Centro;02/12/2026;4;7,0;2560,07;🟡 Planejado;B;Fornecedor Beta;57,0;6,4
+PC000124;Loja Centro;23/12/2026;5;7,0;2680,33;🟡 Planejado;B;Fornecedor Beta;57,0;6,4
+PC000124;Loja Centro;13/01/2027;6;7,0;2682,04;🟡 Planejado;B;Fornecedor Beta;57,0;6,4
+PC000124;Loja Centro;03/02/2027;6;7,0;2683,53;🟡 Planejado;B;Fornecedor Beta;57,0;6,4
+PC000855;Loja Centro;10/11/2026;3;10,0;4014,43;🟡 Planejado;B;Fornecedor Beta;43,0;8,4
+PC000855;Loja Centro;24/11/2026;4;11,0;4682,76;🟡 Planejado;B;Fornecedor Beta;36,0;10,1
+PC000855;Loja Centro;26/12/2026;5;8,0;3189,71;🟡 Planejado;B;Fornecedor Beta;54,0;6,8
+PC000855;Loja Centro;16/01/2027;6;8,0;3118,7;🟡 Planejado;B;Fornecedor Beta;55,0;6,7
+PC000855;Loja Centro;06/02/2027;6;8,0;3180,25;🟡 Planejado;B;Fornecedor Beta;55,0;6,7
+PC000354;Loja Centro;02/11/2026;3;8,0;2735,9;🟡 Planejado;B;Fornecedor Delta;49,0;7,4
+PC000354;Loja Centro;22/11/2026;4;8,0;2690,28;🟡 Planejado;B;Fornecedor Delta;49,0;7,4
+PC000354;Loja Centro;12/12/2026;5;8,0;2681,79;🟡 Planejado;B;Fornecedor Delta;49,0;7,4
+PC000354;Loja Centro;01/01/2027;5;8,0;2675,47;🟡 Planejado;B;Fornecedor Delta;49,0;7,4
+PC000354;Loja Centro;21/01/2027;6;8,0;2682,34;🟡 Planejado;B;Fornecedor Delta;49,0;7,4
+PC000899;Loja Centro;06/09/2026;1;14,0;2264,83;🔴 Prioritário (até 30 dias);B;Fornecedor Beta;30,0;12,2
+PC000899;Loja Centro;25/09/2026;2;15,0;2394,27;🟡 Planejado;B;Fornecedor Beta;28,0;12,8
+PC000899;Loja Centro;13/10/2026;3;25,0;4157,28;🟡 Planejado;B;Fornecedor Beta;20,0;18,4
+PC000899;Loja Centro;03/11/2026;3;21,0;3494,26;🟡 Planejado;B;Fornecedor Beta;20,0;18,4
+PC000899;Loja Centro;19/11/2026;4;25,0;4086,99;🟡 Planejado;B;Fornecedor Beta;17,0;21,7
+PC000899;Loja Centro;09/12/2026;4;24,0;3921,49;🟡 Planejado;B;Fornecedor Beta;17,0;21,7
+PC000899;Loja Centro;09/01/2027;5;19,0;3091,18;🟡 Planejado;B;Fornecedor Beta;22,0;16,9
+PC000899;Loja Centro;28/01/2027;6;20,0;3229,44;🟡 Planejado;B;Fornecedor Beta;21,0;17,5
+PC000099;Loja Centro;31/01/2027;6;8,0;2656,67;🟡 Planejado;B;Fornecedor Beta;54,0;6,8
+PC000635;Loja Centro;13/10/2026;3;11,0;4468,92;🟡 Planejado;B;Fornecedor Alfa;46,0;8,0
+PC000635;Loja Centro;02/11/2026;3;9,0;3656,42;🟡 Planejado;B;Fornecedor Alfa;46,0;8,0
+PC000635;Loja Centro;17/11/2026;4;10,0;4377,01;🟡 Planejado;B;Fornecedor Alfa;38,0;9,5
+PC000635;Loja Centro;07/12/2026;4;10,0;4367,16;🟡 Planejado;B;Fornecedor Alfa;38,0;9,5
+PC000635;Loja Centro;14/01/2027;6;7,0;2896,93;🟡 Planejado;B;Fornecedor Alfa;60,0;6,1
+PC000635;Loja Centro;04/02/2027;6;7,0;2935,37;🟡 Planejado;B;Fornecedor Alfa;60,0;6,1
+PC000920;Loja Centro;25/11/2026;4;20,0;3872,02;🟡 Planejado;B;Fornecedor Alfa;20,0;18,5
+PC000920;Loja Centro;29/12/2026;5;13,0;2516,76;🟡 Planejado;B;Fornecedor Alfa;31,0;11,8
+PC000920;Loja Centro;15/01/2027;6;16,0;2978,58;🟡 Planejado;B;Fornecedor Alfa;27,0;13,7
+PC000920;Loja Centro;04/02/2027;6;15,0;2859,11;🟡 Planejado;B;Fornecedor Alfa;27,0;13,7
+PC000300;Loja Centro;14/08/2026;1;8,0;2625,59;🚨 Urgente (até 7 dias);B;Fornecedor Delta;54,0;6,8
+PC000300;Loja Centro;04/09/2026;1;8,0;2493,06;🔴 Prioritário (até 30 dias);B;Fornecedor Delta;54,0;6,8
+PC000300;Loja Centro;24/09/2026;2;7,0;2381,4;🟡 Planejado;B;Fornecedor Delta;54,0;6,8
+PC000300;Loja Centro;13/10/2026;3;12,0;3684,61;🟡 Planejado;B;Fornecedor Delta;42,0;8,8
+PC000300;Loja Centro;03/11/2026;3;10,0;3226,51;🟡 Planejado;B;Fornecedor Delta;42,0;8,8
+PC000300;Loja Centro;17/11/2026;4;13,0;4020,76;🟡 Planejado;B;Fornecedor Delta;33,0;11,1
+PC000300;Loja Centro;08/12/2026;4;13,0;4080,09;🟡 Planejado;B;Fornecedor Delta;33,0;11,1
+PC000300;Loja Centro;13/01/2027;6;9,0;2968,49;🟡 Planejado;B;Fornecedor Delta;45,0;8,1
+PC000300;Loja Centro;03/02/2027;6;9,0;2971,25;🟡 Planejado;B;Fornecedor Delta;45,0;8,1
+PC000058;Loja Centro;11/09/2026;1;13,0;2457,03;🔴 Prioritário (até 30 dias);B;Fornecedor Alfa;31,0;12,0
+PC000058;Loja Centro;03/10/2026;2;13,0;2387,08;🟡 Planejado;B;Fornecedor Alfa;32,0;11,5
+PC000058;Loja Centro;14/10/2026;3;18,0;3346,09;🟡 Planejado;B;Fornecedor Alfa;22,0;16,3
+PC000058;Loja Centro;03/11/2026;3;18,0;3319,72;🟡 Planejado;B;Fornecedor Alfa;22,0;16,3
+PC000058;Loja Centro;18/11/2026;4;22,0;4053,92;🟡 Planejado;B;Fornecedor Alfa;19,0;19,6
+PC000058;Loja Centro;09/12/2026;4;23,0;4184,57;🟡 Planejado;B;Fornecedor Alfa;19,0;19,6
+PC000058;Loja Centro;17/01/2027;6;14,0;2659,88;🟡 Planejado;B;Fornecedor Alfa;28,0;13,0
+PC000058;Loja Centro;07/02/2027;6;15,0;2770,71;🟡 Planejado;B;Fornecedor Alfa;28,0;13,0
+PC000886;Loja Centro;26/10/2026;3;14,0;2917,83;🟡 Planejado;B;Fornecedor Alfa;30,0;12,1
+PC000886;Loja Centro;12/11/2026;4;18,0;3907,62;🟡 Planejado;B;Fornecedor Alfa;24,0;15,3
+PC000886;Loja Centro;02/12/2026;4;17,0;3549,51;🟡 Planejado;B;Fornecedor Alfa;24,0;15,3
+PC000886;Loja Centro;08/01/2027;5;11,0;2416,93;🟡 Planejado;B;Fornecedor Alfa;36,0;10,0
+PC000886;Loja Centro;25/01/2027;6;13,0;2654,65;🟡 Planejado;B;Fornecedor Alfa;33,0;11,1
+PC000959;Loja Centro;14/08/2026;1;10,0;2753,62;🚨 Urgente (até 7 dias);B;Fornecedor Alfa;53,0;6,9
+PC000959;Loja Centro;04/09/2026;1;8,0;2299,12;🔴 Prioritário (até 30 dias);B;Fornecedor Alfa;53,0;6,9
+PC000959;Loja Centro;24/09/2026;2;8,0;2230,29;🟡 Planejado;B;Fornecedor Alfa;52,0;7,0
+PC000959;Loja Centro;13/10/2026;3;11,0;3312,15;🟡 Planejado;B;Fornecedor Alfa;41,0;8,8
+PC000959;Loja Centro;03/11/2026;3;10,0;2938,95;🟡 Planejado;B;Fornecedor Alfa;41,0;8,8
+PC000959;Loja Centro;19/11/2026;4;12,0;3340,41;🟡 Planejado;B;Fornecedor Alfa;36,0;10,3
+PC000959;Loja Centro;10/12/2026;4;12,0;3420,73;🟡 Planejado;B;Fornecedor Alfa;36,0;10,3
+PC000959;Loja Centro;12/01/2027;6;8,0;2361,96;🟡 Planejado;B;Fornecedor Alfa;49,0;7,4
+PC000959;Loja Centro;02/02/2027;6;9,0;2463,2;🟡 Planejado;B;Fornecedor Alfa;49,0;7,4
+PC000731;Loja Centro;23/08/2026;1;14,0;1954,93;🔴 Prioritário (até 30 dias);B;Fornecedor Beta;30,0;12,3
+PC000731;Loja Centro;12/09/2026;1;13,0;1928,85;🔴 Prioritário (até 30 dias);B;Fornecedor Beta;30,0;12,3
+PC000731;Loja Centro;25/09/2026;2;18,0;2531,08;🟡 Planejado;B;Fornecedor Beta;24,0;15,3
+PC000731;Loja Centro;13/10/2026;3;22,0;3169,93;🟡 Planejado;B;Fornecedor Beta;20,0;18,5
+PC000731;Loja Centro;02/11/2026;3;20,0;2898,75;🟡 Planejado;B;Fornecedor Beta;20,0;18,5
+PC000731;Loja Centro;17/11/2026;4;25,0;3548,64;🟡 Planejado;B;Fornecedor Beta;16,0;22,3
+PC000731;Loja Centro;07/12/2026;4;24,0;3496,39;🟡 Planejado;B;Fornecedor Beta;16,0;22,3
+PC000731;Loja Centro;12/01/2027;6;18,0;2551,81;🟡 Planejado;B;Fornecedor Beta;23,0;16,1
+PC000731;Loja Centro;02/02/2027;6;19,0;2657,27;🟡 Planejado;B;Fornecedor Beta;23,0;16,1
+PC000557;Loja Centro;19/08/2026;1;8,0;2292,34;🚨 Urgente (até 7 dias);B;Fornecedor Gamma;50,0;7,2
+PC000557;Loja Centro;09/09/2026;1;8,0;2315,86;🔴 Prioritário (até 30 dias);B;Fornecedor Gamma;50,0;7,2
+PC000557;Loja Centro;26/09/2026;2;9,0;2451,64;🟡 Planejado;B;Fornecedor Gamma;46,0;7,9
+PC000557;Loja Centro;13/10/2026;3;12,0;3304,23;🟡 Planejado;B;Fornecedor Gamma;37,0;9,9
+PC000557;Loja Centro;03/11/2026;3;11,0;3179,36;🟡 Planejado;B;Fornecedor Gamma;37,0;9,9
+PC000557;Loja Centro;20/11/2026;4;13,0;3558,97;🟡 Planejado;B;Fornecedor Gamma;32,0;11,3
+PC000557;Loja Centro;11/12/2026;4;13,0;3601,59;🟡 Planejado;B;Fornecedor Gamma;32,0;11,3
+PC000557;Loja Centro;15/01/2027;6;9,0;2488,24;🟡 Planejado;B;Fornecedor Gamma;45,0;8,0
+PC000557;Loja Centro;04/02/2027;6;9,0;2447,26;🟡 Planejado;B;Fornecedor Gamma;45,0;8,0
+PC000704;Loja Centro;15/08/2026;1;10,0;2402,1;🚨 Urgente (até 7 dias);B;Fornecedor Alfa;39,0;9,3
+PC000704;Loja Centro;05/09/2026;1;11,0;2475,46;🔴 Prioritário (até 30 dias);B;Fornecedor Alfa;39,0;9,3
+PC000704;Loja Centro;25/09/2026;2;11,0;2551,45;🟡 Planejado;B;Fornecedor Alfa;38,0;9,6
+PC000704;Loja Centro;15/10/2026;3;11,0;2489,75;🟡 Planejado;B;Fornecedor Alfa;38,0;9,7
+PC000704;Loja Centro;05/11/2026;3;11,0;2581,09;🟡 Planejado;B;Fornecedor Alfa;38,0;9,7
+PC000704;Loja Centro;25/11/2026;4;11,0;2486,0;🟡 Planejado;B;Fornecedor Alfa;38,0;9,7
+PC000704;Loja Centro;15/12/2026;5;11,0;2477,0;🟡 Planejado;B;Fornecedor Alfa;37,0;9,7
+PC000704;Loja Centro;04/01/2027;5;11,0;2472,36;🟡 Planejado;B;Fornecedor Alfa;37,0;9,7
+PC000704;Loja Centro;24/01/2027;6;11,0;2476,27;🟡 Planejado;B;Fornecedor Alfa;37,0;9,7
+PC000668;Loja Centro;01/01/2027;5;7,0;2918,06;🟡 Planejado;B;Fornecedor Beta;59,0;6,2
+PC000668;Loja Centro;23/01/2027;6;7,0;2746,81;🟡 Planejado;B;Fornecedor Beta;62,0;5,9
+PC000857;Loja Centro;28/08/2026;1;6,0;2072,34;🔴 Prioritário (até 30 dias);B;Fornecedor Alfa;68,0;5,3
+PC000857;Loja Centro;17/09/2026;2;6,0;2116,38;🟡 Planejado;B;Fornecedor Alfa;67,0;5,5
+PC000857;Loja Centro;08/10/2026;2;6,0;2152,12;🟡 Planejado;B;Fornecedor Alfa;67,0;5,5
+PC000857;Loja Centro;25/10/2026;3;7,0;2357,89;🟡 Planejado;B;Fornecedor Alfa;60,0;6,1
+PC000857;Loja Centro;14/11/2026;4;7,0;2478,85;🟡 Planejado;B;Fornecedor Alfa;58,0;6,3
+PC000857;Loja Centro;05/12/2026;4;7,0;2492,22;🟡 Planejado;B;Fornecedor Alfa;58,0;6,3
+PC000857;Loja Centro;30/12/2026;5;6,0;2187,86;🟡 Planejado;B;Fornecedor Alfa;65,0;5,6
+PC000857;Loja Centro;19/01/2027;6;6,0;2185,63;🟡 Planejado;B;Fornecedor Alfa;64,0;5,7
+PC000857;Loja Centro;09/02/2027;6;7,0;2247,57;🟡 Planejado;B;Fornecedor Alfa;64,0;5,7
+PC000176;Loja Centro;14/08/2026;1;15,0;3819,89;🚨 Urgente (até 7 dias);B;Fornecedor Gamma;47,0;7,8
+PC000176;Loja Centro;03/09/2026;1;9,0;2104,01;🔴 Prioritário (até 30 dias);B;Fornecedor Gamma;47,0;7,8
+PC000176;Loja Centro;20/09/2026;2;10,0;2410,03;🟡 Planejado;B;Fornecedor Gamma;42,0;8,7
+PC000176;Loja Centro;11/10/2026;2;10,0;2481,17;🟡 Planejado;B;Fornecedor Gamma;42,0;8,7
+PC000176;Loja Centro;26/10/2026;3;12,0;2920,42;🟡 Planejado;B;Fornecedor Gamma;35,0;10,3
+PC000176;Loja Centro;13/11/2026;4;13,0;3249,9;🟡 Planejado;B;Fornecedor Gamma;31,0;11,6
+PC000176;Loja Centro;03/12/2026;4;13,0;3140,86;🟡 Planejado;B;Fornecedor Gamma;31,0;11,6
+PC000176;Loja Centro;30/12/2026;5;11,0;2639,66;🟡 Planejado;B;Fornecedor Gamma;38,0;9,6
+PC000176;Loja Centro;21/01/2027;6;10,0;2516,8;🟡 Planejado;B;Fornecedor Gamma;40,0;9,1
+PC000207;Loja Centro;19/01/2027;6;10,0;2996,46;🟡 Planejado;B;Fornecedor Delta;43,0;8,4
+PC000207;Loja Centro;08/02/2027;6;9,0;2865,75;🟡 Planejado;B;Fornecedor Delta;43,0;8,4
+PC000180;Loja Centro;02/11/2026;3;12,0;2918,39;🟡 Planejado;B;Fornecedor Gamma;35,0;10,4
+PC000180;Loja Centro;20/11/2026;4;12,0;3025,36;🟡 Planejado;B;Fornecedor Gamma;33,0;11,1
+PC000180;Loja Centro;10/12/2026;4;12,0;3013,52;🟡 Planejado;B;Fornecedor Gamma;33,0;11,1
+PC000180;Loja Centro;17/01/2027;6;9,0;2173,4;🟡 Planejado;B;Fornecedor Gamma;47,0;7,8
+PC000180;Loja Centro;07/02/2027;6;9,0;2211,85;🟡 Planejado;B;Fornecedor Gamma;47,0;7,8
+PC000223;Loja Centro;31/08/2026;1;12,0;2341,78;🔴 Prioritário (até 30 dias);B;Fornecedor Alfa;34,0;10,6
+PC000223;Loja Centro;21/09/2026;2;12,0;2387,11;🟡 Planejado;B;Fornecedor Alfa;35,0;10,5
+PC000223;Loja Centro;11/10/2026;2;12,0;2298,81;🟡 Planejado;B;Fornecedor Alfa;35,0;10,5
+PC000223;Loja Centro;01/11/2026;3;12,0;2398,49;🟡 Planejado;B;Fornecedor Alfa;35,0;10,5
+PC000223;Loja Centro;22/11/2026;4;12,0;2404,95;🟡 Planejado;B;Fornecedor Alfa;35,0;10,5
+PC000223;Loja Centro;13/12/2026;5;12,0;2406,23;🟡 Planejado;B;Fornecedor Alfa;35,0;10,5
+PC000223;Loja Centro;02/01/2027;5;12,0;2292,01;🟡 Planejado;B;Fornecedor Alfa;35,0;10,5
+PC000223;Loja Centro;23/01/2027;6;12,0;2406,35;🟡 Planejado;B;Fornecedor Alfa;35,0;10,5
+PC000286;Loja Centro;12/11/2026;4;13,0;2981,16;🟡 Planejado;B;Fornecedor Delta;35,0;10,4
+PC000286;Loja Centro;03/12/2026;4;12,0;2842,95;🟡 Planejado;B;Fornecedor Delta;35,0;10,4
+PC000286;Loja Centro;06/01/2027;5;9,0;2018,72;🟡 Planejado;B;Fornecedor Delta;49,0;7,4
+PC000286;Loja Centro;27/01/2027;6;8,0;1903,97;🟡 Planejado;B;Fornecedor Delta;50,0;7,3
+PC000235;Loja Centro;24/10/2026;3;8,0;2463,24;🟡 Planejado;B;Fornecedor Beta;48,0;7,5
+PC000235;Loja Centro;12/11/2026;4;12,0;3585,18;🟡 Planejado;B;Fornecedor Beta;39,0;9,4
+PC000235;Loja Centro;03/12/2026;4;11,0;3213,48;🟡 Planejado;B;Fornecedor Beta;39,0;9,4
+PC000235;Loja Centro;09/01/2027;5;7,0;2038,19;🟡 Planejado;B;Fornecedor Beta;59,0;6,2
+PC000235;Loja Centro;27/01/2027;6;7,0;2217,02;🟡 Planejado;B;Fornecedor Beta;55,0;6,6
+PC000879;Loja Centro;14/08/2026;1;23,0;3272,94;🚨 Urgente (até 7 dias);B;Fornecedor Alfa;26,0;14,0
+PC000879;Loja Centro;03/09/2026;1;15,0;2141,02;🔴 Prioritário (até 30 dias);B;Fornecedor Alfa;26,0;14,0
+PC000879;Loja Centro;23/09/2026;2;16,0;2204,68;🟡 Planejado;B;Fornecedor Alfa;26,0;14,2
+PC000879;Loja Centro;13/10/2026;3;29,0;4074,57;🟡 Planejado;B;Fornecedor Alfa;18,0;20,3
+PC000879;Loja Centro;02/11/2026;3;22,0;3097,0;🟡 Planejado;B;Fornecedor Alfa;18,0;20,3
+PC000879;Loja Centro;18/11/2026;4;28,0;3844,41;🟡 Planejado;B;Fornecedor Alfa;15,0;24,1
+PC000879;Loja Centro;09/12/2026;4;28,0;3862,55;🟡 Planejado;B;Fornecedor Alfa;15,0;24,1
+PC000879;Loja Centro;15/01/2027;6;19,0;2612,83;🟡 Planejado;B;Fornecedor Alfa;22,0;16,3
+PC000879;Loja Centro;05/02/2027;6;19,0;2619,98;🟡 Planejado;B;Fornecedor Alfa;22,0;16,3
+PC000974;Loja Centro;18/08/2026;1;9,0;2220,8;🚨 Urgente (até 7 dias);B;Fornecedor Delta;44,0;8,3
+PC000974;Loja Centro;08/09/2026;1;10,0;2252,92;🔴 Prioritário (até 30 dias);B;Fornecedor Delta;44,0;8,3
+PC000974;Loja Centro;03/10/2026;2;8,0;2002,84;🟡 Planejado;B;Fornecedor Delta;49,0;7,4
+PC000974;Loja Centro;14/10/2026;3;12,0;2748,58;🟡 Planejado;B;Fornecedor Delta;35,0;10,5
+PC000974;Loja Centro;03/11/2026;3;12,0;2728,17;🟡 Planejado;B;Fornecedor Delta;35,0;10,5
+PC000974;Loja Centro;22/11/2026;4;12,0;2837,09;🟡 Planejado;B;Fornecedor Delta;34,0;10,9
+PC000974;Loja Centro;18/12/2026;5;10,0;2308,93;🟡 Planejado;B;Fornecedor Delta;42,0;8,6
+PC000974;Loja Centro;08/01/2027;5;10,0;2356,7;🟡 Planejado;B;Fornecedor Delta;42,0;8,6
+PC000974;Loja Centro;27/01/2027;6;10,0;2476,9;🟡 Planejado;B;Fornecedor Delta;40,0;9,1
+PC000263;Loja Centro;11/10/2026;2;13,0;1875,55;🟡 Planejado;C;Fornecedor Gamma;49,0;7,5
+PC000263;Loja Centro;14/10/2026;3;23,0;3345,72;🟡 Planejado;C;Fornecedor Gamma;28,0;13,0
+PC000263;Loja Centro;09/11/2026;3;23,0;3355,65;🟡 Planejado;C;Fornecedor Gamma;28,0;13,0
+PC000263;Loja Centro;30/11/2026;4;25,0;3615,32;🟡 Planejado;C;Fornecedor Gamma;26,0;14,2
+PC000263;Loja Centro;18/01/2027;6;16,0;2355,53;🟡 Planejado;C;Fornecedor Gamma;39,0;9,4
+PC000440;Loja Centro;14/08/2026;1;12,0;3745,1;🚨 Urgente (até 7 dias);C;Fornecedor Delta;77,0;4,8
+PC000440;Loja Centro;08/09/2026;1;8,0;2490,65;🔴 Prioritário (até 30 dias);C;Fornecedor Delta;77,0;4,8
+PC000440;Loja Centro;03/10/2026;2;8,0;2561,64;🟡 Planejado;C;Fornecedor Delta;76,0;4,8
+PC000440;Loja Centro;15/10/2026;3;12,0;3673,44;🟡 Planejado;C;Fornecedor Delta;53,0;6,8
+PC000440;Loja Centro;10/11/2026;3;12,0;3720,33;🟡 Planejado;C;Fornecedor Delta;53,0;6,8
+PC000440;Loja Centro;01/12/2026;4;13,0;4004,2;🟡 Planejado;C;Fornecedor Delta;49,0;7,5
+PC000440;Loja Centro;18/01/2027;6;9,0;2606,37;🟡 Planejado;C;Fornecedor Delta;76,0;4,8
+PC000487;Loja Centro;14/08/2026;1;17,0;3095,93;🚨 Urgente (até 7 dias);C;Fornecedor Delta;40,0;9,1
+PC000487;Loja Centro;09/09/2026;1;16,0;2967,67;🔴 Prioritário (até 30 dias);C;Fornecedor Delta;40,0;9,1
+PC000487;Loja Centro;05/10/2026;2;16,0;2914,24;🟡 Planejado;C;Fornecedor Delta;40,0;9,0
+PC000487;Loja Centro;31/10/2026;3;16,0;2930,89;🟡 Planejado;C;Fornecedor Delta;40,0;9,0
+PC000487;Loja Centro;26/11/2026;4;16,0;2936,47;🟡 Planejado;C;Fornecedor Delta;40,0;9,0
+PC000487;Loja Centro;22/12/2026;5;16,0;2938,31;🟡 Planejado;C;Fornecedor Delta;40,0;9,0
+PC000487;Loja Centro;17/01/2027;6;16,0;2938,92;🟡 Planejado;C;Fornecedor Delta;40,0;9,0
+PC000041;Loja Centro;04/09/2026;1;11,0;2666,3;🔴 Prioritário (até 30 dias);C;Fornecedor Delta;59,0;6,2
+PC000041;Loja Centro;04/10/2026;2;10,0;2439,86;🟡 Planejado;C;Fornecedor Delta;64,0;5,7
+PC000041;Loja Centro;16/10/2026;3;14,0;3448,15;🟡 Planejado;C;Fornecedor Delta;46,0;8,0
+PC000041;Loja Centro;10/11/2026;3;14,0;3369,05;🟡 Planejado;C;Fornecedor Delta;46,0;8,0
+PC000041;Loja Centro;27/11/2026;4;17,0;4080,21;🟡 Planejado;C;Fornecedor Delta;39,0;9,5
+PC000041;Loja Centro;08/01/2027;5;12,0;2860,6;🟡 Planejado;C;Fornecedor Delta;54,0;6,7
+PC000041;Loja Centro;01/02/2027;6;12,0;3055,08;🟡 Planejado;C;Fornecedor Delta;52,0;7,0
+PC000069;Loja Centro;27/08/2026;1;16,0;2694,68;🔴 Prioritário (até 30 dias);C;Fornecedor Delta;39,0;9,4
+PC000069;Loja Centro;21/09/2026;2;16,0;2679,33;🟡 Planejado;C;Fornecedor Delta;39,0;9,4
+PC000069;Loja Centro;13/10/2026;3;19,0;3084,43;🟡 Planejado;C;Fornecedor Delta;34,0;10,6
+PC000069;Loja Centro;08/11/2026;3;19,0;3111,66;🟡 Planejado;C;Fornecedor Delta;34,0;10,6
+PC000069;Loja Centro;01/12/2026;4;20,0;3269,14;🟡 Planejado;C;Fornecedor Delta;33,0;11,2
+PC000069;Loja Centro;04/01/2027;5;17,0;2788,78;🟡 Planejado;C;Fornecedor Delta;38,0;9,5
+PC000069;Loja Centro;28/01/2027;6;17,0;2864,9;🟡 Planejado;C;Fornecedor Delta;37,0;9,9
+PC000118;Loja Centro;17/08/2026;1;6,0;2430,58;🚨 Urgente (até 7 dias);C;Fornecedor Gamma;104,0;3,5
+PC000118;Loja Centro;11/09/2026;1;6,0;2371,74;🔴 Prioritário (até 30 dias);C;Fornecedor Gamma;104,0;3,5
+PC000118;Loja Centro;04/10/2026;2;6,0;2514,47;🟡 Planejado;C;Fornecedor Gamma;100,0;3,7
+PC000118;Loja Centro;29/10/2026;3;6,0;2565,18;🟡 Planejado;C;Fornecedor Gamma;99,0;3,7
+PC000118;Loja Centro;23/11/2026;4;6,0;2531,24;🟡 Planejado;C;Fornecedor Gamma;98,0;3,7
+PC000118;Loja Centro;18/12/2026;5;6,0;2523,1;🟡 Planejado;C;Fornecedor Gamma;98,0;3,7
+PC000118;Loja Centro;12/01/2027;6;6,0;2521,18;🟡 Planejado;C;Fornecedor Gamma;98,0;3,7
+PC000118;Loja Centro;06/02/2027;6;6,0;2520,39;🟡 Planejado;C;Fornecedor Gamma;98,0;3,7
+PC000129;Loja Centro;17/10/2026;3;20,0;3438,35;🟡 Planejado;C;Fornecedor Delta;31,0;11,6
+PC000129;Loja Centro;12/11/2026;4;24,0;4100,42;🟡 Planejado;C;Fornecedor Delta;29,0;12,4
+PC000129;Loja Centro;08/12/2026;4;22,0;3819,38;🟡 Planejado;C;Fornecedor Delta;29,0;12,4
+PC000129;Loja Centro;20/01/2027;6;16,0;2828,6;🟡 Planejado;C;Fornecedor Delta;38,0;9,5
+PC000702;Loja Centro;20/11/2026;4;18,0;3629,72;🟡 Planejado;C;Fornecedor Gamma;35,0;10,3
+PC000702;Loja Centro;30/12/2026;5;13,0;2593,19;🟡 Planejado;C;Fornecedor Gamma;50,0;7,3
+PC000702;Loja Centro;24/01/2027;6;13,0;2646,87;🟡 Planejado;C;Fornecedor Gamma;49,0;7,5
+PC000673;Loja Centro;01/12/2026;4;10,0;3833,81;🟡 Planejado;C;Fornecedor Gamma;65,0;5,6
+PC000673;Loja Centro;16/01/2027;6;6,0;2540,09;🟡 Planejado;C;Fornecedor Gamma;98,0;3,7
+PC000705;Loja Centro;19/09/2026;2;10,0;2026,73;🟡 Planejado;C;Fornecedor Alfa;65,0;5,6
+PC000705;Loja Centro;13/10/2026;3;16,0;3247,33;🟡 Planejado;C;Fornecedor Alfa;49,0;7,4
+PC000705;Loja Centro;07/11/2026;3;13,0;2563,68;🟡 Planejado;C;Fornecedor Alfa;49,0;7,4
+PC000705;Loja Centro;22/11/2026;4;16,0;3320,15;🟡 Planejado;C;Fornecedor Alfa;39,0;9,4
+PC000705;Loja Centro;27/12/2026;5;13,0;2552,7;🟡 Planejado;C;Fornecedor Alfa;50,0;7,3
+PC000705;Loja Centro;26/01/2027;6;11,0;2285,86;🟡 Planejado;C;Fornecedor Alfa;56,0;6,6
+PC000401;Loja Centro;14/08/2026;1;55,0;4520,6;🚨 Urgente (até 7 dias);C;Fornecedor Beta;19,0;19,4
+PC000401;Loja Centro;09/09/2026;1;34,0;2820,71;🔴 Prioritário (até 30 dias);C;Fornecedor Beta;19,0;19,4
+PC000401;Loja Centro;09/10/2026;2;31,0;2532,32;🟡 Planejado;C;Fornecedor Beta;21,0;17,8
+PC000401;Loja Centro;20/10/2026;3;43,0;3558,56;🟡 Planejado;C;Fornecedor Beta;15,0;24,8
+PC000401;Loja Centro;12/11/2026;4;72,0;5859,27;🟡 Planejado;C;Fornecedor Beta;11,0;33,3
+PC000401;Loja Centro;08/12/2026;4;59,0;4846,38;🟡 Planejado;C;Fornecedor Beta;11,0;33,3
+PC000401;Loja Centro;30/01/2027;6;42,0;3421,78;🟡 Planejado;C;Fornecedor Beta;15,0;23,7
+PC000946;Loja Centro;15/11/2026;4;9,0;2116,3;🟡 Planejado;C;Fornecedor Beta;71,0;5,2
+PC000946;Loja Centro;11/12/2026;4;9,0;2178,18;🟡 Planejado;C;Fornecedor Beta;71,0;5,2
+PC000946;Loja Centro;06/01/2027;5;9,0;2175,34;🟡 Planejado;C;Fornecedor Beta;71,0;5,2
+PC000946;Loja Centro;01/02/2027;6;9,0;2176,27;🟡 Planejado;C;Fornecedor Beta;71,0;5,2
+PC000751;Loja Centro;14/08/2026;1;37,0;8985,34;🚨 Urgente (até 7 dias);C;Fornecedor Gamma;23,0;15,6
+PC000751;Loja Centro;09/09/2026;1;28,0;6783,85;🔴 Prioritário (até 30 dias);C;Fornecedor Gamma;23,0;15,6
+PC000751;Loja Centro;05/10/2026;2;28,0;6783,85;🟡 Planejado;C;Fornecedor Gamma;23,0;15,6
+PC000751;Loja Centro;31/10/2026;3;28,0;6783,85;🟡 Planejado;C;Fornecedor Gamma;23,0;15,6
+PC000751;Loja Centro;26/11/2026;4;28,0;6783,85;🟡 Planejado;C;Fornecedor Gamma;23,0;15,6
+PC000751;Loja Centro;22/12/2026;5;28,0;6783,85;🟡 Planejado;C;Fornecedor Gamma;23,0;15,6
+PC000751;Loja Centro;17/01/2027;6;28,0;6783,85;🟡 Planejado;C;Fornecedor Gamma;23,0;15,6
+PC000437;Loja Centro;25/09/2026;2;17,0;2500,51;🟡 Planejado;C;Fornecedor Gamma;37,0;9,8
+PC000437;Loja Centro;17/10/2026;3;19,0;2803,51;🟡 Planejado;C;Fornecedor Gamma;33,0;11,0
+PC000437;Loja Centro;11/11/2026;3;19,0;2706,96;🟡 Planejado;C;Fornecedor Gamma;33,0;11,0
+PC000437;Loja Centro;03/12/2026;4;21,0;2985,09;🟡 Planejado;C;Fornecedor Gamma;31,0;11,8
+PC000437;Loja Centro;04/01/2027;5;18,0;2551,26;🟡 Planejado;C;Fornecedor Gamma;36,0;10,3
+PC000437;Loja Centro;29/01/2027;6;19,0;2683,95;🟡 Planejado;C;Fornecedor Gamma;35,0;10,5
+PC000851;Loja Centro;11/09/2026;1;13,0;1761,08;🔴 Prioritário (até 30 dias);C;Fornecedor Alfa;49,0;7,5
+PC000851;Loja Centro;04/10/2026;2;13,0;1790,84;🟡 Planejado;C;Fornecedor Alfa;47,0;7,8
+PC000851;Loja Centro;20/10/2026;3;17,0;2319,15;🟡 Planejado;C;Fornecedor Alfa;37,0;9,8
+PC000851;Loja Centro;12/11/2026;4;25,0;3313,43;🟡 Planejado;C;Fornecedor Alfa;30,0;12,2
+PC000851;Loja Centro;08/12/2026;4;22,0;2920,97;🟡 Planejado;C;Fornecedor Alfa;30,0;12,2
+PC000851;Loja Centro;28/01/2027;6;14,0;1944,12;🟡 Planejado;C;Fornecedor Alfa;44,0;8,3
+PC000695;Loja Centro;07/11/2026;3;13,0;2227,57;🟡 Planejado;C;Fornecedor Beta;48,0;7,5
+PC000695;Loja Centro;02/12/2026;4;13,0;2220,94;🟡 Planejado;C;Fornecedor Beta;48,0;7,6
+PC000695;Loja Centro;27/12/2026;5;13,0;2213,56;🟡 Planejado;C;Fornecedor Beta;48,0;7,6
+PC000695;Loja Centro;21/01/2027;6;13,0;2211,71;🟡 Planejado;C;Fornecedor Beta;48,0;7,6
+PC000669;Loja Centro;14/08/2026;1;35,0;2106,28;🚨 Urgente (até 7 dias);C;Fornecedor Beta;22,0;16,5
+PC000669;Loja Centro;09/09/2026;1;29,0;1750,5;🔴 Prioritário (até 30 dias);C;Fornecedor Beta;22,0;16,5
+PC000669;Loja Centro;03/10/2026;2;29,0;1738,3;🟡 Planejado;C;Fornecedor Beta;22,0;16,9
+PC000669;Loja Centro;18/10/2026;3;38,0;2280,28;🟡 Planejado;C;Fornecedor Beta;17,0;22,0
+PC000669;Loja Centro;12/11/2026;4;57,0;3415,43;🟡 Planejado;C;Fornecedor Beta;13,0;27,1
+PC000669;Loja Centro;07/12/2026;4;46,0;2761,53;🟡 Planejado;C;Fornecedor Beta;13,0;27,1
+PC000669;Loja Centro;21/01/2027;6;37,0;2178,32;🟡 Planejado;C;Fornecedor Beta;18,0;20,6
+PC000945;Loja Centro;22/01/2027;6;6,0;2027,0;🟡 Planejado;C;Fornecedor Alfa;110,0;3,3
+PC000434;Loja Centro;13/09/2026;2;8,0;2288,55;🟡 Planejado;C;Fornecedor Alfa;92,0;4,0
+PC000434;Loja Centro;08/10/2026;2;7,0;2052,15;🟡 Planejado;C;Fornecedor Alfa;92,0;4,0
+PC000434;Loja Centro;25/10/2026;3;9,0;2578,93;🟡 Planejado;C;Fornecedor Alfa;76,0;4,8
+PC000434;Loja Centro;14/11/2026;4;10,0;2952,99;🟡 Planejado;C;Fornecedor Alfa;65,0;5,6
+PC000434;Loja Centro;09/12/2026;4;10,0;2902,42;🟡 Planejado;C;Fornecedor Alfa;65,0;5,6
+PC000434;Loja Centro;23/01/2027;6;7,0;2168,37;🟡 Planejado;C;Fornecedor Alfa;89,0;4,1
+PC000355;Loja Centro;06/09/2026;1;11,0;2411,46;🔴 Prioritário (até 30 dias);C;Fornecedor Gamma;58,0;6,2
+PC000355;Loja Centro;30/09/2026;2;11,0;2489,3;🟡 Planejado;C;Fornecedor Gamma;57,0;6,4
+PC000355;Loja Centro;25/10/2026;3;11,0;2534,78;🟡 Planejado;C;Fornecedor Gamma;56,0;6,5
+PC000355;Loja Centro;19/11/2026;4;11,0;2516,39;🟡 Planejado;C;Fornecedor Gamma;56,0;6,5
+PC000355;Loja Centro;14/12/2026;5;11,0;2509,83;🟡 Planejado;C;Fornecedor Gamma;56,0;6,6
+PC000355;Loja Centro;09/01/2027;5;12,0;2602,6;🟡 Planejado;C;Fornecedor Gamma;56,0;6,6
+PC000355;Loja Centro;03/02/2027;6;11,0;2510,14;🟡 Planejado;C;Fornecedor Gamma;56,0;6,6
+PC000953;Loja Centro;27/11/2026;4;11,0;2879,83;🟡 Planejado;C;Fornecedor Alfa;61,0;6,0
+PC000953;Loja Centro;05/01/2027;5;8,0;2088,16;🟡 Planejado;C;Fornecedor Alfa;82,0;4,5
+PC000953;Loja Centro;02/02/2027;6;7,0;2019,96;🟡 Planejado;C;Fornecedor Alfa;86,0;4,3
+PC000771;Loja Centro;23/09/2026;2;12,0;2631,17;🟡 Planejado;C;Fornecedor Delta;51,0;7,2
+PC000771;Loja Centro;18/10/2026;3;12,0;2619,23;🟡 Planejado;C;Fornecedor Delta;50,0;7,2
+PC000771;Loja Centro;12/11/2026;4;12,0;2616,97;🟡 Planejado;C;Fornecedor Delta;50,0;7,2
+PC000771;Loja Centro;07/12/2026;4;12,0;2615,91;🟡 Planejado;C;Fornecedor Delta;50,0;7,2
+PC000771;Loja Centro;01/01/2027;5;12,0;2616,68;🟡 Planejado;C;Fornecedor Delta;50,0;7,2
+PC000771;Loja Centro;26/01/2027;6;12,0;2616,39;🟡 Planejado;C;Fornecedor Delta;50,0;7,2
+PC000461;Loja Centro;12/11/2026;4;23,0;4163,27;🟡 Planejado;C;Fornecedor Beta;35,0;10,5
+PC000461;Loja Centro;08/12/2026;4;19,0;3420,0;🟡 Planejado;C;Fornecedor Beta;35,0;10,5
+PC000461;Loja Centro;27/01/2027;6;13,0;2338,22;🟡 Planejado;C;Fornecedor Beta;50,0;7,3
+PC000604;Loja Centro;28/09/2026;2;12,0;1946,47;🟡 Planejado;C;Fornecedor Delta;54,0;6,7
+PC000604;Loja Centro;14/10/2026;3;15,0;2536,27;🟡 Planejado;C;Fornecedor Delta;42,0;8,8
+PC000604;Loja Centro;09/11/2026;3;16,0;2579,8;🟡 Planejado;C;Fornecedor Delta;42,0;8,8
+PC000604;Loja Centro;24/11/2026;4;19,0;3087,27;🟡 Planejado;C;Fornecedor Delta;34,0;10,9
+PC000604;Loja Centro;11/01/2027;6;16,0;2652,12;🟡 Planejado;C;Fornecedor Delta;46,0;7,9
+PC000604;Loja Centro;05/02/2027;6;14,0;2240,75;🟡 Planejado;C;Fornecedor Delta;46,0;7,9
+PC000847;Loja Centro;14/08/2026;1;50,0;3112,11;🚨 Urgente (até 7 dias);C;Fornecedor Gamma;23,0;15,8
+PC000847;Loja Centro;08/09/2026;1;27,0;1664,78;🔴 Prioritário (até 30 dias);C;Fornecedor Gamma;23,0;15,8
+PC000847;Loja Centro;02/10/2026;2;28,0;1758,37;🟡 Planejado;C;Fornecedor Gamma;22,0;16,3
+PC000847;Loja Centro;27/10/2026;3;29,0;1764,14;🟡 Planejado;C;Fornecedor Gamma;22,0;16,4
+PC000847;Loja Centro;21/11/2026;4;28,0;1747,7;🟡 Planejado;C;Fornecedor Gamma;22,0;16,5
+PC000847;Loja Centro;16/12/2026;5;28,0;1743,36;🟡 Planejado;C;Fornecedor Gamma;22,0;16,5
+PC000847;Loja Centro;10/01/2027;5;28,0;1741,19;🟡 Planejado;C;Fornecedor Gamma;22,0;16,5
+PC000847;Loja Centro;04/02/2027;6;28,0;1742,71;🟡 Planejado;C;Fornecedor Gamma;22,0;16,5
+PC000473;Loja Centro;16/10/2026;3;19,0;7506,17;🟡 Planejado;C;Fornecedor Alfa;34,0;10,8
+PC000473;Loja Centro;11/11/2026;3;19,0;7614,48;🟡 Planejado;C;Fornecedor Alfa;34,0;10,8
+PC000473;Loja Centro;07/12/2026;4;19,0;7614,48;🟡 Planejado;C;Fornecedor Alfa;34,0;10,8
+PC000473;Loja Centro;02/01/2027;5;19,0;7614,48;🟡 Planejado;C;Fornecedor Alfa;34,0;10,8
+PC000473;Loja Centro;28/01/2027;6;19,0;7614,48;🟡 Planejado;C;Fornecedor Alfa;34,0;10,8
+PC000810;Loja Centro;30/08/2026;1;30,0;1540,45;🔴 Prioritário (até 30 dias);C;Fornecedor Delta;22,0;16,8
+PC000810;Loja Centro;21/09/2026;2;32,0;1661,24;🟡 Planejado;C;Fornecedor Delta;20,0;18,4
+PC000810;Loja Centro;13/10/2026;3;58,0;2999,52;🟡 Planejado;C;Fornecedor Delta;14,0;26,4
+PC000810;Loja Centro;08/11/2026;3;47,0;2416,67;🟡 Planejado;C;Fornecedor Delta;14,0;26,4
+PC000810;Loja Centro;23/11/2026;4;57,0;2913,69;🟡 Planejado;C;Fornecedor Delta;11,0;32,8
+PC000810;Loja Centro;09/01/2027;5;36,0;1829,88;🟡 Planejado;C;Fornecedor Delta;18,0;20,6
+PC000810;Loja Centro;01/02/2027;6;38,0;1957,7;🟡 Planejado;C;Fornecedor Delta;17,0;21,7
+PC000996;Loja Centro;15/10/2026;3;7,0;2197,84;🟡 Planejado;C;Fornecedor Alfa;85,0;4,3
+PC000996;Loja Centro;10/11/2026;3;8,0;2281,85;🟡 Planejado;C;Fornecedor Alfa;85,0;4,3
+PC000996;Loja Centro;05/12/2026;4;7,0;2214,36;🟡 Planejado;C;Fornecedor Alfa;85,0;4,3
+PC000996;Loja Centro;30/12/2026;5;7,0;2207,34;🟡 Planejado;C;Fornecedor Alfa;85,0;4,3
+PC000996;Loja Centro;24/01/2027;6;7,0;2205,11;🟡 Planejado;C;Fornecedor Alfa;85,0;4,3
+PC000182;Loja Centro;30/08/2026;1;11,0;1696,18;🔴 Prioritário (até 30 dias);C;Fornecedor Alfa;59,0;6,2
+PC000182;Loja Centro;27/09/2026;2;10,0;1592,3;🟡 Planejado;C;Fornecedor Alfa;63,0;5,8
+PC000182;Loja Centro;13/10/2026;3;18,0;2785,13;🟡 Planejado;C;Fornecedor Alfa;42,0;8,7
+PC000182;Loja Centro;08/11/2026;3;16,0;2470,53;🟡 Planejado;C;Fornecedor Alfa;42,0;8,7
+PC000182;Loja Centro;28/11/2026;4;18,0;2792,33;🟡 Planejado;C;Fornecedor Alfa;37,0;9,9
+PC000182;Loja Centro;10/01/2027;5;12,0;1883,09;🟡 Planejado;C;Fornecedor Alfa;53,0;6,9
+PC000182;Loja Centro;31/01/2027;6;13,0;2123,84;🟡 Planejado;C;Fornecedor Alfa;48,0;7,6
+PC000889;Loja Centro;18/08/2026;1;6,0;2011,83;🚨 Urgente (até 7 dias);C;Fornecedor Gamma;106,0;3,4
+PC000889;Loja Centro;13/09/2026;2;8,0;2627,41;🟡 Planejado;C;Fornecedor Gamma;93,0;3,9
+PC000889;Loja Centro;08/10/2026;2;7,0;2209,7;🟡 Planejado;C;Fornecedor Gamma;93,0;3,9
+PC000889;Loja Centro;27/10/2026;3;8,0;2602,29;🟡 Planejado;C;Fornecedor Gamma;81,0;4,5
+PC000889;Loja Centro;13/11/2026;4;10,0;3237,82;🟡 Planejado;C;Fornecedor Gamma;64,0;5,7
+PC000889;Loja Centro;09/12/2026;4;10,0;3330,15;🟡 Planejado;C;Fornecedor Gamma;64,0;5,7
+PC000889;Loja Centro;29/01/2027;6;7,0;2221,86;🟡 Planejado;C;Fornecedor Gamma;96,0;3,8
+PC000515;Loja Centro;02/11/2026;3;23,0;2146,84;🟡 Planejado;C;Fornecedor Gamma;28,0;12,9
+PC000515;Loja Centro;18/11/2026;4;29,0;2756,07;🟡 Planejado;C;Fornecedor Gamma;22,0;16,4
+PC000515;Loja Centro;03/01/2027;5;17,0;1612,51;🟡 Planejado;C;Fornecedor Gamma;37,0;9,9
+PC000515;Loja Centro;25/01/2027;6;18,0;1746,61;🟡 Planejado;C;Fornecedor Gamma;34,0;10,7
+PC000255;Loja Centro;13/10/2026;3;9,0;2807,02;🟡 Planejado;C;Fornecedor Delta;78,0;4,7
+PC000255;Loja Centro;08/11/2026;3;8,0;2598,36;🟡 Planejado;C;Fornecedor Delta;78,0;4,7
+PC000255;Loja Centro;26/11/2026;4;10,0;2968,86;🟡 Planejado;C;Fornecedor Delta;67,0;5,5
+PC000255;Loja Centro;11/01/2027;6;8,0;2606,06;🟡 Planejado;C;Fornecedor Delta;86,0;4,3
+PC000255;Loja Centro;05/02/2027;6;7,0;2265,85;🟡 Planejado;C;Fornecedor Delta;86,0;4,3
+PC000430;Loja Centro;09/01/2027;5;4,0;1627,37;🟡 Planejado;C;Fornecedor Alfa;152,0;2,4
+PC000978;Loja Centro;21/10/2026;3;11,0;2089,6;🟡 Planejado;C;Fornecedor Gamma;60,0;6,1
+PC000978;Loja Centro;15/11/2026;4;10,0;2057,24;🟡 Planejado;C;Fornecedor Gamma;60,0;6,1
+PC000978;Loja Centro;10/12/2026;4;10,0;2057,24;🟡 Planejado;C;Fornecedor Gamma;60,0;6,1
+PC000978;Loja Centro;04/01/2027;5;10,0;2057,24;🟡 Planejado;C;Fornecedor Gamma;60,0;6,1
+PC000978;Loja Centro;29/01/2027;6;10,0;2057,24;🟡 Planejado;C;Fornecedor Gamma;60,0;6,1
+PC000431;Loja Centro;14/08/2026;1;11,0;2395,49;🚨 Urgente (até 7 dias);C;Fornecedor Gamma;91,0;4,0
+PC000431;Loja Centro;08/09/2026;1;7,0;1442,63;🔴 Prioritário (até 30 dias);C;Fornecedor Gamma;91,0;4,0
+PC000431;Loja Centro;07/10/2026;2;7,0;1411,82;🟡 Planejado;C;Fornecedor Gamma;96,0;3,8
+PC000431;Loja Centro;21/10/2026;3;8,0;1770,51;🟡 Planejado;C;Fornecedor Gamma;74,0;4,9
+PC000431;Loja Centro;12/11/2026;4;14,0;2944,97;🟡 Planejado;C;Fornecedor Gamma;55,0;6,7
+PC000431;Loja Centro;08/12/2026;4;12,0;2475,33;🟡 Planejado;C;Fornecedor Gamma;55,0;6,7
+PC000431;Loja Centro;31/01/2027;6;7,0;1559,16;🟡 Planejado;C;Fornecedor Gamma;86,0;4,3
+PC000245;Loja Centro;16/10/2026;3;6,0;2182,37;🟡 Planejado;C;Fornecedor Delta;99,0;3,7
+PC000245;Loja Centro;11/11/2026;3;7,0;2258,74;🟡 Planejado;C;Fornecedor Delta;99,0;3,7
+PC000245;Loja Centro;28/11/2026;4;8,0;2680,67;🟡 Planejado;C;Fornecedor Delta;83,0;4,4
+PC000245;Loja Centro;24/01/2027;6;4,0;1546,05;🟡 Planejado;C;Fornecedor Delta;144,0;2,5
+PC000206;Loja Centro;01/02/2027;6;7,0;2496,56;🟡 Planejado;D;Fornecedor Delta;175,0;2,1
+PC000984;Loja Centro;13/10/2026;3;16,0;3489,05;🟡 Planejado;D;Fornecedor Beta;93,0;3,9
+PC000984;Loja Centro;12/11/2026;4;15,0;3378,99;🟡 Planejado;D;Fornecedor Beta;82,0;4,5
+PC000984;Loja Centro;06/01/2027;5;11,0;2363,83;🟡 Planejado;D;Fornecedor Beta;117,0;3,1
+PC000529;Loja Centro;14/08/2026;1;67,0;24260,52;🚨 Urgente (até 7 dias);D;Fornecedor Delta;23,0;15,8
+PC000529;Loja Centro;19/09/2026;2;54,0;19743,94;🟡 Planejado;D;Fornecedor Delta;23,0;15,8
+PC000529;Loja Centro;25/10/2026;3;54,0;19743,94;🟡 Planejado;D;Fornecedor Delta;23,0;15,8
+PC000529;Loja Centro;30/11/2026;4;54,0;19743,94;🟡 Planejado;D;Fornecedor Delta;23,0;15,8
+PC000529;Loja Centro;05/01/2027;5;54,0;19743,94;🟡 Planejado;D;Fornecedor Delta;23,0;15,8
+PC000876;Loja Centro;14/09/2026;2;10,0;2464,16;🟡 Planejado;D;Fornecedor Beta;125,0;2,9
+PC000876;Loja Centro;19/10/2026;3;10,0;2459,35;🟡 Planejado;D;Fornecedor Beta;124,0;2,9
+PC000876;Loja Centro;23/11/2026;4;10,0;2454,07;🟡 Planejado;D;Fornecedor Beta;124,0;2,9
+PC000876;Loja Centro;28/12/2026;5;10,0;2451,94;🟡 Planejado;D;Fornecedor Beta;124,0;2,9
+PC000876;Loja Centro;01/02/2027;6;10,0;2451,13;🟡 Planejado;D;Fornecedor Beta;124,0;2,9
+PC000564;Loja Centro;31/08/2026;1;13,0;1729,62;🔴 Prioritário (até 30 dias);D;Fornecedor Alfa;92,0;4,0
+PC000564;Loja Centro;07/10/2026;2;13,0;1693,0;🟡 Planejado;D;Fornecedor Alfa;95,0;3,9
+PC000564;Loja Centro;24/10/2026;3;18,0;2322,5;🟡 Planejado;D;Fornecedor Alfa;69,0;5,3
+PC000564;Loja Centro;17/11/2026;4;22,0;2839,11;🟡 Planejado;D;Fornecedor Alfa;56,0;6,5
+PC000564;Loja Centro;14/01/2027;6;16,0;2110,85;🟡 Planejado;D;Fornecedor Alfa;76,0;4,8
+PC000333;Loja Centro;31/10/2026;3;24,0;2626,11;🟡 Planejado;D;Fornecedor Gamma;51,0;7,2
+PC000333;Loja Centro;21/11/2026;4;31,0;3383,61;🟡 Planejado;D;Fornecedor Gamma;40,0;9,2
+PC000333;Loja Centro;05/02/2027;6;18,0;1938,63;🟡 Planejado;D;Fornecedor Gamma;71,0;5,2
+PC000611;Loja Centro;14/08/2026;1;28,0;11018,67;🚨 Urgente (até 7 dias);D;Fornecedor Alfa;59,0;6,1
+PC000611;Loja Centro;18/09/2026;2;21,0;8182,4;🟡 Planejado;D;Fornecedor Alfa;59,0;6,1
+PC000611;Loja Centro;23/10/2026;3;21,0;8182,4;🟡 Planejado;D;Fornecedor Alfa;59,0;6,1
+PC000611;Loja Centro;27/11/2026;4;21,0;8182,4;🟡 Planejado;D;Fornecedor Alfa;59,0;6,1
+PC000611;Loja Centro;01/01/2027;5;21,0;8182,4;🟡 Planejado;D;Fornecedor Alfa;59,0;6,1
+PC000611;Loja Centro;05/02/2027;6;21,0;8182,4;🟡 Planejado;D;Fornecedor Alfa;59,0;6,1
+PC000813;Loja Centro;11/09/2026;1;15,0;1915,74;🔴 Prioritário (até 30 dias);D;Fornecedor Beta;80,0;4,5
+PC000813;Loja Centro;09/10/2026;2;17,0;2147,81;🟡 Planejado;D;Fornecedor Beta;72,0;5,1
+PC000813;Loja Centro;01/11/2026;3;21,0;2626,4;🟡 Planejado;D;Fornecedor Beta;60,0;6,1
+PC000813;Loja Centro;26/11/2026;4;25,0;3114,36;🟡 Planejado;D;Fornecedor Beta;50,0;7,3
+PC000813;Loja Centro;25/01/2027;6;18,0;2213,39;🟡 Planejado;D;Fornecedor Beta;70,0;5,2
+PC000149;Loja Centro;02/11/2026;3;6,0;2263,87;🟡 Planejado;D;Fornecedor Beta;211,0;1,7
+PC000149;Loja Centro;07/12/2026;4;6,0;2230,84;🟡 Planejado;D;Fornecedor Beta;211,0;1,7
+PC000149;Loja Centro;12/01/2027;6;6,0;2294,56;🟡 Planejado;D;Fornecedor Beta;211,0;1,7
+PC000603;Loja Centro;25/12/2026;5;17,0;1805,34;🟡 Planejado;D;Fornecedor Alfa;74,0;4,9
+PC000603;Loja Centro;29/01/2027;6;17,0;1793,17;🟡 Planejado;D;Fornecedor Alfa;74,0;4,9
+PC000562;Loja Centro;13/10/2026;3;27,0;3045,07;🟡 Planejado;D;Fornecedor Beta;54,0;6,8
+PC000562;Loja Centro;12/11/2026;4;32,0;3648,16;🟡 Planejado;D;Fornecedor Beta;43,0;8,6
+PC000562;Loja Centro;15/01/2027;6;18,0;2075,3;🟡 Planejado;D;Fornecedor Beta;67,0;5,5
+PC000699;Loja Centro;06/01/2027;5;5,0;2277,91;🟡 Planejado;D;Fornecedor Beta;236,0;1,5
+PC000072;Loja Centro;07/09/2026;1;14,0;1597,66;🔴 Prioritário (até 30 dias);D;Fornecedor Alfa;87,0;4,2
+PC000072;Loja Centro;13/10/2026;3;29,0;3270,18;🟡 Planejado;D;Fornecedor Alfa;58,0;6,3
+PC000072;Loja Centro;12/11/2026;4;25,0;2767,31;🟡 Planejado;D;Fornecedor Alfa;51,0;7,2
+PC000072;Loja Centro;05/01/2027;5;17,0;1937,51;🟡 Planejado;D;Fornecedor Alfa;71,0;5,1
+PC000072;Loja Centro;07/02/2027;6;19,0;2060,0;🟡 Planejado;D;Fornecedor Alfa;68,0;5,4
+PC000165;Loja Centro;11/09/2026;1;25,0;1938,86;🔴 Prioritário (até 30 dias);D;Fornecedor Beta;50,0;7,3
+PC000165;Loja Centro;15/10/2026;3;25,0;1963,13;🟡 Planejado;D;Fornecedor Beta;49,0;7,4
+PC000165;Loja Centro;19/11/2026;4;25,0;1964,69;🟡 Planejado;D;Fornecedor Beta;49,0;7,4
+PC000165;Loja Centro;24/12/2026;5;25,0;1963,44;🟡 Planejado;D;Fornecedor Beta;49,0;7,4
+PC000165;Loja Centro;28/01/2027;6;25,0;1963,03;🟡 Planejado;D;Fornecedor Beta;49,0;7,4
+PC000723;Loja Centro;08/09/2026;1;15,0;2121,34;🔴 Prioritário (até 30 dias);D;Fornecedor Beta;84,0;4,3
+PC000723;Loja Centro;13/10/2026;3;18,0;2591,2;🟡 Planejado;D;Fornecedor Beta;74,0;4,9
+PC000723;Loja Centro;12/11/2026;4;21,0;2982,27;🟡 Planejado;D;Fornecedor Beta;62,0;5,9
+PC000723;Loja Centro;06/01/2027;5;14,0;1977,87;🟡 Planejado;D;Fornecedor Beta;89,0;4,1
+PC000723;Loja Centro;31/01/2027;6;16,0;2291,73;🟡 Planejado;D;Fornecedor Beta;76,0;4,8
+PC000153;Loja Centro;06/12/2026;4;6,0;2054,79;🟡 Planejado;D;Fornecedor Gamma;192,0;1,9
+PC000153;Loja Centro;10/01/2027;5;6,0;2025,14;🟡 Planejado;D;Fornecedor Gamma;192,0;1,9
+PC000005;Loja Centro;20/08/2026;1;5,0;1958,28;🚨 Urgente (até 7 dias);D;Fornecedor Delta;232,0;1,6
+PC000005;Loja Centro;23/09/2026;2;6,0;2025,78;🟡 Planejado;D;Fornecedor Delta;225,0;1,6
+PC000005;Loja Centro;28/10/2026;3;6,0;2035,07;🟡 Planejado;D;Fornecedor Delta;223,0;1,6
+PC000005;Loja Centro;02/12/2026;4;6,0;2020,28;🟡 Planejado;D;Fornecedor Delta;222,0;1,6
+PC000005;Loja Centro;06/01/2027;5;6,0;2015,57;🟡 Planejado;D;Fornecedor Delta;222,0;1,6
+PC000112;Loja Centro;28/10/2026;3;20,0;2104,74;🟡 Planejado;D;Fornecedor Beta;62,0;5,8
+PC000112;Loja Centro;28/11/2026;4;22,0;2312,87;🟡 Planejado;D;Fornecedor Beta;58,0;6,3
+PC000112;Loja Centro;28/01/2027;6;15,0;1636,04;🟡 Planejado;D;Fornecedor Beta;82,0;4,4
+PC000975;Loja Centro;07/09/2026;1;11,0;1586,91;🔴 Prioritário (até 30 dias);D;Fornecedor Delta;108,0;3,4
+PC000975;Loja Centro;13/10/2026;3;21,0;2888,79;🟡 Planejado;D;Fornecedor Delta;79,0;4,6
+PC000975;Loja Centro;14/11/2026;4;17,0;2349,88;🟡 Planejado;D;Fornecedor Delta;73,0;5,0
+PC000975;Loja Centro;07/01/2027;5;12,0;1702,55;🟡 Planejado;D;Fornecedor Delta;102,0;3,6
+PC000765;Loja Centro;13/09/2026;2;20,0;1449,51;🟡 Planejado;D;Fornecedor Gamma;64,0;5,7
+PC000765;Loja Centro;19/10/2026;3;20,0;1465,11;🟡 Planejado;D;Fornecedor Gamma;64,0;5,7
+PC000765;Loja Centro;24/11/2026;4;20,0;1466,76;🟡 Planejado;D;Fornecedor Gamma;64,0;5,7
+PC000765;Loja Centro;30/12/2026;5;20,0;1467,45;🟡 Planejado;D;Fornecedor Gamma;64,0;5,7
+PC000765;Loja Centro;04/02/2027;6;20,0;1467,74;🟡 Planejado;D;Fornecedor Gamma;64,0;5,7
+PC000319;Loja Centro;13/10/2026;3;46,0;2038,69;🟡 Planejado;D;Fornecedor Beta;28,0;12,9
+PC000319;Loja Centro;12/11/2026;4;69,0;3062,08;🟡 Planejado;D;Fornecedor Beta;21,0;17,3
+PC000319;Loja Centro;04/01/2027;5;43,0;1886,0;🟡 Planejado;D;Fornecedor Beta;29,0;12,6
+PC000459;Loja Centro;22/09/2026;2;14,0;1485,52;🟡 Planejado;D;Fornecedor Gamma;86,0;4,2
+PC000459;Loja Centro;13/10/2026;3;22,0;2238,41;🟡 Planejado;D;Fornecedor Gamma;61,0;6,0
+PC000459;Loja Centro;17/11/2026;4;21,0;2132,42;🟡 Planejado;D;Fornecedor Gamma;60,0;6,1
+PC000459;Loja Centro;13/01/2027;6;15,0;1520,87;🟡 Planejado;D;Fornecedor Gamma;85,0;4,3
+PC000375;Loja Centro;27/10/2026;3;19,0;2265,51;🟡 Planejado;D;Fornecedor Gamma;65,0;5,6
+PC000375;Loja Centro;20/11/2026;4;24,0;2811,6;🟡 Planejado;D;Fornecedor Gamma;52,0;7,0
+PC000375;Loja Centro;24/01/2027;6;16,0;1819,82;🟡 Planejado;D;Fornecedor Gamma;80,0;4,6
+PC000381;Loja Centro;14/08/2026;1;19,0;1488,74;🚨 Urgente (até 7 dias);D;Fornecedor Beta;75,0;4,9
+PC000381;Loja Centro;18/09/2026;2;17,0;1378,16;🟡 Planejado;D;Fornecedor Beta;73,0;5,0
+PC000381;Loja Centro;13/10/2026;3;33,0;2643,31;🟡 Planejado;D;Fornecedor Beta;46,0;7,9
+PC000381;Loja Centro;12/11/2026;4;34,0;2735,6;🟡 Planejado;D;Fornecedor Beta;39,0;9,4
+PC000381;Loja Centro;12/01/2027;6;22,0;1782,49;🟡 Planejado;D;Fornecedor Beta;56,0;6,5
+PC000209;Loja Centro;16/10/2026;3;14,0;1844,85;🟡 Planejado;D;Fornecedor Delta;86,0;4,2
+PC000209;Loja Centro;12/11/2026;4;20,0;2625,45;🟡 Planejado;D;Fornecedor Delta;66,0;5,5
+PC000209;Loja Centro;11/01/2027;6;13,0;1732,2;🟡 Planejado;D;Fornecedor Delta;93,0;3,9
+PC000558;Loja Centro;05/09/2026;1;7,0;1418,57;🔴 Prioritário (até 30 dias);D;Fornecedor Beta;167,0;2,2
+PC000558;Loja Centro;07/10/2026;2;8,0;1497,26;🟡 Planejado;D;Fornecedor Beta;158,0;2,3
+PC000558;Loja Centro;02/11/2026;3;9,0;1755,13;🟡 Planejado;D;Fornecedor Beta;136,0;2,7
+PC000558;Loja Centro;02/12/2026;4;10,0;1864,78;🟡 Planejado;D;Fornecedor Beta;125,0;2,9
+PC000558;Loja Centro;21/01/2027;6;8,0;1572,71;🟡 Planejado;D;Fornecedor Beta;150,0;2,4
+PC000318;Loja Centro;23/08/2026;1;23,0;7547,64;🔴 Prioritário (até 30 dias);D;Fornecedor Beta;54,0;6,7
+PC000318;Loja Centro;27/09/2026;2;23,0;7474,01;🟡 Planejado;D;Fornecedor Beta;54,0;6,7
+PC000318;Loja Centro;01/11/2026;3;23,0;7474,01;🟡 Planejado;D;Fornecedor Beta;54,0;6,7
+PC000318;Loja Centro;06/12/2026;4;23,0;7474,01;🟡 Planejado;D;Fornecedor Beta;54,0;6,7
+PC000318;Loja Centro;10/01/2027;5;23,0;7474,01;🟡 Planejado;D;Fornecedor Beta;54,0;6,7
+PC000133;Loja Centro;14/08/2026;1;40,0;1751,73;🚨 Urgente (até 7 dias);D;Fornecedor Delta;40,0;9,2
+PC000133;Loja Centro;18/09/2026;2;32,0;1406,31;🟡 Planejado;D;Fornecedor Delta;39,0;9,4
+PC000133;Loja Centro;13/10/2026;3;44,0;1946,21;🟡 Planejado;D;Fornecedor Delta;30,0;12,4
+PC000133;Loja Centro;12/11/2026;4;61,0;2655,6;🟡 Planejado;D;Fornecedor Delta;23,0;15,8
+PC000133;Loja Centro;11/01/2027;6;37,0;1612,6;🟡 Planejado;D;Fornecedor Delta;34,0;10,6
+PC000598;Loja Centro;05/11/2026;3;34,0;1472,31;🟡 Planejado;D;Fornecedor Alfa;36,0;10,1
+PC000598;Loja Centro;30/11/2026;4;41,0;1751,1;🟡 Planejado;D;Fornecedor Alfa;31,0;11,9
+PC000598;Loja Centro;24/01/2027;6;32,0;1366,09;🟡 Planejado;D;Fornecedor Alfa;39,0;9,4
+PC000110;Loja Centro;16/09/2026;2;14,0;1055,57;🟡 Planejado;D;Fornecedor Alfa;90,0;4,0
+PC000110;Loja Centro;13/10/2026;3;29,0;2220,14;🟡 Planejado;D;Fornecedor Alfa;55,0;6,6
+PC000110;Loja Centro;12/11/2026;4;31,0;2325,05;🟡 Planejado;D;Fornecedor Alfa;45,0;8,2
+PC000110;Loja Centro;17/01/2027;6;18,0;1379,84;🟡 Planejado;D;Fornecedor Alfa;68,0;5,4
+PC000423;Loja Centro;14/08/2026;1;71,0;1875,7;🚨 Urgente (até 7 dias);D;Fornecedor Alfa;32,0;11,5
+PC000423;Loja Centro;02/10/2026;2;30,0;794,2;🟡 Planejado;D;Fornecedor Alfa;41,0;8,9
+PC000423;Loja Centro;18/10/2026;3;44,0;1160,22;🟡 Planejado;D;Fornecedor Alfa;29,0;12,8
+PC000423;Loja Centro;12/11/2026;4;81,0;2129,39;🟡 Planejado;D;Fornecedor Alfa;19,0;19,7
+PC000423;Loja Centro;08/01/2027;5;45,0;1187,12;🟡 Planejado;D;Fornecedor Alfa;27,0;13,3
+PC000348;Loja Centro;05/09/2026;1;45,0;7747,65;🔴 Prioritário (até 30 dias);D;Fornecedor Delta;28,0;13,1
+PC000348;Loja Centro;10/10/2026;2;44,0;7558,45;🟡 Planejado;D;Fornecedor Delta;28,0;13,1
+PC000348;Loja Centro;14/11/2026;4;44,0;7558,45;🟡 Planejado;D;Fornecedor Delta;28,0;13,1
+PC000348;Loja Centro;19/12/2026;5;44,0;7558,45;🟡 Planejado;D;Fornecedor Delta;28,0;13,1
+PC000348;Loja Centro;23/01/2027;6;44,0;7558,45;🟡 Planejado;D;Fornecedor Delta;28,0;13,1
+PC000961;Loja Centro;14/08/2026;1;25,0;1504,39;🚨 Urgente (até 7 dias);D;Fornecedor Delta;76,0;4,8
+PC000961;Loja Centro;17/09/2026;2;17,0;1039,88;🟡 Planejado;D;Fornecedor Delta;73,0;5,0
+PC000961;Loja Centro;22/10/2026;3;17,0;1047,68;🟡 Planejado;D;Fornecedor Delta;72,0;5,1
+PC000961;Loja Centro;26/11/2026;4;17,0;1039,64;🟡 Planejado;D;Fornecedor Delta;72,0;5,1
+PC000961;Loja Centro;31/12/2026;5;17,0;1036,47;🟡 Planejado;D;Fornecedor Delta;71,0;5,1
+PC000961;Loja Centro;04/02/2027;6;17,0;1035,25;🟡 Planejado;D;Fornecedor Delta;71,0;5,1
+PC000791;Loja Centro;08/11/2026;3;21,0;1585,24;🟡 Planejado;D;Fornecedor Alfa;59,0;6,2
+PC000791;Loja Centro;09/12/2026;4;22,0;1650,02;🟡 Planejado;D;Fornecedor Alfa;55,0;6,6
+PC000791;Loja Centro;09/02/2027;6;17,0;1266,97;🟡 Planejado;D;Fornecedor Alfa;73,0;5,0
+PC000372;Loja Centro;14/08/2026;1;13,0;1183,86;🚨 Urgente (até 7 dias);D;Fornecedor Delta;93,0;3,9
+PC000372;Loja Centro;22/09/2026;2;13,0;1107,45;🟡 Planejado;D;Fornecedor Delta;100,0;3,7
+PC000372;Loja Centro;13/10/2026;3;18,0;1604,52;🟡 Planejado;D;Fornecedor Delta;71,0;5,1
+PC000372;Loja Centro;13/11/2026;4;19,0;1693,14;🟡 Planejado;D;Fornecedor Delta;64,0;5,7
+PC000372;Loja Centro;10/01/2027;5;13,0;1172,76;🟡 Planejado;D;Fornecedor Delta;94,0;3,9
+PC000599;Loja Centro;14/08/2026;1;36,0;1638,14;🚨 Urgente (até 7 dias);E;Fornecedor Beta;79,0;4,6
+PC000599;Loja Centro;05/10/2026;2;24,0;1105,91;🟡 Planejado;E;Fornecedor Beta;86,0;4,3
+PC000599;Loja Centro;24/10/2026;3;34,0;1557,01;🟡 Planejado;E;Fornecedor Beta;61,0;6,0
+PC000599;Loja Centro;29/11/2026;4;38,0;1759,66;🟡 Planejado;E;Fornecedor Beta;54,0;6,8
+PC000599;Loja Centro;08/02/2027;6;29,0;1335,02;🟡 Planejado;E;Fornecedor Beta;70,0;5,2
+PC000601;Loja Centro;15/10/2026;3;21,0;1967,73;🟡 Planejado;E;Fornecedor Alfa;97,0;3,8
+PC000601;Loja Centro;22/11/2026;4;24,0;2229,01;🟡 Planejado;E;Fornecedor Alfa;86,0;4,2
+PC000601;Loja Centro;08/02/2027;6;17,0;1583,51;🟡 Planejado;E;Fornecedor Alfa;121,0;3,0
+PC000645;Loja Centro;14/08/2026;1;34,0;1588,94;🚨 Urgente (até 7 dias);E;Fornecedor Delta;92,0;4,0
+PC000645;Loja Centro;29/09/2026;2;23,0;1069,01;🟡 Planejado;E;Fornecedor Delta;92,0;4,0
+PC000645;Loja Centro;14/11/2026;4;23,0;1068,98;🟡 Planejado;E;Fornecedor Delta;92,0;4,0
+PC000645;Loja Centro;30/12/2026;5;23,0;1069,0;🟡 Planejado;E;Fornecedor Delta;92,0;4,0
+PC000822;Loja Centro;29/08/2026;1;19,0;1168,01;🔴 Prioritário (até 30 dias);E;Fornecedor Alfa;109,0;3,4
+PC000822;Loja Centro;09/10/2026;2;20,0;1221,81;🟡 Planejado;E;Fornecedor Alfa;103,0;3,5
+PC000822;Loja Centro;02/11/2026;3;25,0;1562,72;🟡 Planejado;E;Fornecedor Alfa;81,0;4,5
+PC000822;Loja Centro;30/11/2026;4;31,0;1931,36;🟡 Planejado;E;Fornecedor Alfa;65,0;5,6
+PC000958;Loja Centro;27/09/2026;2;28,0;5480,47;🟡 Planejado;E;Fornecedor Alfa;72,0;5,0
+PC000958;Loja Centro;11/11/2026;3;28,0;5437,32;🟡 Planejado;E;Fornecedor Alfa;72,0;5,0
+PC000958;Loja Centro;26/12/2026;5;28,0;5437,32;🟡 Planejado;E;Fornecedor Alfa;72,0;5,0
+PC000958;Loja Centro;09/02/2027;6;28,0;5437,32;🟡 Planejado;E;Fornecedor Alfa;72,0;5,0
+PC000292;Loja Centro;25/08/2026;1;20,0;1344,48;🔴 Prioritário (até 30 dias);E;Fornecedor Delta;103,0;3,6
+PC000292;Loja Centro;08/10/2026;2;21,0;1371,44;🟡 Planejado;E;Fornecedor Delta;100,0;3,6
+PC000292;Loja Centro;22/11/2026;4;21,0;1375,63;🟡 Planejado;E;Fornecedor Delta;100,0;3,7
+PC000292;Loja Centro;06/01/2027;5;20,0;1357,85;🟡 Planejado;E;Fornecedor Delta;99,0;3,7
+PC000441;Loja Centro;14/08/2026;1;31,0;13605,64;🚨 Urgente (até 7 dias);E;Fornecedor Beta;119,0;3,1
+PC000441;Loja Centro;29/09/2026;2;17,0;7588,88;🟡 Planejado;E;Fornecedor Beta;119,0;3,1
+PC000441;Loja Centro;14/11/2026;4;17,0;7588,88;🟡 Planejado;E;Fornecedor Beta;119,0;3,1
+PC000441;Loja Centro;30/12/2026;5;17,0;7588,88;🟡 Planejado;E;Fornecedor Beta;119,0;3,1
+PC000593;Loja Centro;03/12/2026;4;15,0;964,72;🟡 Planejado;E;Fornecedor Beta;138,0;2,6
+PC000593;Loja Centro;17/01/2027;6;15,0;949,39;🟡 Planejado;E;Fornecedor Beta;138,0;2,6
+PC000589;Loja Centro;23/08/2026;1;5,0;978,14;🔴 Prioritário (até 30 dias);E;Fornecedor Beta;414,0;0,9
+PC000589;Loja Centro;13/10/2026;3;9,0;1684,88;🟡 Planejado;E;Fornecedor Beta;318,0;1,1
+PC000589;Loja Centro;12/11/2026;4;10,0;1890,49;🟡 Planejado;E;Fornecedor Beta;232,0;1,6
+PC000191;Loja Centro;14/08/2026;1;39,0;1489,84;🚨 Urgente (até 7 dias);E;Fornecedor Delta;96,0;3,8
+PC000191;Loja Centro;28/09/2026;2;22,0;826,68;🟡 Planejado;E;Fornecedor Delta;94,0;3,9
+PC000191;Loja Centro;24/10/2026;3;28,0;1060,27;🟡 Planejado;E;Fornecedor Delta;73,0;5,0
+PC000191;Loja Centro;30/11/2026;4;32,0;1192,51;🟡 Planejado;E;Fornecedor Delta;65,0;5,6
+PC000340;Loja Centro;14/08/2026;1;58,0;1251,57;🚨 Urgente (até 7 dias);E;Fornecedor Gamma;44,0;8,3
+PC000340;Loja Centro;26/09/2026;2;49,0;1055,83;🟡 Planejado;E;Fornecedor Gamma;42,0;8,6
+PC000340;Loja Centro;21/10/2026;3;65,0;1391,41;🟡 Planejado;E;Fornecedor Gamma;32,0;11,5
+PC000340;Loja Centro;27/11/2026;4;71,0;1538,01;🟡 Planejado;E;Fornecedor Gamma;29,0;12,8
+PC000340;Loja Centro;08/02/2027;6;54,0;1163,35;🟡 Planejado;E;Fornecedor Gamma;38,0;9,7
+PC000100;Loja Centro;14/08/2026;1;77,0;12472,84;🚨 Urgente (até 7 dias);E;Fornecedor Beta;47,0;7,8
+PC000100;Loja Centro;28/09/2026;2;44,0;7080,06;🟡 Planejado;E;Fornecedor Beta;47,0;7,8
+PC000100;Loja Centro;12/11/2026;4;44,0;7080,06;🟡 Planejado;E;Fornecedor Beta;47,0;7,8
+PC000100;Loja Centro;27/12/2026;5;44,0;7080,06;🟡 Planejado;E;Fornecedor Beta;47,0;7,8
+PC000671;Loja Centro;22/08/2026;1;17,0;3070,14;🔴 Prioritário (até 30 dias);E;Fornecedor Beta;118,0;3,1
+PC000671;Loja Centro;06/10/2026;2;17,0;3032,34;🟡 Planejado;E;Fornecedor Beta;118,0;3,1
+PC000671;Loja Centro;20/11/2026;4;17,0;3020,49;🟡 Planejado;E;Fornecedor Beta;118,0;3,1
+PC000671;Loja Centro;05/01/2027;5;18,0;3084,98;🟡 Planejado;E;Fornecedor Beta;118,0;3,1
+PC000776;Loja Centro;09/11/2026;3;6,0;819,81;🟡 Planejado;E;Fornecedor Beta;372,0;1,0
+PC000776;Loja Centro;24/12/2026;5;5,0;809,15;🟡 Planejado;E;Fornecedor Beta;371,0;1,0
+PC000776;Loja Centro;07/02/2027;6;5,0;805,01;🟡 Planejado;E;Fornecedor Beta;371,0;1,0
+PC000298;Loja Centro;09/11/2026;3;23,0;1240,48;🟡 Planejado;E;Fornecedor Beta;90,0;4,1
+PC000298;Loja Centro;04/12/2026;4;29,0;1562,76;🟡 Planejado;E;Fornecedor Beta;71,0;5,1
+PC000238;Loja Centro;14/08/2026;1;74,0;16079,5;🚨 Urgente (até 7 dias);E;Fornecedor Gamma;55,0;6,7
+PC000238;Loja Centro;28/09/2026;2;37,0;8034,92;🟡 Planejado;E;Fornecedor Gamma;55,0;6,7
+PC000238;Loja Centro;12/11/2026;4;37,0;8034,92;🟡 Planejado;E;Fornecedor Gamma;55,0;6,7
+PC000238;Loja Centro;27/12/2026;5;37,0;8034,92;🟡 Planejado;E;Fornecedor Gamma;55,0;6,7
+PC000101;Loja Centro;11/10/2026;2;26,0;860,59;🟡 Planejado;E;Fornecedor Beta;80,0;4,6
+PC000101;Loja Centro;30/10/2026;3;35,0;1191,02;🟡 Planejado;E;Fornecedor Beta;58,0;6,3
+PC000101;Loja Centro;18/11/2026;4;50,0;1680,79;🟡 Planejado;E;Fornecedor Beta;41,0;9,0
+PC000656;Loja Centro;13/11/2026;4;3,0;1326,58;🟡 Planejado;E;Fornecedor Alfa;648,0;0,6
+PC000656;Loja Centro;29/12/2026;5;3,0;1319,96;🟡 Planejado;E;Fornecedor Alfa;653,0;0,6
+PC000240;Loja Centro;02/01/2027;5;11,0;947,15;🟡 Planejado;E;Fornecedor Alfa;196,0;1,9
+PC000494;Loja Centro;13/09/2026;2;20,0;799,81;🟡 Planejado;E;Fornecedor Delta;104,0;3,5
+PC000494;Loja Centro;13/10/2026;3;27,0;1072,17;🟡 Planejado;E;Fornecedor Delta;79,0;4,6
+PC000494;Loja Centro;12/11/2026;4;38,0;1540,18;🟡 Planejado;E;Fornecedor Delta;58,0;6,3
+PC000494;Loja Centro;30/01/2027;6;26,0;1052,34;🟡 Planejado;E;Fornecedor Delta;79,0;4,6
+PC000506;Loja Centro;14/11/2026;4;4,0;746,98;🟡 Planejado;E;Fornecedor Gamma;510,0;0,7
+PC000506;Loja Centro;30/12/2026;5;4,0;747,54;🟡 Planejado;E;Fornecedor Gamma;510,0;0,7
+PC000867;Loja Centro;17/08/2026;1;27,0;743,62;🚨 Urgente (até 7 dias);E;Fornecedor Alfa;74,0;4,9
+PC000867;Loja Centro;13/10/2026;3;54,0;1472,3;🟡 Planejado;E;Fornecedor Alfa;54,0;6,7
+PC000867;Loja Centro;26/11/2026;4;38,0;1027,3;🟡 Planejado;E;Fornecedor Alfa;53,0;6,8
+PC000607;Loja Centro;14/08/2026;1;23,0;869,3;🚨 Urgente (até 7 dias);E;Fornecedor Gamma;117,0;3,1
+PC000607;Loja Centro;21/09/2026;2;20,0;753,27;🟡 Planejado;E;Fornecedor Gamma;104,0;3,5
+PC000607;Loja Centro;17/10/2026;3;26,0;983,59;🟡 Planejado;E;Fornecedor Gamma;78,0;4,7
+PC000607;Loja Centro;17/11/2026;4;33,0;1236,09;🟡 Planejado;E;Fornecedor Gamma;63,0;5,8
+PC000607;Loja Centro;09/02/2027;6;22,0;839,52;🟡 Planejado;E;Fornecedor Gamma;93,0;3,9
+PC000011;Loja Centro;13/09/2026;2;7,0;778,72;🟡 Planejado;E;Fornecedor Beta;321,0;1,1
+PC000011;Loja Centro;19/10/2026;3;7,0;783,47;🟡 Planejado;E;Fornecedor Beta;277,0;1,3
+PC000011;Loja Centro;17/11/2026;4;9,0;992,42;🟡 Planejado;E;Fornecedor Beta;218,0;1,7
+PC000011;Loja Centro;03/02/2027;6;7,0;721,68;🟡 Planejado;E;Fornecedor Beta;299,0;1,2
+PC000516;Loja Centro;14/08/2026;1;120,0;1355,72;🚨 Urgente (até 7 dias);E;Fornecedor Delta;33,0;11,1
+PC000516;Loja Centro;04/10/2026;2;58,0;654,19;🟡 Planejado;E;Fornecedor Delta;35,0;10,3
+PC000516;Loja Centro;19/10/2026;3;85,0;963,99;🟡 Planejado;E;Fornecedor Delta;24,0;15,3
+PC000516;Loja Centro;28/11/2026;4;93,0;1053,95;🟡 Planejado;E;Fornecedor Delta;22,0;16,5
+PC000926;Loja Centro;14/08/2026;1;52,0;2541,2;🚨 Urgente (até 7 dias);E;Fornecedor Beta;46,0;7,9
+PC000926;Loja Centro;29/09/2026;2;45,0;2208,41;🟡 Planejado;E;Fornecedor Beta;46,0;7,9
+PC000926;Loja Centro;14/11/2026;4;45,0;2208,41;🟡 Planejado;E;Fornecedor Beta;46,0;7,9
+PC000926;Loja Centro;30/12/2026;5;45,0;2208,41;🟡 Planejado;E;Fornecedor Beta;46,0;7,9
+PC000284;Loja Centro;14/08/2026;1;74,0;912,09;🚨 Urgente (até 7 dias);E;Fornecedor Beta;45,0;8,1
+PC000284;Loja Centro;24/09/2026;2;49,0;601,42;🟡 Planejado;E;Fornecedor Beta;42,0;8,7
+PC000284;Loja Centro;24/10/2026;3;60,0;743,38;🟡 Planejado;E;Fornecedor Beta;34,0;10,7
+PC000284;Loja Centro;06/12/2026;4;63,0;775,84;🟡 Planejado;E;Fornecedor Beta;33,0;11,1
+PC000033;Loja Centro;14/08/2026;1;30,0;3291,02;🚨 Urgente (até 7 dias);E;Fornecedor Gamma;99,0;3,7
+PC000033;Loja Centro;29/09/2026;2;21,0;2297,99;🟡 Planejado;E;Fornecedor Gamma;99,0;3,7
+PC000033;Loja Centro;14/11/2026;4;21,0;2297,99;🟡 Planejado;E;Fornecedor Gamma;99,0;3,7
+PC000033;Loja Centro;30/12/2026;5;21,0;2297,99;🟡 Planejado;E;Fornecedor Gamma;99,0;3,7
+PC000998;Loja Centro;23/09/2026;2;14,0;551,24;🟡 Planejado;E;Fornecedor Gamma;143,0;2,6
+PC000998;Loja Centro;15/10/2026;3;20,0;786,83;🟡 Planejado;E;Fornecedor Gamma;101,0;3,6
+PC000998;Loja Centro;17/11/2026;4;24,0;929,11;🟡 Planejado;E;Fornecedor Gamma;84,0;4,3
+PC000998;Loja Centro;04/02/2027;6;17,0;653,45;🟡 Planejado;E;Fornecedor Gamma;121,0;3,0
+PC000073;Loja Centro;14/08/2026;1;37,0;983,37;🚨 Urgente (até 7 dias);E;Fornecedor Alfa;86,0;4,3
+PC000073;Loja Centro;27/09/2026;2;24,0;644,95;🟡 Planejado;E;Fornecedor Alfa;84,0;4,3
+PC000073;Loja Centro;02/11/2026;3;27,0;721,87;🟡 Planejado;E;Fornecedor Alfa;75,0;4,9
+PC000073;Loja Centro;19/12/2026;5;26,0;685,2;🟡 Planejado;E;Fornecedor Alfa;79,0;4,6
+PC000073;Loja Centro;04/02/2027;6;25,0;663,67;🟡 Planejado;E;Fornecedor Alfa;81,0;4,5
+PC000651;Loja Centro;03/09/2026;1;22,0;522,59;🔴 Prioritário (até 30 dias);E;Fornecedor Gamma;94,0;3,9
+PC000651;Loja Centro;18/10/2026;3;22,0;528,61;🟡 Planejado;E;Fornecedor Gamma;93,0;3,9
+PC000651;Loja Centro;02/12/2026;4;22,0;520,87;🟡 Planejado;E;Fornecedor Gamma;93,0;3,9
+PC000651;Loja Centro;16/01/2027;6;22,0;520,67;🟡 Planejado;E;Fornecedor Gamma;93,0;3,9
+PC000203;Loja Centro;17/11/2026;4;37,0;658,83;🟡 Planejado;E;Fornecedor Delta;55,0;6,7
+PC000203;Loja Centro;01/02/2027;6;26,0;466,1;🟡 Planejado;E;Fornecedor Delta;78,0;4,7
+PC000621;Loja Centro;04/11/2026;3;15,0;3204,3;🟡 Planejado;E;Fornecedor Gamma;135,0;2,7
+PC000621;Loja Centro;19/12/2026;5;15,0;3204,3;🟡 Planejado;E;Fornecedor Gamma;135,0;2,7
+PC000621;Loja Centro;02/02/2027;6;15,0;3204,3;🟡 Planejado;E;Fornecedor Gamma;135,0;2,7
+PC000301;Loja Centro;26/10/2026;3;23,0;504,73;🟡 Planejado;E;Fornecedor Delta;89,0;4,1
+PC000301;Loja Centro;26/11/2026;4;28,0;614,83;🟡 Planejado;E;Fornecedor Delta;73,0;5,0
+PC000605;Loja Centro;29/10/2026;3;17,0;638,84;🟡 Planejado;E;Fornecedor Beta;124,0;2,9
+PC000605;Loja Centro;28/11/2026;4;20,0;775,43;🟡 Planejado;E;Fornecedor Beta;102,0;3,6
+PC000795;Loja Centro;26/08/2026;1;18,0;472,75;🔴 Prioritário (até 30 dias);E;Fornecedor Alfa;113,0;3,2
+PC000795;Loja Centro;01/10/2026;2;20,0;532,68;🟡 Planejado;E;Fornecedor Alfa;101,0;3,6
+PC000795;Loja Centro;26/10/2026;3;27,0;706,23;🟡 Planejado;E;Fornecedor Alfa;77,0;4,7
+PC000795;Loja Centro;29/11/2026;4;31,0;821,55;🟡 Planejado;E;Fornecedor Alfa;66,0;5,5
+PC000617;Loja Centro;27/01/2027;6;7,0;2937,99;🟡 Planejado;E;Fornecedor Delta;312,0;1,2
+PC000455;Loja Centro;09/11/2026;3;18,0;393,64;🟡 Planejado;E;Fornecedor Gamma;112,0;3,3
+PC000455;Loja Centro;26/12/2026;5;17,0;368,12;🟡 Planejado;E;Fornecedor Gamma;119,0;3,1
+PC000455;Loja Centro;07/02/2027;6;17,0;374,5;🟡 Planejado;E;Fornecedor Gamma;116,0;3,1
+PC000622;Loja Centro;17/01/2027;6;10,0;360,77;🟡 Planejado;E;Fornecedor Gamma;195,0;1,9
+PC000014;Loja Centro;13/10/2026;3;23,0;596,95;🟡 Planejado;E;Fornecedor Alfa;99,0;3,7
+PC000014;Loja Centro;12/11/2026;4;30,0;756,99;🟡 Planejado;E;Fornecedor Alfa;73,0;5,0
+PC000677;Loja Centro;10/01/2027;5;8,0;348,34;🟡 Planejado;E;Fornecedor Gamma;259,0;1,4
+PC000050;Loja Centro;31/10/2026;3;17,0;296,59;🟡 Planejado;E;Fornecedor Delta;121,0;3,0
+PC000050;Loja Centro;22/11/2026;4;23,0;400,18;🟡 Planejado;E;Fornecedor Delta;89,0;4,1
+PC000050;Loja Centro;08/02/2027;6;17,0;296,08;🟡 Planejado;E;Fornecedor Delta;121,0;3,0
+PC000577;Loja Centro;19/08/2026;1;42,0;767,11;🚨 Urgente (até 7 dias);E;Fornecedor Alfa;49,0;7,4
+PC000577;Loja Centro;03/10/2026;2;41,0;756,45;🟡 Planejado;E;Fornecedor Alfa;49,0;7,4
+PC000577;Loja Centro;17/11/2026;4;41,0;756,45;🟡 Planejado;E;Fornecedor Alfa;49,0;7,4
+PC000577;Loja Centro;01/01/2027;5;41,0;756,45;🟡 Planejado;E;Fornecedor Alfa;49,0;7,4
+PC000202;Loja Centro;22/11/2026;4;11,0;203,16;🟡 Planejado;E;Fornecedor Beta;191,0;1,9
+PC000202;Loja Centro;06/01/2027;5;11,0;202,57;🟡 Planejado;E;Fornecedor Beta;190,0;1,9
+PC000902;Loja Centro;22/08/2026;1;20,0;205,19;🔴 Prioritário (até 30 dias);E;Fornecedor Alfa;102,0;3,6
+PC000902;Loja Centro;06/10/2026;2;20,0;207,14;🟡 Planejado;E;Fornecedor Alfa;102,0;3,6
+PC000902;Loja Centro;20/11/2026;4;20,0;207,08;🟡 Planejado;E;Fornecedor Alfa;101,0;3,6
+PC000902;Loja Centro;04/01/2027;5;20,0;205,99;🟡 Planejado;E;Fornecedor Alfa;101,0;3,6

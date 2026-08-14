@@ -1,0 +1,11 @@
+﻿Produto;Fornecedor;Classe;Volatilidade;EstoqueAtual;DemandaPrevMes(un);CoberturaDias;MinDias;MaxDias;LeadTimeDias;GiroAtual;GiroAlvo;Status;QtdSugerida;CustoUnitario;ValorSugerido
+PC000005;Não informado;A;Baixa;108,0;124,5;26,0;15;30;15,0;14,03;16,22;🟢 OK;0,0;2141,14;0,0
+PC000001;Não informado;A;Baixa;36,0;38,3;28,2;15;30;15,0;12,94;16,22;🟢 OK;0,0;4242,13;0,0
+PC000002;Não informado;A;Baixa;43,0;13,9;92,5;15;30;15,0;3,94;16,22;🟡 Estoque excessivo;0,0;4752,68;0,0
+PC000004;Não informado;A;Baixa;20,0;9,3;64,4;15;30;15,0;5,67;16,22;🟡 Estoque excessivo;0,0;8285,64;0,0
+PC000007;Não informado;B;Baixa;7,0;10,6;19,8;20;40;15,0;18,4;12,17;🔴 Comprar agora;7,0;5705,8;40586,54
+PC000010;Não informado;C;Baixa;112,0;65,3;51,5;30;55;15,0;7,09;8,59;🟢 OK;0,0;817,15;0,0
+PC000009;Não informado;D;Baixa;26,0;12,2;63,9;40;75;15,0;5,71;6,35;🟢 OK;0,0;762,63;0,0
+PC000003;Não informado;E;Baixa;22,0;8,9;74,6;55;100;15,0;4,89;4,71;🟢 OK;0,0;300,79;0,0
+PC000008;Não informado;E;Baixa;17,0;17,9;28,5;55;100;15,0;12,82;4,71;🔴 Comprar agora;43,0;80,57;3441,68
+PC000006;Não informado;E;Baixa;0,0;1,0;0,0;55;100;15,0;0,0;4,71;🚨 RUPTURA IMINENTE;3,0;813,97;2748,78
