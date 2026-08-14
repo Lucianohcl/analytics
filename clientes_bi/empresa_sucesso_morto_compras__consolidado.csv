@@ -1,27 +1,24 @@
 ﻿Produto;Filial;Fornecedor;Classe;Volatilidade;EstoqueAtual;DemandaPrevMes(un);CoberturaDias;MinDias;MaxDias;LeadTimeDias;GiroAtual;GiroAlvo;Status;QtdSugerida;CustoUnitario;ValorSugerido;FontePrevisao;ModeloUsado;CapitalParado
 PC000666;Loja Sul;Fornecedor Delta;D;Baixa;146,0;2,1;;40;75;10,0;0,17;6,35;🟡 Estoque excessivo;0,0;384,33;0,0;1-Config ML (Painel);SARIMAX;56112,18
-PC000172;Loja Centro;Fornecedor Gamma;D;Baixa;97,0;3,7;791,4;40;75;10,0;0,46;6,35;🟡 Estoque excessivo;0,0;441,68;0,0;1-Config ML (Painel);ExponentialSmoothing;42842,96
 PC000635;Loja Sul;Fornecedor Alfa;D;Baixa;60,0;3,1;579,5;40;75;10,0;0,63;6,35;🟡 Estoque excessivo;0,0;417,81;0,0;1-Config ML (Painel);ARIMA;25068,6
 PC000901;Loja Centro;Fornecedor Delta;E;Baixa;94,0;2,2;;55;100;10,0;0,28;4,71;🟡 Estoque excessivo;0,0;252,97;0,0;1-Config ML (Painel);ARIMA;23779,18
 PC000690;Loja Sul;Fornecedor Beta;E;Baixa;68,0;1,0;;55;100;10,0;0,18;4,71;🟡 Estoque excessivo;0,0;346,05;0,0;1-Config ML (Painel);ARIMA;23531,4
 PC000547;Loja Norte;Fornecedor Beta;D;Baixa;62,0;2,0;930,0;40;75;10,0;0,39;6,35;🟡 Estoque excessivo;0,0;364,25;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);22583,5
-PC000958;Loja Sul;Fornecedor Alfa;E;Baixa;94,0;2,0;;55;100;10,0;0,26;4,71;🟡 Estoque excessivo;0,0;194,19;0,0;1-Config ML (Painel);Croston;18253,86
+PC000958;Loja Sul;Fornecedor Alfa;E;Baixa;94,0;2,0;;55;100;10,0;0,26;4,71;🟡 Estoque excessivo;0,0;194,19;0,0;1-Config ML (Painel);ARIMA;18253,86
 PC000834;Loja Centro;Fornecedor Beta;E;Média;53,0;1,0;;55;100;10,0;0,23;4,71;🟡 Estoque excessivo;0,0;338,65;0,0;1-Config ML (Painel);SARIMAX;17948,449999999997
-PC000357;Loja Norte;Fornecedor Delta;E;Baixa;42,0;3,0;420,0;55;100;10,0;0,87;4,71;🟡 Estoque excessivo;0,0;406,11;0,0;2-Recalculado agora (sem calibrações);Média Móvel;17056,62
-PC000729;Loja Norte;Fornecedor Alfa;C;Baixa;46,0;3,2;437,3;30;55;10,0;0,83;8,59;🟡 Estoque excessivo;0,0;367,77;0,0;1-Config ML (Painel);Croston;16917,42
+PC000357;Loja Norte;Fornecedor Delta;E;Baixa;42,0;3,0;420,0;55;100;10,0;0,87;4,71;🟡 Estoque excessivo;0,0;406,11;0,0;1-Config ML (Painel);Média Móvel;17056,62
+PC000729;Loja Norte;Fornecedor Alfa;C;Baixa;46,0;3,1;448,1;30;55;10,0;0,81;8,59;🟡 Estoque excessivo;0,0;367,77;0,0;1-Config ML (Painel);ARIMA;16917,42
 PC000563;Loja Centro;Fornecedor Alfa;D;Baixa;46,0;3,4;404,4;40;75;10,0;0,9;6,35;🟡 Estoque excessivo;0,0;352,99;0,0;1-Config ML (Painel);ARIMA;16237,54
-PC000755;Loja Sul;Fornecedor Beta;C;Baixa;36,0;3,7;292,3;30;55;10,0;1,25;8,59;🟡 Estoque excessivo;0,0;439,34;0,0;1-Config ML (Painel);Ensemble;15816,24
 PC000457;Loja Sul;Fornecedor Gamma;D;Baixa;48,0;2,6;557,8;40;75;10,0;0,65;6,35;🟡 Estoque excessivo;0,0;312,77;0,0;1-Config ML (Painel);Prophet;15012,96
 PC000343;Loja Centro;Fornecedor Delta;E;Baixa;37,0;2,2;509,2;55;100;10,0;0,72;4,71;🟡 Estoque excessivo;0,0;391,78;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);14495,859999999999
 PC000727;Loja Norte;Fornecedor Alfa;D;Baixa;58,0;3,6;482,0;40;75;10,0;0,76;6,35;🟡 Estoque excessivo;0,0;233,16;0,0;1-Config ML (Painel);ARIMA;13523,28
 PC000935;Loja Sul;Fornecedor Delta;D;Baixa;44,0;2,5;517,8;40;75;10,0;0,7;6,35;🟡 Estoque excessivo;0,0;307,0;0,0;1-Config ML (Painel);Prophet;13508,0
-PC000900;Loja Sul;Fornecedor Gamma;D;Baixa;38,0;2,9;388,6;40;75;10,0;0,94;6,35;🟡 Estoque excessivo;0,0;354,44;0,0;1-Config ML (Painel);Ensemble;13468,72
+PC000900;Loja Sul;Fornecedor Gamma;D;Baixa;38,0;2,9;399,6;40;75;10,0;0,91;6,35;🟡 Estoque excessivo;0,0;354,44;0,0;1-Config ML (Painel);ARIMA;13468,72
 PC000588;Loja Norte;Fornecedor Alfa;D;Baixa;72,0;3,5;618,3;40;75;10,0;0,59;6,35;🟡 Estoque excessivo;0,0;186,71;0,0;1-Config ML (Painel);ExponentialSmoothing;13443,12
-PC000563;Loja Norte;Fornecedor Alfa;D;Baixa;36,0;3,7;291,7;40;75;10,0;1,25;6,35;🟡 Estoque excessivo;0,0;352,99;0,0;1-Config ML (Painel);Ensemble;12707,64
 PC000953;Loja Norte;Fornecedor Alfa;D;Baixa;46,0;3,5;399,1;40;75;10,0;0,91;6,35;🟡 Estoque excessivo;0,0;272,42;0,0;1-Config ML (Painel);Prophet;12531,320000000002
 PC000611;Loja Norte;Fornecedor Alfa;C;Baixa;31,0;3,4;272,2;30;55;10,0;1,34;8,59;🟡 Estoque excessivo;0,0;396,99;0,0;1-Config ML (Painel);ExponentialSmoothing;12306,69
 PC000182;Loja Norte;Fornecedor Alfa;E;Baixa;76,0;1,1;;55;100;10,0;0,17;4,71;🟡 Estoque excessivo;0,0;159,11;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);12092,36
-PC000172;Loja Norte;Fornecedor Gamma;D;Baixa;27,0;3,0;269,9;40;75;10,0;1,35;6,35;🟡 Estoque excessivo;0,0;441,68;0,0;1-Config ML (Painel);Croston;11925,36
+PC000172;Loja Norte;Fornecedor Gamma;D;Baixa;27,0;2,9;279,8;40;75;10,0;1,3;6,35;🟡 Estoque excessivo;0,0;441,68;0,0;1-Config ML (Painel);ARIMA;11925,36
 PC000371;Loja Norte;Fornecedor Beta;D;Baixa;24,0;1,9;379,2;40;75;10,0;0,96;6,35;🟡 Estoque excessivo;0,0;437,36;0,0;1-Config ML (Painel);ARIMA;10496,64
 PC000460;Loja Sul;Fornecedor Beta;E;Baixa;35,0;1,0;;55;100;10,0;0,35;4,71;🟡 Estoque excessivo;0,0;299,23;0,0;1-Config ML (Painel);ExponentialSmoothing;10473,050000000001
 PC000057;Loja Sul;Fornecedor Beta;D;Baixa;27,0;2,0;405,0;40;75;10,0;0,9;6,35;🟡 Estoque excessivo;0,0;347,1;0,0;1-Config ML (Painel);Holt;9371,7
@@ -30,15 +27,15 @@ PC000690;Loja Norte;Fornecedor Beta;D;Baixa;23,0;2,1;335,9;40;75;10,0;1,09;6,35;
 PC000032;Loja Norte;Fornecedor Gamma;E;Média;29,0;1,2;713,9;55;100;10,0;0,51;4,71;🟡 Estoque excessivo;0,0;271,55;0,0;1-Config ML (Painel);ExponentialSmoothing;7874,950000000001
 PC000172;Loja Sul;Fornecedor Gamma;D;Baixa;17,0;2,1;246,4;40;75;10,0;1,48;6,35;🟡 Estoque excessivo;0,0;441,68;0,0;1-Config ML (Painel);SARIMAX;7508,56
 PC000471;Loja Centro;Fornecedor Beta;E;Baixa;29,0;2,7;325,2;55;100;10,0;1,12;4,71;🟡 Estoque excessivo;0,0;258,62;0,0;1-Config ML (Painel);Ensemble;7499,9800000000005
-PC000704;Loja Norte;Fornecedor Alfa;D;Baixa;32,0;2,8;340,1;40;75;10,0;1,07;6,35;🟡 Estoque excessivo;0,0;231,71;0,0;1-Config ML (Painel);Ensemble;7414,72
+PC000704;Loja Norte;Fornecedor Alfa;D;Baixa;32,0;2,8;342,2;40;75;10,0;1,07;6,35;🟡 Estoque excessivo;0,0;231,71;0,0;1-Config ML (Painel);ARIMA;7414,72
 PC000129;Loja Norte;Fornecedor Delta;E;Baixa;42,0;3,0;425,0;55;100;10,0;0,86;4,71;🟡 Estoque excessivo;0,0;172,73;0,0;1-Config ML (Painel);ARIMA;7254,66
-PC000487;Loja Norte;Fornecedor Delta;E;Baixa;37,0;3,1;354,3;55;100;10,0;1,03;4,71;🟡 Estoque excessivo;0,0;183,11;0,0;1-Config ML (Painel);Holt;6775,070000000001
-PC000084;Loja Norte;Fornecedor Alfa;E;Baixa;17,0;3,0;170,0;55;100;10,0;2,15;4,71;🟡 Estoque excessivo;0,0;396,57;0,0;2-Recalculado agora (sem calibrações);Média Móvel;6741,69
+PC000487;Loja Norte;Fornecedor Delta;E;Baixa;37,0;3,2;342,1;55;100;10,0;1,07;4,71;🟡 Estoque excessivo;0,0;183,11;0,0;1-Config ML (Painel);Ensemble;6775,070000000001
+PC000084;Loja Norte;Fornecedor Alfa;E;Baixa;17,0;3,0;170,0;55;100;10,0;2,15;4,71;🟡 Estoque excessivo;0,0;396,57;0,0;1-Config ML (Painel);Média Móvel;6741,69
 PC000431;Loja Norte;Fornecedor Gamma;D;Baixa;30,0;3,1;293,8;40;75;10,0;1,24;6,35;🟡 Estoque excessivo;0,0;209,0;0,0;1-Config ML (Painel);SARIMAX;6270,0
 PC000589;Loja Norte;Fornecedor Beta;E;Baixa;31,0;2,7;343,5;55;100;10,0;1,06;4,71;🟡 Estoque excessivo;0,0;197,26;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);6115,0599999999995
 PC000209;Loja Sul;Fornecedor Delta;E;Baixa;47,0;3,4;410,9;55;100;10,0;0,89;4,71;🟡 Estoque excessivo;0,0;128,94;0,0;1-Config ML (Painel);ExponentialSmoothing;6060,18
-PC000459;Loja Norte;Fornecedor Gamma;E;Baixa;54,0;3,0;540,0;55;100;10,0;0,68;4,71;🟡 Estoque excessivo;0,0;103,33;0,0;2-Recalculado agora (sem calibrações);Média Móvel;5579,82
-PC000498;Loja Centro;Fornecedor Delta;E;Baixa;26,0;2,1;374,7;55;100;10,0;0,97;4,71;🟡 Estoque excessivo;0,0;212,86;0,0;2-Recalculado agora (sem calibrações);Croston;5534,360000000001
+PC000459;Loja Norte;Fornecedor Gamma;E;Baixa;54,0;3,0;540,0;55;100;10,0;0,68;4,71;🟡 Estoque excessivo;0,0;103,33;0,0;1-Config ML (Painel);Média Móvel;5579,82
+PC000498;Loja Centro;Fornecedor Delta;E;Baixa;26,0;2,0;390,0;55;100;10,0;0,94;4,71;🟡 Estoque excessivo;0,0;212,86;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);5534,360000000001
 PC000030;Loja Norte;Fornecedor Beta;D;Baixa;14,0;2,2;191,5;40;75;10,0;1,91;6,35;🟡 Estoque excessivo;0,0;374,38;0,0;1-Config ML (Painel);ARIMA;5241,32
 PC000058;Loja Norte;Fornecedor Alfa;E;Baixa;26,0;1,4;566,3;55;100;10,0;0,64;4,71;🟡 Estoque excessivo;0,0;185,65;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);4826,900000000001
 PC000629;Loja Centro;Fornecedor Gamma;E;Baixa;88,0;2,0;;55;100;10,0;0,27;4,71;🟡 Estoque excessivo;0,0;50,73;0,0;1-Config ML (Painel);ExponentialSmoothing;4464,24
@@ -46,30 +43,29 @@ PC000629;Loja Norte;Fornecedor Gamma;E;Média;85,0;1,2;;55;100;10,0;0,17;4,71;�
 PC000604;Loja Norte;Fornecedor Delta;D;Baixa;26,0;3,2;242,3;40;75;10,0;1,51;6,35;🟡 Estoque excessivo;0,0;164,91;0,0;1-Config ML (Painel);ExponentialSmoothing;4287,66
 PC000498;Loja Sul;Fornecedor Delta;E;Média;19,0;1,1;500,5;55;100;10,0;0,73;4,71;🟡 Estoque excessivo;0,0;212,86;0,0;1-Config ML (Painel);Ensemble;4044,34
 PC000408;Loja Norte;Fornecedor Delta;D;Baixa;11,0;2,0;167,4;40;75;10,0;2,18;6,35;🟡 Estoque excessivo;0,0;364,11;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);4005,21
-PC000506;Loja Norte;Fornecedor Gamma;E;Baixa;20,0;2,7;225,0;55;100;10,0;1,62;4,71;🟡 Estoque excessivo;0,0;184,28;0,0;2-Recalculado agora (sem calibrações);Média Móvel;3685,6
-PC000939;Loja Sul;Fornecedor Delta;E;Baixa;16,0;3,1;154,7;55;100;10,0;2,36;4,71;🟡 Estoque excessivo;0,0;228,23;0,0;2-Recalculado agora (sem calibrações);ARIMA;3651,68
+PC000506;Loja Norte;Fornecedor Gamma;E;Baixa;20,0;2,7;225,0;55;100;10,0;1,62;4,71;🟡 Estoque excessivo;0,0;184,28;0,0;1-Config ML (Painel);Média Móvel;3685,6
+PC000939;Loja Sul;Fornecedor Delta;E;Baixa;16,0;3,0;160,0;55;100;10,0;2,28;4,71;🟡 Estoque excessivo;0,0;228,23;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);3651,68
 PC000656;Loja Centro;Fornecedor Alfa;E;Média;8,0;1,1;222,8;55;100;10,0;1,64;4,71;🟡 Estoque excessivo;0,0;422,14;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);3377,12
 PC000182;Loja Sul;Fornecedor Alfa;E;Baixa;21,0;3,1;203,4;55;100;10,0;1,79;4,71;🟡 Estoque excessivo;0,0;159,11;0,0;1-Config ML (Painel);Ensemble;3341,3100000000004
 PC000459;Loja Sul;Fornecedor Gamma;E;Baixa;32,0;2,7;357,9;55;100;10,0;1,02;4,71;🟡 Estoque excessivo;0,0;103,33;0,0;1-Config ML (Painel);ExponentialSmoothing;3306,56
-PC000641;Loja Sul;Fornecedor Delta;E;Baixa;13,0;3,1;124,2;55;100;10,0;2,94;4,71;🟡 Estoque excessivo;0,0;246,66;0,0;2-Recalculado agora (sem calibrações);Croston;3206,58
+PC000641;Loja Sul;Fornecedor Delta;E;Baixa;13,0;3,1;124,2;55;100;10,0;2,94;4,71;🟡 Estoque excessivo;0,0;246,66;0,0;1-Config ML (Painel);Croston;3206,58
 PC000776;Loja Centro;Fornecedor Beta;E;Baixa;17,0;3,5;146,7;55;100;10,0;2,49;4,71;🟡 Estoque excessivo;0,0;147,41;0,0;1-Config ML (Painel);ARIMA;2505,97
 PC000593;Loja Sul;Fornecedor Beta;E;Baixa;38,0;3,0;379,4;55;100;10,0;0,96;4,71;🟡 Estoque excessivo;0,0;64,75;0,0;1-Config ML (Painel);ARIMA;2460,5
 PC000506;Loja Centro;Fornecedor Gamma;E;Baixa;13,0;2,7;145,5;55;100;10,0;2,51;4,71;🟡 Estoque excessivo;0,0;184,28;0,0;1-Config ML (Painel);ARIMA;2395,64
 PC000614;Loja Centro;Fornecedor Alfa;E;Baixa;15,0;1,0;450,0;55;100;10,0;0,81;4,71;🟡 Estoque excessivo;0,0;151,36;0,0;1-Config ML (Painel);ARIMA;2270,4
 PC000073;Loja Sul;Fornecedor Alfa;E;Baixa;71,0;3,2;668,7;55;100;10,0;0,55;4,71;🟡 Estoque excessivo;0,0;26,61;0,0;1-Config ML (Painel);SARIMAX;1889,31
-PC000033;Loja Norte;Fornecedor Gamma;E;Baixa;17,0;3,3;155,6;55;100;10,0;2,35;4,71;🟡 Estoque excessivo;0,0;109,66;0,0;1-Config ML (Painel);Croston;1864,22
+PC000033;Loja Norte;Fornecedor Gamma;E;Baixa;17,0;3,3;155,2;55;100;10,0;2,35;4,71;🟡 Estoque excessivo;0,0;109,66;0,0;1-Config ML (Painel);Holt;1864,22
 PC000038;Loja Norte;Fornecedor Delta;E;Baixa;5,0;1,0;150,0;55;100;10,0;2,43;4,71;🟡 Estoque excessivo;0,0;328,35;0,0;1-Config ML (Painel);ARIMA;1641,75
-PC000622;Loja Norte;Fornecedor Gamma;E;Baixa;47,0;3,7;379,1;55;100;10,0;0,96;4,71;🟡 Estoque excessivo;0,0;34,58;0,0;1-Config ML (Painel);Croston;1625,26
 PC000022;Loja Sul;Fornecedor Gamma;E;Baixa;11,0;2,9;112,5;55;100;10,0;3,24;4,71;🟡 Estoque excessivo;0,0;139,43;0,0;1-Config ML (Painel);ARIMA;1533,73
 PC000498;Loja Norte;Fornecedor Delta;E;Baixa;7,0;1,0;213,0;55;100;10,0;1,71;4,71;🟡 Estoque excessivo;0,0;212,86;0,0;1-Config ML (Painel);ExponentialSmoothing;1490,02
 PC000100;Loja Sul;Fornecedor Beta;E;Baixa;9,0;3,1;88,2;55;100;10,0;4,14;4,71;🟢 OK;0,0;162,76;0,0;1-Config ML (Painel);Ensemble;1464,84
 PC000540;Loja Norte;Fornecedor Delta;E;Média;6,0;1,8;102,5;55;100;10,0;3,56;4,71;🟡 Estoque excessivo;0,0;240,12;0,0;1-Config ML (Painel);Ensemble;1440,72
 PC000589;Loja Centro;Fornecedor Beta;E;Baixa;7,0;3,3;64,4;55;100;10,0;5,67;4,71;🟢 OK;0,0;197,26;0,0;1-Config ML (Painel);Prophet;1380,82
-PC000176;Loja Sul;Fornecedor Gamma;D;Baixa;5,0;3,5;42,3;40;75;10,0;8,62;6,35;🟢 OK;0,0;246,67;0,0;1-Config ML (Painel);Croston;1233,35
-PC000577;Loja Norte;Fornecedor Alfa;E;Baixa;62,0;3,0;620,0;55;100;10,0;0,59;4,71;🟡 Estoque excessivo;0,0;18,45;0,0;2-Recalculado agora (sem calibrações);Holt;1143,8999999999999
-PC000011;Loja Centro;Fornecedor Beta;E;Baixa;10,0;3,7;80,0;55;100;10,0;4,56;4,71;🟢 OK;0,0;105,77;0,0;1-Config ML (Painel);Ensemble;1057,7
-PC000984;Loja Sul;Fornecedor Beta;E;Média;4,0;1,2;100,1;55;100;10,0;3,65;4,71;🟡 Estoque excessivo;0,0;221,47;0,0;1-Config ML (Painel);Ensemble;885,88
+PC000176;Loja Sul;Fornecedor Gamma;D;Baixa;5,0;3,6;42,1;40;75;10,0;8,67;6,35;🟢 OK;0,0;246,67;0,0;1-Config ML (Painel);Holt;1233,35
+PC000577;Loja Norte;Fornecedor Alfa;E;Baixa;62,0;3,0;620,0;55;100;10,0;0,59;4,71;🟡 Estoque excessivo;0,0;18,45;0,0;1-Config ML (Painel);Holt;1143,8999999999999
+PC000011;Loja Centro;Fornecedor Beta;E;Baixa;10,0;3,2;93,7;55;100;10,0;3,89;4,71;🟢 OK;0,0;105,77;0,0;1-Config ML (Painel);ExponentialSmoothing;1057,7
+PC000984;Loja Sul;Fornecedor Beta;E;Média;4,0;1,3;94,2;55;100;10,0;3,87;4,71;🟢 OK;0,0;221,47;0,0;1-Config ML (Painel);ARIMA;885,88
 PC000605;Loja Sul;Fornecedor Beta;E;Baixa;22,0;2,4;275,4;55;100;10,0;1,33;4,71;🟡 Estoque excessivo;0,0;38,69;0,0;1-Config ML (Painel);Prophet;851,18
 PC000776;Loja Norte;Fornecedor Beta;E;Baixa;5,0;2,4;62,7;55;100;10,0;5,82;4,71;🟢 OK;0,0;147,41;0,0;1-Config ML (Painel);Prophet;737,05
 PC000577;Loja Sul;Fornecedor Alfa;E;Baixa;33,0;2,6;382,6;55;100;10,0;0,95;4,71;🟡 Estoque excessivo;0,0;18,45;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);608,85
-PC000169;Loja Sul;Fornecedor Alfa;E;Baixa;34,0;3,4;300,8;55;100;10,0;1,21;4,71;🟡 Estoque excessivo;0,0;10,82;0,0;1-Config ML (Painel);ARIMA;367,88
+PC000169;Loja Sul;Fornecedor Alfa;E;Baixa;34,0;3,3;307,5;55;100;10,0;1,19;4,71;🟡 Estoque excessivo;0,0;10,82;0,0;1-Config ML (Painel);Ensemble;367,88

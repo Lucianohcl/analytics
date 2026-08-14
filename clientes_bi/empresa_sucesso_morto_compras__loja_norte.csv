@@ -1,14 +1,14 @@
 ﻿Produto;Filial;Fornecedor;Classe;Volatilidade;EstoqueAtual;DemandaPrevMes(un);CoberturaDias;MinDias;MaxDias;LeadTimeDias;GiroAtual;GiroAlvo;Status;QtdSugerida;CustoUnitario;ValorSugerido;FontePrevisao;ModeloUsado;CapitalParado
 PC000547;Loja Norte;Fornecedor Beta;D;Baixa;62,0;2,0;930,0;40;75;10,0;0,39;6,35;🟡 Estoque excessivo;0,0;364,25;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);22583,5
 PC000357;Loja Norte;Fornecedor Delta;E;Baixa;42,0;3,0;420,0;55;100;10,0;0,87;4,71;🟡 Estoque excessivo;0,0;406,11;0,0;1-Config ML (Painel);Média Móvel;17056,62
+PC000729;Loja Norte;Fornecedor Alfa;C;Baixa;46,0;3,1;448,1;30;55;10,0;0,81;8,59;🟡 Estoque excessivo;0,0;367,77;0,0;1-Config ML (Painel);ARIMA;16917,42
 PC000182;Loja Norte;Fornecedor Alfa;E;Baixa;76,0;1,1;;55;100;10,0;0,17;4,71;🟡 Estoque excessivo;0,0;159,11;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);12092,36
-PC000172;Loja Norte;Fornecedor Gamma;D;Baixa;27,0;3,0;269,9;40;75;10,0;1,35;6,35;🟡 Estoque excessivo;0,0;441,68;0,0;1-Config ML (Painel);Croston;11925,36
+PC000172;Loja Norte;Fornecedor Gamma;D;Baixa;27,0;2,9;279,8;40;75;10,0;1,3;6,35;🟡 Estoque excessivo;0,0;441,68;0,0;1-Config ML (Painel);ARIMA;11925,36
 PC000371;Loja Norte;Fornecedor Beta;D;Baixa;24,0;1,9;379,2;40;75;10,0;0,96;6,35;🟡 Estoque excessivo;0,0;437,36;0,0;1-Config ML (Painel);ARIMA;10496,64
 PC000690;Loja Norte;Fornecedor Beta;D;Baixa;23,0;2,1;335,9;40;75;10,0;1,09;6,35;🟡 Estoque excessivo;0,0;346,05;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);7959,150000000001
 PC000032;Loja Norte;Fornecedor Gamma;E;Média;29,0;1,2;713,9;55;100;10,0;0,51;4,71;🟡 Estoque excessivo;0,0;271,55;0,0;1-Config ML (Painel);ExponentialSmoothing;7874,950000000001
-PC000704;Loja Norte;Fornecedor Alfa;D;Baixa;32,0;2,8;340,1;40;75;10,0;1,07;6,35;🟡 Estoque excessivo;0,0;231,71;0,0;1-Config ML (Painel);Ensemble;7414,72
+PC000704;Loja Norte;Fornecedor Alfa;D;Baixa;32,0;2,8;342,2;40;75;10,0;1,07;6,35;🟡 Estoque excessivo;0,0;231,71;0,0;1-Config ML (Painel);ARIMA;7414,72
 PC000129;Loja Norte;Fornecedor Delta;E;Baixa;42,0;3,0;425,0;55;100;10,0;0,86;4,71;🟡 Estoque excessivo;0,0;172,73;0,0;1-Config ML (Painel);ARIMA;7254,66
-PC000487;Loja Norte;Fornecedor Delta;E;Baixa;37,0;3,1;354,3;55;100;10,0;1,03;4,71;🟡 Estoque excessivo;0,0;183,11;0,0;1-Config ML (Painel);Holt;6775,070000000001
 PC000084;Loja Norte;Fornecedor Alfa;E;Baixa;17,0;3,0;170,0;55;100;10,0;2,15;4,71;🟡 Estoque excessivo;0,0;396,57;0,0;1-Config ML (Painel);Média Móvel;6741,69
 PC000431;Loja Norte;Fornecedor Gamma;D;Baixa;30,0;3,1;293,8;40;75;10,0;1,24;6,35;🟡 Estoque excessivo;0,0;209,0;0,0;1-Config ML (Painel);SARIMAX;6270,0
 PC000589;Loja Norte;Fornecedor Beta;E;Baixa;31,0;2,7;343,5;55;100;10,0;1,06;4,71;🟡 Estoque excessivo;0,0;197,26;0,0;1-Config ML (Painel);SARIMAX (c/ sazonalidade+promoção);6115,0599999999995
