@@ -6794,7 +6794,73 @@ elif pg=="ml_produtos":
             save_ml_produtos_resultado(st.session_state.cid,resultado,st.session_state.get("mlp_filial_sel"))
         addlog(f"ML por Produto: {len(resultado)} produtos (top {int(pct_top*100)}%)")
 
-    resultado=st.session_state.get("ml_produtos_resultado")
+    sec("🔬 Validação Out-of-Sample (Previsto x Real)")
+    _meses_disp_mlp=[]
+    if data_col:
+        _datas_disp_mlp=pd.to_datetime(df_v[data_col],errors="coerce",dayfirst=True).dropna()
+        _meses_disp_mlp=sorted(_datas_disp_mlp.dt.to_period("M").astype(str).unique().tolist())
+    if len(_meses_disp_mlp)<2:
+        st.markdown('<div class="al-w">⚠️ Histórico insuficiente pra validar (precisa de pelo menos 2 meses de dados).</div>',unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="al-i">Escolha uma data de corte: o modelo treina SÓ com dado até essa data, prevê os meses seguintes "às cegas", e comparamos com o que realmente aconteceu (se já existir na base).</div>',unsafe_allow_html=True)
+        data_corte_mlp=st.selectbox("Treinar até (data de corte)",_meses_disp_mlp[:-1],
+            index=max(0,len(_meses_disp_mlp)-7),key="mlp_data_corte")
+        n_meses_valid_mlp=st.slider("Quantos meses validar depois do corte",1,12,6,key="mlp_n_valid")
+        if st.button("🔬 Rodar Validação",use_container_width=True,key="mlp_btn_validar"):
+            df_treino_mlp=df_v.copy()
+            df_treino_mlp["_periodo_val_mlp"]=pd.to_datetime(df_treino_mlp[data_col],errors="coerce",dayfirst=True).dt.to_period("M").astype(str)
+            df_treino_mlp=df_treino_mlp[df_treino_mlp["_periodo_val_mlp"]<=data_corte_mlp].copy()
+            df_treino_mlp[metrica_col]=pd.to_numeric(df_treino_mlp[metrica_col],errors="coerce")
+
+            ranking_val_mlp=pareto_analysis(df_treino_mlp,"_ProdutoUnico",metrica_col)
+            n_selecionar_val_mlp=max(1,int(np.ceil(len(ranking_val_mlp)*pct_top)))
+            df_treino_mlp["_data_ml_val_mlp"]=pd.to_datetime(df_treino_mlp[data_col],errors="coerce",dayfirst=True)
+            df_treino_mlp["_periodo_ml_val_mlp"]=df_treino_mlp["_data_ml_val_mlp"].dt.to_period("M")
+            n_periodos_val_mlp=df_treino_mlp.dropna(subset=["_data_ml_val_mlp"]).groupby("_ProdutoUnico")["_periodo_ml_val_mlp"].nunique()
+            produtos_hist_val_mlp=n_periodos_val_mlp[n_periodos_val_mlp>=min_periodos].index
+            ranking_elegivel_val_mlp=ranking_val_mlp[ranking_val_mlp["_ProdutoUnico"].isin(produtos_hist_val_mlp)]
+            top_produtos_val_mlp=ranking_elegivel_val_mlp.head(n_selecionar_val_mlp)["_ProdutoUnico"].tolist()
+
+            st.markdown(f'<div class="al-i">🔎 {len(top_produtos_val_mlp)} produtos elegíveis para validação.</div>',unsafe_allow_html=True)
+            pb_val_mlp=st.progress(0)
+            texto_pb_val_mlp=st.empty()
+            linhas_val_mlp=[]
+            modelos_val_mlp=[m for m,ok in MODELOS_ML.items() if ok]
+            for idx_val_mlp,prod_val_mlp in enumerate(top_produtos_val_mlp):
+                texto_pb_val_mlp.caption(f"Validando {idx_val_mlp+1} de {len(top_produtos_val_mlp)}: {str(prod_val_mlp)[:50]}")
+                serie_val_mlp=serie_mensal_produto(df_treino_mlp,"_ProdutoUnico",prod_val_mlp,data_col,metrica_col)
+                melhor_val_mlp,_rank_val_mlp=melhor_modelo(serie_val_mlp,modelos_val_mlp)
+                proj_val_mlp=treinar(serie_val_mlp,melhor_val_mlp,n_meses_valid_mlp)
+                if proj_val_mlp is not None:
+                    serie_completa_val_mlp=serie_mensal_produto(df_v,"_ProdutoUnico",prod_val_mlp,data_col,metrica_col)
+                    corte_ts_mlp=pd.Period(data_corte_mlp).to_timestamp()
+                    serie_real_pos_mlp=serie_completa_val_mlp[serie_completa_val_mlp.index>corte_ts_mlp].head(n_meses_valid_mlp)
+                    proj_lista_val_mlp=proj_val_mlp.tolist()
+                    for i_vm in range(min(len(proj_lista_val_mlp),len(serie_real_pos_mlp))):
+                        real_vm=float(serie_real_pos_mlp.iloc[i_vm])
+                        prev_vm=float(proj_lista_val_mlp[i_vm])
+                        erro_abs_vm=abs(prev_vm-real_vm)
+                        erro_pct_vm=safe(erro_abs_vm,abs(real_vm))*100
+                        linhas_val_mlp.append({"Produto":prod_val_mlp,"Mes":str(serie_real_pos_mlp.index[i_vm]),
+                            "Modelo":melhor_val_mlp,"Previsto":round(prev_vm,2),"Real":round(real_vm,2),
+                            "Erro %":round(erro_pct_vm,1),"Bias":round(prev_vm-real_vm,2)})
+                if len(top_produtos_val_mlp)>0:
+                    pb_val_mlp.progress((idx_val_mlp+1)/len(top_produtos_val_mlp))
+            pb_val_mlp.empty(); texto_pb_val_mlp.empty()
+            st.session_state["mlp_validacao_resultado"]=pd.DataFrame(linhas_val_mlp) if linhas_val_mlp else None
+
+        df_val_mlp=st.session_state.get("mlp_validacao_resultado")
+        if df_val_mlp is not None and not df_val_mlp.empty:
+            mape_val_mlp=df_val_mlp["Erro %"].mean()
+            n_produtos_val_mlp=df_val_mlp["Produto"].nunique()
+            cv1,cv2,cv3=st.columns(3)
+            mc(cv1,"MAPE validado",f"{mape_val_mlp:.1f}%","g" if mape_val_mlp<15 else ("y" if mape_val_mlp<30 else "r"))
+            mc(cv2,"Produtos validados",str(n_produtos_val_mlp),"b")
+            mc(cv3,"Comparações válidas",str(len(df_val_mlp)),"b")
+            with st.expander("📋 Ver detalhe da validação (Previsto x Real)"):
+                st.dataframe(df_val_mlp,use_container_width=True,height=380)
+        elif df_val_mlp is not None:
+            st.markdown('<div class="al-w">⚠️ Nenhum mês real encontrado depois da
     if resultado is None and st.session_state.cid:
         resultado=load_ml_produtos_resultado(st.session_state.cid,st.session_state.get("mlp_filial_sel"))
         if resultado is not None:
