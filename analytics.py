@@ -6861,6 +6861,8 @@ elif pg=="ml_produtos":
                 st.dataframe(df_val_mlp,use_container_width=True,height=380)
         elif df_val_mlp is not None:
             st.markdown('<div class="al-w">⚠️ Nenhum mês real encontrado depois da data de corte escolhida.</div>',unsafe_allow_html=True)
+
+    resultado=st.session_state.get("ml_produtos_resultado")
     if resultado is None and st.session_state.cid:
         resultado=load_ml_produtos_resultado(st.session_state.cid,st.session_state.get("mlp_filial_sel"))
         if resultado is not None:
