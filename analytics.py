@@ -6970,6 +6970,8 @@ elif pg=="ml_produtos":
             proj_g=linha_g["previsao"]
             melhor_g=linha_g["modelo_escolhido"]
             serie_g=serie_mensal_produto(df_v_r,produto_col_r,prod_g,data_col_r,metrica_col_r)
+            if serie_g.empty:
+                continue  # produto do resultado salvo não existe mais no filtro atual (filial/categoria mudou) — pula, sem travar a tela
             x_h=[str(p) for p in serie_g.index]
             x_p=[f"M+{i2+1}" for i2 in range(len(proj_g))]
             v_at=float(serie_g.iloc[-1])
