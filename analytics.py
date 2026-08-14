@@ -6666,6 +6666,13 @@ elif pg=="ml_produtos":
         if filial_sel_mlp!="(Todas as filiais)":
             df_v=df_v[df_v[_col_fil_mlp].astype(str)==filial_sel_mlp].copy()
 
+    _col_cat_mlp=next((c for c in df_v.columns if c.strip().lower() in ["categoria","segmento","grupo"]),None)
+    if _col_cat_mlp:
+        _categorias_disp_mlp=sorted(df_v[_col_cat_mlp].dropna().astype(str).unique().tolist())
+        categoria_sel_mlp=st.selectbox("📦 Categoria (opcional)",["(Todas)"]+_categorias_disp_mlp,key="mlp_categoria_sel")
+        if categoria_sel_mlp!="(Todas)":
+            df_v=df_v[df_v[_col_cat_mlp].astype(str)==categoria_sel_mlp].copy()
+
     cols_v=list(df_v.columns)
 
     cod_col=next((c for c in cols_v if c.strip().lower() in ["produto","codigo","código","sku"]),None)
@@ -6752,17 +6759,27 @@ elif pg=="ml_produtos":
             melhor_mlp,rank_mlp=melhor_modelo(serie_mlp,modelos_mlp)
             proj_mlp=treinar(serie_mlp,melhor_mlp,meses_previsao)
             ultimo_mlp=float(serie_mlp.iloc[-1])
+            # MAPE do modelo vencedor: reaproveita o mesmo backtest usado pra escolher
+            # o modelo (últimos 6 meses reais vs. previstos), pra medir o erro em %.
+            mape_mlp=None
+            _,_prev_bt_mlp,_real_bt_mlp=treinar_backtest(serie_mlp,melhor_mlp)
+            if _prev_bt_mlp is not None and _real_bt_mlp is not None:
+                _mask_bt_mlp=_real_bt_mlp!=0
+                if _mask_bt_mlp.sum()>0:
+                    mape_mlp=float(np.mean(np.abs((_real_bt_mlp[_mask_bt_mlp]-_prev_bt_mlp[_mask_bt_mlp])/_real_bt_mlp[_mask_bt_mlp]))*100)
             if proj_mlp is not None:
                 prox_mlp=float(proj_mlp.iloc[0])
                 var_mlp=safe(prox_mlp-ultimo_mlp,abs(ultimo_mlp))*100
                 linhas_mlp.append({"_ProdutoUnico":prod_mlp,"n_periodos":len(serie_mlp),
                     "modelo_escolhido":melhor_mlp,"ultimo_real":ultimo_mlp,
                     "previsao":[round(v,2) for v in proj_mlp.tolist()],
-                    "var_pct_proximo_mes":round(var_mlp,1),"status":"ok","rank":rank_mlp})
+                    "var_pct_proximo_mes":round(var_mlp,1),"status":"ok","rank":rank_mlp,
+                    "mape":round(mape_mlp,1) if mape_mlp is not None else None})
             else:
                 linhas_mlp.append({"_ProdutoUnico":prod_mlp,"n_periodos":len(serie_mlp),
                     "modelo_escolhido":melhor_mlp,"ultimo_real":ultimo_mlp,
-                    "previsao":None,"var_pct_proximo_mes":None,"status":"falhou ao treinar","rank":rank_mlp})
+                    "previsao":None,"var_pct_proximo_mes":None,"status":"falhou ao treinar","rank":rank_mlp,
+                    "mape":round(mape_mlp,1) if mape_mlp is not None else None})
             if len(top_produtos_mlp)>0:
                 pb_mlp.progress((idx_mlp+1)/len(top_produtos_mlp))
         pb_mlp.empty(); texto_pb_mlp.empty()
@@ -6789,10 +6806,12 @@ elif pg=="ml_produtos":
         df_v_r=st.session_state.get("vendas_raw_com_chave",df_v)
         ok_mask=resultado["status"]=="ok"
         n_ok=int(ok_mask.sum())
-        mc_cols=st.columns(3)
+        mape_medio_mlp=resultado.loc[ok_mask,"mape"].dropna().mean() if "mape" in resultado.columns else None
+        mc_cols=st.columns(4)
         mc(mc_cols[0],"Produtos analisados",str(len(resultado)),"b")
         mc(mc_cols[1],"Previsões geradas",str(n_ok),"g")
         mc(mc_cols[2],"Sem dados suficientes",str(len(resultado)-n_ok),"y")
+        mc(mc_cols[3],"MAPE médio",f"{mape_medio_mlp:.1f}%" if mape_medio_mlp is not None and pd.notna(mape_medio_mlp) else "—","g")
         sec("📋 Resultado — Melhor Modelo por Produto")
         def confiab_label(n):
             if n>=18: return "🟢 Alta"
@@ -6803,9 +6822,11 @@ elif pg=="ml_produtos":
         tabela_show["ultimo_real"]=tabela_show["ultimo_real"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
         tabela_show["previsao_proximo_mes"]=tabela_show["previsao"].apply(
           lambda p: fmt(p[0]) if isinstance(p,list) and len(p)>0 else "—")
+        if "mape" in tabela_show.columns:
+            tabela_show["mape"]=tabela_show["mape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
         with st.expander(f"📋 Ver tabela completa ({len(tabela_show)} produtos)"):
             st.dataframe(tabela_show[[produto_col_r,"n_periodos","confiabilidade","modelo_escolhido","ultimo_real",
-              "previsao_proximo_mes","var_pct_proximo_mes","status"]],
+              "previsao_proximo_mes","var_pct_proximo_mes","mape","status"]],
               use_container_width=True,height=420)
         csv_ml=resultado.to_csv(sep=";",decimal=",",index=False).encode("utf-8-sig")
         c_exp1,c_exp2=st.columns(2)
