@@ -6842,6 +6842,7 @@ elif pg=="ml_produtos":
         st.session_state["mlp_data_col_atual"]=data_col
         if st.session_state.cid:
             save_ml_produtos_resultado(st.session_state.cid,resultado,st.session_state.get("mlp_filial_sel"))
+        st.session_state["mlp_resultado_categoria_usada"]=st.session_state.get("mlp_categoria_sel","(Todas)")
         addlog(f"ML por Produto: {len(resultado)} produtos (top {int(pct_top*100)}%)")
 
     sec("🔬 Validação Out-of-Sample (Previsto x Real)")
@@ -6924,6 +6925,14 @@ elif pg=="ml_produtos":
         resultado=load_ml_produtos_resultado(st.session_state.cid,st.session_state.get("mlp_filial_sel"))
         if resultado is not None:
             st.session_state["ml_produtos_resultado"]=resultado
+    # Se o resultado que temos foi calculado com uma categoria DIFERENTE da que está
+    # selecionada agora na tela, ele está desatualizado — não mostra como se fosse válido.
+    _categoria_atual_mlp=st.session_state.get("mlp_categoria_sel","(Todas)")
+    _categoria_do_resultado_mlp=st.session_state.get("mlp_resultado_categoria_usada","(Todas)")
+    if resultado is not None and _categoria_atual_mlp!=_categoria_do_resultado_mlp:
+        st.markdown(f'<div class="al-w">⚠️ O resultado mostrado abaixo foi calculado com a categoria "{_categoria_do_resultado_mlp}", '
+                    f'não com "{_categoria_atual_mlp}" (selecionada agora). Clique em "🚀 Rodar ML nos Produtos" de novo para atualizar.</div>',unsafe_allow_html=True)
+        resultado=None
     if resultado is not None and not resultado.empty:
         produto_col_r=st.session_state.get("mlp_produto_col_atual",produto_col)
         metrica_col_r=st.session_state.get("mlp_metrica_col_atual",metrica_col)
