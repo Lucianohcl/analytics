@@ -6663,7 +6663,8 @@ elif pg=="ml_produtos":
         def _on_change_filial_mlp():
             st.session_state["mlp_filial_sel_backup"]=st.session_state["mlp_filial_sel"]
             for _k_limpar_mlp in ["ml_produtos_resultado","mlp_produto_col_atual",
-                                   "mlp_metrica_col_atual","mlp_data_col_atual"]:
+                                   "mlp_metrica_col_atual","mlp_data_col_atual","vendas_raw_com_chave",
+                                   "mlp_validacao_resultado"]:
                 if _k_limpar_mlp in st.session_state:
                     del st.session_state[_k_limpar_mlp]
 
@@ -6684,7 +6685,8 @@ elif pg=="ml_produtos":
         _categorias_disp_mlp=sorted(df_v[_col_cat_mlp].dropna().astype(str).unique().tolist())
         def _on_change_categoria_mlp():
             for _k_limpar_cat_mlp in ["ml_produtos_resultado","mlp_produto_col_atual",
-                                       "mlp_metrica_col_atual","mlp_data_col_atual"]:
+                                       "mlp_metrica_col_atual","mlp_data_col_atual","vendas_raw_com_chave",
+                                       "mlp_validacao_resultado"]:
                 if _k_limpar_cat_mlp in st.session_state:
                     del st.session_state[_k_limpar_cat_mlp]
         categoria_sel_mlp=st.selectbox("📦 Categoria (opcional)",["(Todas)"]+_categorias_disp_mlp,
@@ -6936,6 +6938,8 @@ elif pg=="ml_produtos":
         for _,linha_ex in resultado[ok_mask].iterrows():
             prod_ex=linha_ex[produto_col_r]
             serie_ex=serie_mensal_produto(df_v_r if 'df_v_r' in dir() else df_v,produto_col_r,prod_ex,data_col_r,metrica_col_r)
+            if serie_ex.empty:
+                continue  # produto do resultado salvo não existe mais no filtro atual (filial/categoria mudou) — pula, sem travar a tela
             for periodo_ex,valor_ex in serie_ex.items():
                 linhas_editavel.append({"Produto":prod_ex,"Tipo":"Real","Mes":str(periodo_ex),
                     "Valor":round(float(valor_ex),2),"Modelo":"","Ajustado (preencha se quiser)":""})
