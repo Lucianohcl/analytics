@@ -2438,6 +2438,19 @@ def save_ml_produtos_resultado(cid,df,filial=None):
                 df_save[col]=df_save[col].apply(lambda x: json.dumps(x) if x is not None else None)
         df_save.to_csv(path_ml_produtos_resultado(cid,filial),sep=";",decimal=",",index=False,encoding="utf-8-sig")
 
+def path_ml_produtos_validacao(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_ml_produtos_validacao__{_sufixo_filial(filial)}.csv")
+
+def save_ml_produtos_validacao(cid,df,filial=None):
+    if df is not None and not df.empty:
+        df.to_csv(path_ml_produtos_validacao(cid,filial),sep=";",decimal=",",index=False,encoding="utf-8-sig")
+
+def load_ml_produtos_validacao(cid,filial=None):
+    p=path_ml_produtos_validacao(cid,filial)
+    if not os.path.exists(p): return None
+    try:
+        return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
+    except: return None
+
 def load_ml_produtos_resultado(cid,filial=None):
     p=path_ml_produtos_resultado(cid,filial)
     if not os.path.exists(p): return None
@@ -6847,9 +6860,16 @@ elif pg=="ml_produtos":
                 if len(top_produtos_val_mlp)>0:
                     pb_val_mlp.progress((idx_val_mlp+1)/len(top_produtos_val_mlp))
             pb_val_mlp.empty(); texto_pb_val_mlp.empty()
-            st.session_state["mlp_validacao_resultado"]=pd.DataFrame(linhas_val_mlp) if linhas_val_mlp else None
+            _df_val_mlp_novo=pd.DataFrame(linhas_val_mlp) if linhas_val_mlp else None
+            st.session_state["mlp_validacao_resultado"]=_df_val_mlp_novo
+            if st.session_state.cid and _df_val_mlp_novo is not None:
+                save_ml_produtos_validacao(st.session_state.cid,_df_val_mlp_novo,st.session_state.get("mlp_filial_sel"))
 
         df_val_mlp=st.session_state.get("mlp_validacao_resultado")
+        if df_val_mlp is None and st.session_state.cid:
+            df_val_mlp=load_ml_produtos_validacao(st.session_state.cid,st.session_state.get("mlp_filial_sel"))
+            if df_val_mlp is not None:
+                st.session_state["mlp_validacao_resultado"]=df_val_mlp
         if df_val_mlp is not None and not df_val_mlp.empty:
             mape_val_mlp=df_val_mlp["Erro %"].mean()
             n_produtos_val_mlp=df_val_mlp["Produto"].nunique()
