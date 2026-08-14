@@ -9601,7 +9601,43 @@ elif pg=="fluxo_compras":
                 resumo_semanal_ff["Faturamento"]=0.0
                 totais_mensais_ff={}
                 mes_base_ff=pd.Timestamp.now().to_period("M").to_timestamp()
-                _cfg_ml_ff=load_cfgml_resultado(st.session_state.cid,st.session_state.get("ff_filial_sel")) if st.session_state.cid else None
+                _cfg_ml_ff=None
+                _totais_mensais_prontos_ff=None
+                if st.session_state.cid:
+                    if st.session_state.get("ff_filial_sel")=="(Todas as filiais)" and _col_fil_ff:
+                        # Monta o faturamento previsto loja por loja — cada uma com o SEU
+                        # PRÓPRIO corte de data (até onde ela tem compra programada) — e só
+                        # depois soma os totais mensais já calculados. Isso garante que o
+                        # consolidado é sempre exatamente Centro+Norte+Sul, igual já
+                        # acontece com as compras — nenhuma loja "empresta" mês pra outra.
+                        _faltando_ml_ff=[]
+                        _totais_mensais_prontos_ff={}
+                        for _fil_soma_ff in _filiais_disp_ff:
+                            _p_ml_fil=load_cfgml_resultado(st.session_state.cid,_fil_soma_ff)
+                            _,_cal_fil,_=load_resultado_compras(st.session_state.cid,_fil_soma_ff)
+                            if _p_ml_fil is None or _p_ml_fil.empty:
+                                _faltando_ml_ff.append(_fil_soma_ff)
+                                continue
+                            _limite_fil=None
+                            _prod_prog_fil=set()
+                            if _cal_fil is not None and not _cal_fil.empty:
+                                _limite_fil=pd.to_datetime(_cal_fil["DataEvento"],format="%d/%m/%Y",errors="coerce").max()
+                                _prod_prog_fil=set(_cal_fil["Produto"].unique())
+                            _col_prod_fil="_ProdutoUnico" if "_ProdutoUnico" in _p_ml_fil.columns else None
+                            for _,row_prev_fil in _p_ml_fil.iterrows():
+                                if row_prev_fil.get("status")!="ok": continue
+                                if _col_prod_fil and row_prev_fil.get(_col_prod_fil) not in _prod_prog_fil: continue
+                                _prev_lista_fil=row_prev_fil.get("previsao")
+                                if not _prev_lista_fil: continue
+                                for i_mes_fil,val_mes_fil in enumerate(_prev_lista_fil):
+                                    _mes_cal_fil=pd.Timestamp.now().to_period("M").to_timestamp()+pd.DateOffset(months=i_mes_fil+1)
+                                    if _limite_fil is not None and _mes_cal_fil>_limite_fil: continue
+                                    _totais_mensais_prontos_ff[i_mes_fil]=_totais_mensais_prontos_ff.get(i_mes_fil,0.0)+max(0.0,float(val_mes_fil))
+                        if _faltando_ml_ff:
+                            st.markdown(f'<div class="al-w">⚠️ Faltam rodar o ML para: <b>{", ".join(_faltando_ml_ff)}</b> — o faturamento previsto do consolidado vai ficar incompleto até rodar o Motor de Previsão nessas filiais.</div>',unsafe_allow_html=True)
+                        _cfg_ml_ff=pd.DataFrame()  # sinaliza "já processado" — evita cair no aviso de erro abaixo
+                    else:
+                        _cfg_ml_ff=load_cfgml_resultado(st.session_state.cid,st.session_state.get("ff_filial_sel"))
                 if _cfg_ml_ff is None:
                     st.markdown(f'<div class="al-w">⚠️ Não encontrei Cenário ML rodado para <b>{st.session_state.get("ff_filial_sel") or "(Todas as filiais)"}</b> — rode-o primeiro em <b>🎛️ Motor de Previsão</b> nessa Filial, ou o Fluxo Projetado vai ficar incompleto (sem a parte de demanda prevista).</div>',unsafe_allow_html=True)
                 _res_ml_ff=st.session_state.get("ml_produtos_resultado")
@@ -9613,7 +9649,9 @@ elif pg=="fluxo_compras":
 
                 produtos_programados_ff=set(df_cal_ff["Produto"].unique()) if df_cal_ff is not None and not df_cal_ff.empty else set()
 
-                if _fonte_prev_ff is None:
+                if _totais_mensais_prontos_ff is not None:
+                    totais_mensais_ff=_totais_mensais_prontos_ff
+                elif _fonte_prev_ff is None:
                     st.markdown('<div class="al-w">⚠️ Nenhuma previsão de vendas encontrada ainda — rode o <b>🎛️ Motor de Previsão</b> ou o <b>🧮 ML por Produto</b> primeiro para ver o Faturamento Projetado aqui.</div>',unsafe_allow_html=True)
                 elif not produtos_programados_ff:
                     st.markdown('<div class="al-i">Sem produtos na programação de compras para comparar o faturamento.</div>',unsafe_allow_html=True)
@@ -10071,13 +10109,20 @@ elif pg=="parecer_ia":
 
                         _sem_defc=_sf.get('semanas_deficit_semanal',[]) if _sf else []
                         if _sem_defc:
-                            _pior_defc=min(_sem_defc,key=lambda s:s['diferenca'])
+                            _sem_defc_ordenadas=sorted(_sem_defc,key=lambda s:s['diferenca'])
+                            _top_defc=_sem_defc_ordenadas[:8]  # até 8 piores, pra não estourar o prompt em filiais com muitas semanas apertadas
+                            _lista_defc_txt="; ".join(
+                                f"{s['semana']} (entrada {fmt(s['entrada'])} x saída {fmt(s['saida'])}, déficit {fmt(abs(s['diferenca']))})"
+                                for s in _top_defc)
+                            _sufixo_defc=f" (mostrando as {len(_top_defc)} piores de {len(_sem_defc)} no total)" if len(_sem_defc)>len(_top_defc) else ""
                             _caixa_txt+=(f". ALÉM DISSO: {len(_sem_defc)} semana(s) individuais tiveram SAÍDA maior que ENTRADA "
-                                        f"naquela semana específica (mesmo o saldo acumulado total podendo estar positivo) — "
-                                        f"a pior foi {_pior_defc['semana']}, com entrada de {fmt(_pior_defc['entrada'])} "
-                                        f"contra saída de {fmt(_pior_defc['saida'])} (déficit de {fmt(abs(_pior_defc['diferenca']))})"
-                                        f". Cite essas semanas de déficit semanal no parecer como um alerta à parte — "
-                                        f"são semanas de atenção mesmo que o caixa acumulado não tenha ficado negativo.")
+                                        f"naquela semana específica (mesmo o saldo acumulado total podendo estar positivo). "
+                                        f"Semanas específicas{_sufixo_defc}: {_lista_defc_txt}"
+                                        f". No parecer, cite pelo menos 2-3 dessas semanas específicas (com datas) E, na mesma "
+                                        f"frase ou no mesmo parágrafo, reafirme explicitamente que o saldo ACUMULADO não ficou "
+                                        f"negativo em nenhum momento — as duas informações precisam aparecer juntas, como "
+                                        f"contraponto uma da outra (ex: \"apesar de X semanas pontuais de déficit, o caixa "
+                                        f"acumulado se manteve positivo o tempo todo\"). Nunca cite uma sem a outra.")
 
                         # Fornecedores desta filial, calculado ao vivo do Motor de Compras salvo (participação + capital parado)
                         _forn_txt_p="sem dado de fornecedor calculado para esta filial"
@@ -10117,6 +10162,15 @@ Fornecedores desta filial (participação e capital parado, calculado das compra
 
                     bloco_todas_filiais="\n".join(blocos_filiais)
 
+                    # Busca o parecer imediatamente anterior (mesmo tipo) pra permitir comparação de tendência
+                    _hist_anterior_p=load_parecer_ia_historico(st.session_state.cid,"comercial") if st.session_state.cid else []
+                    if _hist_anterior_p:
+                        _texto_rodada_anterior_p=(f"PARECER DA RODADA ANTERIOR (gerado em {_hist_anterior_p[0].get('data','—')}, "
+                            f"score médio {_hist_anterior_p[0].get('score','—')}), PARA COMPARAÇÃO DE TENDÊNCIA:\n"
+                            f"{_hist_anterior_p[0].get('texto','')}")
+                    else:
+                        _texto_rodada_anterior_p="Não há parecer anterior salvo — esta é a primeira rodada, sem base de comparação."
+
                     prompt_parecer=f"""Você é um consultor de Controladoria/FP&A sênior, analisando a operação de estoque e caixa de uma empresa com MÚLTIPLAS FILIAIS ({', '.join(FILIAIS_PARECER)}).
 
 SUA TAREFA PRINCIPAL não é resumir cada filial isoladamente — é ENCONTRAR CORRELAÇÕES E PADRÕES entre elas. Especificamente, para cada ponto analisado, avalie:
@@ -10128,6 +10182,7 @@ SUA TAREFA PRINCIPAL não é resumir cada filial isoladamente — é ENCONTRAR C
 IMPORTANTE SOBRE DATAS: sempre que citar saldo, semana crítica ou projeção, diga a qual filial e a qual período se refere.
 
 REFERÊNCIAS DE MERCADO PARA CLASSIFICAR CADA MÉTRICA (diga explicitamente onde cada número se encaixa):
+- Score Executivo (0-100): <40 Crítico | 40-59 Regular | 60-74 Bom | 75-89 Muito Bom | ≥90 Excelente
 - MAPE: <10% Excelente | 10-20% Bom | 20-30% Aceitável | >30% Baixa confiabilidade
 - Cobertura de estoque (dias): <15 Enxuta | 15-45 Saudável | 45-90 Alta | >90 Excessiva
 - Giro de estoque (x/ano): <4x Baixo | 4-8x Moderado | 8-15x Bom | >15x Excelente
@@ -10155,19 +10210,24 @@ DESEMPENHO DE FORNECEDORES (Prazo/Qualidade/OTIF — avaliação manual, vale pa
 TAREFA:
 Escreva um parecer executivo em português, rico, profissional e ESPECÍFICO (não genérico), para um Coordenador/Gerente de Controladoria que supervisiona as {len(FILIAIS_PARECER)} filiais. Estruture assim:
 
-**1. Diagnóstico Geral e Comparativo entre Filiais** — explique em 1-2 frases o que é o Score Executivo (métrica composta considerando Ruptura, Giro, Cobertura, Capital Parado, MAPE e Lead Time; Ruptura é o fator mais determinante por impactar receita diretamente). Depois cite o Score de CADA UMA das {len(FILIAIS_PARECER)} filiais individualmente (nunca resuma como "varia entre X e Y" sem nomear cada uma). Só afirme que a situação é "semelhante" ou "muito diferente" entre filiais se os números que você já vai citar nas seções seguintes realmente sustentarem essa afirmação — não conclua isso antes de checar.
+**1. Diagnóstico Geral e Comparativo entre Filiais** — explique em 1-2 frases o que é o Score Executivo (métrica composta considerando Ruptura, Giro, Cobertura, Capital Parado, MAPE e Lead Time; Ruptura é o fator mais determinante por impactar receita diretamente). Depois cite o Score de CADA UMA das {len(FILIAIS_PARECER)} filiais individualmente (nunca resuma como "varia entre X e Y" sem nomear cada uma), classificando cada uma pela régua de referência acima. Só afirme que a situação é "semelhante" ou "muito diferente" entre filiais se os números que você já vai citar nas seções seguintes realmente sustentarem essa afirmação — não conclua isso antes de checar. APRENDIZADO CRUZADO (obrigatório): identifique a filial com MELHOR desempenho num indicador-chave (Score, Giro de Classe A, ou Ruptura) e a com PIOR desempenho no mesmo indicador — aponte a diferença numérica entre as duas, e sugira, com base nos dados disponíveis (fornecedor, cobertura, lead time), uma hipótese do que a melhor está fazendo diferente que a pior poderia adotar.
 
 **2. Radar de Estoque — Ação Imediata, por Filial** — para cada filial, cite: ruptura iminente/comprar agora (total sugerido), quantidade de produtos em Estoque Excessivo, e o valor de Capital Parado (sem giro). Esses 3 números (ruptura, estoque excessivo, capital parado) estão nos dados de cada filial abaixo — cite todos os 3 aqui, mesmo que só formalmente, porque a Seção 7 vai precisar reusar alguns deles. Se uma filial está bem pior que as outras em algum desses pontos, destaque isso com os números lado a lado.
 
 **3. Estoque e Capital por Curva — Onde Focar Primeiro** — para CADA filial, cite o capital liberável (nunca omita nenhuma, mesmo que o valor seja pequeno ou zero) E o giro por classe (não só capital — cite pelo menos a Classe A de cada filial: giro atual vs alvo). Cruzando as filiais, diga onde está o maior capital liberável no total, para priorizar a ação. Você pode citar a Curva de Pareto como contexto adicional, mas NUNCA aplique o percentual dela sobre a Classe A do Giro/Capital — são bases diferentes.
 
-**4. Confiabilidade da Previsão** — explique brevemente a validação às cegas e como o motor escolhe modelo por produto. Apresente as calibrações disponíveis como capacidade educativa, depois diga quais estavam ativas em cada filial nesta rodada (sem inventar nenhuma que não foi informada).
+**4. Confiabilidade da Previsão** — ABRA a seção citando o MAPE (erro médio) de CADA filial, com a classificação da régua de referência acima (ex: "a Loja X está em Y%, classificada como Bom") — o número vem primeiro, antes de qualquer explicação de método. Só depois explique brevemente a validação às cegas e como o motor escolhe modelo por produto. Apresente as calibrações disponíveis como capacidade educativa, depois diga quais estavam ativas em cada filial nesta rodada (sem inventar nenhuma que não foi informada).
 
 **5. Situação de Caixa — Padrão entre Filiais** — para cada filial com semana negativa, você recebeu a lista completa, cronológica, de todas as semanas negativas com seus saldos. NÃO liste as semanas uma por uma no texto — em vez disso, identifique e descreva o PADRÃO: a situação piora progressivamente até um ponto e depois melhora? Há um pico isolado destoante do resto? O problema é concentrado em um período específico (ex: um trimestre) ou espalhado ao longo de todo o horizonte? Cite a semana mais crítica como ponto de referência, mas a narrativa deve ser sobre a tendência, não sobre cada dado individual. Só afirme que as semanas críticas "coincidem" ou "não coincidem" entre filiais se houver pelo menos 2 filiais com semana crítica pra comparar — se só 1 filial tiver, diga apenas que só ela apresentou criticidade, sem tentar comparar padrão.
 
 **6. Fornecedores — Concentração e Risco Cruzado** — identifique fornecedores que aparecem com participação relevante em mais de uma filial (risco de dependência combinado). VERIFICAÇÃO OBRIGATÓRIA: para cada fornecedor citado, compare o valor de compra sugerida com o capital parado que ele já tem — se um fornecedor tem capital parado relevante (produtos dele já parados sem giro) E ao mesmo tempo está recebendo uma sugestão de compra significativa, isso é um alerta específico que precisa ser dito explicitamente (ex: "Fornecedor X tem R$Y parado sem giro, mas ainda assim está recebendo sugestão de compra de R$Z — vale revisar se essa compra nova é realmente necessária antes de aumentar ainda mais o estoque parado desse fornecedor"). Não deixe essa checagem implícita — se ela se aplicar a algum fornecedor, escreva a frase de alerta. Traga também prazo/qualidade/OTIF quando relevante.
 
-**7. Ações Recomendadas** — 6 a 9 ações práticas, priorizadas (mais urgente primeiro), cada uma dizendo A QUAL FILIAL (ou "todas") se aplica. REGRA OBRIGATÓRIA: toda ação deve referenciar um número, filial ou achado JÁ CITADO em uma das seções 1-6 acima — nunca introduza aqui um valor que não apareceu antes no texto. REGRA ANTI-REDUNDÂNCIA: cada ação deve tratar de um PROBLEMA diferente das outras — antes de escrever a lista final, revise se duas ações não estão recomendando a mesma coisa pra mesma filial só com números diferentes (ex: uma ação sobre "capital parado da Loja X" e outra sobre "capital liberável da Loja X" são a mesma recomendação disfarçada, a menos que sejam explicitamente duas ações distintas com objetivos diferentes) — se isso acontecer, funda as duas em uma ação só, mais completa, em vez de listar separadamente.
+**7. Ações Recomendadas** — 6 a 9 ações práticas, cada uma dizendo A QUAL FILIAL (ou "todas") se aplica. ORDENAÇÃO OBRIGATÓRIA: ordene TODAS as ações pelo IMPACTO FINANCEIRO estimado (o valor em R$ que a ação libera, economiza ou protege — reuse os números já citados nas seções 1-6), da maior pra menor — não por "urgência" subjetiva. As 3 primeiras ações da lista devem vir marcadas no início com "🔴 PRIORIDADE MÁXIMA" e trazer entre parênteses o valor em R$ que justifica essa posição (ex: "🔴 PRIORIDADE MÁXIMA — libera R$1.6M em capital parado"). REGRA OBRIGATÓRIA: toda ação deve referenciar um número, filial ou achado JÁ CITADO em uma das seções 1-6 acima — nunca introduza aqui um valor que não apareceu antes no texto. REGRA ANTI-REDUNDÂNCIA: cada ação deve tratar de um PROBLEMA diferente das outras — antes de escrever a lista final, revise se duas ações não estão recomendando a mesma coisa pra mesma filial só com números diferentes (ex: uma ação sobre "capital parado da Loja X" e outra sobre "capital liberável da Loja X" são a mesma recomendação disfarçada, a menos que sejam explicitamente duas ações distintas com objetivos diferentes) — se isso acontecer, funda as duas em uma ação só, mais completa, em vez de listar separadamente.
+
+**8. Evolução desde a Última Rodada** — compare com o texto do parecer anterior (fornecido abaixo). Se não houver parecer anterior, escreva apenas uma frase dizendo que esta é a primeira rodada registrada, sem seguir os pontos abaixo. Havendo parecer anterior: (a) diga se o Score de cada filial melhorou, piorou ou ficou estável desde então; (b) aponte qualquer problema citado na rodada anterior que CONTINUA aparecendo agora (sinal de que a ação recomendada não foi tomada, ou não fez efeito); (c) aponte qualquer melhora real conquistada. Seja específico com números das duas rodadas lado a lado, não genérico.
+
+PARECER DA RODADA ANTERIOR PARA COMPARAÇÃO:
+{_texto_rodada_anterior_p}
 
 ANTES DE FINALIZAR, REVISE VOCÊ MESMO O TEXTO E CORRIJA SE PRECISAR:
 - Todo número usado na Seção 7 apareceu em alguma seção anterior?
@@ -10344,11 +10404,38 @@ Ativo Total: {fmt(fin_consolidado.get('ativo_total',0))} | Passivo Total: {fmt(f
 Alertas já classificados: {_alertas_cons_txt if _alertas_cons_txt else 'nenhum alerta'}
 """ if fin_consolidado else "Não disponível."
 
+                        _hist_anterior_fin=load_parecer_ia_historico(st.session_state.cid,"financeiro") if st.session_state.cid else []
+                        if _hist_anterior_fin:
+                            _texto_rodada_anterior_fin=(f"PARECER DA RODADA ANTERIOR (gerado em {_hist_anterior_fin[0].get('data','—')}), "
+                                f"PARA COMPARAÇÃO DE TENDÊNCIA:\n{_hist_anterior_fin[0].get('texto','')}")
+                        else:
+                            _texto_rodada_anterior_fin="Não há parecer anterior salvo — esta é a primeira rodada, sem base de comparação."
+
                         prompt_fin=f"""Você é um consultor de Controladoria/FP&A sênior, analisando a saúde financeira de uma empresa com múltiplas filiais ({', '.join(FILIAIS_FIN)}), a partir da DRE e do Balanço Patrimonial.
 
 REGRA CRÍTICA SOBRE ESCOPO: Receita, Margens, Ciclo de Caixa (PMR/PMP/PME) e Score de Saúde são calculados por filial e PODEM ser comparados entre elas. Liquidez, Kanitz e ROE vêm do Balanço Patrimonial, que tem contas corporativas (Capital Social, Empréstimos, Patrimônio Líquido) não segregadas por loja — por isso essas 3 métricas SÓ existem no nível "(Todas as filiais)" e NUNCA devem ser atribuídas ou comparadas entre lojas individualmente. Não invente uma "Liquidez da Loja Centro", por exemplo — isso não existe nos dados.
 
 Os alertas fornecidos abaixo JÁ FORAM CLASSIFICADOS usando faixas de referência de mercado padrão (ex: Margem Líquida <5% é atenção, Liquidez Corrente <1x é crítico, Kanitz <-3 é zona insolvente) — você não precisa reclassificar, só usar essa classificação já pronta na sua análise.
+
+═══════════════════════════════════════════
+CHECKLIST OBRIGATÓRIO — confira cada item abaixo DEPOIS de escrever o parecer, antes de considerar finalizado. Se algum item não aparecer no texto, volte e adicione antes de responder:
+☐ Toda vez que citar um Score de Saúde, veio junto a classificação da régua (Crítico/Regular/Bom/Muito Bom/Excelente)?
+☐ A Seção 2 abre citando a Receita Bruta e Líquida de CADA filial, antes de qualquer margem?
+☐ A Seção 2 tem uma conta em R$ de quanto a filial mais fraca ganharia se atingisse a margem da mais forte?
+☐ Na PRIMEIRA vez que "ICD" aparece no texto, veio junto, na mesma frase, a explicação "(mede quanto do EBITDA cobre a dívida financeira líquida — quanto maior, mais folga pra pagar dívida com a própria geração de caixa)"?
+☐ Na PRIMEIRA vez que "Kanitz" aparece no texto, veio junto, na mesma frase, a explicação "(índice que combina liquidez, endividamento e rentabilidade numa nota, indicando zona de insolvência, penumbra ou solvência)"?
+☐ Se PME, Giro de Estoque ou PMP forem iguais (ou quase iguais) entre 2+ filiais, isso foi comentado explicitamente como algo a validar?
+☐ PROIBIDO usar as palavras "significativo", "relevante" ou "potencial" substituindo um número em qualquer ação marcada "🔴 PRIORIDADE MÁXIMA". Se não for possível calcular um R$ real pra uma ação, ela NÃO leva o selo "🔴 PRIORIDADE MÁXIMA" — vira uma ação normal, mais abaixo na lista, com justificativa em palavras (sem fingir ser número).
+☐ As ações estão ordenadas da maior pra menor pelo valor em R$ de impacto (não por ordem de seção)?
+═══════════════════════════════════════════
+
+RÉGUA DE REFERÊNCIA PARA O SCORE DE SAÚDE (0-100, diga onde cada filial se encaixa): <40 Crítico | 40-59 Regular | 60-74 Bom | 75-89 Muito Bom | ≥90 Excelente
+
+GLOSSÁRIO — explique brevemente quando citar pela primeira vez:
+ICD (Índice de Cobertura da Dívida): mede quanto do EBITDA cobre a dívida financeira líquida (dívida financeira menos caixa disponível) — quanto maior, mais folga a empresa tem pra pagar suas dívidas com a própria geração de caixa operacional. Valor negativo ou muito baixo é sinal de alerta.
+Kanitz: índice que combina liquidez, endividamento e rentabilidade numa única nota, pra classificar a empresa em zona de insolvência (<-3), penumbra (-3 a 0) ou solvência (>0).
+
+DESCONFIANÇA DE DADOS: se algum indicador (ex: Giro de Estoque, PME, PMP) vier EXATAMENTE IGUAL ou muito próximo entre 2 ou mais filiais, mencione isso como um ponto a validar com a operação (pode ser coincidência real ou pode ser sinal de dado desatualizado/repetido) — não trate como uma coincidência normal sem comentário.
 
 DADOS POR FILIAL (Receita, Margens, Ciclo de Caixa, Score):
 {bloco_fin_todas}
@@ -10361,13 +10448,18 @@ Escreva um parecer executivo em português, rico, específico e SEM repetir a me
 
 **1. Diagnóstico Geral** — Score de Saúde de cada filial, e a situação de Liquidez/Kanitz/ROE da empresa como um todo (nível consolidado, nunca por loja).
 
-**2. Rentabilidade e Margens, por Filial** — compare Margem Bruta/Líquida/Contribuição/EBITDA (%) entre as filiais, citando também os valores em R$ (Lucro Bruto, Lucro Líquido, EBITDA) quando ajudar a dar escala à comparação. Aponte qual filial está com a rentabilidade mais fraca e cite os alertas relacionados já classificados. ANÁLISE OBRIGATÓRIA: calcule e compare a taxa de conversão de Lucro Bruto para Lucro Líquido (Lucro Líquido ÷ Lucro Bruto) entre as filiais — uma filial com Lucro Bruto alto mas conversão baixa (ex: perde muito entre bruto e líquido) tem um problema de ESTRUTURA DE DESPESA, não de venda; uma filial com Lucro Bruto baixo mas conversão saudável tem o problema na ORIGEM (venda/CMV), não na despesa. Diga explicitamente qual dos dois casos cada filial se encaixa.
+**2. Rentabilidade e Margens, por Filial** — ABRA a seção citando a Receita Bruta e a Receita Líquida de CADA filial (obrigatório, e vem ANTES de qualquer margem — sem isso não dá pra saber se o resultado de uma filial é eficiência real ou só efeito de tamanho). Só depois compare Margem Bruta/Líquida/Contribuição/EBITDA (%) entre as filiais, citando também os valores em R$ (Lucro Bruto, Lucro Líquido, EBITDA) quando ajudar a dar escala à comparação. Aponte qual filial está com a rentabilidade mais fraca e cite os alertas relacionados já classificados. ANÁLISE OBRIGATÓRIA: calcule e compare a taxa de conversão de Lucro Bruto para Lucro Líquido (Lucro Líquido ÷ Lucro Bruto) entre as filiais — uma filial com Lucro Bruto alto mas conversão baixa (ex: perde muito entre bruto e líquido) tem um problema de ESTRUTURA DE DESPESA, não de venda; uma filial com Lucro Bruto baixo mas conversão saudável tem o problema na ORIGEM (venda/CMV), não na despesa. Diga explicitamente qual dos dois casos cada filial se encaixa.
 
 **3. Ciclo Operacional e Prazos, por Filial** — compare PMR/PMP/PME/Ciclo de Caixa e Giro de Estoque entre as filiais. Cite o que um ciclo de caixa maior ou giro de estoque menor significam em termos de capital de giro.
 
-**4. Saúde Patrimonial da Empresa** — Liquidez Corrente/Imediata, Kanitz, ROE e ICD, no nível consolidado, junto com Ativo Total, Passivo Total e Patrimônio Líquido para dar contexto de tamanho. Explique brevemente o que o Kanitz representa (zona de insolvência/penumbra/solvência).
+**4. Saúde Patrimonial da Empresa** — Liquidez Corrente/Imediata, Kanitz, ROE e ICD, no nível consolidado, junto com Ativo Total, Passivo Total e Patrimônio Líquido para dar contexto de tamanho. Ao citar Kanitz pela primeira vez, explique em 1 frase o que ele representa (combina liquidez, endividamento e rentabilidade numa nota, classificando a zona de insolvência/penumbra/solvência). Ao citar ICD pela primeira vez, explique em 1 frase o que ele mede (quanto do EBITDA cobre a dívida financeira líquida — quanto maior, mais folga pra pagar dívida com a própria geração de caixa).
 
-**5. Ações Recomendadas** — 5 a 8 ações práticas, priorizadas, cada uma dizendo a qual filial se aplica (ou "empresa toda" para as ações relacionadas a Liquidez/Kanitz/ROE). REGRA: toda ação deve referenciar um número já citado nas seções 1-4 acima. REGRA ANTI-REDUNDÂNCIA: cada ação trata de um problema diferente — não recomende a mesma coisa duas vezes com números diferentes. REGRA DE CONSISTÊNCIA ENTRE FILIAIS: se duas ou mais filiais têm o MESMO valor (ou valor muito próximo) num indicador problemático, todas elas devem receber o mesmo tratamento na recomendação — ou você inclui todas as filiais afetadas na mesma ação, ou explica explicitamente por que só uma delas está sendo priorizada apesar do número ser igual nas outras. Nunca destaque só 1 filial silenciosamente quando o dado mostra que outra(s) têm o problema igual. REGRA DE COERÊNCIA DE CAUSA: se a Seção 2 já concluiu que a causa da rentabilidade fraca de uma filial é ESTRUTURA DE DESPESA (conversão Bruto→Líquido baixa) ou é ORIGEM/VENDA (Margem Bruta baixa), nenhuma ação sobre essa mesma filial pode sugerir investigar a causa oposta — a ação precisa ser consistente com o diagnóstico já dado, nunca contradizê-lo. A taxa de conversão Bruto→Líquido é o sinal PRINCIPAL de causa — "essa filial tem a Margem Bruta mais baixa entre as 3" não é motivo suficiente para recomendar ação de origem/venda se a diferença for pequena (poucos pontos percentuais) e a conversão já tiver apontado estrutura de despesa como causa principal; só recomende ação de origem/venda se a Margem Bruta estiver em faixa realmente baixa em termos absolutos (abaixo de 20%, conforme referência de mercado), não apenas relativamente mais baixa que as outras filiais.
+**5. Ações Recomendadas** — 5 a 8 ações práticas, cada uma dizendo a qual filial se aplica (ou "empresa toda" para as ações relacionadas a Liquidez/Kanitz/ROE). ORDENAÇÃO OBRIGATÓRIA: ordene as ações pelo IMPACTO FINANCEIRO estimado (valor em R$ que a ação recupera, economiza ou libera — reuse números já citados nas seções 1-4, incluindo a estimativa do aprendizado cruzado da Seção 2), da maior pra menor. Marque com "🔴 PRIORIDADE MÁXIMA" APENAS as ações onde você conseguir CALCULAR um valor em R$ real a partir dos dados fornecidos, colocando esse valor entre parênteses — nunca escreva "significativo", "relevante" ou "potencial" no lugar de um número; se não der pra calcular um valor real pra uma ação, não marque como prioridade máxima, apenas posicione ela mais abaixo na lista, sem o selo. REGRA: toda ação deve referenciar um número já citado nas seções 1-4 acima. REGRA ANTI-REDUNDÂNCIA: cada ação trata de um problema diferente — não recomende a mesma coisa duas vezes com números diferentes. REGRA DE CONSISTÊNCIA ENTRE FILIAIS: se duas ou mais filiais têm o MESMO valor (ou valor muito próximo) num indicador problemático, todas elas devem receber o mesmo tratamento na recomendação — ou você inclui todas as filiais afetadas na mesma ação, ou explica explicitamente por que só uma delas está sendo priorizada apesar do número ser igual nas outras. Nunca destaque só 1 filial silenciosamente quando o dado mostra que outra(s) têm o problema igual. REGRA DE COERÊNCIA DE CAUSA: se a Seção 2 já concluiu que a causa da rentabilidade fraca de uma filial é ESTRUTURA DE DESPESA (conversão Bruto→Líquido baixa) ou é ORIGEM/VENDA (Margem Bruta baixa), nenhuma ação sobre essa mesma filial pode sugerir investigar a causa oposta — a ação precisa ser consistente com o diagnóstico já dado, nunca contradizê-lo. A taxa de conversão Bruto→Líquido é o sinal PRINCIPAL de causa — "essa filial tem a Margem Bruta mais baixa entre as 3" não é motivo suficiente para recomendar ação de origem/venda se a diferença for pequena (poucos pontos percentuais) e a conversão já tiver apontado estrutura de despesa como causa principal; só recomende ação de origem/venda se a Margem Bruta estiver em faixa realmente baixa em termos absolutos (abaixo de 20%, conforme referência de mercado), não apenas relativamente mais baixa que as outras filiais.
+
+**6. Evolução desde a Última Rodada** — compare com o parecer anterior (abaixo). Se não houver, escreva uma frase dizendo que é a primeira rodada, sem seguir os itens abaixo. Havendo parecer anterior: diga se o Score de cada filial e a rentabilidade melhoraram, pioraram ou ficaram estáveis; aponte problemas que persistem desde a rodada passada; aponte melhorias reais. Seja específico com números lado a lado.
+
+PARECER DA RODADA ANTERIOR:
+{_texto_rodada_anterior_fin}
 
 Seja específico. Não invente dados que não foram fornecidos."""
 
@@ -10485,6 +10577,13 @@ Seja específico. Não invente dados que não foram fornecidos."""
                 st.markdown('<div class="al-d">❌ Nenhuma API Key configurada.</div>',unsafe_allow_html=True)
             else:
                 with st.spinner("Cruzando os dois relatórios..."):
+                    _hist_consolidado_ant=load_parecer_ia_historico(st.session_state.cid,"consolidado") if st.session_state.cid else []
+                    if _hist_consolidado_ant:
+                        _texto_consolidado_anterior=(f"(gerado em {_hist_consolidado_ant[0].get('data','—')})\n"
+                            f"{_hist_consolidado_ant[0].get('texto','')}")
+                    else:
+                        _texto_consolidado_anterior="Não há parecer consolidado anterior salvo — esta é a primeira rodada."
+
                     prompt_final=f"""Você é um consultor sênior de Controladoria/FP&A. Você já recebeu, prontos e validados, dois relatórios separados sobre a mesma empresa: um do MÓDULO COMERCIAL (Motor de Compras, Estoque, ML de demanda, Fornecedores) e outro do MÓDULO FINANCEIRO (DRE, Margens, Liquidez, Ciclo de Caixa).
 
 SUA TAREFA não é repetir os dois relatórios um atrás do outro — é ENCONTRAR CONEXÕES REAIS entre eles. Por exemplo (só exemplos, use os achados reais dos relatórios abaixo, não invente):
@@ -10494,6 +10593,20 @@ SUA TAREFA não é repetir os dois relatórios um atrás do outro — é ENCONTR
 - Uma filial com bom desempenho nos dois relatórios reforça que ela é referência; uma filial fraca nos dois reforça prioridade.
 
 REGRA: só afirme uma conexão entre os dois relatórios se os dados de AMBOS realmente sustentarem ela — não force uma correlação que não existe nos textos. Se não houver conexão clara entre um achado comercial e um financeiro, tudo bem trazê-lo isolado, mas priorize as conexões reais que você encontrar.
+
+DUAS ARMADILHAS A EVITAR NAS CORRELAÇÕES (comuns e inválidas):
+1. CORRELAÇÃO MATEMATICAMENTE ÓBVIA: se uma métrica é parte da FÓRMULA da outra (ex: Giro de Estoque baixo "causando" Ciclo de Caixa elevado — Ciclo de Caixa é CALCULADO a partir do Giro, não é uma descoberta, é a mesma informação duas vezes). Não conte isso como correlação — é tautologia.
+2. CAUSALIDADE SEM MECANISMO: nunca ligue dois números só porque ambos são "ruins" na mesma filial, sem conseguir explicar EM PALAVRAS o mecanismo que liga um ao outro (ex: "concentração de fornecedor" e "estrutura de despesa ineficiente" não têm relação lógica direta — um é risco de compra, outro é gasto administrativo — a menos que você consiga articular o porquê). Se não conseguir explicar o mecanismo em uma frase clara, não é uma correlação válida, descarte.
+
+═══════════════════════════════════════════
+CHECKLIST OBRIGATÓRIO — confira DEPOIS de escrever o parecer, antes de finalizar:
+☐ Cada correlação listada tem um MECANISMO explicado (não são só dois números ruins juntos)?
+☐ Nenhuma correlação é matematicamente óbvia (uma métrica sendo componente direto da fórmula da outra)?
+☐ Todo valor em R$ que já existia nos relatórios-fonte (Comercial/Financeiro) foi PRESERVADO ao citar essa ação/achado aqui — nenhum número foi "perdido" ao resumir?
+☐ As Prioridades Finais estão ordenadas por valor em R$ real, do maior pro menor — nenhuma ação sem número vem antes de uma ação com número maior?
+☐ Só ações com valor em R$ real calculável recebem o selo "🔴 PRIORIDADE MÁXIMA" — nunca com base em palavras como "significativo" no lugar de número?
+☐ A Seção 1 cita o Score Comercial E o Score Financeiro separadamente quando forem diferentes entre si — nunca generaliza um resumo único que ignora a diferença entre eles?
+═══════════════════════════════════════════
 
 RELATÓRIO COMERCIAL (já gerado, validado):
 {_texto_com_final}
@@ -10505,11 +10618,16 @@ TAREFA — estruture o parecer consolidado assim:
 
 **1. Visão Executiva Consolidada** — 4-6 frases resumindo a saúde geral da empresa, cruzando as duas fontes, para um leitor que só vai ler esse resumo.
 
-**2. Correlações Encontradas entre Comercial e Financeiro** — liste as conexões reais e específicas que você encontrou entre os dois relatórios (mínimo 3, máximo 6). Cada uma deve citar o achado comercial e o achado financeiro que se conectam, e explicar a relação.
+**2. Correlações Encontradas entre Comercial e Financeiro** — liste as conexões reais e específicas que você encontrou entre os dois relatórios (mínimo 3, máximo 6). Cada uma deve citar o achado comercial e o achado financeiro que se conectam, e explicar a relação. ANTES DE ESCREVER CADA CORRELAÇÃO, teste ela contra estas duas perguntas: (1) "Uma dessas duas métricas é calculada a partir da outra, ou vêm da mesma fórmula?" — se sim, DESCARTE, não é correlação, é a mesma informação repetida (ex: Giro de Estoque e Ciclo de Caixa vêm do mesmo cálculo, nunca liste essa dupla). (2) "Eu consigo explicar EM UMA FRASE o mecanismo que faz um causar o outro?" — se não conseguir articular o mecanismo, DESCARTE essa correlação, não force uma ligação só porque os dois números são ruins na mesma filial. EXEMPLO CONCRETO DE CORRELAÇÃO INVÁLIDA A NÃO REPETIR: "Concentração de compra num fornecedor" NÃO explica "estrutura de despesa ineficiente" — concentração de fornecedor é risco de CADEIA DE SUPRIMENTOS (dependência, poder de negociação), estrutura de despesa ineficiente é sobre GASTOS ADMINISTRATIVOS/OPERACIONAIS — são categorias diferentes sem mecanismo causal entre si. Não use essa combinação nem outra parecida (uma métrica de fornecedor explicando uma métrica de despesa) a menos que consiga articular um mecanismo real e específico.
 
 **3. Panorama por Filial** — para cada filial, uma síntese curta cruzando a situação comercial e financeira dela juntas (é a loja com melhor ou pior desempenho geral? Por quê, considerando os dois lados?).
 
-**4. Prioridades Finais da Empresa** — 6 a 10 ações finais, priorizadas (mais urgente primeiro), fundindo as recomendações dos dois relatórios originais. Remova duplicatas, junte ações relacionadas dos dois lados numa só quando fizer sentido, e diga a qual filial (ou "empresa toda") cada uma se aplica. Toda ação deve ter origem rastreável em um dos dois relatórios acima — não invente ação nova sem base neles.
+**4. Prioridades Finais da Empresa** — 6 a 10 ações finais, fundindo as recomendações dos dois relatórios originais. PRESERVAÇÃO DE NÚMEROS (obrigatório, siga este processo passo a passo): para CADA ação que você escrever aqui, primeiro procure nos dois relatórios-fonte (acima) se esse mesmo tema já tinha um valor em R$ calculado — se tinha, COPIE esse valor literalmente pra dentro da ação (ex: se o relatório Financeiro já calculou "R$201K" pra estrutura de despesa da Loja Centro, a ação sobre esse tema aqui tem que trazer "R$201K" explicitamente, não pode virar uma frase genérica sem número). ORDENAÇÃO OBRIGATÓRIA — siga este processo em 2 etapas, nessa ordem exata: ETAPA 1: separe todas as ações em dois grupos — Grupo A (ações que têm um valor em R$ real) e Grupo B (ações sem valor em R$). ETAPA 2: liste primeiro TODO o Grupo A, ordenado do maior R$ pro menor R$, e só DEPOIS de esgotar o Grupo A liste o Grupo B — nenhuma ação do Grupo B pode aparecer entre ou antes de ações do Grupo A, mesmo que pareça urgente ou importante. O selo "🔴 PRIORIDADE MÁXIMA" só pode ir nas 3 primeiras posições da lista final, e só se estiverem no Grupo A (com valor em R$) — se uma ação do Grupo B estiver entre as 3 primeiras por engano, ela não recebe o selo e precisa ser movida pra depois de todo o Grupo A. Remova duplicatas, junte ações relacionadas dos dois lados numa só quando fizer sentido, e diga a qual filial (ou "empresa toda") cada uma se aplica. Toda ação deve ter origem rastreável em um dos dois relatórios acima — não invente ação nova sem base neles.
+
+**5. Evolução desde a Última Rodada** — compare com o parecer consolidado anterior (abaixo). Se não houver, escreva uma frase dizendo que é a primeira rodada consolidada, sem seguir os itens abaixo. Havendo anterior: diga o que melhorou, o que persiste como problema, e se a ordem de prioridade das ações mudou desde então.
+
+PARECER CONSOLIDADO DA RODADA ANTERIOR:
+{_texto_consolidado_anterior}
 
 Seja específico, use os números e filiais já citados nos dois relatórios. Não invente dado novo."""
 
