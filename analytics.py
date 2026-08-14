@@ -6825,8 +6825,12 @@ elif pg=="ml_produtos":
         if "mape" in tabela_show.columns:
             tabela_show["mape"]=tabela_show["mape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
         with st.expander(f"📋 Ver tabela completa ({len(tabela_show)} produtos)"):
-            st.dataframe(tabela_show[[produto_col_r,"n_periodos","confiabilidade","modelo_escolhido","ultimo_real",
-              "previsao_proximo_mes","var_pct_proximo_mes","mape","status"]],
+            _cols_tabela_mlp=[produto_col_r,"n_periodos","confiabilidade","modelo_escolhido","ultimo_real",
+              "previsao_proximo_mes","var_pct_proximo_mes"]
+            if "mape" in tabela_show.columns:
+                _cols_tabela_mlp.append("mape")
+            _cols_tabela_mlp.append("status")
+            st.dataframe(tabela_show[_cols_tabela_mlp],
               use_container_width=True,height=420)
         csv_ml=resultado.to_csv(sep=";",decimal=",",index=False).encode("utf-8-sig")
         c_exp1,c_exp2=st.columns(2)
