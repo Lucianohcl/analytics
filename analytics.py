@@ -6682,7 +6682,13 @@ elif pg=="ml_produtos":
     _col_cat_mlp=next((c for c in df_v.columns if c.strip().lower() in ["categoria","segmento","grupo"]),None)
     if _col_cat_mlp:
         _categorias_disp_mlp=sorted(df_v[_col_cat_mlp].dropna().astype(str).unique().tolist())
-        categoria_sel_mlp=st.selectbox("📦 Categoria (opcional)",["(Todas)"]+_categorias_disp_mlp,key="mlp_categoria_sel")
+        def _on_change_categoria_mlp():
+            for _k_limpar_cat_mlp in ["ml_produtos_resultado","mlp_produto_col_atual",
+                                       "mlp_metrica_col_atual","mlp_data_col_atual"]:
+                if _k_limpar_cat_mlp in st.session_state:
+                    del st.session_state[_k_limpar_cat_mlp]
+        categoria_sel_mlp=st.selectbox("📦 Categoria (opcional)",["(Todas)"]+_categorias_disp_mlp,
+            key="mlp_categoria_sel",on_change=_on_change_categoria_mlp)
         if categoria_sel_mlp!="(Todas)":
             df_v=df_v[df_v[_col_cat_mlp].astype(str)==categoria_sel_mlp].copy()
 
