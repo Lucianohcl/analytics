@@ -6946,13 +6946,35 @@ elif pg=="ml_produtos":
         mc(mc_cols[1],"Previsões geradas",str(n_ok),"g")
         mc(mc_cols[2],"Sem dados suficientes",str(len(resultado)-n_ok),"y")
         mc(mc_cols[3],"MAPE médio",f"{mape_medio_mlp:.1f}%" if mape_medio_mlp is not None and pd.notna(mape_medio_mlp) else "—","g")
+
+        # MAPE agrupado por modelo escolhido — quantos produtos cada modelo venceu
+        # e qual o erro médio DAQUELE grupo especificamente (não do total geral).
+        if "mape" in resultado.columns and n_ok>0:
+            _breakdown_mape_mlp=resultado.loc[ok_mask].groupby("modelo_escolhido").agg(
+                Produtos=("modelo_escolhido","count"),
+                _mape_medio=("mape","mean")
+            ).reset_index().sort_values("Produtos",ascending=False)
+            _breakdown_mape_mlp["MAPE médio"]=_breakdown_mape_mlp["_mape_medio"].apply(
+                lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+            _breakdown_mape_mlp=_breakdown_mape_mlp.rename(columns={"modelo_escolhido":"Modelo"})[["Modelo","Produtos","MAPE médio"]]
+            with st.expander(f"📊 MAPE por modelo ({len(_breakdown_mape_mlp)} modelos usados)"):
+                st.dataframe(_breakdown_mape_mlp,use_container_width=True,
+                  height=min(420,80+35*len(_breakdown_mape_mlp)))
+
         sec("📋 Resultado — Melhor Modelo por Produto")
-        def confiab_label(n):
-            if n>=18: return "🟢 Alta"
-            if n>=12: return "🟡 Média"
+        def confiab_label(n,mape_v):
+            # Confiabilidade agora considera as DUAS coisas: histórico suficiente E
+            # erro (MAPE) baixo — um produto com 40 meses de histórico mas MAPE de
+            # 200% não pode aparecer como "Alta", mesmo tendo bastante dado.
+            if pd.notna(mape_v):
+                if mape_v<20 and n>=18: return "🟢 Alta"
+                if mape_v<50 and n>=12: return "🟡 Média"
+                return "🔴 Baixa"
+            if n>=18: return "🟡 Média"
             return "🔴 Baixa"
         tabela_show=resultado.copy()
-        tabela_show["confiabilidade"]=tabela_show["n_periodos"].apply(confiab_label)
+        tabela_show["confiabilidade"]=tabela_show.apply(
+          lambda r: confiab_label(r["n_periodos"], r.get("mape")), axis=1)
         tabela_show["ultimo_real"]=tabela_show["ultimo_real"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
         tabela_show["previsao_proximo_mes"]=tabela_show["previsao"].apply(
           lambda p: fmt(p[0]) if isinstance(p,list) and len(p)>0 else "—")
