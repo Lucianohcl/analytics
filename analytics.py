@@ -658,7 +658,7 @@ def ler(b,nome):
             for enc in ["utf-8-sig","utf-8","latin1","cp1252"]:
                 for sep in [";",",","\t","|"]:
                     try:
-                        df=pd.read_csv(io.BytesIO(b),sep=sep,encoding=enc,on_bad_lines="skip",decimal=",")
+                        df=pd.read_csv(io.BytesIO(b),sep=sep,encoding=enc,on_bad_lines="skip",decimal=",",thousands=".")
                         if df.shape[1]>=2: return limpar(df),"CSV lido"
                     except: pass
             return None,"Não foi possível ler"
@@ -3615,7 +3615,7 @@ elif pg=="importar":
                     for enc in ["utf-8-sig","utf-8","latin1","cp1252"]:
                         for sep in [";",","]:
                             try:
-                                df_tmp=pd.read_csv(io.BytesIO(b),sep=sep,decimal=",",encoding=enc,on_bad_lines="skip")
+                                df_tmp=pd.read_csv(io.BytesIO(b),sep=sep,decimal=",",encoding=enc,on_bad_lines="skip",thousands=".")
                                 # Corrige mojibake (UTF-8 lido como Latin-1/CP1252) nos nomes das colunas
                                 if enc in ("latin1","cp1252"):
                                     novas_cols=[]
