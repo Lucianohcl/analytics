@@ -6806,7 +6806,7 @@ elif pg=="ml_produtos":
     if curva_sel_mlp!="(Todas)":
         df_v=df_v[df_v["_CurvaABC"]==curva_sel_mlp].copy()
 
-    sec("⚙️ Configurações")
+    sec("🔬 Validação Out-of-Sample (Previsto x Real)")
     if "_mlp_config_sincronizada" not in st.session_state:
         st.session_state["_mlp_config_sincronizada"]=True
         if st.session_state.cid:
@@ -6814,107 +6814,15 @@ elif pg=="ml_produtos":
             if _cfg_mlp_atual:
                 if _cfg_mlp_atual.get("mlp_pct") is not None:
                     st.session_state["mlp_pct"]=_cfg_mlp_atual["mlp_pct"]
-                if _cfg_mlp_atual.get("mlp_meses") is not None:
-                    st.session_state["mlp_meses"]=_cfg_mlp_atual["mlp_meses"]
                 if _cfg_mlp_atual.get("mlp_minper") is not None:
                     st.session_state["mlp_minper"]=_cfg_mlp_atual["mlp_minper"]
     if "mlp_pct" not in st.session_state: st.session_state["mlp_pct"]=0.20
-    if "mlp_meses" not in st.session_state: st.session_state["mlp_meses"]=3
     if "mlp_minper" not in st.session_state: st.session_state["mlp_minper"]=12
     pct_top=st.select_slider("Top % de produtos (por venda)",
       options=[0.05,0.10,0.20,0.30,0.50,1.00],
       format_func=lambda v:f"Top {int(v*100)}%",key="mlp_pct")
-    c5,c6=st.columns(2)
-    meses_previsao=c5.slider("Meses a prever",1,12,key="mlp_meses")
-    min_periodos=c6.slider("Mínimo de meses de histórico",4,24,key="mlp_minper")
+    min_periodos=st.slider("Mínimo de meses de histórico",4,24,key="mlp_minper")
 
-    senha_rodar_mlp=st.text_input("Senha master para rodar",type="password",key="senha_rodar_mlp")
-    if st.button("🚀 Rodar ML nos Produtos",use_container_width=True):
-        if senha_rodar_mlp!=SENHA_MASTER:
-            st.markdown('<div class="al-d">❌ Senha master incorreta — nada foi executado.</div>',unsafe_allow_html=True)
-            st.stop()
-        if st.session_state.cid:
-            save_config_mlp(st.session_state.cid)
-        df_v_calc=df_v.copy()
-        df_v_calc[metrica_col]=pd.to_numeric(df_v_calc[metrica_col],errors="coerce")
-
-        ranking_mlp=pareto_analysis(df_v_calc,"_ProdutoUnico",metrica_col)
-        n_selecionar_mlp=max(1,int(np.ceil(len(ranking_mlp)*pct_top)))
-        df_v_calc["_data_ml_mlp"]=pd.to_datetime(df_v_calc[data_col],errors="coerce",dayfirst=True)
-        df_v_calc["_periodo_ml_mlp"]=df_v_calc["_data_ml_mlp"].dt.to_period("M")
-        n_periodos_mlp=df_v_calc.dropna(subset=["_data_ml_mlp"]).groupby("_ProdutoUnico")["_periodo_ml_mlp"].nunique()
-        produtos_com_hist_mlp=n_periodos_mlp[n_periodos_mlp>=min_periodos].index
-        ranking_elegivel_mlp=ranking_mlp[ranking_mlp["_ProdutoUnico"].isin(produtos_com_hist_mlp)]
-        top_produtos_mlp=ranking_elegivel_mlp.head(n_selecionar_mlp)["_ProdutoUnico"].tolist()
-
-        _total_universo_mlp=len(ranking_mlp)
-        _total_com_hist_mlp=len(produtos_com_hist_mlp)
-        _descartados_hist_mlp=_total_universo_mlp-_total_com_hist_mlp
-        _msg_elegiveis_mlp=f'🔎 {len(top_produtos_mlp)} produtos elegíveis (Top {int(pct_top*100)}% com histórico mínimo de {min_periodos} meses).'
-        if _descartados_hist_mlp>0:
-            _msg_elegiveis_mlp+=f' ⚠️ {_descartados_hist_mlp} de {_total_universo_mlp} produtos da base foram descartados por terem menos de {min_periodos} meses com venda registrada.'
-        st.markdown(f'<div class="al-i">{_msg_elegiveis_mlp}</div>',unsafe_allow_html=True)
-        pb_mlp=st.progress(0)
-        texto_pb_mlp=st.empty()
-        modelos_mlp=[m for m,ok in MODELOS_ML.items() if ok]
-        linhas_mlp=[]
-        for idx_mlp,prod_mlp in enumerate(top_produtos_mlp):
-            texto_pb_mlp.caption(f"Processando {idx_mlp+1} de {len(top_produtos_mlp)}: {str(prod_mlp)[:50]}")
-            serie_mlp=serie_mensal_produto(df_v_calc,"_ProdutoUnico",prod_mlp,data_col,metrica_col)
-            # Croston/TSB só valem a pena testar em produto de venda intermitente
-            # (muitos meses com zero venda). Pular eles em produto de venda regular
-            # evita que ganhem o backtest por acaso e depois errem feio na previsão
-            # de verdade — mesma correção já aplicada no Config ML.
-            _pct_zeros_mlp=float((pd.to_numeric(serie_mlp,errors="coerce").fillna(0)==0).mean()) if len(serie_mlp)>0 else 0.0
-            if _pct_zeros_mlp<0.30:
-                modelos_mlp_p=[m for m in modelos_mlp if m not in ("Croston","TSB")]
-            else:
-                modelos_mlp_p=modelos_mlp
-            melhor_mlp,rank_mlp=melhor_modelo(serie_mlp,modelos_mlp_p)
-            proj_mlp=treinar(serie_mlp,melhor_mlp,meses_previsao)
-            ultimo_mlp=float(serie_mlp.iloc[-1])
-            # Média histórica de TODO o período disponível — usada depois como peso de
-            # importância do produto (mais estável que olhar só o último mês, que pode
-            # ter sido atípico pra cima ou pra baixo).
-            media_hist_mlp=float(serie_mlp.mean()) if len(serie_mlp)>0 else 0.0
-            # MAPE do modelo vencedor: reaproveita o mesmo backtest usado pra escolher
-            # o modelo (últimos 6 meses reais vs. previstos), pra medir o erro em %.
-            mape_mlp=None
-            _,_prev_bt_mlp,_real_bt_mlp=treinar_backtest(serie_mlp,melhor_mlp)
-            if _prev_bt_mlp is not None and _real_bt_mlp is not None:
-                _mask_bt_mlp=_real_bt_mlp!=0
-                if _mask_bt_mlp.sum()>0:
-                    mape_mlp=float(np.mean(np.abs((_real_bt_mlp[_mask_bt_mlp]-_prev_bt_mlp[_mask_bt_mlp])/_real_bt_mlp[_mask_bt_mlp]))*100)
-            if proj_mlp is not None:
-                prox_mlp=float(proj_mlp.iloc[0])
-                var_mlp=safe(prox_mlp-ultimo_mlp,abs(ultimo_mlp))*100
-                linhas_mlp.append({"_ProdutoUnico":prod_mlp,"n_periodos":len(serie_mlp),
-                    "modelo_escolhido":melhor_mlp,"ultimo_real":ultimo_mlp,"media_historica":media_hist_mlp,
-                    "previsao":[round(v,2) for v in proj_mlp.tolist()],
-                    "var_pct_proximo_mes":round(var_mlp,1),"status":"ok","rank":rank_mlp,
-                    "mape":round(mape_mlp,1) if mape_mlp is not None else None})
-            else:
-                linhas_mlp.append({"_ProdutoUnico":prod_mlp,"n_periodos":len(serie_mlp),
-                    "modelo_escolhido":melhor_mlp,"ultimo_real":ultimo_mlp,"media_historica":media_hist_mlp,
-                    "previsao":None,"var_pct_proximo_mes":None,"status":"falhou ao treinar","rank":rank_mlp,
-                    "mape":round(mape_mlp,1) if mape_mlp is not None else None})
-            if len(top_produtos_mlp)>0:
-                pb_mlp.progress((idx_mlp+1)/len(top_produtos_mlp))
-        pb_mlp.empty(); texto_pb_mlp.empty()
-        resultado=pd.DataFrame(linhas_mlp)
-
-        st.session_state.ml_produtos_resultado=resultado
-        st.session_state.vendas_raw_com_chave=df_v
-        st.session_state["mlp_produto_col_atual"]=produto_col
-        st.session_state["mlp_metrica_col_atual"]=metrica_col
-        st.session_state["mlp_data_col_atual"]=data_col
-        if st.session_state.cid:
-            save_ml_produtos_resultado(st.session_state.cid,resultado,st.session_state.get("mlp_filial_sel"))
-        st.session_state["mlp_resultado_categoria_usada"]=st.session_state.get("mlp_categoria_sel","(Todas)")
-        st.session_state["mlp_resultado_curva_usada"]=st.session_state.get("mlp_curva_sel","(Todas)")
-        addlog(f"ML por Produto: {len(resultado)} produtos (top {int(pct_top*100)}%)")
-
-    sec("🔬 Validação Out-of-Sample (Previsto x Real)")
     _meses_disp_mlp=[]
     if data_col:
         _datas_disp_mlp=pd.to_datetime(df_v[data_col],errors="coerce",dayfirst=True).dropna()
@@ -6926,7 +6834,11 @@ elif pg=="ml_produtos":
         data_corte_mlp=st.selectbox("Treinar até (data de corte)",_meses_disp_mlp[:-1],
             index=max(0,len(_meses_disp_mlp)-7),key="mlp_data_corte")
         n_meses_valid_mlp=st.slider("Quantos meses validar depois do corte",1,12,6,key="mlp_n_valid")
+        senha_validar_mlp=st.text_input("Senha master para rodar",type="password",key="senha_validar_mlp")
         if st.button("🔬 Rodar Validação",use_container_width=True,key="mlp_btn_validar"):
+            if senha_validar_mlp!=SENHA_MASTER:
+                st.markdown('<div class="al-d">❌ Senha master incorreta — nada foi executado.</div>',unsafe_allow_html=True)
+                st.stop()
             df_treino_mlp=df_v.copy()
             df_treino_mlp["_periodo_val_mlp"]=pd.to_datetime(df_treino_mlp[data_col],errors="coerce",dayfirst=True).dt.to_period("M").astype(str)
             df_treino_mlp=df_treino_mlp[df_treino_mlp["_periodo_val_mlp"]<=data_corte_mlp].copy()
@@ -6941,7 +6853,14 @@ elif pg=="ml_produtos":
             ranking_elegivel_val_mlp=ranking_val_mlp[ranking_val_mlp["_ProdutoUnico"].isin(produtos_hist_val_mlp)]
             top_produtos_val_mlp=ranking_elegivel_val_mlp.head(n_selecionar_val_mlp)["_ProdutoUnico"].tolist()
 
-            st.markdown(f'<div class="al-i">🔎 {len(top_produtos_val_mlp)} produtos elegíveis para validação.</div>',unsafe_allow_html=True)
+            _total_universo_val_mlp=len(ranking_val_mlp)
+            _total_com_hist_val_mlp=len(produtos_hist_val_mlp)
+            _descartados_hist_val_mlp=_total_universo_val_mlp-_total_com_hist_val_mlp
+            _msg_val_mlp=f'🔎 {len(top_produtos_val_mlp)} produtos elegíveis para validação (histórico mínimo de {min_periodos} meses).'
+            if _descartados_hist_val_mlp>0:
+                _msg_val_mlp+=f' ⚠️ {_descartados_hist_val_mlp} de {_total_universo_val_mlp} produtos da base foram descartados por terem menos de {min_periodos} meses com venda registrada.'
+            st.markdown(f'<div class="al-i">{_msg_val_mlp}</div>',unsafe_allow_html=True)
+
             pb_val_mlp=st.progress(0)
             texto_pb_val_mlp=st.empty()
             linhas_val_mlp=[]
@@ -6949,12 +6868,20 @@ elif pg=="ml_produtos":
             for idx_val_mlp,prod_val_mlp in enumerate(top_produtos_val_mlp):
                 texto_pb_val_mlp.caption(f"Validando {idx_val_mlp+1} de {len(top_produtos_val_mlp)}: {str(prod_val_mlp)[:50]}")
                 serie_val_mlp=serie_mensal_produto(df_treino_mlp,"_ProdutoUnico",prod_val_mlp,data_col,metrica_col)
-                melhor_val_mlp,_rank_val_mlp=melhor_modelo(serie_val_mlp,modelos_val_mlp)
+                # Croston/TSB só valem a pena testar em produto de venda intermitente
+                # (muitos meses com zero venda) — mesma correção já aplicada nas outras telas.
+                _pct_zeros_val_mlp=float((pd.to_numeric(serie_val_mlp,errors="coerce").fillna(0)==0).mean()) if len(serie_val_mlp)>0 else 0.0
+                if _pct_zeros_val_mlp<0.30:
+                    modelos_val_mlp_p=[m for m in modelos_val_mlp if m not in ("Croston","TSB")]
+                else:
+                    modelos_val_mlp_p=modelos_val_mlp
+                melhor_val_mlp,_rank_val_mlp=melhor_modelo(serie_val_mlp,modelos_val_mlp_p)
                 proj_val_mlp=treinar(serie_val_mlp,melhor_val_mlp,n_meses_valid_mlp)
                 if proj_val_mlp is not None:
                     serie_completa_val_mlp=serie_mensal_produto(df_v,"_ProdutoUnico",prod_val_mlp,data_col,metrica_col)
                     corte_ts_mlp=pd.Period(data_corte_mlp).to_timestamp()
                     serie_real_pos_mlp=serie_completa_val_mlp[serie_completa_val_mlp.index>corte_ts_mlp].head(n_meses_valid_mlp)
+                    _media_hist_val_mlp=float(serie_val_mlp.mean()) if len(serie_val_mlp)>0 else 0.0
                     proj_lista_val_mlp=proj_val_mlp.tolist()
                     for i_vm in range(min(len(proj_lista_val_mlp),len(serie_real_pos_mlp))):
                         real_vm=float(serie_real_pos_mlp.iloc[i_vm])
@@ -6963,7 +6890,8 @@ elif pg=="ml_produtos":
                         erro_pct_vm=safe(erro_abs_vm,abs(real_vm))*100
                         linhas_val_mlp.append({"Produto":prod_val_mlp,"Mes":str(serie_real_pos_mlp.index[i_vm]),
                             "Modelo":melhor_val_mlp,"Previsto":round(prev_vm,2),"Real":round(real_vm,2),
-                            "Erro %":round(erro_pct_vm,1),"Bias":round(prev_vm-real_vm,2)})
+                            "Erro %":round(erro_pct_vm,1),"Bias":round(prev_vm-real_vm,2),
+                            "MediaHistorica":round(_media_hist_val_mlp,2)})
                 if len(top_produtos_val_mlp)>0:
                     pb_val_mlp.progress((idx_val_mlp+1)/len(top_produtos_val_mlp))
             pb_val_mlp.empty(); texto_pb_val_mlp.empty()
@@ -6977,328 +6905,55 @@ elif pg=="ml_produtos":
             df_val_mlp=load_ml_produtos_validacao(st.session_state.cid,st.session_state.get("mlp_filial_sel"))
             if df_val_mlp is not None:
                 st.session_state["mlp_validacao_resultado"]=df_val_mlp
+
         if df_val_mlp is not None and not df_val_mlp.empty:
             mape_val_mlp=df_val_mlp["Erro %"].mean()
             n_produtos_val_mlp=df_val_mlp["Produto"].nunique()
-            cv1,cv2,cv3=st.columns(3)
+
+            # MAPE ponderado — pesa mais os produtos que vendem mais (usa a média
+            # histórica de cada produto, calculada durante a própria validação).
+            mape_pond_val_mlp=None
+            if "MediaHistorica" in df_val_mlp.columns:
+                _pesos_val_mlp=df_val_mlp.groupby("Produto")["MediaHistorica"].first().clip(lower=0)
+                _erro_medio_prod_val_mlp=df_val_mlp.groupby("Produto")["Erro %"].mean()
+                _peso_total_val_mlp=_pesos_val_mlp.sum()
+                if _peso_total_val_mlp>0:
+                    mape_pond_val_mlp=(_erro_medio_prod_val_mlp*_pesos_val_mlp).sum()/_peso_total_val_mlp
+
+            cv1,cv2,cv3,cv4=st.columns(4)
             mc(cv1,"MAPE validado",f"{mape_val_mlp:.1f}%","g" if mape_val_mlp<15 else ("y" if mape_val_mlp<30 else "r"))
-            mc(cv2,"Produtos validados",str(n_produtos_val_mlp),"b")
-            mc(cv3,"Comparações válidas",str(len(df_val_mlp)),"b")
+            _cor_pond=("g" if (mape_pond_val_mlp or 999)<15 else ("y" if (mape_pond_val_mlp or 999)<30 else "r"))
+            mc(cv2,"MAPE ponderado",f"{mape_pond_val_mlp:.1f}%" if mape_pond_val_mlp is not None else "—",_cor_pond)
+            mc(cv3,"Produtos validados",str(n_produtos_val_mlp),"b")
+            mc(cv4,"Comparações válidas",str(len(df_val_mlp)),"b")
+
+            # MAPE por modelo — quantos produtos cada modelo venceu, e o erro médio
+            # daquele grupo especificamente (não do total geral).
+            _breakdown_val_mlp=df_val_mlp.groupby("Modelo").agg(
+                Produtos=("Produto","nunique"),
+                _mape_medio=("Erro %","mean")
+            ).reset_index().sort_values("Produtos",ascending=False)
+            _breakdown_val_mlp["MAPE médio"]=_breakdown_val_mlp["_mape_medio"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+            _breakdown_val_mlp=_breakdown_val_mlp[["Modelo","Produtos","MAPE médio"]]
+            with st.expander(f"📊 MAPE por modelo ({len(_breakdown_val_mlp)} modelos usados)"):
+                st.dataframe(_breakdown_val_mlp,use_container_width=True,
+                  height=min(420,80+35*len(_breakdown_val_mlp)))
+                st.markdown("**Ver produtos de cada modelo** (ordenados do pior MAPE pro melhor, pra achar rápido quem está puxando a média):")
+                for _modelo_det_val_mlp in _breakdown_val_mlp["Modelo"]:
+                    _prods_modelo_val_mlp=df_val_mlp[df_val_mlp["Modelo"]==_modelo_det_val_mlp].groupby("Produto").agg(
+                        _erro_medio=("Erro %","mean"),_meses=("Mes","nunique")
+                    ).reset_index().sort_values("_erro_medio",ascending=False)
+                    _prods_modelo_val_mlp["MAPE"]=_prods_modelo_val_mlp["_erro_medio"].apply(lambda v: f"{v:.1f}%")
+                    _tab_det_val_mlp=_prods_modelo_val_mlp.rename(columns={"_meses":"Meses validados"})[["Produto","MAPE","Meses validados"]]
+                    with st.expander(f"🔎 {_modelo_det_val_mlp} — {len(_prods_modelo_val_mlp)} produto(s)"):
+                        st.dataframe(_tab_det_val_mlp,use_container_width=True,
+                          height=min(400,60+35*len(_tab_det_val_mlp)))
+
             with st.expander("📋 Ver detalhe da validação (Previsto x Real)"):
-                st.dataframe(df_val_mlp,use_container_width=True,height=380)
+                _cols_mostrar_val=["Produto","Mes","Modelo","Previsto","Real","Erro %","Bias"]
+                st.dataframe(df_val_mlp[_cols_mostrar_val],use_container_width=True,height=380)
         elif df_val_mlp is not None:
             st.markdown('<div class="al-w">⚠️ Nenhum mês real encontrado depois da data de corte escolhida.</div>',unsafe_allow_html=True)
-
-    resultado=st.session_state.get("ml_produtos_resultado")
-    if resultado is None and st.session_state.cid:
-        resultado=load_ml_produtos_resultado(st.session_state.cid,st.session_state.get("mlp_filial_sel"))
-        if resultado is not None:
-            st.session_state["ml_produtos_resultado"]=resultado
-    # Se o resultado que temos foi calculado com uma categoria DIFERENTE da que está
-    # selecionada agora na tela, ele está desatualizado — não mostra como se fosse válido.
-    _categoria_atual_mlp=st.session_state.get("mlp_categoria_sel","(Todas)")
-    _categoria_do_resultado_mlp=st.session_state.get("mlp_resultado_categoria_usada","(Todas)")
-    _curva_atual_mlp=st.session_state.get("mlp_curva_sel","(Todas)")
-    _curva_do_resultado_mlp=st.session_state.get("mlp_resultado_curva_usada","(Todas)")
-    if resultado is not None and (_categoria_atual_mlp!=_categoria_do_resultado_mlp or _curva_atual_mlp!=_curva_do_resultado_mlp):
-        st.markdown(f'<div class="al-w">⚠️ O resultado mostrado abaixo foi calculado com Categoria "{_categoria_do_resultado_mlp}" e '
-                    f'Curva "{_curva_do_resultado_mlp}", diferente do que está selecionado agora (Categoria "{_categoria_atual_mlp}", '
-                    f'Curva "{_curva_atual_mlp}"). Clique em "🚀 Rodar ML nos Produtos" de novo para atualizar.</div>',unsafe_allow_html=True)
-        resultado=None
-    if resultado is not None and not resultado.empty:
-        produto_col_r=st.session_state.get("mlp_produto_col_atual",produto_col)
-        metrica_col_r=st.session_state.get("mlp_metrica_col_atual",metrica_col)
-        data_col_r=st.session_state.get("mlp_data_col_atual",data_col)
-        df_v_r=st.session_state.get("vendas_raw_com_chave",df_v)
-        ok_mask=resultado["status"]=="ok"
-        n_ok=int(ok_mask.sum())
-        mape_medio_mlp=resultado.loc[ok_mask,"mape"].dropna().mean() if "mape" in resultado.columns else None
-        # MAPE ponderado pelo tamanho do produto (média histórica de venda) — calculado
-        # aqui em cima também, pra aparecer junto com o MAPE médio simples no topo,
-        # não só escondido no expander mais abaixo.
-        mape_pond_topo_mlp=None
-        if "mape" in resultado.columns and "media_historica" in resultado.columns and n_ok>0:
-            _df_pond_topo_mlp=resultado.loc[ok_mask].copy()
-            _df_pond_topo_mlp["_peso"]=pd.to_numeric(_df_pond_topo_mlp["media_historica"],errors="coerce").fillna(0).clip(lower=0)
-            _soma_peso_topo_mlp=_df_pond_topo_mlp["_peso"].sum()
-            if _soma_peso_topo_mlp>0:
-                mape_pond_topo_mlp=(_df_pond_topo_mlp["mape"]*_df_pond_topo_mlp["_peso"]).sum()/_soma_peso_topo_mlp
-        mc_cols=st.columns(5)
-        mc(mc_cols[0],"Produtos analisados",str(len(resultado)),"b")
-        mc(mc_cols[1],"Previsões geradas",str(n_ok),"g")
-        mc(mc_cols[2],"Sem dados suficientes",str(len(resultado)-n_ok),"y")
-        mc(mc_cols[3],"MAPE médio",f"{mape_medio_mlp:.1f}%" if mape_medio_mlp is not None and pd.notna(mape_medio_mlp) else "—","g")
-        mc(mc_cols[4],"MAPE ponderado",f"{mape_pond_topo_mlp:.1f}%" if mape_pond_topo_mlp is not None and pd.notna(mape_pond_topo_mlp) else "—","g")
-
-        # MAPE agrupado por modelo escolhido — quantos produtos cada modelo venceu
-        # e qual o erro médio DAQUELE grupo especificamente (não do total geral).
-        if "mape" in resultado.columns and n_ok>0:
-            _breakdown_mape_mlp=resultado.loc[ok_mask].groupby("modelo_escolhido").agg(
-                Produtos=("modelo_escolhido","count"),
-                _mape_medio=("mape","mean")
-            ).reset_index().sort_values("Produtos",ascending=False)
-            _breakdown_mape_mlp["MAPE médio"]=_breakdown_mape_mlp["_mape_medio"].apply(
-                lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
-            _breakdown_mape_mlp=_breakdown_mape_mlp.rename(columns={"modelo_escolhido":"Modelo"})[["Modelo","Produtos","MAPE médio"]]
-            with st.expander(f"📊 MAPE por modelo ({len(_breakdown_mape_mlp)} modelos usados)"):
-                st.dataframe(_breakdown_mape_mlp,use_container_width=True,
-                  height=min(420,80+35*len(_breakdown_mape_mlp)))
-                st.markdown("**Ver produtos de cada modelo** (ordenados do pior MAPE pro melhor, pra achar rápido quem está puxando a média):")
-                for _modelo_det_mlp in _breakdown_mape_mlp["Modelo"]:
-                    _prods_modelo_mlp=resultado.loc[ok_mask & (resultado["modelo_escolhido"]==_modelo_det_mlp)].copy()
-                    _prods_modelo_mlp=_prods_modelo_mlp.sort_values("mape",ascending=False)
-                    _tab_det_mlp=_prods_modelo_mlp[[produto_col_r,"mape","media_historica","n_periodos"]].copy()
-                    _tab_det_mlp["mape"]=_tab_det_mlp["mape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
-                    _tab_det_mlp["media_historica"]=_tab_det_mlp["media_historica"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
-                    _tab_det_mlp=_tab_det_mlp.rename(columns={produto_col_r:"Produto","mape":"MAPE",
-                        "media_historica":"Média histórica de venda","n_periodos":"Meses de histórico"})
-                    with st.expander(f"🔎 {_modelo_det_mlp} — {len(_prods_modelo_mlp)} produto(s)"):
-                        st.dataframe(_tab_det_mlp,use_container_width=True,
-                          height=min(400,60+35*len(_tab_det_mlp)))
-
-            # MAPE ponderado por valor de venda — o erro de um produto que vende
-            # muito pesa mais que o erro de um produto que vende pouco. Fica num
-            # expander à parte, não substitui o MAPE médio simples de cima.
-            _df_pond_mlp=resultado.loc[ok_mask].copy()
-            _df_pond_mlp["_peso"]=pd.to_numeric(_df_pond_mlp.get("media_historica"),errors="coerce").fillna(0).clip(lower=0)
-            _soma_peso_geral=_df_pond_mlp["_peso"].sum()
-            _mape_pond_geral=(_df_pond_mlp["mape"]*_df_pond_mlp["_peso"]).sum()/_soma_peso_geral if _soma_peso_geral>0 else None
-            with st.expander("⚖️ MAPE ponderado por valor de venda (produtos que vendem mais pesam mais)"):
-                st.markdown(
-                    f'<div class="al-i">Peso usado: <b>média histórica de venda</b> de cada produto (todo o período disponível, não só o último mês).<br>'
-                    f'MAPE médio simples: <b>{mape_medio_mlp:.1f}%</b> &nbsp;|&nbsp; '
-                    f'MAPE ponderado por valor: <b>{f"{_mape_pond_geral:.1f}%" if _mape_pond_geral is not None and pd.notna(_mape_pond_geral) else "—"}</b><br>'
-                    f'Se os dois números forem parecidos, o erro está bem distribuído entre produtos grandes e pequenos. '
-                    f'Se o ponderado for BEM diferente do simples, os produtos que mais vendem estão errando '
-                    f'{"mais" if (_mape_pond_geral or 0)>mape_medio_mlp else "menos"} do que a média sugere — vale investigar esses primeiro.</div>',
-                    unsafe_allow_html=True)
-                def _calc_pond(g):
-                    peso=g["_peso"].sum()
-                    return pd.Series({
-                        "Produtos": len(g),
-                        "_simples": g["mape"].mean(),
-                        "_ponderado": (g["mape"]*g["_peso"]).sum()/peso if peso>0 else None
-                    })
-                _breakdown_pond_mlp=_df_pond_mlp.groupby("modelo_escolhido").apply(_calc_pond).reset_index()
-                _breakdown_pond_mlp=_breakdown_pond_mlp.rename(columns={"modelo_escolhido":"Modelo"})
-                _breakdown_pond_mlp["MAPE médio (simples)"]=_breakdown_pond_mlp["_simples"].apply(
-                    lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
-                _breakdown_pond_mlp["MAPE ponderado (por valor)"]=_breakdown_pond_mlp["_ponderado"].apply(
-                    lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
-                _breakdown_pond_mlp=_breakdown_pond_mlp.sort_values("Produtos",ascending=False)[
-                    ["Modelo","Produtos","MAPE médio (simples)","MAPE ponderado (por valor)"]]
-                st.dataframe(_breakdown_pond_mlp,use_container_width=True,
-                  height=min(420,80+35*len(_breakdown_pond_mlp)))
-
-        sec("📋 Resultado — Melhor Modelo por Produto")
-        def confiab_label(n,mape_v):
-            # Confiabilidade agora considera as DUAS coisas: histórico suficiente E
-            # erro (MAPE) baixo — um produto com 40 meses de histórico mas MAPE de
-            # 200% não pode aparecer como "Alta", mesmo tendo bastante dado.
-            if pd.notna(mape_v):
-                if mape_v<20 and n>=18: return "🟢 Alta"
-                if mape_v<50 and n>=12: return "🟡 Média"
-                return "🔴 Baixa"
-            if n>=18: return "🟡 Média"
-            return "🔴 Baixa"
-        tabela_show=resultado.copy()
-        tabela_show["confiabilidade"]=tabela_show.apply(
-          lambda r: confiab_label(r["n_periodos"], r.get("mape")), axis=1)
-        tabela_show["ultimo_real"]=tabela_show["ultimo_real"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
-        tabela_show["previsao_proximo_mes"]=tabela_show["previsao"].apply(
-          lambda p: fmt(p[0]) if isinstance(p,list) and len(p)>0 else "—")
-        if "mape" in tabela_show.columns:
-            tabela_show["mape"]=tabela_show["mape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
-        with st.expander(f"📋 Ver tabela completa ({len(tabela_show)} produtos)"):
-            _cols_tabela_mlp=[produto_col_r,"n_periodos","confiabilidade","modelo_escolhido","ultimo_real",
-              "previsao_proximo_mes","var_pct_proximo_mes"]
-            if "mape" in tabela_show.columns:
-                _cols_tabela_mlp.append("mape")
-            _cols_tabela_mlp.append("status")
-            st.dataframe(tabela_show[_cols_tabela_mlp],
-              use_container_width=True,height=420)
-        csv_ml=resultado.to_csv(sep=";",decimal=",",index=False).encode("utf-8-sig")
-        c_exp1,c_exp2=st.columns(2)
-        c_exp1.download_button("📥 Exportar resultado (CSV)",csv_ml,file_name="ml_produtos.csv",use_container_width=True)
-
-        # CSV "editável": uma linha por mês (real + previsão), com coluna em branco
-        # pra quem for usar preencher um ajuste manual por cima do número do modelo
-        linhas_editavel=[]
-        for _,linha_ex in resultado[ok_mask].iterrows():
-            prod_ex=linha_ex[produto_col_r]
-            serie_ex=serie_mensal_produto(df_v_r if 'df_v_r' in dir() else df_v,produto_col_r,prod_ex,data_col_r,metrica_col_r)
-            if serie_ex.empty:
-                continue  # produto do resultado salvo não existe mais no filtro atual (filial/categoria mudou) — pula, sem travar a tela
-            for periodo_ex,valor_ex in serie_ex.items():
-                linhas_editavel.append({"Produto":prod_ex,"Tipo":"Real","Mes":str(periodo_ex),
-                    "Valor":round(float(valor_ex),2),"Modelo":"","Ajustado (preencha se quiser)":""})
-            proj_ex=linha_ex["previsao"] or []
-            modelo_ex=linha_ex["modelo_escolhido"]
-            ultimo_periodo=serie_ex.index[-1]
-            for i_ex,v_ex in enumerate(proj_ex):
-                mes_futuro=ultimo_periodo+pd.DateOffset(months=i_ex+1)
-                linhas_editavel.append({"Produto":prod_ex,"Tipo":"Previsão","Mes":mes_futuro.strftime("%Y-%m"),
-                    "Valor":round(float(v_ex),2),"Modelo":modelo_ex,"Ajustado (preencha se quiser)":""})
-        df_editavel=pd.DataFrame(linhas_editavel)
-        csv_editavel=df_editavel.to_csv(sep=";",decimal=",",index=False).encode("utf-8-sig")
-        c_exp2.download_button("📝 Exportar para edição (1 linha por mês)",csv_editavel,
-          file_name="ml_produtos_editavel.csv",use_container_width=True)
-
-        sec("📈 Evolução dos Produtos — Histórico + Previsão")
-        n_graficos=st.slider("Quantos produtos mostrar",2,min(20,n_ok) if n_ok>=2 else 2,
-          min(8,n_ok) if n_ok>=2 else n_ok,key="mlp_n_graficos")
-        resultado_ok=resultado[ok_mask].head(n_graficos).reset_index(drop=True)
-        cores_prod=["#14243B","#A9762F","#3D5A80","#8B5E34","#5B7B9A","#C99A54","#2C3E50","#B08D57",
-                    "#4A6482","#996B3D","#1F3552","#D4A76A","#345678","#8C6239","#6889A8","#BF9B5F",
-                    "#2E4761","#A0763B","#527092","#9C7443"]
-
-        fig_lin=go.Figure()
-        cards_var=[]
-        for i,(_,linha_g) in enumerate(resultado_ok.iterrows()):
-            prod_g=linha_g[produto_col_r]
-            proj_g=linha_g["previsao"]
-            melhor_g=linha_g["modelo_escolhido"]
-            serie_g=serie_mensal_produto(df_v_r,produto_col_r,prod_g,data_col_r,metrica_col_r)
-            if serie_g.empty:
-                continue  # produto do resultado salvo não existe mais no filtro atual (filial/categoria mudou) — pula, sem travar a tela
-            x_h=[str(p) for p in serie_g.index]
-            x_p=[f"M+{i2+1}" for i2 in range(len(proj_g))]
-            v_at=float(serie_g.iloc[-1])
-            v_pr=proj_g[-1]
-            var_g=safe(v_pr-v_at,abs(v_at))*100
-            cor_g=cores_prod[i%len(cores_prod)]
-            nome_curto=str(prod_g)[:30]
-
-            fig_lin.add_trace(go.Scatter(x=x_h,y=serie_g.values,name=nome_curto,
-              legendgroup=f"g{i}",mode="lines",line=dict(color=cor_g,width=2)))
-            fig_lin.add_trace(go.Scatter(x=[x_h[-1]]+x_p,y=[serie_g.values[-1]]+proj_g,
-              name=nome_curto,legendgroup=f"g{i}",showlegend=False,
-              mode="lines+markers",line=dict(color=cor_g,width=2,dash="dash"),
-              marker=dict(size=5,color=cor_g,symbol="diamond")))
-
-            n_per_g=len(serie_g)
-            confiab_g="🟢 Alta" if n_per_g>=18 else ("🟡 Média" if n_per_g>=12 else "🔴 Baixa")
-            cards_var.append({"produto":nome_curto,"cor":cor_g,"v_at":v_at,"v_pr":v_pr,
-                              "var":var_g,"modelo":melhor_g,"confiab":confiab_g,"n_per":n_per_g})
-
-        if len(resultado_ok)>0:
-            primeira_serie=serie_mensal_produto(df_v_r,produto_col_r,
-              resultado_ok.iloc[0][produto_col_r],data_col_r,metrica_col_r)
-            ultimo_mes_real=str(primeira_serie.index[-1]) if not primeira_serie.empty else str(pd.Timestamp.now().to_period("M"))
-        if len(resultado_ok)>0 and ultimo_mes_real is not None:
-            fig_lin.add_vline(x=ultimo_mes_real,line_dash="dash",line_color="#9CA3AF",opacity=0.6)
-            fig_lin.add_annotation(x=ultimo_mes_real,y=1,yref="paper",yanchor="bottom",
-              text="Início da previsão",showarrow=False,font=dict(size=9,color="#9CA3AF"))
-        fig_lin.update_layout(
-          title=dict(text=f"Histórico e Previsão — Top {len(resultado_ok)} Produtos",
-            font=dict(size=15,family="Georgia, serif",color="#14243B")),
-          plot_bgcolor="white",paper_bgcolor="white",
-          font=dict(color="#6B7280",size=10,family="Segoe UI, Arial"),
-          margin=dict(l=10,r=10,t=50,b=70),
-          xaxis=dict(type="category",gridcolor="#F3F4F6",linecolor="#E5E7EB",showgrid=False,
-            tickangle=-40,tickfont=dict(size=9,color="#4B5563")),
-          yaxis=dict(gridcolor="#F3F4F6",linecolor="#E5E7EB",showgrid=True,zeroline=False,tickfont=dict(size=9)),
-          legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.38,x=0.5,xanchor="center",font=dict(size=9)),
-          hovermode="x unified",height=500,
-          hoverlabel=dict(bgcolor="white",bordercolor="#E5E7EB",font=dict(color="#14243B")))
-        st.plotly_chart(fig_lin,use_container_width=True)
-
-        sec("🎯 Variação Prevista por Produto")
-        for i in range(0,len(cards_var),3):
-            cols_c=st.columns(3)
-            for j,col_c in enumerate(cols_c):
-                if i+j>=len(cards_var): break
-                cv=cards_var[i+j]
-                cls_v="g" if cv["var"]>0 else ("r" if cv["var"]<0 else "")
-                col_c.markdown(f'''<div class="mc" style="border-left:3px solid {cv["cor"]}">
-                  <div class="mc-lbl">{cv["produto"]}</div>
-                  <div class="mc-val {cls_v}">{cv["var"]:+.1f}%</div>
-                  <div class="mc-sub">{fmt(cv["v_at"])} → {fmt(cv["v_pr"])} · {cv["modelo"]}</div>
-                  <div class="mc-sub">{cv["confiab"]} · {cv["n_per"]} meses de histórico</div>
-                  </div>''',unsafe_allow_html=True)
-
-        sec("📈 Ver previsão de um produto específico")
-        var_pct_prod=st.slider("Variação cenários (%)",5,30,15,step=5,key="mlp_var_cenario")
-        produtos_ok=resultado[ok_mask][produto_col_r].tolist()
-        if produtos_ok:
-            prod_sel=st.selectbox("Produto",produtos_ok,key="mlp_prod_detalhe")
-            serie=serie_mensal_produto(df_v_r,produto_col_r,prod_sel,data_col_r,metrica_col_r)
-            if serie.empty:
-                st.markdown('<div class="al-w">⚠️ Este produto não existe no filtro atual (filial/categoria mudou desde que o resultado foi salvo) — clique em "🚀 Rodar ML nos Produtos" de novo para atualizar.</div>',unsafe_allow_html=True)
-                st.stop()
-            linha=resultado[resultado[produto_col_r]==prod_sel].iloc[0]
-            proj=linha["previsao"]
-            melhor_nm=linha["modelo_escolhido"]
-            rank_prod=linha.get("rank",{}) or {}
-            if proj:
-                x_h=[str(p) for p in serie.index]
-                x_p=[f"M+{i+1}" for i in range(len(proj))]
-                v_at=float(serie.iloc[-1])
-                v_pr=proj[-1]
-                var_tot=safe(v_pr-v_at,abs(v_at))*100
-
-                fig=go.Figure()
-                fig.add_trace(go.Scatter(x=x_h,y=serie.values,name="Histórico",
-                  mode="lines+markers",line=dict(color="#14243B",width=2.3),
-                  marker=dict(size=5,color="#14243B",line=dict(color="white",width=1.5))))
-                fig.add_trace(go.Scatter(x=x_p,y=proj,name=f"Previsão ({linha['modelo_escolhido']})",
-                  mode="lines+markers",line=dict(color="#A9762F",width=2.3,dash="dash"),
-                  marker=dict(size=7,color="#A9762F",symbol="diamond",line=dict(color="white",width=1))))
-                y_up=[v*(1+var_pct_prod/100) for v in proj]
-                y_dn=[v*(1-var_pct_prod/100) for v in proj]
-                fig.add_trace(go.Scatter(x=x_p+x_p[::-1],y=y_up+y_dn[::-1],
-                  fill="toself",fillcolor="rgba(107,114,128,.08)",
-                  line=dict(color="rgba(0,0,0,0)"),name=f"±{var_pct_prod}%"))
-                fig.add_vline(x=x_h[-1],line_dash="dash",line_color="#9CA3AF",opacity=0.6)
-                fig.add_annotation(x=x_h[-1],y=1,yref="paper",yanchor="bottom",
-                  text="Início da previsão",showarrow=False,font=dict(size=9,color="#9CA3AF"))
-                fig.update_layout(
-                  title=dict(text=f"{prod_sel} — {var_tot:+.1f}% em {len(proj)} meses ({melhor_nm})",
-                    font=dict(size=14,family="Georgia, serif",color="#14243B")),
-                  plot_bgcolor="white",paper_bgcolor="white",font=dict(color="#6B7280",size=10,family="Segoe UI, Arial"),
-                  margin=dict(l=10,r=10,t=48,b=60),
-                  xaxis=dict(type="category",tickangle=-40,tickfont=dict(size=9,color="#4B5563"),
-                    linecolor="#E5E7EB",showgrid=False),
-                  yaxis=dict(gridcolor="#F3F4F6",linecolor="#E5E7EB",showgrid=True,zeroline=False,tickfont=dict(size=9)),
-                  legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.32,x=0.5,xanchor="center",font=dict(size=10)),
-                  hovermode="x unified",height=400,
-                  hoverlabel=dict(bgcolor="white",bordercolor="#E5E7EB",font=dict(color="#14243B")))
-                st.plotly_chart(fig,use_container_width=True)
-
-                c1,c2,c3=st.columns(3)
-                mc(c1,f"🐻 Pessimista (-{var_pct_prod}%)",fmt(v_pr*(1-var_pct_prod/100)),"r",f"vs atual: {fmt(v_at)}")
-                mc(c2,"📊 Base (projeção)",fmt(v_pr),"y",f"{var_tot:+.1f}% vs atual")
-                mc(c3,f"🐂 Otimista (+{var_pct_prod}%)",fmt(v_pr*(1+var_pct_prod/100)),"g",f"vs atual: {fmt(v_at)}")
-
-                media_serie=float(serie.mean()) if len(serie)>0 else 1
-                st.markdown(f"""**Como chegamos a essa projeção:**
-
-O sistema usou os últimos **{len(serie)}** períodos históricos para treinar cada modelo.
-Depois testou a precisão de cada um nos últimos meses reais — comparando o que o modelo teria previsto com o que realmente aconteceu.
-O vencedor foi **{melhor_nm}** com menor erro relativo.
-O erro % abaixo mostra o desvio médio da previsão em relação à média histórica de **{fmt(media_serie)}**.
-Quanto menor o %, mais preciso o modelo foi nos dados reais.
-
-**Ranking de modelos — erro relativo (% sobre a média histórica):**""")
-                rank_s=sorted(rank_prod.items(),key=lambda x:x[1])
-                if rank_s:
-                    desc_modelos={"ARIMA":"Captura tendências e autocorrelações",
-                      "ExponentialSmoothing":"Pesa mais os dados recentes",
-                      "SARIMAX":"Captura sazonalidade anual",
-                      "Holt":"Tendência com amortecimento",
-                      "Média Móvel":"Média dos últimos períodos",
-                      "Prophet":"IA do Meta para séries temporais"}
-                    icones_rank=["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
-                    cols_r=st.columns(max(min(len(rank_s),4),1))
-                    for i,(mod,mse) in enumerate(rank_s):
-                        ico=icones_rank[i] if i<len(icones_rank) else f"{i+1}º"
-                        col_atual=cols_r[i%len(cols_r)]
-                        rmse=float(mse**0.5) if mse<float("inf") else 0
-                        erro_pct=safe(rmse,abs(media_serie))*100
-                        cls_err="g" if erro_pct<5 else ("y" if erro_pct<15 else "r")
-                        col_atual.markdown(f'<div class="mc"><div class="mc-lbl">{ico} {mod}</div>'
-                          f'<div class="mc-val {cls_err}" style="font-size:1rem">{erro_pct:.1f}% erro</div>'
-                          f'<div class="mc-sub">{desc_modelos.get(mod,"")}</div></div>',unsafe_allow_html=True)
 elif pg=="config_ml":
     hdr("🎛️ Motor de Previsão — Configuração Avançada","Parametrize sazonalidade, promoções e reajustes — e valide antes de aplicar")
     if "cfgml_config_carregada" not in st.session_state:
