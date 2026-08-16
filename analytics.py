@@ -352,13 +352,13 @@ def pre_carregar_cliente(cid):
     # a própria página de Pareto já recarrega do disco sozinha quando necessário,
     # de forma correta e ciente de Filial (evita o "achou que você trocou de visão" à toa).    
 
-def renderizar_card_cliente(c):
+def renderizar_card_cliente(c,prefixo="ab"):
     c1,c2,c3,c4=st.columns([4,2,1,1])
     p2=load_cli(c["id"]); tem_pin=bool(p2.get("pin","")) if p2 else False
     c1.markdown(f'<div style="color:#111827;font-weight:600;padding:10px 0">'
                f'{c["nome"]} {"🔒" if tem_pin else "🔓"}</div>',unsafe_allow_html=True)
     c2.markdown(f'<div style="color:#9CA3AF;font-size:.82rem;padding:12px 0">🕐 {c["at"]}</div>',unsafe_allow_html=True)
-    if c3.button("📂 Abrir",key=f"ab_{c['id']}",use_container_width=True):
+    if c3.button("📂 Abrir",key=f"{prefixo}_{c['id']}",use_container_width=True):
         if tem_pin:
             st.session_state.pin_pendente=c["id"]
         else:
@@ -373,7 +373,7 @@ def renderizar_card_cliente(c):
             st.session_state["_limpar_busca_cliente"]=True
             pre_carregar_cliente(c["id"])
             addlog(f"'{c['nome']}' aberto"); ir("boas_vindas")
-    if c4.button("🗑",key=f"dl_{c['id']}",use_container_width=True):
+    if c4.button("🗑",key=f"{prefixo}_dl_{c['id']}",use_container_width=True):
         os.remove(path_cli(c["id"]))
         if st.session_state.cid==c["id"]: st.session_state.cid=None; st.session_state.df_raw=None
         st.rerun()
@@ -3352,7 +3352,7 @@ elif pg=="clientes":
         encontrados=[c for c in cls if termo_busca in c["nome"].lower()]
         if encontrados:
             for c in encontrados:
-                renderizar_card_cliente(c)
+                renderizar_card_cliente(c,prefixo="busca")
         else:
             st.markdown('<div class="al-i">Nenhum cliente encontrado com esse nome.</div>',unsafe_allow_html=True)
     else:
@@ -3364,7 +3364,7 @@ elif pg=="clientes":
         if senha_lista==SENHA_MASTER:
             st.markdown('<div class="al-s">✅ Acesso autorizado</div>',unsafe_allow_html=True)
             for c in cls:
-                renderizar_card_cliente(c)
+                renderizar_card_cliente(c,prefixo="lista")
         elif senha_lista:
             st.markdown('<div class="al-d">❌ Senha incorreta.</div>',unsafe_allow_html=True)
 
