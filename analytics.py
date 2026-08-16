@@ -1861,7 +1861,13 @@ def treinar(serie,modelo,n=6):
             proj_ens,_=ensemble_forecast(s,modelos_base,n)
             return proj_ens
         if modelo=="Prophet" and PROPHET_OK:
-            idx=pd.date_range(end=pd.Timestamp.now(),periods=len(s),freq="MS")
+            # Usa as datas REAIS da série (não "hoje") — importante principalmente no
+            # backtest, onde a série treinada termina 6 meses antes do fim de verdade;
+            # usar "hoje" bagunçava a sazonalidade que o Prophet tenta calcular.
+            if isinstance(s.index,pd.DatetimeIndex) and len(s.index)==len(s):
+                idx=s.index
+            else:
+                idx=pd.date_range(end=pd.Timestamp.now(),periods=len(s),freq="MS")
             df_p=pd.DataFrame({"ds":idx,"y":s.values})
             m=Prophet(changepoint_prior_scale=0.01,yearly_seasonality=True); m.fit(df_p)
             fut=m.make_future_dataframe(periods=n,freq="MS"); fc=m.predict(fut)
@@ -5822,12 +5828,20 @@ Quanto menor o %, mais preciso o modelo foi nos dados reais.
                           "Prophet":"IA do Meta para séries temporais"}.get(mod,"")
                     # Converte MSE para RMSE% (erro relativo à média da série)
                     media_serie=float(v_hist.mean()) if len(v_hist)>0 else 1
-                    rmse=float(mse**0.5) if mse<float("inf") else 0
-                    erro_pct=safe(rmse,abs(media_serie))*100
-                    cls_err="g" if erro_pct<5 else ("y" if erro_pct<15 else "r")
-                    cols_r[i].markdown(f'<div class="mc"><div class="mc-lbl">{ico} {mod}</div>'
-                      f'<div class="mc-val {cls_err}" style="font-size:1rem">{erro_pct:.1f}% erro</div>'
-                      f'<div class="mc-sub">{desc}</div></div>',unsafe_allow_html=True)
+                    if mse>=float("inf"):
+                        erro_pct=None
+                    else:
+                        rmse=float(mse**0.5)
+                        erro_pct=safe(rmse,abs(media_serie))*100
+                    if erro_pct is None:
+                        cols_r[i].markdown(f'<div class="mc"><div class="mc-lbl">{ico} {mod}</div>'
+                          f'<div class="mc-val r" style="font-size:1rem">Falhou</div>'
+                          f'<div class="mc-sub">Não conseguiu treinar com esses dados</div></div>',unsafe_allow_html=True)
+                    else:
+                        cls_err="g" if erro_pct<5 else ("y" if erro_pct<15 else "r")
+                        cols_r[i].markdown(f'<div class="mc"><div class="mc-lbl">{ico} {mod}</div>'
+                          f'<div class="mc-val {cls_err}" style="font-size:1rem">{erro_pct:.1f}% erro</div>'
+                          f'<div class="mc-sub">{desc}</div></div>',unsafe_allow_html=True)
 
         # Tabela resumo
         sec("📋 Resumo de Todas as Projeções")
