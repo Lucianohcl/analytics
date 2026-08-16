@@ -1872,7 +1872,10 @@ def treinar(serie,modelo,n=6):
             m=Prophet(changepoint_prior_scale=0.01,yearly_seasonality=True); m.fit(df_p)
             fut=m.make_future_dataframe(periods=n,freq="MS"); fc=m.predict(fut)
             return pd.Series(fc["yhat"].tail(n).values)
-    except: pass
+    except Exception as _e_treinar:
+        if modelo=="Prophet":
+            st.session_state["_debug_ultimo_erro_prophet"]=f"{type(_e_treinar).__name__}: {_e_treinar}"
+        pass
     return None
 
 def treinar_backtest(serie,modelo,timeout_s=10):
@@ -3349,13 +3352,7 @@ if pg=="boas_vindas":
 elif pg=="clientes":
     hdr("👥 Clientes")
     with st.expander("🔧 Debug: Prophet instalado?"):
-        st.code(f"PROPHET_OK = {PROPHET_OK}")
-        if not PROPHET_OK:
-            try:
-                from prophet import Prophet as _TesteProphet
-                st.write("Import direto funcionou — estranho, PROPHET_OK deveria ser True")
-            except Exception as _e_prophet_debug:
-                st.code(f"Erro ao importar: {type(_e_prophet_debug).__name__}: {_e_prophet_debug}")
+        st.code(f"Último erro do Prophet ao treinar: {st.session_state.get('_debug_ultimo_erro_prophet','(nenhum registrado ainda nessa sessão)')}")
     if st.session_state.get("_limpar_busca_cliente"):
         st.session_state["busca_cliente_nome"]=""
         st.session_state["_limpar_busca_cliente"]=False
