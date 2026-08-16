@@ -6833,7 +6833,13 @@ elif pg=="ml_produtos":
         ranking_elegivel_mlp=ranking_mlp[ranking_mlp["_ProdutoUnico"].isin(produtos_com_hist_mlp)]
         top_produtos_mlp=ranking_elegivel_mlp.head(n_selecionar_mlp)["_ProdutoUnico"].tolist()
 
-        st.markdown(f'<div class="al-i">🔎 {len(top_produtos_mlp)} produtos elegíveis (Top {int(pct_top*100)}% com histórico mínimo).</div>',unsafe_allow_html=True)
+        _total_universo_mlp=len(ranking_mlp)
+        _total_com_hist_mlp=len(produtos_com_hist_mlp)
+        _descartados_hist_mlp=_total_universo_mlp-_total_com_hist_mlp
+        _msg_elegiveis_mlp=f'🔎 {len(top_produtos_mlp)} produtos elegíveis (Top {int(pct_top*100)}% com histórico mínimo de {min_periodos} meses).'
+        if _descartados_hist_mlp>0:
+            _msg_elegiveis_mlp+=f' ⚠️ {_descartados_hist_mlp} de {_total_universo_mlp} produtos da base foram descartados por terem menos de {min_periodos} meses com venda registrada.'
+        st.markdown(f'<div class="al-i">{_msg_elegiveis_mlp}</div>',unsafe_allow_html=True)
         pb_mlp=st.progress(0)
         texto_pb_mlp=st.empty()
         modelos_mlp=[m for m,ok in MODELOS_ML.items() if ok]
