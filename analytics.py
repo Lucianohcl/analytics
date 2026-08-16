@@ -2472,6 +2472,21 @@ def load_ml_produtos_validacao(cid,filial=None):
         return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
     except: return None
 
+def path_ml_produtos_validacao_ranks(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_ml_produtos_validacao_ranks__{_sufixo_filial(filial)}.json")
+
+def save_ml_produtos_validacao_ranks(cid,ranks_dict,filial=None):
+    try:
+        with open(path_ml_produtos_validacao_ranks(cid,filial),"w",encoding="utf-8") as f:
+            json.dump(ranks_dict,f)
+    except: pass
+
+def load_ml_produtos_validacao_ranks(cid,filial=None):
+    p=path_ml_produtos_validacao_ranks(cid,filial)
+    if not os.path.exists(p): return None
+    try:
+        with open(p,encoding="utf-8") as f: return json.load(f)
+    except: return None
+
 def load_ml_produtos_resultado(cid,filial=None):
     p=path_ml_produtos_resultado(cid,filial)
     if not os.path.exists(p): return None
@@ -6779,9 +6794,17 @@ elif pg=="ml_produtos":
         produto_col_agrupar=desc_col
     produto_col="_ProdutoUnico"
 
-    # Filtro por Curva ABC — reaproveita a mesma classificação usada na Curva de
-    # Pareto (Classe A = até 80% do valor acumulado, B = até 95%, C = o resto).
+    # Filtro por Curva ABC — usa a classificação de 5 níveis (A a E), a mesma
+    # que o Motor de Compras usa, pra ficar consistente com o resto do app
+    # (em vez da versão simples de 3 níveis que a Curva de Pareto usa).
     _ranking_curva_mlp=pareto_analysis(df_v,"_ProdutoUnico",metrica_col)
+    def _classe_5niveis_mlp(pct_acum):
+        if pct_acum<=70: return "A"
+        if pct_acum<=80: return "B"
+        if pct_acum<=90: return "C"
+        if pct_acum<=97: return "D"
+        return "E"
+    _ranking_curva_mlp["classe_abc"]=_ranking_curva_mlp["pct_acumulado"].apply(_classe_5niveis_mlp)
     _mapa_curva_mlp=dict(zip(_ranking_curva_mlp["_ProdutoUnico"],_ranking_curva_mlp["classe_abc"]))
     df_v["_CurvaABC"]=df_v["_ProdutoUnico"].map(_mapa_curva_mlp)
     _curvas_disp_mlp=sorted(df_v["_CurvaABC"].dropna().unique().tolist())
@@ -6864,6 +6887,7 @@ elif pg=="ml_produtos":
             pb_val_mlp=st.progress(0)
             texto_pb_val_mlp=st.empty()
             linhas_val_mlp=[]
+            ranks_todos_val_mlp={}
             modelos_val_mlp=[m for m,ok in MODELOS_ML.items() if ok]
             for idx_val_mlp,prod_val_mlp in enumerate(top_produtos_val_mlp):
                 texto_pb_val_mlp.caption(f"Validando {idx_val_mlp+1} de {len(top_produtos_val_mlp)}: {str(prod_val_mlp)[:50]}")
@@ -6875,7 +6899,8 @@ elif pg=="ml_produtos":
                     modelos_val_mlp_p=[m for m in modelos_val_mlp if m not in ("Croston","TSB")]
                 else:
                     modelos_val_mlp_p=modelos_val_mlp
-                melhor_val_mlp,_rank_val_mlp=melhor_modelo(serie_val_mlp,modelos_val_mlp_p)
+                melhor_val_mlp,rank_val_mlp=melhor_modelo(serie_val_mlp,modelos_val_mlp_p)
+                ranks_todos_val_mlp[prod_val_mlp]=rank_val_mlp
                 proj_val_mlp=treinar(serie_val_mlp,melhor_val_mlp,n_meses_valid_mlp)
                 if proj_val_mlp is not None:
                     serie_completa_val_mlp=serie_mensal_produto(df_v,"_ProdutoUnico",prod_val_mlp,data_col,metrica_col)
@@ -6897,8 +6922,10 @@ elif pg=="ml_produtos":
             pb_val_mlp.empty(); texto_pb_val_mlp.empty()
             _df_val_mlp_novo=pd.DataFrame(linhas_val_mlp) if linhas_val_mlp else None
             st.session_state["mlp_validacao_resultado"]=_df_val_mlp_novo
+            st.session_state["mlp_validacao_ranks"]=ranks_todos_val_mlp
             if st.session_state.cid and _df_val_mlp_novo is not None:
                 save_ml_produtos_validacao(st.session_state.cid,_df_val_mlp_novo,st.session_state.get("mlp_filial_sel"))
+                save_ml_produtos_validacao_ranks(st.session_state.cid,ranks_todos_val_mlp,st.session_state.get("mlp_filial_sel"))
 
         df_val_mlp=st.session_state.get("mlp_validacao_resultado")
         if df_val_mlp is None and st.session_state.cid:
@@ -6952,6 +6979,28 @@ elif pg=="ml_produtos":
             with st.expander("📋 Ver detalhe da validação (Previsto x Real)"):
                 _cols_mostrar_val=["Produto","Mes","Modelo","Previsto","Real","Erro %","Bias"]
                 st.dataframe(df_val_mlp[_cols_mostrar_val],use_container_width=True,height=380)
+
+            _ranks_salvos_val=st.session_state.get("mlp_validacao_ranks")
+            if _ranks_salvos_val is None and st.session_state.cid:
+                _ranks_salvos_val=load_ml_produtos_validacao_ranks(st.session_state.cid,st.session_state.get("mlp_filial_sel"))
+                if _ranks_salvos_val is not None:
+                    st.session_state["mlp_validacao_ranks"]=_ranks_salvos_val
+            _ranks_salvos_val=_ranks_salvos_val or {}
+            if _ranks_salvos_val:
+                with st.expander("🔬 Todos os modelos testados, por produto (não só o vencedor)"):
+                    _prod_ver_ranks=st.selectbox("Produto",sorted(_ranks_salvos_val.keys()),key="mlp_prod_ver_ranks")
+                    _rank_prod_sel=_ranks_salvos_val.get(_prod_ver_ranks,{})
+                    _media_prod_sel=df_val_mlp.loc[df_val_mlp["Produto"]==_prod_ver_ranks,"MediaHistorica"].iloc[0] if "MediaHistorica" in df_val_mlp.columns and (df_val_mlp["Produto"]==_prod_ver_ranks).any() else 1
+                    _linhas_rank_sel=[]
+                    for _mod_r,_mse_r in sorted(_rank_prod_sel.items(),key=lambda x:x[1]):
+                        if _mse_r>=float("inf"):
+                            _linhas_rank_sel.append({"Modelo":_mod_r,"Erro":"Falhou"})
+                        else:
+                            _rmse_r=float(_mse_r**0.5)
+                            _erro_pct_r=safe(_rmse_r,abs(_media_prod_sel))*100
+                            _linhas_rank_sel.append({"Modelo":_mod_r,"Erro":f"{_erro_pct_r:.1f}%"})
+                    st.dataframe(pd.DataFrame(_linhas_rank_sel),use_container_width=True,
+                      height=min(350,80+35*len(_linhas_rank_sel)))
         elif df_val_mlp is not None:
             st.markdown('<div class="al-w">⚠️ Nenhum mês real encontrado depois da data de corte escolhida.</div>',unsafe_allow_html=True)
 elif pg=="config_ml":
