@@ -3327,6 +3327,14 @@ if pg=="boas_vindas":
 # ── CLIENTES ────────────────────────────────────────
 elif pg=="clientes":
     hdr("👥 Clientes")
+    with st.expander("🔧 Debug: Prophet instalado?"):
+        st.code(f"PROPHET_OK = {PROPHET_OK}")
+        if not PROPHET_OK:
+            try:
+                from prophet import Prophet as _TesteProphet
+                st.write("Import direto funcionou — estranho, PROPHET_OK deveria ser True")
+            except Exception as _e_prophet_debug:
+                st.code(f"Erro ao importar: {type(_e_prophet_debug).__name__}: {_e_prophet_debug}")
     if st.session_state.get("_limpar_busca_cliente"):
         st.session_state["busca_cliente_nome"]=""
         st.session_state["_limpar_busca_cliente"]=False
