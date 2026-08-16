@@ -6833,7 +6833,16 @@ elif pg=="ml_produtos":
         for idx_mlp,prod_mlp in enumerate(top_produtos_mlp):
             texto_pb_mlp.caption(f"Processando {idx_mlp+1} de {len(top_produtos_mlp)}: {str(prod_mlp)[:50]}")
             serie_mlp=serie_mensal_produto(df_v_calc,"_ProdutoUnico",prod_mlp,data_col,metrica_col)
-            melhor_mlp,rank_mlp=melhor_modelo(serie_mlp,modelos_mlp)
+            # Croston/TSB só valem a pena testar em produto de venda intermitente
+            # (muitos meses com zero venda). Pular eles em produto de venda regular
+            # evita que ganhem o backtest por acaso e depois errem feio na previsão
+            # de verdade — mesma correção já aplicada no Config ML.
+            _pct_zeros_mlp=float((pd.to_numeric(serie_mlp,errors="coerce").fillna(0)==0).mean()) if len(serie_mlp)>0 else 0.0
+            if _pct_zeros_mlp<0.30:
+                modelos_mlp_p=[m for m in modelos_mlp if m not in ("Croston","TSB")]
+            else:
+                modelos_mlp_p=modelos_mlp
+            melhor_mlp,rank_mlp=melhor_modelo(serie_mlp,modelos_mlp_p)
             proj_mlp=treinar(serie_mlp,melhor_mlp,meses_previsao)
             ultimo_mlp=float(serie_mlp.iloc[-1])
             # Média histórica de TODO o período disponível — usada depois como peso de
@@ -6976,11 +6985,22 @@ elif pg=="ml_produtos":
         ok_mask=resultado["status"]=="ok"
         n_ok=int(ok_mask.sum())
         mape_medio_mlp=resultado.loc[ok_mask,"mape"].dropna().mean() if "mape" in resultado.columns else None
-        mc_cols=st.columns(4)
+        # MAPE ponderado pelo tamanho do produto (média histórica de venda) — calculado
+        # aqui em cima também, pra aparecer junto com o MAPE médio simples no topo,
+        # não só escondido no expander mais abaixo.
+        mape_pond_topo_mlp=None
+        if "mape" in resultado.columns and "media_historica" in resultado.columns and n_ok>0:
+            _df_pond_topo_mlp=resultado.loc[ok_mask].copy()
+            _df_pond_topo_mlp["_peso"]=pd.to_numeric(_df_pond_topo_mlp["media_historica"],errors="coerce").fillna(0).clip(lower=0)
+            _soma_peso_topo_mlp=_df_pond_topo_mlp["_peso"].sum()
+            if _soma_peso_topo_mlp>0:
+                mape_pond_topo_mlp=(_df_pond_topo_mlp["mape"]*_df_pond_topo_mlp["_peso"]).sum()/_soma_peso_topo_mlp
+        mc_cols=st.columns(5)
         mc(mc_cols[0],"Produtos analisados",str(len(resultado)),"b")
         mc(mc_cols[1],"Previsões geradas",str(n_ok),"g")
         mc(mc_cols[2],"Sem dados suficientes",str(len(resultado)-n_ok),"y")
         mc(mc_cols[3],"MAPE médio",f"{mape_medio_mlp:.1f}%" if mape_medio_mlp is not None and pd.notna(mape_medio_mlp) else "—","g")
+        mc(mc_cols[4],"MAPE ponderado",f"{mape_pond_topo_mlp:.1f}%" if mape_pond_topo_mlp is not None and pd.notna(mape_pond_topo_mlp) else "—","g")
 
         # MAPE agrupado por modelo escolhido — quantos produtos cada modelo venceu
         # e qual o erro médio DAQUELE grupo especificamente (não do total geral).
