@@ -37,6 +37,7 @@ except: STATS_OK = False
 try:
     from prophet import Prophet; PROPHET_OK = True
 except: PROPHET_OK = False
+_DEBUG_ULTIMO_ERRO_PROPHET={"msg":None}
 
 # ═══════════════════════════════════════════════════
 # CONFIG
@@ -1874,7 +1875,7 @@ def treinar(serie,modelo,n=6):
             return pd.Series(fc["yhat"].tail(n).values)
     except Exception as _e_treinar:
         if modelo=="Prophet":
-            st.session_state["_debug_ultimo_erro_prophet"]=f"{type(_e_treinar).__name__}: {_e_treinar}"
+            _DEBUG_ULTIMO_ERRO_PROPHET["msg"]=f"{type(_e_treinar).__name__}: {_e_treinar}"
         pass
     return None
 
@@ -3352,7 +3353,7 @@ if pg=="boas_vindas":
 elif pg=="clientes":
     hdr("👥 Clientes")
     with st.expander("🔧 Debug: Prophet instalado?"):
-        st.code(f"Último erro do Prophet ao treinar: {st.session_state.get('_debug_ultimo_erro_prophet','(nenhum registrado ainda nessa sessão)')}")
+        st.code(f"Último erro do Prophet ao treinar: {_DEBUG_ULTIMO_ERRO_PROPHET['msg'] or '(nenhum registrado ainda nessa sessão)'}")
     if st.session_state.get("_limpar_busca_cliente"):
         st.session_state["busca_cliente_nome"]=""
         st.session_state["_limpar_busca_cliente"]=False
