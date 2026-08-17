@@ -133,16 +133,19 @@ img, iframe{filter:invert(1) hue-rotate(180deg);}
   font-weight:700;font-size:1.05rem;margin:0 auto 12px;border:2px solid rgba(169,118,47,.6);}
 .wc-step-t{font-weight:700;color:#14243B;font-size:.9rem;margin-bottom:3px;}
 .wc-step-s{color:#9CA3AF;font-size:.76rem;}
-.wc-card-exp{background:#0F6E56;color:#fff;border-radius:12px;padding:16px 20px;
-  margin-bottom:16px;border:1px solid rgba(169,118,47,.55);cursor:pointer;}
-.wc-card-exp summary{font-family:Georgia,serif;font-weight:700;font-size:.85rem;
+.wc-card-exp{background:linear-gradient(150deg,#0F6E56 0%,#085041 100%);color:#fff;border-radius:14px;
+  padding:20px 22px;margin-bottom:16px;border:1px solid rgba(169,118,47,.55);cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .15s ease, box-shadow .15s ease;}
+.wc-card-exp:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.26);border-color:#D9BD82;}
+.wc-card-exp summary{font-family:Georgia,serif;font-weight:700;font-size:.95rem;
   letter-spacing:.03em;list-style:none;cursor:pointer;color:#fff;}
 .wc-card-exp summary::-webkit-details-marker{display:none;}
-.wc-card-exp summary::after{content:"▾";float:right;color:#9FE1CB;}
+.wc-card-exp summary::after{content:"▾";float:right;color:#D9BD82;}
 .wc-card-exp[open] summary::after{content:"▴";}
-.wc-card-exp-content{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.2);}
+.wc-card-exp-content{margin-top:14px;padding-top:12px;border-top:1px solid rgba(217,189,130,.35);}
 .wc-card-exp ul{list-style:none;margin:0;padding:0;font-size:.8rem;line-height:1.95;color:#F0FBF7;}
-.wc-card-exp li{margin-bottom:4px;}
+.wc-card-exp li{margin-bottom:4px;padding-left:20px;position:relative;}
+.wc-card-exp li::before{content:"✓";position:absolute;left:0;color:#D9BD82;font-weight:700;}
 </style>""", unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════════
@@ -3315,10 +3318,10 @@ if pg=="boas_vindas":
       <summary>📊 Módulo Financeiro</summary>
       <div class="wc-card-exp-content">
         <ul>
-          <li>📊 Demonstrações completas — DRE, Balanço e Fluxo de Caixa, sempre atualizados</li>
-          <li>📈 Mais de 15 indicadores de saúde financeira, calculados automaticamente</li>
-          <li>🚨 Alertas quando algo sai do esperado, sem precisar procurar o problema</li>
-          <li>🎯 Simulação de cenários — o que acontece se as vendas caírem ou subirem</li>
+          <li>Demonstrações completas — DRE, Balanço e Fluxo de Caixa, sempre atualizados</li>
+          <li>Mais de 15 indicadores de saúde financeira, calculados automaticamente</li>
+          <li>Alertas quando algo sai do esperado, sem precisar procurar o problema</li>
+          <li>Simulação de cenários — o que acontece se as vendas caírem ou subirem</li>
         </ul>
       </div>
     </details>""",unsafe_allow_html=True)
@@ -3327,11 +3330,11 @@ if pg=="boas_vindas":
       <summary>📈 Módulo Comercial</summary>
       <div class="wc-card-exp-content">
         <ul>
-          <li>📈 Previsão de vendas futuras, produto por produto, com base no histórico real</li>
-          <li>📦 Sugestão automática de quanto comprar e quando, sem depender de achismo</li>
-          <li>🚨 Aviso antecipado de produtos que podem faltar ou sobrar no estoque</li>
-          <li>🎯 Ranking dos produtos que mais pesam no faturamento</li>
-          <li>🚚 Avaliação de fornecedores por prazo, qualidade e entrega</li>
+          <li>Previsão de vendas futuras, produto por produto, com base no histórico real</li>
+          <li>Sugestão automática de quanto comprar e quando, sem depender de achismo</li>
+          <li>Aviso antecipado de produtos que podem faltar ou sobrar no estoque</li>
+          <li>Ranking dos produtos que mais pesam no faturamento</li>
+          <li>Avaliação de fornecedores por prazo, qualidade e entrega</li>
         </ul>
       </div>
     </details>""",unsafe_allow_html=True)
@@ -3340,10 +3343,10 @@ if pg=="boas_vindas":
       <summary>✨ Inteligência Artificial</summary>
       <div class="wc-card-exp-content">
         <ul>
-          <li>🔮 O sistema testa várias formas de prever a demanda e escolhe a mais precisa pra cada produto</li>
-          <li>✅ Toda previsão é testada contra o que realmente aconteceu, antes de confiar nela</li>
-          <li>🧭 Relatórios executivos escritos automaticamente, cruzando Comercial e Financeiro</li>
-          <li>📄 Pronto pra imprimir ou apresentar, sem trabalho manual</li>
+          <li>O sistema testa várias formas de prever a demanda e escolhe a mais precisa pra cada produto</li>
+          <li>Toda previsão é testada contra o que realmente aconteceu, antes de confiar nela</li>
+          <li>Relatórios executivos escritos automaticamente, cruzando Comercial e Financeiro</li>
+          <li>Pronto pra imprimir ou apresentar, sem trabalho manual</li>
         </ul>
       </div>
     </details>""",unsafe_allow_html=True)    
