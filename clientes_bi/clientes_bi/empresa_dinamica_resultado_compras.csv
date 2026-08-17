@@ -1,0 +1,904 @@
+﻿Produto;Fornecedor;Classe;Volatilidade;EstoqueAtual;DemandaPrevMes(un);CoberturaDias;MinDias;MaxDias;LeadTimeDias;GiroAtual;GiroAlvo;Status;QtdSugerida;CustoUnitario;ValorSugerido
+PC001173;Não informado;A;Baixa;282,0;393,7;21,5;15;30;15;16,98;16,22;🟢 OK;0,0;700,94;0,0
+PC002592;Não informado;A;Baixa;481,0;277,9;51,9;15;30;15;7,03;16,22;🟡 Estoque excessivo;0,0;645,78;0,0
+PC002709;Não informado;A;Baixa;256,0;221,7;34,6;15;30;15;10,54;16,22;🟡 Estoque excessivo;0,0;888,13;0,0
+PC003083;Não informado;A;Baixa;334,0;214,5;46,7;15;30;15;7,81;16,22;🟡 Estoque excessivo;0,0;833,6;0,0
+PC000960;Não informado;A;Baixa;537,0;229,4;70,2;15;30;15;5,2;16,22;🟡 Estoque excessivo;0,0;781,29;0,0
+PC000661;Não informado;A;Baixa;234,0;206,2;34,0;15;30;15;10,72;16,22;🟡 Estoque excessivo;0,0;664,27;0,0
+PC005395;Não informado;A;Baixa;173,0;187,0;27,8;15;30;15;13,15;16,22;🟢 OK;0,0;777,99;0,0
+PC008800;Não informado;A;Baixa;798,0;438,9;54,5;15;30;15;6,69;16,22;🟡 Estoque excessivo;0,0;429,23;0,0
+PC004563;Não informado;A;Baixa;349,0;207,7;50,4;15;30;15;7,24;16,22;🟡 Estoque excessivo;0,0;631,29;0,0
+PC001450;Não informado;A;Baixa;384,0;170,1;67,7;15;30;15;5,39;16,22;🟡 Estoque excessivo;0,0;603,24;0,0
+PC000672;Não informado;A;Baixa;506,0;321,0;47,3;15;30;15;7,72;16,22;🟡 Estoque excessivo;0,0;567,05;0,0
+PC003019;Não informado;A;Média;240,0;289,6;24,9;15;30;15;14,68;16,22;🟢 OK;0,0;540,14;0,0
+PC003925;Não informado;A;Baixa;566,0;469,0;36,2;15;30;15;10,08;16,22;🟡 Estoque excessivo;0,0;373,91;0,0
+PC002154;Não informado;A;Baixa;379,0;190,4;59,7;15;30;15;6,11;16,22;🟡 Estoque excessivo;0,0;816,91;0,0
+PC004811;Não informado;A;Baixa;310,0;195,5;47,6;15;30;15;7,67;16,22;🟡 Estoque excessivo;0,0;493,51;0,0
+PC003795;Não informado;A;Baixa;417,0;137,7;90,9;15;30;15;4,02;16,22;🟡 Estoque excessivo;0,0;571,2;0,0
+PC009877;Não informado;A;Baixa;141,0;104,4;40,5;15;30;15;9,01;16,22;🟡 Estoque excessivo;0,0;670,74;0,0
+PC008523;Não informado;A;Baixa;190,0;111,9;50,9;15;30;15;7,17;16,22;🟡 Estoque excessivo;0,0;896,53;0,0
+PC003936;Não informado;A;Baixa;235,0;66,5;106,0;15;30;15;3,44;16,22;🟡 Estoque excessivo;0,0;1084,59;0,0
+PC009813;Não informado;A;Baixa;192,0;155,6;37,0;15;30;15;9,86;16,22;🟡 Estoque excessivo;0,0;792,37;0,0
+PC008512;Não informado;A;Baixa;536,0;307,1;52,4;15;30;15;6,97;16,22;🟡 Estoque excessivo;0,0;384,63;0,0
+PC004629;Não informado;A;Baixa;93,0;127,4;21,9;15;30;15;16,66;16,22;🟢 OK;0,0;951,66;0,0
+PC000587;Não informado;A;Baixa;140,0;73,5;57,1;15;30;15;6,39;16,22;🟡 Estoque excessivo;0,0;847,54;0,0
+PC004171;Não informado;A;Baixa;217,0;101,1;64,4;15;30;15;5,67;16,22;🟡 Estoque excessivo;0,0;737,69;0,0
+PC003690;Não informado;A;Baixa;307,0;165,3;55,7;15;30;15;6,55;16,22;🟡 Estoque excessivo;0,0;556,72;0,0
+PC002515;Não informado;A;Baixa;106,0;84,8;37,5;15;30;15;9,74;16,22;🟡 Estoque excessivo;0,0;1025,27;0,0
+PC000403;Não informado;A;Baixa;221,0;86,2;76,9;15;30;15;4,75;16,22;🟡 Estoque excessivo;0,0;859,25;0,0
+PC002624;Não informado;A;Baixa;284,0;123,9;68,8;15;30;15;5,31;16,22;🟡 Estoque excessivo;0,0;555,87;0,0
+PC004051;Não informado;A;Baixa;317,0;100,7;94,4;15;30;15;3,87;16,22;🟡 Estoque excessivo;0,0;726,83;0,0
+PC000339;Não informado;A;Baixa;120,0;78,0;46,2;15;30;15;7,91;16,22;🟡 Estoque excessivo;0,0;812,54;0,0
+PC006419;Não informado;A;Baixa;49,0;87,8;16,7;15;30;15;21,79;16,22;🟢 OK;0,0;741,2;0,0
+PC004747;Não informado;A;Média;33,0;104,7;9,5;15;30;15;38,61;16,22;🚨 RUPTURA IMINENTE;72,0;967,46;69395,61
+PC006539;Não informado;A;Baixa;44,0;96,7;13,7;15;30;15;26,74;16,22;🚨 RUPTURA IMINENTE;53,0;876,79;46200,68
+PC008192;Não informado;A;Baixa;169,0;53,4;95,0;15;30;15;3,84;16,22;🟡 Estoque excessivo;0,0;1117,81;0,0
+PC007827;Não informado;A;Baixa;110,0;58,4;56,5;15;30;15;6,46;16,22;🟡 Estoque excessivo;0,0;943,76;0,0
+PC007840;Não informado;A;Baixa;69,0;144,3;14,4;15;30;15;25,44;16,22;🚨 RUPTURA IMINENTE;75,0;539,91;40628,26
+PC008362;Não informado;A;Baixa;94,0;102,8;27,4;15;30;15;13,31;16,22;🟢 OK;0,0;669,22;0,0
+PC003648;Não informado;A;Média;171,0;111,5;46,0;15;30;15;7,93;16,22;🟡 Estoque excessivo;0,0;728,53;0,0
+PC006378;Não informado;A;Baixa;47,0;70,0;20,1;15;30;15;18,12;16,22;🟢 OK;0,0;864,81;0,0
+PC001227;Não informado;B;Baixa;134,0;329,3;12,2;20;40;15;29,9;12,17;🚨 RUPTURA IMINENTE;305,0;236,64;72203,86
+PC001386;Não informado;B;Baixa;160,0;66,3;72,4;20;40;15;5,04;12,17;🟡 Estoque excessivo;0,0;750,4;0,0
+PC004491;Não informado;B;Baixa;167,0;59,4;84,3;20;40;15;4,33;12,17;🟡 Estoque excessivo;0,0;662,38;0,0
+PC005715;Não informado;B;Média;169,0;102,3;49,5;20;40;15;7,37;12,17;🟡 Estoque excessivo;0,0;786,55;0,0
+PC004512;Não informado;B;Baixa;172,0;87,9;58,7;20;40;15;6,22;12,17;🟡 Estoque excessivo;0,0;937,3;0,0
+PC007786;Não informado;B;Baixa;105,0;71,8;43,9;20;40;15;8,32;12,17;🟡 Estoque excessivo;0,0;631,02;0,0
+PC003968;Não informado;B;Baixa;214,0;125,1;51,3;20;40;15;7,11;12,17;🟡 Estoque excessivo;0,0;409,87;0,0
+PC008768;Não informado;B;Baixa;179,0;135,8;39,5;20;40;15;9,23;12,17;🟢 OK;0,0;504,63;0,0
+PC008544;Não informado;B;Baixa;262,0;81,0;97,1;20;40;15;3,76;12,17;🟡 Estoque excessivo;0,0;717,19;0,0
+PC008789;Não informado;B;Baixa;28,0;44,1;19,0;20;40;15;19,18;12,17;🔴 Comprar agora;31,0;699,52;21581,02
+PC008288;Não informado;B;Baixa;139,0;63,8;65,3;20;40;15;5,59;12,17;🟡 Estoque excessivo;0,0;605,9;0,0
+PC000789;Não informado;B;Baixa;68,0;72,2;28,2;20;40;15;12,92;12,17;🟢 OK;0,0;798,97;0,0
+PC008064;Não informado;B;Baixa;123,0;171,5;21,5;20;40;15;16,97;12,17;🟢 OK;0,0;400,08;0,0
+PC002176;Não informado;B;Baixa;141,0;53,1;79,7;20;40;15;4,58;12,17;🟡 Estoque excessivo;0,0;872,17;0,0
+PC008843;Não informado;B;Baixa;113,0;47,9;70,8;20;40;15;5,15;12,17;🟡 Estoque excessivo;0,0;900,86;0,0
+PC007008;Não informado;B;Média;173,0;184,4;28,1;20;40;15;12,97;12,17;🟢 OK;0,0;358,36;0,0
+PC002464;Não informado;B;Baixa;51,0;38,6;39,7;20;40;15;9,2;12,17;🟢 OK;0,0;854,4;0,0
+PC003467;Não informado;B;Baixa;60,0;65,8;27,4;20;40;15;13,34;12,17;🟢 OK;0,0;524,32;0,0
+PC008992;Não informado;B;Baixa;121,0;60,1;60,4;20;40;15;6,04;12,17;🟡 Estoque excessivo;0,0;1076,5;0,0
+PC003091;Não informado;B;Baixa;204,0;76,6;79,9;20;40;15;4,57;12,17;🟡 Estoque excessivo;0,0;370,12;0,0
+PC009472;Não informado;B;Baixa;128,0;37,7;101,8;20;40;15;3,59;12,17;🟡 Estoque excessivo;0,0;701,02;0,0
+PC001600;Não informado;B;Baixa;84,0;65,3;38,6;20;40;15;9,46;12,17;🟢 OK;0,0;854,5;0,0
+PC007061;Não informado;B;Baixa;253,0;76,0;99,8;20;40;15;3,66;12,17;🟡 Estoque excessivo;0,0;428,03;0,0
+PC006291;Não informado;B;Baixa;106,0;39,4;80,8;20;40;15;4,52;12,17;🟡 Estoque excessivo;0,0;789,68;0,0
+PC002922;Não informado;B;Baixa;109,0;41,4;79,0;20;40;15;4,62;12,17;🟡 Estoque excessivo;0,0;826,87;0,0
+PC006869;Não informado;B;Baixa;70,0;44,0;47,8;20;40;15;7,64;12,17;🟡 Estoque excessivo;0,0;878,69;0,0
+PC008597;Não informado;B;Baixa;89,0;40,5;66,0;20;40;15;5,53;12,17;🟡 Estoque excessivo;0,0;960,38;0,0
+PC000448;Não informado;B;Baixa;293,0;100,3;87,6;20;40;15;4,17;12,17;🟡 Estoque excessivo;0,0;331,68;0,0
+PC009280;Não informado;B;Baixa;108,0;34,9;92,9;20;40;15;3,93;12,17;🟡 Estoque excessivo;0,0;880,35;0,0
+PC001322;Não informado;B;Baixa;26,0;35,3;22,1;20;40;15;16,53;12,17;🟢 OK;0,0;969,9;0,0
+PC009675;Não informado;B;Baixa;237,0;84,0;84,6;20;40;15;4,31;12,17;🟡 Estoque excessivo;0,0;395,21;0,0
+PC000128;Não informado;B;Baixa;54,0;62,2;26,0;20;40;15;14,02;12,17;🟢 OK;0,0;489,21;0,0
+PC002507;Não informado;B;Baixa;93,0;60,7;45,9;20;40;15;7,95;12,17;🟡 Estoque excessivo;0,0;445,9;0,0
+PC002197;Não informado;B;Baixa;48,0;62,6;23,0;20;40;15;15,88;12,17;🟢 OK;0,0;349,44;0,0
+PC004179;Não informado;B;Baixa;104,0;65,6;47,5;20;40;15;7,68;12,17;🟡 Estoque excessivo;0,0;425,56;0,0
+PC000213;Não informado;B;Baixa;30,0;56,2;16,0;20;40;15;22,8;12,17;🔴 Comprar agora;45,0;471,31;21189,36
+PC002699;Não informado;B;Baixa;43,0;46,9;27,5;20;40;15;13,26;12,17;🟢 OK;0,0;753,98;0,0
+PC005011;Não informado;B;Baixa;72,0;30,3;71,2;20;40;15;5,12;12,17;🟡 Estoque excessivo;0,0;853,23;0,0
+PC005600;Não informado;B;Baixa;68,0;34,6;58,9;20;40;15;6,2;12,17;🟡 Estoque excessivo;0,0;719,57;0,0
+PC003989;Não informado;B;Baixa;198,0;107,8;55,1;20;40;15;6,62;12,17;🟡 Estoque excessivo;0,0;229,3;0,0
+PC008275;Não informado;B;Baixa;48,0;29,0;49,7;20;40;15;7,35;12,17;🟡 Estoque excessivo;0,0;916,18;0,0
+PC002835;Não informado;C;Baixa;115,0;42,9;80,3;30;55;15;4,54;8,59;🟡 Estoque excessivo;0,0;609,96;0,0
+PC005203;Não informado;C;Baixa;40,0;43,0;27,9;30;55;15;13,07;8,59;🔴 Comprar agora;39,0;742,82;28795,69
+PC008042;Não informado;C;Baixa;33,0;27,6;35,9;30;55;15;10,16;8,59;🟢 OK;0,0;974,34;0,0
+PC005930;Não informado;C;Baixa;180,0;112,8;47,9;30;55;15;7,63;8,59;🟢 OK;0,0;302,81;0,0
+PC000019;Não informado;C;Baixa;142,0;249,6;17,1;30;55;15;21,39;8,59;🔴 Comprar agora;316,0;362,45;114407,5
+PC007379;Não informado;C;Baixa;72,0;34,3;63,0;30;55;15;5,79;8,59;🟡 Estoque excessivo;0,0;563,73;0,0
+PC009941;Não informado;C;Baixa;33,0;31,9;31,0;30;55;15;11,76;8,59;🟢 OK;0,0;670,66;0,0
+PC000981;Não informado;C;Baixa;148,0;68,9;64,4;30;55;15;5,67;8,59;🟡 Estoque excessivo;0,0;399,44;0,0
+PC002571;Não informado;C;Baixa;29,0;35,6;24,4;30;55;15;14,95;8,59;🔴 Comprar agora;36,0;628,74;22828,74
+PC000011;Não informado;C;Baixa;17,0;31,5;16,2;30;55;15;22,56;8,59;🔴 Comprar agora;41,0;670,95;27367,67
+PC000064;Não informado;C;Baixa;49,0;63,4;23,2;30;55;15;15,75;8,59;🔴 Comprar agora;67,0;571,45;38467,09
+PC001811;Não informado;C;Baixa;83,0;32,5;76,6;30;55;15;4,76;8,59;🟡 Estoque excessivo;0,0;707,64;0,0
+PC005461;Não informado;C;Baixa;253,0;80,8;93,9;30;55;15;3,89;8,59;🟡 Estoque excessivo;0,0;268,91;0,0
+PC003605;Não informado;C;Baixa;77,0;33,7;68,4;30;55;15;5,33;8,59;🟡 Estoque excessivo;0,0;801,58;0,0
+PC004000;Não informado;C;Baixa;129,0;42,0;92,1;30;55;15;3,96;8,59;🟡 Estoque excessivo;0,0;502,71;0,0
+PC002389;Não informado;C;Baixa;30,0;83,6;10,8;30;55;15;33,91;8,59;🚨 RUPTURA IMINENTE;123,0;819,52;101048,98
+PC007315;Não informado;C;Baixa;33,0;36,1;27,4;30;55;15;13,32;8,59;🔴 Comprar agora;33,0;539,28;17934,98
+PC004768;Não informado;C;Baixa;56,0;47,4;35,4;30;55;15;10,31;8,59;🟢 OK;0,0;511,42;0,0
+PC001312;Não informado;C;Baixa;50,0;54,6;27,4;30;55;15;13,3;8,59;🔴 Comprar agora;50,0;675,68;33912,46
+PC009824;Não informado;C;Baixa;136,0;78,8;51,8;30;55;15;7,05;8,59;🟢 OK;0,0;473,47;0,0
+PC003050;Não informado;C;Baixa;10,0;90,7;3,3;30;55;15;110,41;8,59;🚨 RUPTURA IMINENTE;156,0;741,34;115920,1
+PC007648;Não informado;C;Baixa;52,0;26,4;59,0;30;55;15;6,19;8,59;🟡 Estoque excessivo;0,0;843,58;0,0
+PC006826;Não informado;C;Baixa;43,0;28,2;45,8;30;55;15;7,97;8,59;🟢 OK;0,0;600,24;0,0
+PC003562;Não informado;C;Baixa;93,0;39,6;70,4;30;55;15;5,18;8,59;🟡 Estoque excessivo;0,0;462,35;0,0
+PC008853;Não informado;C;Baixa;61,0;23,3;78,4;30;55;15;4,66;8,59;🟡 Estoque excessivo;0,0;791,37;0,0
+PC006867;Não informado;C;Baixa;64,0;26,4;72,7;30;55;15;5,02;8,59;🟡 Estoque excessivo;0,0;679,16;0,0
+PC004992;Não informado;C;Baixa;38,0;55,5;20,5;30;55;15;17,78;8,59;🔴 Comprar agora;64,0;362,77;23153,63
+PC000896;Não informado;C;Baixa;142,0;104,9;40,6;30;55;15;8,99;8,59;🟢 OK;0,0;196,36;0,0
+PC009664;Não informado;C;Baixa;37,0;21,2;52,4;30;55;15;6,97;8,59;🟢 OK;0,0;802,54;0,0
+PC006411;Não informado;C;Baixa;84,0;40,8;61,8;30;55;15;5,9;8,59;🟡 Estoque excessivo;0,0;466,82;0,0
+PC004309;Não informado;C;Baixa;41,0;34,5;35,7;30;55;15;10,23;8,59;🟢 OK;0,0;637,27;0,0
+PC007808;Não informado;C;Baixa;80,0;50,3;47,7;30;55;15;7,66;8,59;🟢 OK;0,0;386,02;0,0
+PC001898;Não informado;C;Baixa;55,0;33,1;49,9;30;55;15;7,31;8,59;🟢 OK;0,0;801,97;0,0
+PC009152;Não informado;C;Baixa;84,0;26,5;95,0;30;55;15;3,84;8,59;🟡 Estoque excessivo;0,0;796,12;0,0
+PC007082;Não informado;C;Baixa;31,0;21,2;43,9;30;55;15;8,31;8,59;🟢 OK;0,0;767,91;0,0
+PC003541;Não informado;C;Baixa;112,0;37,1;90,5;30;55;15;4,03;8,59;🟡 Estoque excessivo;0,0;478,41;0,0
+PC005387;Não informado;C;Baixa;29,0;28,5;30,5;30;55;15;11,97;8,59;🟢 OK;0,0;721,7;0,0
+PC002259;Não informado;C;Baixa;46,0;18,7;73,8;30;55;15;4,95;8,59;🟡 Estoque excessivo;0,0;999,45;0,0
+PC006611;Não informado;C;Baixa;197,0;265,5;22,3;30;55;15;16,4;8,59;🔴 Comprar agora;290,0;466,46;135137,91
+PC000234;Não informado;C;Baixa;46,0;18,5;74,7;30;55;15;4,89;8,59;🟡 Estoque excessivo;0,0;730,12;0,0
+PC003531;Não informado;C;Baixa;324,0;146,2;66,5;30;55;15;5,49;8,59;🟡 Estoque excessivo;0,0;101,01;0,0
+PC008320;Não informado;C;Baixa;51,0;38,2;40,0;30;55;15;9,12;8,59;🟢 OK;0,0;641,57;0,0
+PC006186;Não informado;C;Baixa;23,0;23,9;28,8;30;55;15;12,66;8,59;🔴 Comprar agora;21,0;816,27;17046,86
+PC006720;Não informado;C;Baixa;23,0;26,0;26,5;30;55;15;13,76;8,59;🔴 Comprar agora;25,0;775,96;19168,47
+PC000810;Não informado;C;Baixa;67,0;61,2;32,8;30;55;15;11,12;8,59;🟢 OK;0,0;397,67;0,0
+PC009685;Não informado;C;Baixa;193,0;58,9;98,3;30;55;15;3,71;8,59;🟡 Estoque excessivo;0,0;278,1;0,0
+PC002773;Não informado;C;Média;53,0;61,2;26,0;30;55;15;14,05;8,59;🔴 Comprar agora;59,0;463,28;27432,68
+PC002848;Não informado;C;Baixa;53,0;42,3;37,6;30;55;15;9,72;8,59;🟢 OK;0,0;634,13;0,0
+PC005568;Não informado;C;Baixa;54,0;27,6;58,7;30;55;15;6,22;8,59;🟡 Estoque excessivo;0,0;545,77;0,0
+PC004384;Não informado;C;Baixa;28,0;36,8;22,8;30;55;15;16,01;8,59;🔴 Comprar agora;40,0;560,42;22152,64
+PC000490;Não informado;C;Baixa;78,0;35,5;65,9;30;55;15;5,54;8,59;🟡 Estoque excessivo;0,0;365,39;0,0
+PC009043;Não informado;C;Média;82,0;48,1;51,2;30;55;15;7,13;8,59;🟢 OK;0,0;525,98;0,0
+PC006784;Não informado;C;Baixa;105,0;51,8;60,8;30;55;15;6,0;8,59;🟡 Estoque excessivo;0,0;413,16;0,0
+PC008096;Não informado;C;Baixa;51,0;49,0;31,3;30;55;15;11,68;8,59;🟢 OK;0,0;433,54;0,0
+PC007392;Não informado;C;Baixa;156,0;177,9;26,3;30;55;15;13,88;8,59;🔴 Comprar agora;170,0;85,57;14565,02
+PC000576;Não informado;C;Baixa;55,0;21,9;75,5;30;55;15;4,84;8,59;🟡 Estoque excessivo;0,0;564,28;0,0
+PC008403;Não informado;C;Baixa;40,0;15,4;77,9;30;55;15;4,68;8,59;🟡 Estoque excessivo;0,0;740,99;0,0
+PC009600;Não informado;C;Baixa;62,0;20,6;90,2;30;55;15;4,04;8,59;🟡 Estoque excessivo;0,0;660,32;0,0
+PC002195;Não informado;C;Baixa;74,0;41,1;54,0;30;55;15;6,75;8,59;🟢 OK;0,0;360,94;0,0
+PC005579;Não informado;C;Baixa;23,0;45,3;15,2;30;55;15;23,97;8,59;🔴 Comprar agora;60,0;302,6;18176,18
+PC006035;Não informado;C;Baixa;100,0;51,7;58,0;30;55;15;6,3;8,59;🟡 Estoque excessivo;0,0;452,46;0,0
+PC000085;Não informado;C;Baixa;46,0;52,6;26,3;30;55;15;13,9;8,59;🔴 Comprar agora;50,0;407,15;20512,35
+PC008704;Não informado;C;Baixa;60,0;129,4;13,9;30;55;15;26,24;8,59;🚨 RUPTURA IMINENTE;177,0;458,94;81360,92
+PC003987;Não informado;C;Baixa;53,0;113,4;14,0;30;55;15;26,04;8,59;🚨 RUPTURA IMINENTE;155,0;187,33;29030,76
+PC005408;Não informado;C;Baixa;102,0;31,2;98,0;30;55;15;3,73;8,59;🟡 Estoque excessivo;0,0;506,39;0,0
+PC006483;Não informado;C;Baixa;17,0;17,3;29,4;30;55;15;12,41;8,59;🔴 Comprar agora;15,0;740,93;10953,53
+PC005653;Não informado;C;Baixa;117,0;72,9;48,1;30;55;15;7,58;8,59;🟢 OK;0,0;578,13;0,0
+PC007722;Não informado;C;Baixa;67,0;31,9;62,9;30;55;15;5,8;8,59;🟡 Estoque excessivo;0,0;424,59;0,0
+PC009952;Não informado;C;Baixa;36,0;66,6;16,2;30;55;15;22,51;8,59;🔴 Comprar agora;86,0;727,51;62628,93
+PC003667;Não informado;C;Baixa;19,0;16,3;34,9;30;55;15;10,45;8,59;🟢 OK;0,0;943,71;0,0
+PC004896;Não informado;C;Baixa;41,0;29,1;42,3;30;55;15;8,64;8,59;🟢 OK;0,0;476,2;0,0
+PC006997;Não informado;C;Baixa;28,0;30,4;27,6;30;55;15;13,23;8,59;🔴 Comprar agora;28,0;838,25;23311,24
+PC009611;Não informado;C;Baixa;51,0;23,3;65,8;30;55;15;5,55;8,59;🟡 Estoque excessivo;0,0;630,6;0,0
+PC002730;Não informado;C;Baixa;37,0;35,6;31,2;30;55;15;11,72;8,59;🟢 OK;0,0;366,17;0,0
+PC008160;Não informado;C;Baixa;86,0;29,9;86,4;30;55;15;4,23;8,59;🟡 Estoque excessivo;0,0;569,67;0,0
+PC003157;Não informado;C;Baixa;42,0;38,8;32,5;30;55;15;11,23;8,59;🟢 OK;0,0;541,32;0,0
+PC004928;Não informado;C;Baixa;39,0;42,1;27,8;30;55;15;13,14;8,59;🔴 Comprar agora;38,0;610,84;23354,95
+PC001291;Não informado;C;Média;23,0;65,6;10,5;30;55;15;34,69;8,59;🚨 RUPTURA IMINENTE;97,0;353,07;34328,29
+PC006698;Não informado;C;Baixa;55,0;18,2;90,5;30;55;15;4,03;8,59;🟡 Estoque excessivo;0,0;708,71;0,0
+PC006954;Não informado;C;Baixa;48,0;19,4;74,1;30;55;15;4,93;8,59;🟡 Estoque excessivo;0,0;766,24;0,0
+PC006163;Não informado;C;Baixa;44,0;16,4;80,7;30;55;15;4,52;8,59;🟡 Estoque excessivo;0,0;933,91;0,0
+PC002581;Não informado;C;Baixa;91,0;69,1;39,5;30;55;15;9,24;8,59;🟢 OK;0,0;271,09;0,0
+PC005184;Não informado;C;Baixa;92,0;27,2;101,5;30;55;15;3,6;8,59;🟡 Estoque excessivo;0,0;393,88;0,0
+PC006272;Não informado;C;Baixa;102,0;96,2;31,8;30;55;15;11,48;8,59;🟢 OK;0,0;235,43;0,0
+PC008213;Não informado;C;Média;11,0;31,7;10,4;30;55;15;35,05;8,59;🚨 RUPTURA IMINENTE;47,0;817,13;38482,7
+PC008256;Não informado;C;Baixa;19,0;17,6;32,4;30;55;15;11,27;8,59;🟢 OK;0,0;852,34;0,0
+PC002901;Não informado;C;Baixa;55,0;31,9;51,7;30;55;15;7,06;8,59;🟢 OK;0,0;364,87;0,0
+PC001941;Não informado;C;Baixa;37,0;12,9;85,7;30;55;15;4,26;8,59;🟡 Estoque excessivo;0,0;856,24;0,0
+PC009045;Não informado;C;Média;14,0;26,7;15,7;30;55;15;23,22;8,59;🔴 Comprar agora;35,0;816,44;28569,15
+PC001696;Não informado;C;Baixa;58,0;34,7;50,1;30;55;15;7,28;8,59;🟢 OK;0,0;412,3;0,0
+PC001301;Não informado;D;Baixa;18,0;17,5;30,9;40;75;15;11,82;6,35;🔴 Comprar agora;26,0;636,98;16373,24
+PC007123;Não informado;D;Baixa;19,0;16,0;35,6;40;75;15;10,24;6,35;🔴 Comprar agora;21,0;730,26;15333,61
+PC004435;Não informado;D;Baixa;15,0;24,8;18,1;40;75;15;20,13;6,35;🔴 Comprar agora;47,0;832,64;39170,15
+PC001472;Não informado;D;Baixa;34,0;24,9;40,9;40;75;15;8,91;6,35;🟢 OK;0,0;541,07;0,0
+PC008981;Não informado;D;Baixa;32,0;30,9;31,1;40;75;15;11,75;6,35;🔴 Comprar agora;45,0;543,04;24585,34
+PC003072;Não informado;D;Baixa;11,0;53,5;6,2;40;75;15;59,21;6,35;🚨 RUPTURA IMINENTE;123,0;670,04;82303,28
+PC001216;Não informado;D;Baixa;43,0;15,1;85,6;40;75;15;4,27;6,35;🟡 Estoque excessivo;0,0;622,59;0,0
+PC005802;Não informado;D;Baixa;11,0;14,0;23,5;40;75;15;15,51;6,35;🔴 Comprar agora;24,0;948,51;22821,53
+PC005589;Não informado;D;Média;26,0;24,9;31,3;40;75;15;11,65;6,35;🔴 Comprar agora;36,0;897,89;32548,0
+PC004320;Não informado;D;Baixa;20,0;25,4;23,7;40;75;15;15,43;6,35;🔴 Comprar agora;43,0;521,9;22649,36
+PC005907;Não informado;D;Baixa;48,0;36,9;39,0;40;75;15;9,35;6,35;🔴 Comprar agora;44,0;579,92;25643,79
+PC000395;Não informado;D;Baixa;37,0;13,3;83,4;40;75;15;4,37;6,35;🟡 Estoque excessivo;0,0;857,9;0,0
+PC009834;Não informado;D;Média;38,0;23,6;48,3;40;75;15;7,56;6,35;🟢 OK;0,0;648,82;0,0
+PC001504;Não informado;D;Baixa;79,0;42,5;55,7;40;75;15;6,55;6,35;🟢 OK;0,0;437,01;0,0
+PC009066;Não informado;D;Baixa;101,0;89,9;33,7;40;75;15;10,83;6,35;🔴 Comprar agora;124,0;132,23;16367,37
+PC001739;Não informado;D;Baixa;13,0;13,4;29,2;40;75;15;12,52;6,35;🔴 Comprar agora;20,0;831,59;16994,84
+PC004704;Não informado;D;Baixa;33,0;14,1;70,2;40;75;15;5,2;6,35;🟢 OK;0,0;732,71;0,0
+PC008896;Não informado;D;Baixa;52,0;29,8;52,4;40;75;15;6,97;6,35;🟢 OK;0,0;704,22;0,0
+PC005226;Não informado;D;Baixa;12,0;10,9;33,0;40;75;15;11,07;6,35;🔴 Comprar agora;15,0;988,54;15120,04
+PC007187;Não informado;D;Média;10,0;22,9;13,1;40;75;15;27,86;6,35;🚨 RUPTURA IMINENTE;47,0;933,22;44099,33
+PC002827;Não informado;D;Baixa;15,0;13,4;33,7;40;75;15;10,83;6,35;🔴 Comprar agora;18,0;913,06;16787,91
+PC004714;Não informado;D;Média;39,0;19,7;59,3;40;75;15;6,15;6,35;🟢 OK;0,0;978,63;0,0
+PC001043;Não informado;D;Baixa;64,0;31,4;61,1;40;75;15;5,97;6,35;🟢 OK;0,0;587,13;0,0
+PC006634;Não informado;D;Baixa;37,0;11,9;93,5;40;75;15;3,9;6,35;🟡 Estoque excessivo;0,0;806,31;0,0
+PC000595;Não informado;D;Baixa;27,0;14,1;57,6;40;75;15;6,34;6,35;🟢 OK;0,0;639,98;0,0
+PC007136;Não informado;D;Baixa;43,0;55,6;23,2;40;75;15;15,72;6,35;🔴 Comprar agora;96,0;254,04;24369,57
+PC005034;Não informado;D;Baixa;30,0;67,7;13,3;40;75;15;27,45;6,35;🚨 RUPTURA IMINENTE;139,0;875,65;121878,3
+PC003392;Não informado;D;Baixa;13,0;11,9;32,6;40;75;15;11,18;6,35;🔴 Comprar agora;17,0;1091,36;18413,33
+PC001184;Não informado;D;Baixa;74,0;24,7;89,7;40;75;15;4,07;6,35;🟡 Estoque excessivo;0,0;428,71;0,0
+PC007883;Não informado;D;Média;25,0;25,7;29,2;40;75;15;12,49;6,35;🔴 Comprar agora;39,0;735,1;28799,42
+PC002963;Não informado;D;Baixa;32,0;16,2;59,4;40;75;15;6,15;6,35;🟢 OK;0,0;533,01;0,0
+PC008779;Não informado;D;Baixa;27,0;15,6;51,9;40;75;15;7,04;6,35;🟢 OK;0,0;956,77;0,0
+PC006656;Não informado;D;Baixa;29,0;20,6;42,2;40;75;15;8,64;6,35;🟢 OK;0,0;673,65;0,0
+PC004064;Não informado;D;Baixa;149,0;49,7;90,0;40;75;15;4,05;6,35;🟡 Estoque excessivo;0,0;176,28;0,0
+PC002026;Não informado;D;Baixa;187,0;56,1;99,9;40;75;15;3,65;6,35;🟡 Estoque excessivo;0,0;170,76;0,0
+PC007210;Não informado;D;Baixa;58,0;18,5;94,1;40;75;15;3,88;6,35;🟡 Estoque excessivo;0,0;512,59;0,0
+PC000917;Não informado;D;Baixa;70,0;46,0;45,6;40;75;15;8,0;6,35;🟢 OK;0,0;315,71;0,0
+PC007872;Não informado;D;Baixa;58,0;27,0;64,4;40;75;15;5,66;6,35;🟢 OK;0,0;367,28;0,0
+PC001675;Não informado;D;Baixa;26,0;10,7;72,7;40;75;15;5,02;6,35;🟢 OK;0,0;1031,35;0,0
+PC004373;Não informado;D;Baixa;53,0;20,8;76,5;40;75;15;4,77;6,35;🟡 Estoque excessivo;0,0;570,22;0,0
+PC002763;Não informado;D;Baixa;10,0;11,5;26,1;40;75;15;14,01;6,35;🔴 Comprar agora;19,0;886,9;16664,43
+PC005664;Não informado;D;Baixa;20,0;14,0;42,8;40;75;15;8,52;6,35;🟢 OK;0,0;730,46;0,0
+PC007018;Não informado;D;Baixa;108,0;35,0;92,5;40;75;15;3,95;6,35;🟡 Estoque excessivo;0,0;262,25;0,0
+PC005792;Não informado;D;Média;30,0;25,4;35,5;40;75;15;10,29;6,35;🔴 Comprar agora;33,0;669,72;22409,36
+PC009683;Não informado;D;Baixa;23,0;11,4;60,4;40;75;15;6,05;6,35;🟢 OK;0,0;943,4;0,0
+PC005024;Não informado;D;Baixa;32,0;59,9;16,0;40;75;15;22,77;6,35;🔴 Comprar agora;118,0;140,6;16554,34
+PC001483;Não informado;D;Baixa;73,0;57,7;38,0;40;75;15;9,61;6,35;🔴 Comprar agora;71,0;285,58;20324,9
+PC001066;Não informado;D;Baixa;35,0;16,2;65,0;40;75;15;5,62;6,35;🟢 OK;0,0;581,95;0,0
+PC001557;Não informado;D;Baixa;20,0;13,7;43,8;40;75;15;8,33;6,35;🟢 OK;0,0;726,84;0,0
+PC007627;Não informado;D;Baixa;19,0;27,1;21,0;40;75;15;17,34;6,35;🔴 Comprar agora;49,0;458,85;22349,98
+PC004586;Não informado;D;Baixa;73,0;74,5;29,4;40;75;15;12,41;6,35;🔴 Comprar agora;113,0;173,75;19669,56
+PC001035;Não informado;D;Baixa;31,0;19,5;47,7;40;75;15;7,65;6,35;🟢 OK;0,0;856,66;0,0
+PC003155;Não informado;D;Baixa;51,0;15,5;98,9;40;75;15;3,69;6,35;🟡 Estoque excessivo;0,0;613,7;0,0
+PC004544;Não informado;D;Baixa;51,0;23,3;65,6;40;75;15;5,56;6,35;🟢 OK;0,0;383,45;0,0
+PC009547;Não informado;D;Baixa;29,0;19,3;45,1;40;75;15;8,1;6,35;🟢 OK;0,0;681,2;0,0
+PC005845;Não informado;D;Baixa;13,0;38,1;10,2;40;75;15;35,63;6,35;🚨 RUPTURA IMINENTE;82,0;703,19;57784,14
+PC007232;Não informado;D;Baixa;15,0;13,9;32,3;40;75;15;11,3;6,35;🔴 Comprar agora;20,0;813,84;16131,01
+PC001514;Não informado;D;Baixa;16,0;40,1;12,0;40;75;15;30,52;6,35;🚨 RUPTURA IMINENTE;84,0;897,22;75664,07
+PC004448;Não informado;D;Baixa;16,0;73,2;6,6;40;75;15;55,7;6,35;🚨 RUPTURA IMINENTE;167,0;882,8;147530,51
+PC000800;Não informado;D;Baixa;30,0;12,5;71,9;40;75;15;5,08;6,35;🟢 OK;0,0;885,52;0,0
+PC006890;Não informado;D;Baixa;55,0;30,2;54,7;40;75;15;6,68;6,35;🟢 OK;0,0;286,64;0,0
+PC002986;Não informado;D;Baixa;47,0;35,7;39,5;40;75;15;9,24;6,35;🔴 Comprar agora;42,0;496,35;20947,8
+PC001685;Não informado;D;Baixa;106,0;44,0;72,2;40;75;15;5,06;6,35;🟢 OK;0,0;235,9;0,0
+PC004883;Não informado;D;Baixa;27,0;19,8;40,9;40;75;15;8,92;6,35;🟢 OK;0,0;693,25;0,0
+PC000979;Não informado;D;Baixa;29,0;15,3;57,0;40;75;15;6,41;6,35;🟢 OK;0,0;1047,98;0,0
+PC001792;Não informado;D;Baixa;23,0;16,3;42,3;40;75;15;8,64;6,35;🟢 OK;0,0;622,26;0,0
+PC002771;Não informado;D;Baixa;12,0;10,4;34,6;40;75;15;10,54;6,35;🔴 Comprar agora;14,0;784,8;10986,27
+PC004115;Não informado;D;Média;11,0;19,9;16,6;40;75;15;21,97;6,35;🔴 Comprar agora;39,0;879,41;33990,31
+PC007893;Não informado;D;Baixa;44,0;25,0;52,8;40;75;15;6,91;6,35;🟢 OK;0,0;692,25;0,0
+PC006176;Não informado;D;Baixa;60,0;28,0;64,2;40;75;15;5,69;6,35;🟢 OK;0,0;306,63;0,0
+PC001867;Não informado;D;Baixa;27,0;17,4;46,5;40;75;15;7,84;6,35;🟢 OK;0,0;574,21;0,0
+PC006336;Não informado;D;Baixa;9,0;30,5;8,9;40;75;15;41,21;6,35;🚨 RUPTURA IMINENTE;67,0;775,76;52133,53
+PC005003;Não informado;D;Média;528,0;269,1;58,9;40;75;15;6,2;6,35;🟢 OK;0,0;50,72;0,0
+PC007763;Não informado;D;Média;37,0;45,8;24,2;40;75;15;15,06;6,35;🔴 Comprar agora;77,0;402,26;31168,62
+PC008661;Não informado;D;Baixa;10,0;20,1;14,9;40;75;15;24,45;6,35;🚨 RUPTURA IMINENTE;40,0;469,4;18887,04
+PC009235;Não informado;D;Baixa;12,0;10,2;35,2;40;75;15;10,38;6,35;🔴 Comprar agora;14,0;851,19;11565,31
+PC007168;Não informado;D;Baixa;32,0;10,5;91,2;40;75;15;4,0;6,35;🟡 Estoque excessivo;0,0;1011,1;0,0
+PC008459;Não informado;D;Baixa;126,0;54,4;69,5;40;75;15;5,25;6,35;🟢 OK;0,0;128,25;0,0
+PC008075;Não informado;D;Baixa;40,0;15,9;75,6;40;75;15;4,83;6,35;🟡 Estoque excessivo;0,0;610,51;0,0
+PC006931;Não informado;D;Baixa;24,0;16,3;44,3;40;75;15;8,25;6,35;🟢 OK;0,0;838,09;0,0
+PC007755;Não informado;D;Baixa;13,0;42,8;9,1;40;75;15;40,02;6,35;🚨 RUPTURA IMINENTE;94,0;700,38;65775,05
+PC002410;Não informado;D;Baixa;125,0;56,0;67,0;40;75;15;5,45;6,35;🟢 OK;0,0;161,93;0,0
+PC003787;Não informado;D;Baixa;13,0;29,3;13,3;40;75;15;27,46;6,35;🚨 RUPTURA IMINENTE;60,0;533,1;32172,76
+PC001931;Não informado;D;Baixa;35,0;10,2;103,0;40;75;15;3,54;6,35;🟡 Estoque excessivo;0,0;825,59;0,0
+PC000659;Não informado;D;Baixa;7,0;12,3;17,1;40;75;15;21,35;6,35;🔴 Comprar agora;24,0;788,71;18696,85
+PC007243;Não informado;D;Baixa;79,0;39,9;59,4;40;75;15;6,14;6,35;🟢 OK;0,0;262,87;0,0
+PC006229;Não informado;D;Baixa;17,0;33,6;15,2;40;75;15;24,02;6,35;🔴 Comprar agora;67,0;1093,54;73175,22
+PC002965;Não informado;D;Baixa;7,0;10,4;20,2;40;75;15;18,1;6,35;🔴 Comprar agora;19,0;598,98;11403,19
+PC006923;Não informado;D;Média;27,0;17,6;46,0;40;75;15;7,93;6,35;🟢 OK;0,0;769,75;0,0
+PC003349;Não informado;D;Baixa;14,0;43,6;9,6;40;75;15;37,88;6,35;🚨 RUPTURA IMINENTE;95,0;683,39;64897,31
+PC002707;Não informado;D;Baixa;5,0;9,5;15,8;40;75;15;23,08;6,35;🔴 Comprar agora;19,0;803,26;15030,76
+PC009888;Não informado;D;Baixa;40,0;51,3;23,4;40;75;15;15,61;6,35;🔴 Comprar agora;88,0;211,62;18689,95
+PC000021;Não informado;D;Baixa;224,0;99,4;67,6;40;75;15;5,4;6,35;🟢 OK;0,0;82,8;0,0
+PC005610;Não informado;D;Baixa;16,0;10,1;47,7;40;75;15;7,65;6,35;🟢 OK;0,0;709,49;0,0
+PC002643;Não informado;D;Baixa;10,0;13,9;21,6;40;75;15;16,9;6,35;🔴 Comprar agora;25,0;546,03;13500,72
+PC002752;Não informado;D;Baixa;25,0;14,3;52,3;40;75;15;6,98;6,35;🟢 OK;0,0;535,38;0,0
+PC005333;Não informado;D;Baixa;28,0;30,7;27,4;40;75;15;13,34;6,35;🔴 Comprar agora;49,0;263,1;12830,82
+PC008021;Não informado;D;Baixa;20,0;9,6;62,5;40;75;15;5,84;6,35;🟢 OK;0,0;774,85;0,0
+PC006442;Não informado;D;Baixa;28,0;16,2;51,8;40;75;15;7,04;6,35;🟢 OK;0,0;774,91;0,0
+PC000832;Não informado;D;Baixa;12,0;14,3;25,2;40;75;15;14,49;6,35;🔴 Comprar agora;24,0;516,79;12259,3
+PC004243;Não informado;D;Baixa;85,0;26,2;97,5;40;75;15;3,74;6,35;🟡 Estoque excessivo;0,0;337,93;0,0
+PC009109;Não informado;D;Baixa;17,0;17,2;29,6;40;75;15;12,34;6,35;🔴 Comprar agora;26,0;586,97;15322,64
+PC005205;Não informado;D;Baixa;42,0;31,2;40,4;40;75;15;9,03;6,35;🟢 OK;0,0;357,07;0,0
+PC001621;Não informado;D;Baixa;28,0;16,0;52,6;40;75;15;6,94;6,35;🟢 OK;0,0;613,68;0,0
+PC001429;Não informado;D;Baixa;12,0;8,2;44,2;40;75;15;8,27;6,35;🟢 OK;0,0;884,35;0,0
+PC003434;Não informado;D;Baixa;13,0;8,2;47,4;40;75;15;7,7;6,35;🟢 OK;0,0;847,07;0,0
+PC009557;Não informado;D;Baixa;11,0;8,4;39,5;40;75;15;9,25;6,35;🔴 Comprar agora;10,0;828,24;8201,68
+PC003851;Não informado;D;Baixa;29,0;32,4;26,9;40;75;15;13,58;6,35;🔴 Comprar agora;52,0;332,63;17267,1
+PC001664;Não informado;D;Baixa;11,0;15,0;22,1;40;75;15;16,54;6,35;🔴 Comprar agora;26,0;461,19;12170,85
+PC007443;Não informado;D;Baixa;34,0;21,7;46,9;40;75;15;7,78;6,35;🟢 OK;0,0;376,06;0,0
+PC005216;Não informado;D;Baixa;70,0;48,2;43,6;40;75;15;8,37;6,35;🟢 OK;0,0;449,95;0,0
+PC004875;Não informado;D;Baixa;26,0;14,1;55,5;40;75;15;6,58;6,35;🟢 OK;0,0;852,98;0,0
+PC001258;Não informado;D;Baixa;24,0;10,1;71,1;40;75;15;5,13;6,35;🟢 OK;0,0;747,0;0,0
+PC003360;Não informado;D;Baixa;25,0;20,6;36,4;40;75;15;10,04;6,35;🔴 Comprar agora;27,0;395,84;10514,19
+PC003475;Não informado;D;Média;26,0;14,7;53,1;40;75;15;6,87;6,35;🟢 OK;0,0;958,92;0,0
+PC006400;Não informado;D;Média;26,0;13,3;58,6;40;75;15;6,23;6,35;🟢 OK;0,0;773,27;0,0
+PC004202;Não informado;D;Baixa;69,0;40,8;50,7;40;75;15;7,19;6,35;🟢 OK;0,0;246,04;0,0
+PC009173;Não informado;D;Baixa;12,0;13,2;27,3;40;75;15;13,39;6,35;🔴 Comprar agora;21,0;597,18;12546,11
+PC004053;Não informado;D;Baixa;28,0;11,6;72,1;40;75;15;5,06;6,35;🟢 OK;0,0;626,09;0,0
+PC000384;Não informado;D;Baixa;9,0;24,9;10,8;40;75;15;33,67;6,35;🚨 RUPTURA IMINENTE;53,0;901,35;48012,5
+PC000907;Não informado;D;Baixa;10,0;8,1;37,0;40;75;15;9,86;6,35;🔴 Comprar agora;10,0;862,87;8848,65
+PC000512;Não informado;D;Baixa;34,0;9,4;108,3;40;75;15;3,37;6,35;🟡 Estoque excessivo;0,0;562,19;0,0
+PC004192;Não informado;D;Baixa;12,0;9,5;37,8;40;75;15;9,66;6,35;🔴 Comprar agora;12,0;679,03;8029,45
+PC002517;Não informado;D;Baixa;7,0;8,7;24,1;40;75;15;15,17;6,35;🔴 Comprar agora;15,0;754,87;11186,27
+PC000843;Não informado;D;Baixa;31,0;17,9;51,9;40;75;15;7,04;6,35;🟢 OK;0,0;642,42;0,0
+PC009621;Não informado;D;Baixa;12,0;14,4;25,0;40;75;15;14,59;6,35;🔴 Comprar agora;24,0;485,35;11631,93
+PC006048;Não informado;D;Baixa;15,0;14,7;30,5;40;75;15;11,95;6,35;🔴 Comprar agora;22,0;793,06;17322,96
+PC001760;Não informado;D;Baixa;41,0;19,5;63,2;40;75;15;5,78;6,35;🟢 OK;0,0;395,83;0,0
+PC000938;Não informado;D;Baixa;150,0;52,4;85,9;40;75;15;4,25;6,35;🟡 Estoque excessivo;0,0;128,92;0,0
+PC009184;Não informado;D;Baixa;62,0;23,9;77,7;40;75;15;4,69;6,35;🟡 Estoque excessivo;0,0;316,81;0,0
+PC005131;Não informado;D;Baixa;50,0;16,2;92,5;40;75;15;3,95;6,35;🟡 Estoque excessivo;0,0;388,27;0,0
+PC005459;Não informado;D;Baixa;4,0;6,0;19,8;40;75;15;18,39;6,35;🔴 Comprar agora;11,0;1094,66;12169,13
+PC005651;Não informado;D;Baixa;12,0;7,5;47,9;40;75;15;7,61;6,35;🟢 OK;0,0;1002,59;0,0
+PC009376;Não informado;D;Baixa;27,0;23,5;34,5;40;75;15;10,59;6,35;🔴 Comprar agora;32,0;354,28;11250,79
+PC008448;Não informado;D;Baixa;5,0;7,2;20,8;40;75;15;17,55;6,35;🔴 Comprar agora;13,0;1044,68;13614,67
+PC005120;Não informado;D;Baixa;22,0;7,2;91,1;40;75;15;4,01;6,35;🟡 Estoque excessivo;0,0;831,23;0,0
+PC008000;Não informado;D;Baixa;14,0;14,6;28,8;40;75;15;12,66;6,35;🔴 Comprar agora;22,0;478,19;10725,1
+PC008682;Não informado;D;Baixa;20,0;11,0;54,8;40;75;15;6,66;6,35;🟢 OK;0,0;877,72;0,0
+PC008851;Não informado;D;Baixa;64,0;20,5;93,9;40;75;15;3,89;6,35;🟡 Estoque excessivo;0,0;340,12;0,0
+PC006122;Não informado;D;Baixa;8,0;14,5;16,5;40;75;15;22,11;6,35;🔴 Comprar agora;28,0;659,6;18700,04
+PC008554;Não informado;D;Baixa;10,0;8,9;33,9;40;75;15;10,77;6,35;🔴 Comprar agora;12,0;726,06;8807,16
+PC009056;Não informado;D;Baixa;8,0;8,1;29,7;40;75;15;12,29;6,35;🔴 Comprar agora;12,0;746,02;9106,23
+PC005013;Não informado;D;Baixa;5,0;6,7;22,3;40;75;15;16,35;6,35;🔴 Comprar agora;12,0;1065,68;12576,63
+PC009984;Não informado;D;Baixa;27,0;13,3;60,8;40;75;15;6,0;6,35;🟢 OK;0,0;400,31;0,0
+PC007104;Não informado;D;Baixa;151,0;95,1;47,6;40;75;15;7,66;6,35;🟢 OK;0,0;92,28;0,0
+PC002496;Não informado;D;Baixa;18,0;7,9;68,6;40;75;15;5,32;6,35;🟢 OK;0,0;815,59;0,0
+PC004363;Não informado;D;Baixa;11,0;7,2;46,1;40;75;15;7,93;6,35;🟢 OK;0,0;928,8;0,0
+PC004555;Não informado;D;Baixa;7,0;11,0;19,1;40;75;15;19,07;6,35;🔴 Comprar agora;20,0;871,53;17799,5
+PC002666;Não informado;D;Baixa;36,0;23,1;46,8;40;75;15;7,8;6,35;🟢 OK;0,0;952,56;0,0
+PC001493;Não informado;D;Baixa;9,0;11,3;23,9;40;75;15;15,26;6,35;🔴 Comprar agora;19,0;544,33;10460,51
+PC006464;Não informado;D;Baixa;14,0;13,8;30,5;40;75;15;11,95;6,35;🔴 Comprar agora;20,0;368,58;7513,13
+PC009939;Não informado;D;Baixa;13,0;64,4;6,1;40;75;15;60,24;6,35;🚨 RUPTURA IMINENTE;148,0;322,23;47666,47
+PC000779;Não informado;D;Baixa;38,0;12,6;90,8;40;75;15;4,02;6,35;🟡 Estoque excessivo;0,0;504,55;0,0
+PC000851;Não informado;D;Baixa;40,0;15,3;78,2;40;75;15;4,66;6,35;🟡 Estoque excessivo;0,0;400,27;0,0
+PC005835;Não informado;D;Baixa;30,0;9,1;99,2;40;75;15;3,68;6,35;🟡 Estoque excessivo;0,0;578,85;0,0
+PC007264;Não informado;D;Baixa;164,0;93,0;52,9;40;75;15;6,9;6,35;🟢 OK;0,0;195,0;0,0
+PC009107;Não informado;D;Baixa;8,0;11,6;20,8;40;75;15;17,58;6,35;🔴 Comprar agora;21,0;861,01;17994,53
+PC007051;Não informado;D;Baixa;65,0;53,0;36,8;40;75;15;9,91;6,35;🔴 Comprar agora;67,0;181,28;12215,61
+PC006752;Não informado;D;Baixa;9,0;8,9;30,2;40;75;15;12,08;6,35;🔴 Comprar agora;13,0;796,82;10626,88
+PC008019;Não informado;D;Baixa;63,0;43,2;43,8;40;75;15;8,33;6,35;🟢 OK;0,0;137,18;0,0
+PC008341;Não informado;D;Média;19,0;12,1;47,0;40;75;15;7,77;6,35;🟢 OK;0,0;776,17;0,0
+PC003539;Não informado;D;Baixa;22,0;6,0;110,3;40;75;15;3,31;6,35;🟡 Estoque excessivo;0,0;937,48;0,0
+PC006741;Não informado;D;Baixa;19,0;8,1;70,0;40;75;15;5,21;6,35;🟢 OK;0,0;518,47;0,0
+PC001728;Não informado;D;Baixa;42,0;22,0;57,1;40;75;15;6,39;6,35;🟢 OK;0,0;360,32;0,0
+PC006560;Não informado;D;Baixa;16,0;6,9;69,6;40;75;15;5,25;6,35;🟢 OK;0,0;913,89;0,0
+PC006027;Não informado;D;Baixa;117,0;58,6;59,9;40;75;15;6,1;6,35;🟢 OK;0,0;139,52;0,0
+PC007424;Não informado;D;Baixa;40,0;14,0;85,7;40;75;15;4,26;6,35;🟡 Estoque excessivo;0,0;527,96;0,0
+PC009568;Não informado;D;Baixa;16,0;12,1;39,8;40;75;15;9,18;6,35;🔴 Comprar agora;14,0;860,33;12192,91
+PC005248;Não informado;D;Baixa;2,0;19,6;3,1;40;75;15;119,4;6,35;🚨 RUPTURA IMINENTE;47,0;1026,38;48309,1
+PC009237;Não informado;D;Baixa;14,0;6,2;68,3;40;75;15;5,35;6,35;🟢 OK;0,0;917,57;0,0
+PC000723;Não informado;D;Baixa;7,0;14,2;14,8;40;75;15;24,67;6,35;🚨 RUPTURA IMINENTE;28,0;621,17;17697,27
+PC008170;Não informado;D;Baixa;19,0;9,2;61,8;40;75;15;5,91;6,35;🟢 OK;0,0;943,52;0,0
+PC002891;Não informado;D;Baixa;115,0;39,8;86,7;40;75;15;4,21;6,35;🟡 Estoque excessivo;0,0;156,66;0,0
+PC000320;Não informado;D;Baixa;4,0;6,1;19,7;40;75;15;18,54;6,35;🔴 Comprar agora;11,0;997,99;11216,25
+PC005354;Não informado;D;Baixa;21,0;9,8;64,3;40;75;15;5,67;6,35;🟢 OK;0,0;555,41;0,0
+PC004437;Não informado;D;Baixa;40,0;12,3;97,2;40;75;15;3,76;6,35;🟡 Estoque excessivo;0,0;544,56;0,0
+PC003339;Não informado;D;Baixa;33,0;25,3;39,1;40;75;15;9,35;6,35;🔴 Comprar agora;30,0;696,68;21157,25
+PC006293;Não informado;D;Baixa;44,0;80,3;16,4;40;75;15;22,21;6,35;🔴 Comprar agora;157,0;404,68;63452,61
+PC003882;Não informado;D;Baixa;48,0;30,0;47,9;40;75;15;7,62;6,35;🟢 OK;0,0;197,68;0,0
+PC004288;Não informado;D;Baixa;12,0;6,2;58,3;40;75;15;6,26;6,35;🟢 OK;0,0;919,38;0,0
+PC001163;Não informado;D;Baixa;4,0;6,0;20,0;40;75;15;18,27;6,35;🔴 Comprar agora;11,0;907,6;9999,89
+PC004117;Não informado;D;Baixa;5,0;23,5;6,4;40;75;15;57,13;6,35;🚨 RUPTURA IMINENTE;54,0;706,48;37936,97
+PC006624;Não informado;D;Baixa;13,0;6,9;56,4;40;75;15;6,47;6,35;🟢 OK;0,0;959,54;0,0
+PC004800;Não informado;D;Baixa;14,0;14,6;28,8;40;75;15;12,65;6,35;🔴 Comprar agora;22,0;665,66;14911,71
+PC005451;Não informado;D;Baixa;30,0;11,9;75,9;40;75;15;4,81;6,35;🟡 Estoque excessivo;0,0;439,97;0,0
+PC001749;Não informado;D;Baixa;27,0;11,9;68,0;40;75;15;5,37;6,35;🟢 OK;0,0;475,93;0,0
+PC006675;Não informado;D;Baixa;11,0;14,7;22,5;40;75;15;16,21;6,35;🔴 Comprar agora;26,0;659,21;16896,02
+PC006227;Não informado;D;Baixa;5,0;10,0;14,9;40;75;15;24,42;6,35;🚨 RUPTURA IMINENTE;20,0;475,73;9557,81
+PC005067;Não informado;D;Baixa;33,0;12,5;79,2;40;75;15;4,61;6,35;🟡 Estoque excessivo;0,0;399,59;0,0
+PC009536;Não informado;D;Baixa;10,0;6,1;49,3;40;75;15;7,41;6,35;🟢 OK;0,0;799,07;0,0
+PC004107;Não informado;D;Baixa;33,0;12,5;79,5;40;75;15;4,59;6,35;🟡 Estoque excessivo;0,0;438,83;0,0
+PC004821;Não informado;D;Baixa;32,0;10,1;95,1;40;75;15;3,84;6,35;🟡 Estoque excessivo;0,0;498,49;0,0
+PC005280;Não informado;D;Baixa;14,0;9,5;44,3;40;75;15;8,23;6,35;🟢 OK;0,0;737,06;0,0
+PC006859;Não informado;D;Média;15,0;9,8;45,9;40;75;15;7,95;6,35;🟢 OK;0,0;925,37;0,0
+PC001824;Não informado;D;Baixa;20,0;11,1;54,1;40;75;15;6,74;6,35;🟢 OK;0,0;611,4;0,0
+PC002067;Não informado;D;Baixa;7,0;8,1;25,8;40;75;15;14,15;6,35;🔴 Comprar agora;13,0;554,29;7400,7
+PC005259;Não informado;D;Baixa;13,0;9,2;42,4;40;75;15;8,6;6,35;🟢 OK;0,0;857,65;0,0
+PC009696;Não informado;D;Baixa;18,0;20,3;26,6;40;75;15;13,71;6,35;🔴 Comprar agora;33,0;289,15;9458,08
+PC007563;Não informado;D;Baixa;27,0;24,3;33,3;40;75;15;10,95;6,35;🔴 Comprar agora;34,0;563,62;19035,27
+PC007957;Não informado;D;Baixa;14,0;12,9;32,6;40;75;15;11,21;6,35;🔴 Comprar agora;18,0;322,4;5884,21
+PC007307;Não informado;D;Baixa;6,0;5,4;33,2;40;75;15;10,99;6,35;🔴 Comprar agora;8,0;635,79;4800,37
+PC003904;Não informado;D;Baixa;26,0;38,7;20,1;40;75;15;18,13;6,35;🔴 Comprar agora;71,0;197,82;14016,85
+PC006528;Não informado;D;Baixa;102,0;32,8;93,3;40;75;15;3,91;6,35;🟡 Estoque excessivo;0,0;134,12;0,0
+PC005984;Não informado;D;Baixa;14,0;16,6;25,3;40;75;15;14,43;6,35;🔴 Comprar agora;28,0;356,98;9819,47
+PC002069;Não informado;D;Baixa;22,0;9,4;70,6;40;75;15;5,17;6,35;🟢 OK;0,0;508,25;0,0
+PC002720;Não informado;D;Baixa;23,0;45,9;15,0;40;75;15;24,29;6,35;🔴 Comprar agora;92,0;343,87;31573,47
+PC009728;Não informado;D;Baixa;17,0;5,1;100,6;40;75;15;3,63;6,35;🟡 Estoque excessivo;0,0;924,4;0,0
+PC008640;Não informado;D;Baixa;18,0;15,7;34,3;40;75;15;10,63;6,35;🔴 Comprar agora;21,0;499,41;10652,12
+PC008011;Não informado;D;Baixa;14,0;5,0;84,0;40;75;15;4,34;6,35;🟡 Estoque excessivo;0,0;801,83;0,0
+PC005843;Não informado;D;Baixa;68,0;62,7;32,6;40;75;15;11,21;6,35;🔴 Comprar agora;89,0;102,22;9061,13
+PC004427;Não informado;D;Baixa;11,0;8,7;38,0;40;75;15;9,6;6,35;🔴 Comprar agora;11,0;511,9;5481,2
+PC002474;Não informado;D;Baixa;16,0;22,9;21,0;40;75;15;17,41;6,35;🔴 Comprar agora;41,0;755,97;31172,36
+PC002005;Não informado;D;Baixa;14,0;5,9;70,6;40;75;15;5,17;6,35;🟢 OK;0,0;805,66;0,0
+PC000467;Não informado;D;Baixa;11,0;13,5;24,5;40;75;15;14,89;6,35;🔴 Comprar agora;23,0;378,25;8571,72
+PC009130;Não informado;D;Baixa;16,0;29,8;16,1;40;75;15;22,7;6,35;🔴 Comprar agora;59,0;981,68;57543,03
+PC000298;Não informado;D;Baixa;23,0;7,7;89,3;40;75;15;4,09;6,35;🟡 Estoque excessivo;0,0;593,19;0,0
+PC006144;Não informado;D;Baixa;11,0;4,8;68,9;40;75;15;5,3;6,35;🟢 OK;0,0;796,87;0,0
+PC006603;Não informado;D;Baixa;17,0;7,1;71,6;40;75;15;5,1;6,35;🟢 OK;0,0;554,87;0,0
+PC008587;Não informado;D;Baixa;10,0;39,1;7,7;40;75;15;47,56;6,35;🚨 RUPTURA IMINENTE;88,0;475,07;41672,98
+PC008979;Não informado;D;Baixa;14,0;5,9;70,9;40;75;15;5,15;6,35;🟢 OK;0,0;835,82;0,0
+PC001491;Não informado;D;Baixa;17,0;10,9;46,9;40;75;15;7,78;6,35;🟢 OK;0,0;514,64;0,0
+PC001120;Não informado;D;Baixa;11,0;6,2;53,3;40;75;15;6,84;6,35;🟢 OK;0,0;629,18;0,0
+PC004522;Não informado;D;Baixa;6,0;16,8;10,7;40;75;15;34,06;6,35;🚨 RUPTURA IMINENTE;36,0;806,54;29028,09
+PC002528;Não informado;D;Baixa;16,0;17,4;27,7;40;75;15;13,2;6,35;🔴 Comprar agora;27,0;318,63;8725,54
+PC008384;Não informado;D;Baixa;23,0;12,7;54,5;40;75;15;6,7;6,35;🟢 OK;0,0;383,59;0,0
+PC004619;Não informado;D;Baixa;48,0;17,4;82,7;40;75;15;4,41;6,35;🟡 Estoque excessivo;0,0;285,77;0,0
+PC006739;Não informado;D;Média;19,0;51,4;11,1;40;75;15;32,92;6,35;🚨 RUPTURA IMINENTE;110,0;138,32;15150,14
+PC002272;Não informado;D;Baixa;9,0;11,4;23,7;40;75;15;15,42;6,35;🔴 Comprar agora;20,0;697,26;13606,25
+PC003168;Não informado;D;Baixa;5,0;5,1;29,6;40;75;15;12,35;6,35;🔴 Comprar agora;8,0;682,12;5242,29
+PC004736;Não informado;D;Baixa;7,0;20,0;10,5;40;75;15;34,76;6,35;🚨 RUPTURA IMINENTE;43,0;855,6;36782,79
+PC003552;Não informado;D;Baixa;12,0;10,0;36,0;40;75;15;10,14;6,35;🔴 Comprar agora;13,0;360,72;4686,96
+PC007914;Não informado;D;Baixa;3,0;5,4;16,7;40;75;15;21,8;6,35;🔴 Comprar agora;10,0;855,63;8928,75
+PC004693;Não informado;E;Baixa;13,0;9,9;39,5;55;100;15;9,24;4,71;🔴 Comprar agora;20,0;340,31;6776,37
+PC002123;Não informado;E;Baixa;55,0;26,6;62,0;55;100;15;5,89;4,71;🟢 OK;0,0;554,28;0,0
+PC002144;Não informado;E;Média;14,0;25,2;16,7;55;100;15;21,9;4,71;🔴 Comprar agora;70,0;285,76;19999,96
+PC006112;Não informado;E;Baixa;12,0;37,3;9,7;55;100;15;37,82;4,71;🚨 RUPTURA IMINENTE;112,0;303,12;34055,25
+PC002336;Não informado;E;Baixa;12,0;26,0;13,8;55;100;15;26,4;4,71;🚨 RUPTURA IMINENTE;75,0;277,82;20783,83
+PC003840;Não informado;E;Baixa;14,0;9,9;42,6;55;100;15;8,57;4,71;🔴 Comprar agora;19,0;771,64;14547,72
+PC000618;Não informado;E;Baixa;9,0;6,5;41,6;55;100;15;8,77;4,71;🔴 Comprar agora;13,0;454,64;5735,72
+PC009450;Não informado;E;Baixa;58,0;32,4;53,7;55;100;15;6,8;4,71;🔴 Comprar agora;50,0;124,76;6242,2
+PC007507;Não informado;E;Baixa;60,0;21,6;83,2;55;100;15;4,38;4,71;🟢 OK;0,0;159,51;0,0
+PC008277;Não informado;E;Baixa;11,0;4,2;77,7;55;100;15;4,7;4,71;🟢 OK;0,0;931,99;0,0
+PC008339;Não informado;E;Baixa;7,0;6,1;34,3;55;100;15;10,63;4,71;🔴 Comprar agora;13,0;669,15;8959,08
+PC002899;Não informado;E;Baixa;23,0;32,8;21,0;55;100;15;17,37;4,71;🔴 Comprar agora;86,0;495,46;42843,93
+PC006016;Não informado;E;Baixa;46,0;16,7;82,8;55;100;15;4,41;4,71;🟢 OK;0,0;230,34;0,0
+PC009363;Não informado;E;Baixa;28,0;10,0;83,6;55;100;15;4,37;4,71;🟢 OK;0,0;367,28;0,0
+PC005888;Não informado;E;Baixa;21,0;7,1;89,2;55;100;15;4,09;4,71;🟢 OK;0,0;579,83;0,0
+PC006677;Não informado;E;Baixa;16,0;7,5;63,8;55;100;15;5,72;4,71;🟢 OK;0,0;555,57;0,0
+PC003872;Não informado;E;Baixa;34,0;39,0;26,2;55;100;15;13,94;4,71;🔴 Comprar agora;96,0;158,8;15228,04
+PC006357;Não informado;E;Baixa;32,0;68,6;14,0;55;100;15;26,08;4,71;🚨 RUPTURA IMINENTE;197,0;152,34;29950,97
+PC000426;Não informado;E;Baixa;7,0;21,9;9,6;55;100;15;37,99;4,71;🚨 RUPTURA IMINENTE;66,0;598,08;39383,74
+PC001107;Não informado;E;Baixa;5,0;7,4;20,3;55;100;15;17,99;4,71;🔴 Comprar agora;20,0;443,33;8710,56
+PC006314;Não informado;E;Baixa;8,0;6,9;34,9;55;100;15;10,47;4,71;🔴 Comprar agora;15,0;515,21;7700,18
+PC003754;Não informado;E;Baixa;6,0;7,8;23,1;55;100;15;15,77;4,71;🔴 Comprar agora;20,0;826,89;16477,41
+PC005760;Não informado;E;Baixa;20,0;16,9;35,4;55;100;15;10,3;4,71;🔴 Comprar agora;36,0;181,65;6620,9
+PC006976;Não informado;E;Baixa;7,0;12,8;16,4;55;100;15;22,22;4,71;🔴 Comprar agora;36,0;491,62;17506,92
+PC006485;Não informado;E;Baixa;77,0;26,3;87,8;55;100;15;4,16;4,71;🟢 OK;0,0;145,46;0,0
+PC003477;Não informado;E;Baixa;9,0;17,1;15,8;55;100;15;23,17;4,71;🔴 Comprar agora;48,0;675,75;32530,46
+PC003731;Não informado;E;Baixa;35,0;11,9;88,3;55;100;15;4,13;4,71;🟢 OK;0,0;240,35;0,0
+PC005139;Não informado;E;Baixa;12,0;4,2;85,4;55;100;15;4,27;4,71;🟢 OK;0,0;908,55;0,0
+PC007765;Não informado;E;Baixa;18,0;8,6;62,6;55;100;15;5,83;4,71;🟢 OK;0,0;400,04;0,0
+PC004755;Não informado;E;Baixa;28,0;8,6;97,6;55;100;15;3,74;4,71;🟢 OK;0,0;365,41;0,0
+PC001248;Não informado;E;Baixa;12,0;6,7;54,0;55;100;15;6,76;4,71;🔴 Comprar agora;10,0;568,61;5817,06
+PC003659;Não informado;E;Baixa;26,0;7,6;102,4;55;100;15;3,57;4,71;🟡 Estoque excessivo;0,0;464,59;0,0
+PC005536;Não informado;E;Baixa;28,0;14,3;58,7;55;100;15;6,21;4,71;🟢 OK;0,0;202,81;0,0
+PC009355;Não informado;E;Baixa;12,0;9,5;37,9;55;100;15;9,63;4,71;🔴 Comprar agora;20,0;371,2;7300,62
+PC005098;Não informado;E;Baixa;30,0;18,2;49,5;55;100;15;7,37;4,71;🔴 Comprar agora;31,0;297,55;9098,06
+PC002880;Não informado;E;Baixa;55,0;26,7;61,7;55;100;15;5,91;4,71;🟢 OK;0,0;131,24;0,0
+PC004757;Não informado;E;Baixa;28,0;12,4;67,9;55;100;15;5,38;4,71;🟢 OK;0,0;224,0;0,0
+PC002858;Não informado;E;Baixa;19,0;18,2;31,3;55;100;15;11,66;4,71;🔴 Comprar agora;42,0;369,17;15397,48
+PC008331;Não informado;E;Baixa;6,0;6,1;29,7;55;100;15;12,29;4,71;🔴 Comprar agora;14,0;409,84;5820,91
+PC001770;Não informado;E;Baixa;14,0;6,1;68,7;55;100;15;5,31;4,71;🟢 OK;0,0;567,5;0,0
+PC006688;Não informado;E;Baixa;5,0;3,9;38,5;55;100;15;9,47;4,71;🔴 Comprar agora;8,0;995,56;7941,77
+PC009301;Não informado;E;Baixa;10,0;15,9;18,9;55;100;15;19,34;4,71;🔴 Comprar agora;43,0;602,54;25895,76
+PC008106;Não informado;E;Baixa;11,0;19,6;16,8;55;100;15;21,73;4,71;🔴 Comprar agora;54,0;551,53;30055,36
+PC002187;Não informado;E;Baixa;51,0;15,5;98,7;55;100;15;3,7;4,71;🟢 OK;0,0;220,24;0,0
+PC008651;Não informado;E;Baixa;8,0;12,0;19,9;55;100;15;18,31;4,71;🔴 Comprar agora;32,0;305,13;9800,95
+PC003008;Não informado;E;Baixa;5,0;8,0;18,8;55;100;15;19,44;4,71;🔴 Comprar agora;22,0;365,87;7916,29
+PC000416;Não informado;E;Baixa;32,0;19,2;50,1;55;100;15;7,29;4,71;🔴 Comprar agora;32,0;176,29;5620,49
+PC006912;Não informado;E;Baixa;21,0;6,7;94,0;55;100;15;3,88;4,71;🟢 OK;0,0;421,37;0,0
+PC008203;Não informado;E;Baixa;7,0;4,3;49,4;55;100;15;7,4;4,71;🔴 Comprar agora;7,0;611,81;4395,33
+PC000149;Não informado;E;Baixa;7,0;32,7;6,4;55;100;15;56,82;4,71;🚨 RUPTURA IMINENTE;102,0;361,75;36885,49
+PC008659;Não informado;E;Baixa;9,0;3,9;69,5;55;100;15;5,25;4,71;🟢 OK;0,0;676,6;0,0
+PC008128;Não informado;E;Baixa;6,0;3,5;51,1;55;100;15;7,14;4,71;🔴 Comprar agora;6,0;805,74;4625,73
+PC004096;Não informado;E;Baixa;4,0;4,3;27,7;55;100;15;13,19;4,71;🔴 Comprar agora;10,0;539,79;5642,18
+PC007040;Não informado;E;Baixa;9,0;12,1;22,4;55;100;15;16,32;4,71;🔴 Comprar agora;31,0;241,92;7560,56
+PC007296;Não informado;E;Baixa;7,0;3,5;59,4;55;100;15;6,14;4,71;🟢 OK;0,0;792,66;0,0
+PC007338;Não informado;E;Baixa;5,0;27,9;5,4;55;100;15;67,82;4,71;🚨 RUPTURA IMINENTE;88,0;613,03;53888,04
+PC001427;Não informado;E;Baixa;51,0;48,6;31,5;55;100;15;11,59;4,71;🔴 Comprar agora;111,0;114,65;12712,54
+PC004499;Não informado;E;Baixa;6,0;5,8;31,0;55;100;15;11,76;4,71;🔴 Comprar agora;13,0;442,35;5895,55
+PC005707;Não informado;E;Baixa;20,0;6,0;99,3;55;100;15;3,68;4,71;🟢 OK;0,0;434,99;0,0
+PC008298;Não informado;E;Baixa;17,0;5,5;93,2;55;100;15;3,92;4,71;🟢 OK;0,0;660,13;0,0
+PC009770;Não informado;E;Baixa;14,0;13,6;30,9;55;100;15;11,82;4,71;🔴 Comprar agora;31,0;592,06;18557,25
+PC006880;Não informado;E;Baixa;5,0;22,0;6,8;55;100;15;53,57;4,71;🚨 RUPTURA IMINENTE;68,0;599,39;40986,95
+PC006987;Não informado;E;Baixa;10,0;5,0;60,2;55;100;15;6,07;4,71;🟢 OK;0,0;629,38;0,0
+PC001376;Não informado;E;Baixa;25,0;10,3;72,8;55;100;15;5,01;4,71;🟢 OK;0,0;250,99;0,0
+PC005525;Não informado;E;Baixa;3,0;4,8;18,9;55;100;15;19,3;4,71;🔴 Comprar agora;13,0;559,34;7194,43
+PC007936;Não informado;E;Baixa;8,0;4,0;60,5;55;100;15;6,03;4,71;🟢 OK;0,0;766,97;0,0
+PC005312;Não informado;E;Baixa;22,0;8,1;81,2;55;100;15;4,49;4,71;🟢 OK;0,0;350,23;0,0
+PC005290;Não informado;E;Baixa;2,0;3,7;16,0;55;100;15;22,75;4,71;🔴 Comprar agora;10,0;799,06;8361,43
+PC000267;Não informado;E;Baixa;4,0;3,9;30,6;55;100;15;11,93;4,71;🔴 Comprar agora;9,0;996,54;9037,92
+PC000971;Não informado;E;Baixa;12,0;31,8;11,3;55;100;15;32,29;4,71;🚨 RUPTURA IMINENTE;94,0;432,4;40715,06
+PC006475;Não informado;E;Baixa;4,0;3,9;30,6;55;100;15;11,91;4,71;🔴 Comprar agora;9,0;890,23;8062,05
+PC000459;Não informado;E;Baixa;11,0;3,8;87,2;55;100;15;4,19;4,71;🟢 OK;0,0;765,19;0,0
+PC002387;Não informado;E;Baixa;18,0;11,1;48,6;55;100;15;7,51;4,71;🔴 Comprar agora;19,0;204,37;3888,95
+PC008746;Não informado;E;Baixa;12,0;5,2;69,3;55;100;15;5,27;4,71;🟢 OK;0,0;518,07;0,0
+PC000554;Não informado;E;Baixa;19,0;9,9;57,8;55;100;15;6,31;4,71;🟢 OK;0,0;222,28;0,0
+PC008915;Não informado;E;Baixa;16,0;6,0;80,6;55;100;15;4,53;4,71;🟢 OK;0,0;440,05;0,0
+PC001632;Não informado;E;Baixa;28,0;9,6;87,7;55;100;15;4,16;4,71;🟢 OK;0,0;295,93;0,0
+PC009429;Não informado;E;Baixa;7,0;6,6;32,0;55;100;15;11,39;4,71;🔴 Comprar agora;15,0;655,17;9727,87
+PC004010;Não informado;E;Baixa;10,0;6,4;46,7;55;100;15;7,82;4,71;🔴 Comprar agora;11,0;709,14;8105,19
+PC009171;Não informado;E;Baixa;7,0;4,0;52,1;55;100;15;7,0;4,71;🔴 Comprar agora;6,0;826,06;5306,78
+PC006240;Não informado;E;Baixa;13,0;8,1;48,4;55;100;15;7,55;4,71;🔴 Comprar agora;14,0;354,08;4915,29
+PC004691;Não informado;E;Baixa;20,0;10,3;58,1;55;100;15;6,28;4,71;🟢 OK;0,0;282,38;0,0
+PC004906;Não informado;E;Baixa;4,0;3,0;39,7;55;100;15;9,18;4,71;🔴 Comprar agora;6,0;711,45;4314,61
+PC004683;Não informado;E;Baixa;23,0;17,0;40,7;55;100;15;8,98;4,71;🔴 Comprar agora;34,0;453,13;15211,26
+PC007658;Não informado;E;Baixa;9,0;6,6;40,8;55;100;15;8,96;4,71;🔴 Comprar agora;13,0;265,96;3479,12
+PC003733;Não informado;E;Baixa;14,0;4,9;85,1;55;100;15;4,29;4,71;🟢 OK;0,0;526,95;0,0
+PC004864;Não informado;E;Baixa;6,0;9,8;18,4;55;100;15;19,81;4,71;🔴 Comprar agora;27,0;767,15;20381,31
+PC005971;Não informado;E;Baixa;10,0;10,1;29,6;55;100;15;12,32;4,71;🔴 Comprar agora;24,0;705,38;16747,27
+PC008267;Não informado;E;Baixa;14,0;7,5;56,3;55;100;15;6,48;4,71;🟢 OK;0,0;310,01;0,0
+PC000352;Não informado;E;Baixa;9,0;5,3;50,7;55;100;15;7,2;4,71;🔴 Comprar agora;9,0;637,51;5581,87
+PC001962;Não informado;E;Baixa;31,0;28,4;32,7;55;100;15;11,16;4,71;🔴 Comprar agora;64,0;119,05;7591,31
+PC009419;Não informado;E;Baixa;26,0;10,2;76,2;55;100;15;4,79;4,71;🟢 OK;0,0;278,25;0,0
+PC003200;Não informado;E;Baixa;8,0;5,0;47,9;55;100;15;7,62;4,71;🔴 Comprar agora;9,0;897,15;7807,78
+PC003221;Não informado;E;Baixa;6,0;6,9;26,2;55;100;15;13,94;4,71;🔴 Comprar agora;17,0;315,71;5342,12
+PC008224;Não informado;E;Baixa;11,0;3,5;93,6;55;100;15;3,9;4,71;🟢 OK;0,0;699,41;0,0
+PC009632;Não informado;E;Baixa;7,0;3,0;70,4;55;100;15;5,19;4,71;🟢 OK;0,0;733,33;0,0
+PC008938;Não informado;E;Baixa;5,0;3,7;40,2;55;100;15;9,09;4,71;🔴 Comprar agora;7,0;691,94;5151,75
+PC005269;Não informado;E;Baixa;11,0;5,7;57,8;55;100;15;6,32;4,71;🟢 OK;0,0;481,52;0,0
+PC000597;Não informado;E;Baixa;7,0;3,5;59,8;55;100;15;6,1;4,71;🟢 OK;0,0;567,09;0,0
+PC005472;Não informado;E;Baixa;2,0;4,6;13,0;55;100;15;28,15;4,71;🚨 RUPTURA IMINENTE;13,0;890,78;11958,99
+PC000275;Não informado;E;Baixa;9,0;3,2;85,0;55;100;15;4,29;4,71;🟢 OK;0,0;916,04;0,0
+PC003861;Não informado;E;Baixa;16,0;4,4;109,4;55;100;15;3,34;4,71;🟡 Estoque excessivo;0,0;558,11;0,0
+PC001952;Não informado;E;Baixa;15,0;16,0;28,1;55;100;15;13,0;4,71;🔴 Comprar agora;38,0;180,41;6928,83
+PC000874;Não informado;E;Baixa;3,0;5,1;17,5;55;100;15;20,8;4,71;🔴 Comprar agora;14,0;494,29;6968,24
+PC007274;Não informado;E;Baixa;3,0;3,0;30,0;55;100;15;12,18;4,71;🔴 Comprar agora;7,0;767,67;5382,15
+PC008531;Não informado;E;Baixa;14,0;7,8;53,8;55;100;15;6,78;4,71;🔴 Comprar agora;12,0;574,02;6888,28
+PC002323;Não informado;E;Baixa;4,0;5,0;23,9;55;100;15;15,26;4,71;🔴 Comprar agora;13,0;502,72;6395,25
+PC001056;Não informado;E;Baixa;40,0;11,9;101,1;55;100;15;3,61;4,71;🟡 Estoque excessivo;0,0;227,76;0,0
+PC002432;Não informado;E;Baixa;22,0;13,9;47,6;55;100;15;7,67;4,71;🔴 Comprar agora;24,0;549,89;13319,86
+PC001995;Não informado;E;Baixa;3,0;4,1;21,7;55;100;15;16,83;4,71;🔴 Comprar agora;11,0;668,84;7244,23
+PC004256;Não informado;E;Baixa;7,0;5,8;36,1;55;100;15;10,11;4,71;🔴 Comprar agora;12,0;407,46;5051,71
+PC002635;Não informado;E;Baixa;59,0;19,7;90,0;55;100;15;4,06;4,71;🟢 OK;0,0;122,47;0,0
+PC004371;Não informado;E;Baixa;6,0;11,0;16,3;55;100;15;22,38;4,71;🔴 Comprar agora;31,0;745,01;22936,46
+PC009920;Não informado;E;Baixa;28,0;16,5;50,9;55;100;15;7,17;4,71;🔴 Comprar agora;27,0;150,32;4063,37
+PC005696;Não informado;E;Baixa;12,0;5,1;70,7;55;100;15;5,16;4,71;🟢 OK;0,0;419,98;0,0
+PC006283;Não informado;E;Baixa;21,0;8,5;73,8;55;100;15;4,94;4,71;🟢 OK;0,0;290,74;0,0
+PC008907;Não informado;E;Baixa;8,0;4,1;59,0;55;100;15;6,19;4,71;🟢 OK;0,0;475,54;0,0
+PC001152;Não informado;E;Baixa;2,0;16,7;3,6;55;100;15;101,52;4,71;🚨 RUPTURA IMINENTE;54,0;651,93;34960,1
+PC006613;Não informado;E;Baixa;6,0;4,8;37,4;55;100;15;9,76;4,71;🔴 Comprar agora;10,0;778,51;7824,09
+PC000725;Não informado;E;Baixa;10,0;2,8;106,0;55;100;15;3,44;4,71;🟡 Estoque excessivo;0,0;636,66;0,0
+PC000640;Não informado;E;Baixa;5,0;8,0;18,7;55;100;15;19,48;4,71;🔴 Comprar agora;22,0;466,33;10112,26
+PC008469;Não informado;E;Média;13,0;8,1;48,1;55;100;15;7,58;4,71;🔴 Comprar agora;14,0;522,6;7319,38
+PC003413;Não informado;E;Baixa;6,0;3,6;49,4;55;100;15;7,39;4,71;🔴 Comprar agora;6,0;515,55;3169,02
+PC002368;Não informado;E;Baixa;3,0;8,3;10,8;55;100;15;33,69;4,71;🚨 RUPTURA IMINENTE;25,0;791,95;19555,74
+PC009322;Não informado;E;Baixa;10,0;12,5;24,0;55;100;15;15,23;4,71;🔴 Comprar agora;32,0;299,5;9500,86
+PC008533;Não informado;E;Baixa;5,0;2,7;56,3;55;100;15;6,48;4,71;🟢 OK;0,0;1005,48;0,0
+PC000192;Não informado;E;Baixa;9,0;4,1;66,3;55;100;15;5,5;4,71;🟢 OK;0,0;615,51;0,0
+PC001611;Não informado;E;Baixa;43,0;13,0;99,3;55;100;15;3,68;4,71;🟢 OK;0,0;140,84;0,0
+PC003520;Não informado;E;Baixa;8,0;2,7;88,7;55;100;15;4,12;4,71;🟢 OK;0,0;817,73;0,0
+PC002602;Não informado;E;Baixa;43,0;15,3;84,2;55;100;15;4,34;4,71;🟢 OK;0,0;155,75;0,0
+PC005899;Não informado;E;Baixa;16,0;7,4;64,9;55;100;15;5,62;4,71;🟢 OK;0,0;262,95;0,0
+PC005771;Não informado;E;Baixa;12,0;5,0;71,6;55;100;15;5,1;4,71;🟢 OK;0,0;409,35;0,0
+PC000256;Não informado;E;Média;16,0;16,9;28,3;55;100;15;12,88;4,71;🔴 Comprar agora;40,0;240,25;9722,38
+PC002048;Não informado;E;Baixa;19,0;6,2;92,1;55;100;15;3,96;4,71;🟢 OK;0,0;291,63;0,0
+PC003424;Não informado;E;Baixa;4,0;3,9;31,1;55;100;15;11,75;4,71;🔴 Comprar agora;9,0;586,62;5210,04
+PC001344;Não informado;E;Baixa;3,0;3,9;23,0;55;100;15;15,84;4,71;🔴 Comprar agora;10,0;418,77;4194,22
+PC002218;Não informado;E;Baixa;4,0;4,0;29,6;55;100;15;12,32;4,71;🔴 Comprar agora;9,0;406,72;3863,53
+PC002944;Não informado;E;Baixa;7,0;6,0;34,9;55;100;15;10,45;4,71;🔴 Comprar agora;13,0;796,47;10384,06
+PC001578;Não informado;E;Baixa;5,0;9,2;16,3;55;100;15;22,34;4,71;🔴 Comprar agora;26,0;570,69;14614,64
+PC009931;Não informado;E;Baixa;6,0;13,1;13,7;55;100;15;26,66;4,71;🚨 RUPTURA IMINENTE;38,0;211,92;8016,31
+PC000341;Não informado;E;Baixa;5,0;15,4;9,7;55;100;15;37,53;4,71;🚨 RUPTURA IMINENTE;46,0;203,89;9461,61
+PC009514;Não informado;E;Baixa;17,0;17,0;30,0;55;100;15;12,15;4,71;🔴 Comprar agora;40,0;155,53;6157,56
+PC000203;Não informado;E;Baixa;9,0;4,9;55,1;55;100;15;6,63;4,71;🟢 OK;0,0;766,61;0,0
+PC008725;Não informado;E;Baixa;2,0;2,7;21,9;55;100;15;16,7;4,71;🔴 Comprar agora;7,0;939,72;6719,44
+PC007456;Não informado;E;Média;31,0;28,2;33,0;55;100;15;11,06;4,71;🔴 Comprar agora;63,0;110,94;6979,91
+PC007509;Não informado;E;Baixa;5,0;4,8;31,5;55;100;15;11,58;4,71;🔴 Comprar agora;11,0;547,04;5941,37
+PC009642;Não informado;E;Baixa;8,0;6,3;38,0;55;100;15;9,61;4,71;🔴 Comprar agora;13,0;259,48;3392,34
+PC005781;Não informado;E;Baixa;36,0;19,5;55,4;55;100;15;6,59;4,71;🟢 OK;0,0;103,04;0,0
+PC007978;Não informado;E;Baixa;6,0;12,9;14,0;55;100;15;26,14;4,71;🚨 RUPTURA IMINENTE;37,0;676,5;25006,26
+PC000533;Não informado;E;Baixa;6,0;2,0;88,8;55;100;15;4,11;4,71;🟢 OK;0,0;1000,56;0,0
+PC006547;Não informado;E;Baixa;7,0;4,5;46,3;55;100;15;7,88;4,71;🔴 Comprar agora;8,0;692,25;5619,87
+PC002251;Não informado;E;Baixa;4,0;6,0;20,1;55;100;15;18,16;4,71;🔴 Comprar agora;16,0;775,56;12335,5
+PC000531;Não informado;E;Baixa;5,0;8,1;18,6;55;100;15;19,6;4,71;🔴 Comprar agora;22,0;232,76;5085,74
+PC004394;Não informado;E;Baixa;4,0;10,3;11,6;55;100;15;31,38;4,71;🚨 RUPTURA IMINENTE;30,0;831,49;25271,11
+PC002133;Não informado;E;Baixa;3,0;1,8;50,6;55;100;15;7,22;4,71;🔴 Comprar agora;3,0;863,98;2535,17
+PC004576;Não informado;E;Baixa;4,0;4,9;24,7;55;100;15;14,77;4,71;🔴 Comprar agora;12,0;346,32;4220,96
+PC000715;Não informado;E;Baixa;37,0;34,1;32,5;55;100;15;11,22;4,71;🔴 Comprar agora;77,0;193,32;14826,76
+PC000211;Não informado;E;Baixa;3,0;10,2;8,8;55;100;15;41,33;4,71;🚨 RUPTURA IMINENTE;31,0;665,44;20609,3
+PC007488;Não informado;E;Baixa;5,0;4,1;36,8;55;100;15;9,92;4,71;🔴 Comprar agora;9,0;368,75;3165,3
+PC004627;Não informado;E;Baixa;11,0;8,1;40,6;55;100;15;8,99;4,71;🔴 Comprar agora;16,0;804,48;12947,73
+PC000544;Não informado;E;Baixa;5,0;8,0;18,7;55;100;15;19,5;4,71;🔴 Comprar agora;22,0;223,98;4864,45
+PC003669;Não informado;E;Baixa;11,0;6,4;51,5;55;100;15;7,09;4,71;🔴 Comprar agora;10,0;294,24;3050,97
+PC006816;Não informado;E;Baixa;16,0;4,9;97,5;55;100;15;3,74;4,71;🟢 OK;0,0;305,56;0,0
+PC003776;Não informado;E;Baixa;28,0;9,4;89,8;55;100;15;4,07;4,71;🟢 OK;0,0;166,55;0,0
+PC007680;Não informado;E;Baixa;8,0;3,1;77,2;55;100;15;4,73;4,71;🟢 OK;0,0;519,16;0,0
+PC004949;Não informado;E;Baixa;7,0;2,8;75,3;55;100;15;4,85;4,71;🟢 OK;0,0;469,67;0,0
+PC008467;Não informado;E;Baixa;15,0;22,1;20,4;55;100;15;17,93;4,71;🔴 Comprar agora;59,0;111,5;6545,53
+PC002451;Não informado;E;Baixa;17,0;15,1;33,9;55;100;15;10,77;4,71;🔴 Comprar agora;33,0;198,87;6597,82
+PC005963;Não informado;E;Baixa;7,0;1,9;108,1;55;100;15;3,38;4,71;🟡 Estoque excessivo;0,0;875,57;0,0
+PC006037;Não informado;E;Baixa;8,0;4,7;51,1;55;100;15;7,14;4,71;🔴 Comprar agora;8,0;485,33;3714,32
+PC005504;Não informado;E;Baixa;5,0;6,9;21,6;55;100;15;16,86;4,71;🔴 Comprar agora;18,0;773,83;14004,04
+PC001939;Não informado;E;Média;2,0;3,3;18,3;55;100;15;19,94;4,71;🔴 Comprar agora;9,0;753,15;6723,02
+PC004307;Não informado;E;Baixa;6,0;12,8;14,0;55;100;15;26,05;4,71;🚨 RUPTURA IMINENTE;37,0;143,51;5285,07
+PC007402;Não informado;E;Baixa;8,0;6,4;37,7;55;100;15;9,69;4,71;🔴 Comprar agora;13,0;350,11;4637,52
+PC009299;Não informado;E;Baixa;14,0;4,7;88,5;55;100;15;4,12;4,71;🟢 OK;0,0;336,99;0,0
+PC009258;Não informado;E;Baixa;4,0;3,4;35,1;55;100;15;10,4;4,71;🔴 Comprar agora;7,0;442,14;3270,17
+PC008083;Não informado;E;Baixa;2,0;2,0;29,8;55;100;15;12,24;4,71;🔴 Comprar agora;5,0;754,52;3552,67
+PC007381;Não informado;E;Baixa;12,0;6,3;57,2;55;100;15;6,38;4,71;🟢 OK;0,0;265,44;0,0
+PC007125;Não informado;E;Baixa;22,0;12,6;52,3;55;100;15;6,98;4,71;🔴 Comprar agora;20,0;112,02;2245,43
+PC006101;Não informado;E;Baixa;10,0;3,0;100,2;55;100;15;3,64;4,71;🟡 Estoque excessivo;0,0;540,45;0,0
+PC007072;Não informado;E;Baixa;1,0;16,7;1,8;55;100;15;202,68;4,71;🚨 RUPTURA IMINENTE;55,0;259,36;14142,33
+PC007146;Não informado;E;Baixa;2,0;3,0;19,8;55;100;15;18,39;4,71;🔴 Comprar agora;8,0;743,31;6003,39
+PC009120;Não informado;E;Baixa;23,0;19,0;36,4;55;100;15;10,03;4,71;🔴 Comprar agora;40,0;149,97;6027,33
+PC008928;Não informado;E;Baixa;21,0;21,8;28,9;55;100;15;12,61;4,71;🔴 Comprar agora;52,0;223,8;11534,45
+PC009491;Não informado;E;Baixa;9,0;20,7;13,1;55;100;15;27,92;4,71;🚨 RUPTURA IMINENTE;60,0;253,7;15181,68
+PC002688;Não informado;E;Baixa;3,0;8,2;11,0;55;100;15;33,07;4,71;🚨 RUPTURA IMINENTE;24,0;559,45;13525,81
+PC003626;Não informado;E;Baixa;5,0;5,7;26,2;55;100;15;13,94;4,71;🔴 Comprar agora;14,0;823,36;11607,94
+PC008085;Não informado;E;Baixa;7,0;15,0;14,0;55;100;15;26,16;4,71;🚨 RUPTURA IMINENTE;43,0;522,22;22540,28
+PC000480;Não informado;E;Baixa;6,0;2,0;88,3;55;100;15;4,13;4,71;🟢 OK;0,0;885,52;0,0
+PC007904;Não informado;E;Baixa;4,0;3,0;39,7;55;100;15;9,2;4,71;🔴 Comprar agora;6,0;661,41;4026,44
+PC007819;Não informado;E;Baixa;3,0;4,9;18,3;55;100;15;19,93;4,71;🔴 Comprar agora;13,0;742,12;9929,17
+PC001706;Não informado;E;Baixa;7,0;2,8;76,3;55;100;15;4,78;4,71;🟢 OK;0,0;606,64;0,0
+PC002837;Não informado;E;Baixa;24,0;19,6;36,8;55;100;15;9,92;4,71;🔴 Comprar agora;41,0;121,16;4995,63
+PC000032;Não informado;E;Baixa;4,0;1,8;65,2;55;100;15;5,6;4,71;🟢 OK;0,0;586,0;0,0
+PC006506;Não informado;E;Baixa;3,0;3,1;29,5;55;100;15;12,39;4,71;🔴 Comprar agora;7,0;645,48;4636,49
+PC009365;Não informado;E;Baixa;14,0;9,7;43,3;55;100;15;8,42;4,71;🔴 Comprar agora;18,0;225,12;4121,02
+PC006803;Não informado;E;Baixa;8,0;4,6;51,9;55;100;15;7,04;4,71;🔴 Comprar agora;7,0;415,48;3082,64
+PC004565;Não informado;E;Baixa;2,0;3,9;15,3;55;100;15;23,83;4,71;🔴 Comprar agora;11,0;835,53;9239,98
+PC008810;Não informado;E;Baixa;9,0;5,1;53,2;55;100;15;6,86;4,71;🔴 Comprar agora;8,0;255,32;2022,34
+PC009747;Não informado;E;Baixa;22,0;8,2;80,5;55;100;15;4,53;4,71;🟢 OK;0,0;176,51;0,0
+PC003488;Não informado;E;Baixa;5,0;4,0;37,1;55;100;15;9,84;4,71;🔴 Comprar agora;8,0;366,11;3103,49
+PC003027;Não informado;E;Baixa;6,0;2,0;89,2;55;100;15;4,09;4,71;🟢 OK;0,0;654,85;0,0
+PC007584;Não informado;E;Baixa;6,0;2,0;89,8;55;100;15;4,06;4,71;🟢 OK;0,0;570,06;0,0
+PC006592;Não informado;E;Baixa;5,0;2,6;56,9;55;100;15;6,42;4,71;🟢 OK;0,0;399,89;0,0
+PC003347;Não informado;E;Média;3,0;5,0;18,0;55;100;15;20,28;4,71;🔴 Comprar agora;14,0;523,33;7154,92
+PC009088;Não informado;E;Baixa;4,0;2,7;45,2;55;100;15;8,07;4,71;🔴 Comprar agora;5,0;521,34;2527,45
+PC006496;Não informado;E;Média;8,0;8,2;29,4;55;100;15;12,43;4,71;🔴 Comprar agora;19,0;236,69;4553,68
+PC005323;Não informado;E;Baixa;6,0;3,1;57,5;55;100;15;6,35;4,71;🟢 OK;0,0;589,59;0,0
+PC008480;Não informado;E;Baixa;33,0;26,6;37,3;55;100;15;9,79;4,71;🔴 Comprar agora;56,0;70,38;3906,33
+PC008917;Não informado;E;Baixa;28,0;17,3;48,4;55;100;15;7,53;4,71;🔴 Comprar agora;30,0;67,25;2003,66
+PC008874;Não informado;E;Baixa;5,0;1,8;85,4;55;100;15;4,27;4,71;🟢 OK;0,0;523,38;0,0
+PC003456;Não informado;E;Média;2,0;7,9;7,6;55;100;15;48,03;4,71;🚨 RUPTURA IMINENTE;24,0;265,06;6445,4
+PC003306;Não informado;E;Baixa;6,0;7,5;23,8;55;100;15;15,31;4,71;🔴 Comprar agora;19,0;800,41;15336,27
+PC001045;Não informado;E;Baixa;1,0;1,8;16,3;55;100;15;22,43;4,71;🔴 Comprar agora;5,0;696,53;3583,21
+PC007691;Não informado;E;Baixa;29,0;15,4;56,6;55;100;15;6,44;4,71;🟢 OK;0,0;81,92;0,0
+PC003178;Não informado;E;Baixa;3,0;2,1;43,8;55;100;15;8,33;4,71;🔴 Comprar agora;4,0;572,29;2202,02
+PC003915;Não informado;E;Baixa;12,0;11,7;30,6;55;100;15;11,91;4,71;🔴 Comprar agora;27,0;122,3;3321,6
+PC001408;Não informado;E;Baixa;6,0;29,6;6,1;55;100;15;59,98;4,71;🚨 RUPTURA IMINENTE;93,0;289,96;26847,88
+PC001235;Não informado;E;Baixa;6,0;11,3;16,0;55;100;15;22,87;4,71;🔴 Comprar agora;32,0;579,56;18308,08
+PC005674;Não informado;E;Baixa;4,0;1,6;73,1;55;100;15;4,99;4,71;🟢 OK;0,0;593,77;0,0
+PC000651;Não informado;E;Baixa;4,0;1,9;62,2;55;100;15;5,87;4,71;🟢 OK;0,0;767,01;0,0
+PC002912;Não informado;E;Baixa;10,0;2,8;106,1;55;100;15;3,44;4,71;🟡 Estoque excessivo;0,0;364,78;0,0
+PC003283;Não informado;E;Baixa;6,0;1,9;95,9;55;100;15;3,81;4,71;🟢 OK;0,0;675,85;0,0
+PC000277;Não informado;E;Baixa;28,0;19,5;43,2;55;100;15;8,45;4,71;🔴 Comprar agora;37,0;124,83;4598,57
+PC006549;Não informado;E;Baixa;12,0;3,5;102,1;55;100;15;3,58;4,71;🟡 Estoque excessivo;0,0;288,55;0,0
+PC005152;Não informado;E;Baixa;6,0;3,2;57,0;55;100;15;6,4;4,71;🟢 OK;0,0;610,43;0,0
+PC002080;Não informado;E;Baixa;16,0;9,4;50,9;55;100;15;7,17;4,71;🔴 Comprar agora;15,0;140,75;2172,3
+PC006421;Não informado;E;Baixa;2,0;6,1;9,8;55;100;15;37,27;4,71;🚨 RUPTURA IMINENTE;18,0;552,69;10182,22
+PC003744;Não informado;E;Baixa;2,0;6,6;9,1;55;100;15;40,0;4,71;🚨 RUPTURA IMINENTE;20,0;697,09;13883,09
+PC003712;Não informado;E;Baixa;2,0;3,0;20,2;55;100;15;18,06;4,71;🔴 Comprar agora;8,0;472,85;3734,59
+PC002016;Não informado;E;Baixa;12,0;5,9;61,2;55;100;15;5,96;4,71;🟢 OK;0,0;211,23;0,0
+PC003370;Não informado;E;Baixa;3,0;2,6;34,3;55;100;15;10,63;4,71;🔴 Comprar agora;6,0;333,03;1911,03
+PC007552;Não informado;E;Baixa;6,0;3,1;58,5;55;100;15;6,24;4,71;🟢 OK;0,0;486,26;0,0
+PC004128;Não informado;E;Baixa;2,0;5,0;11,9;55;100;15;30,69;4,71;🚨 RUPTURA IMINENTE;15,0;802,98;11895,27
+PC002208;Não informado;E;Baixa;12,0;4,0;89,2;55;100;15;4,09;4,71;🟢 OK;0,0;268,88;0,0
+PC004032;Não informado;E;Baixa;6,0;2,9;62,7;55;100;15;5,82;4,71;🟢 OK;0,0;448,79;0,0
+PC008490;Não informado;E;Baixa;10,0;8,3;36,0;55;100;15;10,13;4,71;🔴 Comprar agora;18,0;151,25;2685,54
+PC004224;Não informado;E;Baixa;5,0;3,8;39,9;55;100;15;9,15;4,71;🔴 Comprar agora;8,0;782,76;5901,73
+PC001920;Não informado;E;Baixa;15,0;9,5;47,6;55;100;15;7,67;4,71;🔴 Comprar agora;17,0;366,37;6052,25
+PC007635;Não informado;E;Baixa;6,0;2,7;67,7;55;100;15;5,39;4,71;🟢 OK;0,0;407,17;0,0
+PC003603;Não informado;E;Baixa;6,0;2,9;62,4;55;100;15;5,85;4,71;🟢 OK;0,0;307,3;0,0
+PC004939;Não informado;E;Baixa;3,0;3,0;29,6;55;100;15;12,32;4,71;🔴 Comprar agora;7,0;440,98;3143,17
+PC003029;Não informado;E;Baixa;13,0;28,7;13,6;55;100;15;26,84;4,71;🚨 RUPTURA IMINENTE;83,0;183,0;15116,05
+PC008395;Não informado;E;Média;5,0;9,9;15,1;55;100;15;24,15;4,71;🔴 Comprar agora;28,0;171,74;4822,07
+PC003584;Não informado;E;Baixa;12,0;4,0;90,8;55;100;15;4,02;4,71;🟢 OK;0,0;270,86;0,0
+PC003114;Não informado;E;Baixa;5,0;2,0;74,0;55;100;15;4,93;4,71;🟢 OK;0,0;542,89;0,0
+PC004235;Não informado;E;Baixa;14,0;8,3;50,8;55;100;15;7,18;4,71;🔴 Comprar agora;14,0;425,45;5763,93
+PC008139;Não informado;E;Baixa;22,0;6,3;104,7;55;100;15;3,49;4,71;🟡 Estoque excessivo;0,0;155,29;0,0
+PC005077;Não informado;E;Baixa;4,0;11,9;10,1;55;100;15;36,27;4,71;🚨 RUPTURA IMINENTE;36,0;301,57;10781,53
+PC008736;Não informado;E;Baixa;3,0;3,2;27,7;55;100;15;13,16;4,71;🔴 Comprar agora;8,0;587,29;4592,74
+PC004501;Não informado;E;Baixa;2,0;10,3;5,8;55;100;15;62,77;4,71;🚨 RUPTURA IMINENTE;32,0;412,05;13348,13
+PC006219;Não informado;E;Média;17,0;21,5;23,8;55;100;15;15,36;4,71;🔴 Comprar agora;55,0;93,75;5114,53
+PC000915;Não informado;E;Baixa;2,0;1,9;31,0;55;100;15;11,77;4,71;🔴 Comprar agora;4,0;579,37;2578,38
+PC005973;Não informado;E;Baixa;6,0;15,1;11,9;55;100;15;30,69;4,71;🚨 RUPTURA IMINENTE;44,0;492,5;21892,15
+PC000682;Não informado;E;Baixa;11,0;8,6;38,2;55;100;15;9,56;4,71;🔴 Comprar agora;18,0;111,56;1986,29
+PC008234;Não informado;E;Baixa;3,0;4,0;22,4;55;100;15;16,28;4,71;🔴 Comprar agora;10,0;273,58;2839,79
+PC001747;Não informado;E;Baixa;6,0;2,0;91,2;55;100;15;4,0;4,71;🟢 OK;0,0;503,88;0,0
+PC001888;Não informado;E;Baixa;18,0;7,0;76,6;55;100;15;4,76;4,71;🟢 OK;0,0;137,95;0,0
+PC009760;Não informado;E;Baixa;20,0;6,8;88,3;55;100;15;4,13;4,71;🟢 OK;0,0;152,82;0,0
+PC008426;Não informado;E;Baixa;6,0;3,1;58,7;55;100;15;6,22;4,71;🟢 OK;0,0;390,41;0,0
+PC006099;Não informado;E;Baixa;8,0;10,4;23,0;55;100;15;15,85;4,71;🔴 Comprar agora;27,0;375,96;10053,46
+PC006347;Não informado;E;Baixa;4,0;2,1;58,2;55;100;15;6,27;4,71;🟢 OK;0,0;586,87;0,0
+PC000469;Não informado;E;Baixa;2,0;3,7;16,0;55;100;15;22,75;4,71;🔴 Comprar agora;10,0;284,87;2981,86
+PC005482;Não informado;E;Baixa;9,0;7,2;37,3;55;100;15;9,77;4,71;🔴 Comprar agora;15,0;337,5;5096,77
+PC009408;Não informado;E;Baixa;6,0;3,0;59,7;55;100;15;6,11;4,71;🟢 OK;0,0;343,28;0,0
+PC005632;Não informado;E;Baixa;3,0;1,3;71,0;55;100;15;5,14;4,71;🟢 OK;0,0;918,65;0,0
+PC001803;Não informado;E;Baixa;8,0;4,4;54,5;55;100;15;6,7;4,71;🔴 Comprar agora;7,0;367,57;2454,0
+PC009035;Não informado;E;Baixa;4,0;2,5;47,5;55;100;15;7,68;4,71;🔴 Comprar agora;4,0;418,55;1850,73
+PC003403;Não informado;E;Baixa;4,0;2,9;41,1;55;100;15;8,88;4,71;🔴 Comprar agora;6,0;485,14;2780,58
+PC007115;Não informado;E;Baixa;4,0;14,5;8,3;55;100;15;43,97;4,71;🚨 RUPTURA IMINENTE;44,0;419,31;18525,53
+PC000992;Não informado;E;Baixa;2,0;4,9;12,1;55;100;15;30,05;4,71;🚨 RUPTURA IMINENTE;14,0;375,2;5427,88
+PC000704;Não informado;E;Baixa;4,0;5,1;23,6;55;100;15;15,5;4,71;🔴 Comprar agora;13,0;534,9;6944,35
+PC004947;Não informado;E;Baixa;3,0;2,1;43,9;55;100;15;8,32;4,71;🔴 Comprar agora;4,0;410,48;1575,61
+PC003818;Não informado;E;Baixa;0,0;5,2;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;17,0;706,31;12298,07
+PC009024;Não informado;E;Baixa;5,0;3,0;49,2;55;100;15;7,42;4,71;🔴 Comprar agora;5,0;369,36;1906,25
+PC000864;Não informado;E;Baixa;1,0;5,1;5,8;55;100;15;62,42;4,71;🚨 RUPTURA IMINENTE;16,0;551,39;8878,29
+PC000736;Não informado;E;Baixa;5,0;5,1;29,6;55;100;15;12,32;4,71;🔴 Comprar agora;12,0;560,62;6657,78
+PC002579;Não informado;E;Baixa;3,0;1,4;65,8;55;100;15;5,55;4,71;🟢 OK;0,0;959,56;0,0
+PC009099;Não informado;E;Baixa;6,0;3,1;57,4;55;100;15;6,36;4,71;🟢 OK;0,0;417,77;0,0
+PC001642;Não informado;E;Baixa;28,0;14,6;57,4;55;100;15;6,36;4,71;🟢 OK;0,0;61,31;0,0
+PC002261;Não informado;E;Baixa;11,0;6,0;55,0;55;100;15;6,64;4,71;🔴 Comprar agora;9,0;133,98;1206,61
+PC008416;Não informado;E;Baixa;2,0;1,1;57,0;55;100;15;6,41;4,71;🟢 OK;0,0;760,2;0,0
+PC006933;Não informado;E;Baixa;12,0;5,0;72,0;55;100;15;5,07;4,71;🟢 OK;0,0;177,61;0,0
+PC002794;Não informado;E;Baixa;5,0;11,0;13,7;55;100;15;26,71;4,71;🚨 RUPTURA IMINENTE;32,0;314,8;9943,8
+PC006731;Não informado;E;Baixa;4,0;2,1;58,2;55;100;15;6,27;4,71;🟢 OK;0,0;472,62;0,0
+PC007253;Não informado;E;Baixa;2,0;6,1;9,8;55;100;15;37,4;4,71;🚨 RUPTURA IMINENTE;18,0;754,12;13947,45
+PC004960;Não informado;E;Baixa;3,0;1,9;46,6;55;100;15;7,84;4,71;🔴 Comprar agora;3,0;373,47;1286,13
+PC001237;Não informado;E;Baixa;13,0;4,1;95,8;55;100;15;3,81;4,71;🟢 OK;0,0;203,9;0,0
+PC005994;Não informado;E;Baixa;2,0;3,0;20,3;55;100;15;17,98;4,71;🔴 Comprar agora;8,0;713,37;5601,35
+PC004299;Não informado;E;Baixa;2,0;1,6;38,1;55;100;15;9,59;4,71;🔴 Comprar agora;3,0;988,95;3219,89
+PC007328;Não informado;E;Baixa;2,0;4,1;14,6;55;100;15;25,01;4,71;🚨 RUPTURA IMINENTE;12,0;251,97;2948,84
+PC000746;Não informado;E;Baixa;3,0;0,9;96,4;55;100;15;3,79;4,71;🟢 OK;0,0;1013,26;0,0
+PC005056;Não informado;E;Média;3,0;3,4;26,8;55;100;15;13,62;4,71;🔴 Comprar agora;8,0;405,88;3325,72
+PC005397;Não informado;E;Baixa;7,0;19,1;11,0;55;100;15;33,16;4,71;🚨 RUPTURA IMINENTE;57,0;160,87;9105,29
+PC006667;Não informado;E;Baixa;1,0;1,0;30,7;55;100;15;11,9;4,71;🔴 Comprar agora;2,0;873,93;1974,92
+PC003296;Não informado;E;Baixa;8,0;9,7;24,8;55;100;15;14,74;4,71;🔴 Comprar agora;24,0;426,71;10369,56
+PC009856;Não informado;E;Baixa;2,0;1,0;59,5;55;100;15;6,14;4,71;🟢 OK;0,0;718,41;0,0
+PC000224;Não informado;E;Baixa;6,0;6,1;29,7;55;100;15;12,27;4,71;🔴 Comprar agora;14,0;417,21;5912,03
+PC008211;Não informado;E;Baixa;5,0;10,5;14,3;55;100;15;25,55;4,71;🚨 RUPTURA IMINENTE;30,0;370,43;11113,35
+PC004074;Não informado;E;Baixa;2,0;1,0;60,8;55;100;15;6,0;4,71;🟢 OK;0,0;697,26;0,0
+PC007360;Não informado;E;Baixa;29,0;13,2;65,8;55;100;15;5,55;4,71;🟢 OK;0,0;59,0;0,0
+PC008971;Não informado;E;Baixa;3,0;3,3;27,0;55;100;15;13,5;4,71;🔴 Comprar agora;8,0;386,02;3123,64
+PC009386;Não informado;E;Baixa;3,0;2,0;45,5;55;100;15;8,02;4,71;🔴 Comprar agora;4,0;399,49;1435,36
+PC005856;Não informado;E;Baixa;3,0;1,8;49,5;55;100;15;7,37;4,71;🔴 Comprar agora;3,0;469,45;1434,46
+PC002400;Não informado;E;Baixa;8,0;4,0;59,7;55;100;15;6,12;4,71;🟢 OK;0,0;241,95;0,0
+PC002976;Não informado;E;Baixa;4,0;5,0;24,2;55;100;15;15,11;4,71;🔴 Comprar agora;13,0;290,99;3654,05
+PC004266;Não informado;E;Baixa;3,0;5,0;18,0;55;100;15;20,31;4,71;🔴 Comprar agora;14,0;148,72;2036,3
+PC001130;Não informado;E;Baixa;1,0;6,3;4,8;55;100;15;76,06;4,71;🚨 RUPTURA IMINENTE;20,0;641,48;12725,19
+PC005141;Não informado;E;Baixa;1,0;1,0;29,4;55;100;15;12,42;4,71;🔴 Comprar agora;2,0;628,32;1509,83
+PC009555;Não informado;E;Baixa;6,0;11,7;15,4;55;100;15;23,63;4,71;🔴 Comprar agora;33,0;268,54;8821,4
+PC004330;Não informado;E;Baixa;3,0;1,3;67,6;55;100;15;5,4;4,71;🟢 OK;0,0;539,53;0,0
+PC007712;Não informado;E;Baixa;2,0;4,3;14,1;55;100;15;25,97;4,71;🚨 RUPTURA IMINENTE;12,0;635,02;7765,12
+PC000075;Não informado;E;Baixa;0,0;1,6;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;5,0;692,25;3636,76
+PC002059;Não informado;E;Baixa;1,0;0,9;31,6;55;100;15;11,54;4,71;🔴 Comprar agora;2,0;652,45;1410,98
+PC008595;Não informado;E;Baixa;21,0;27,9;22,6;55;100;15;16,14;4,71;🔴 Comprar agora;72,0;87,0;6252,75
+PC007594;Não informado;E;Baixa;1,0;4,1;7,4;55;100;15;49,46;4,71;🚨 RUPTURA IMINENTE;13,0;578,68;7262,05
+PC008149;Não informado;E;Baixa;4,0;6,4;18,7;55;100;15;19,48;4,71;🔴 Comprar agora;17,0;210,14;3646,05
+PC003104;Não informado;E;Baixa;2,0;3,1;19,4;55;100;15;18,77;4,71;🔴 Comprar agora;8,0;350,37;2902,34
+PC004970;Não informado;E;Baixa;13,0;4,3;90,0;55;100;15;4,06;4,71;🟢 OK;0,0;252,92;0,0
+PC002090;Não informado;E;Baixa;1,0;1,1;28,4;55;100;15;12,85;4,71;🔴 Comprar agora;3,0;683,32;1722,14
+PC003797;Não informado;E;Baixa;2,0;1,7;35,7;55;100;15;10,23;4,71;🔴 Comprar agora;4,0;736,0;2653,65
+PC005376;Não informado;E;Baixa;9,0;2,8;97,9;55;100;15;3,73;4,71;🟢 OK;0,0;249,32;0,0
+PC006208;Não informado;E;Baixa;0,0;4,0;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;13,0;469,33;6217,14
+PC006165;Não informado;E;Baixa;10,0;6,4;46,6;55;100;15;7,84;4,71;🔴 Comprar agora;11,0;184,48;2118,19
+PC006570;Não informado;E;Baixa;1,0;1,4;22,0;55;100;15;16,6;4,71;🔴 Comprar agora;4,0;571,95;2028,95
+PC004832;Não informado;E;Baixa;21,0;16,0;39,3;55;100;15;9,3;4,71;🔴 Comprar agora;32,0;134,24;4360,71
+PC004181;Não informado;E;Baixa;4,0;9,7;12,4;55;100;15;29,37;4,71;🚨 RUPTURA IMINENTE;28,0;127,76;3600,85
+PC008618;Não informado;E;Baixa;14,0;8,1;52,1;55;100;15;7,0;4,71;🔴 Comprar agora;13,0;130,66;1678,77
+PC003946;Não informado;E;Baixa;3,0;0,9;96,8;55;100;15;3,77;4,71;🟢 OK;0,0;748,3;0,0
+PC009312;Não informado;E;Baixa;3,0;0,9;102,0;55;100;15;3,58;4,71;🟡 Estoque excessivo;0,0;629,88;0,0
+PC003093;Não informado;E;Baixa;7,0;3,6;58,9;55;100;15;6,2;4,71;🟢 OK;0,0;175,53;0,0
+PC009578;Não informado;E;Baixa;6,0;2,0;88,4;55;100;15;4,13;4,71;🟢 OK;0,0;331,33;0,0
+PC004672;Não informado;E;Baixa;7,0;3,1;68,8;55;100;15;5,31;4,71;🟢 OK;0,0;222,12;0,0
+PC005824;Não informado;E;Baixa;4,0;4,0;29,7;55;100;15;12,3;4,71;🔴 Comprar agora;9,0;685,31;6495,29
+PC002784;Não informado;E;Baixa;3,0;3,0;30,4;55;100;15;12,02;4,71;🔴 Comprar agora;7,0;198,61;1366,82
+PC003595;Não informado;E;Baixa;2,0;2,8;21,1;55;100;15;17,32;4,71;🔴 Comprar agora;7,0;240,61;1802,47
+PC006368;Não informado;E;Baixa;2,0;1,9;30,9;55;100;15;11,8;4,71;🔴 Comprar agora;4,0;360,62;1610,48
+PC008723;Não informado;E;Baixa;1,0;1,0;29,9;55;100;15;12,21;4,71;🔴 Comprar agora;2,0;708,14;1660,27
+PC003979;Não informado;E;Média;26,0;15,7;49,6;55;100;15;7,36;4,71;🔴 Comprar agora;26,0;84,29;2227,35
+PC003680;Não informado;E;Baixa;2,0;1,0;57,8;55;100;15;6,32;4,71;🟢 OK;0,0;532,98;0,0
+PC007189;Não informado;E;Baixa;1,0;6,0;5,0;55;100;15;72,95;4,71;🚨 RUPTURA IMINENTE;19,0;368,19;6990,6
+PC005075;Não informado;E;Baixa;7,0;3,1;68,5;55;100;15;5,33;4,71;🟢 OK;0,0;197,81;0,0
+PC003147;Não informado;E;Média;1,0;1,8;16,9;55;100;15;21,54;4,71;🔴 Comprar agora;5,0;541,32;2653,37
+PC003136;Não informado;E;Baixa;4,0;2,1;58,0;55;100;15;6,29;4,71;🟢 OK;0,0;258,4;0,0
+PC003498;Não informado;E;Baixa;1,0;0,9;32,0;55;100;15;11,39;4,71;🔴 Comprar agora;2,0;596,27;1264,77
+PC001834;Não informado;E;Baixa;11,0;5,3;62,4;55;100;15;5,85;4,71;🟢 OK;0,0;102,59;0,0
+PC003211;Não informado;E;Baixa;3,0;2,0;44,2;55;100;15;8,25;4,71;🔴 Comprar agora;4,0;312,2;1180,49
+PC005717;Não informado;E;Baixa;28,0;14,7;57,3;55;100;15;6,37;4,71;🟢 OK;0,0;118,36;0,0
+PC006250;Não informado;E;Baixa;8,0;4,8;49,8;55;100;15;7,33;4,71;🔴 Comprar agora;8,0;171,42;1381,9
+PC007968;Não informado;E;Baixa;6,0;1,9;94,8;55;100;15;3,85;4,71;🟢 OK;0,0;255,57;0,0
+PC009792;Não informado;E;Baixa;1,0;0,8;36,2;55;100;15;10,1;4,71;🔴 Comprar agora;2,0;515,67;910,55
+PC008715;Não informado;E;Baixa;1,0;1,6;19,0;55;100;15;19,19;4,71;🔴 Comprar agora;4,0;613,59;2611,6
+PC006432;Não informado;E;Baixa;11,0;5,2;63,9;55;100;15;5,71;4,71;🟢 OK;0,0;95,5;0,0
+PC000362;Não informado;E;Baixa;1,0;1,6;18,7;55;100;15;19,47;4,71;🔴 Comprar agora;4,0;670,47;2905,52
+PC004819;Não informado;E;Baixa;4,0;1,3;91,7;55;100;15;3,98;4,71;🟢 OK;0,0;595,24;0,0
+PC009248;Não informado;E;Baixa;2,0;2,0;29,4;55;100;15;12,4;4,71;🔴 Comprar agora;5,0;745,31;3572,3
+PC002131;Não informado;E;Baixa;13,0;4,9;79,0;55;100;15;4,62;4,71;🟢 OK;0,0;133,88;0,0
+PC002325;Não informado;E;Baixa;2,0;4,0;14,9;55;100;15;24,56;4,71;🚨 RUPTURA IMINENTE;11,0;487,39;5583,55
+PC007059;Não informado;E;Média;3,0;1,7;54,2;55;100;15;6,74;4,71;🔴 Comprar agora;3,0;571,33;1450,91
+PC004885;Não informado;E;Baixa;1,0;0,9;31,8;55;100;15;11,47;4,71;🔴 Comprar agora;2,0;591,18;1266,14
+PC001280;Não informado;E;Baixa;9,0;2,6;102,1;55;100;15;3,57;4,71;🟡 Estoque excessivo;0,0;145,52;0,0
+PC000768;Não informado;E;Baixa;5,0;7,9;19,0;55;100;15;19,19;4,71;🔴 Comprar agora;21,0;181,83;3870,95
+PC008672;Não informado;E;Baixa;3,0;11,4;7,9;55;100;15;46,36;4,71;🚨 RUPTURA IMINENTE;35,0;244,4;8579,79
+PC007317;Não informado;E;Baixa;4,0;1,2;97,0;55;100;15;3,76;4,71;🟢 OK;0,0;564,02;0,0
+PC009962;Não informado;E;Baixa;2,0;1,5;39,6;55;100;15;9,22;4,71;🔴 Comprar agora;3,0;467,28;1426,99
+PC005546;Não informado;E;Baixa;5,0;3,0;49,7;55;100;15;7,34;4,71;🔴 Comprar agora;5,0;176,47;892,89
+PC007955;Não informado;E;Baixa;1,0;2,0;14,7;55;100;15;24,87;4,71;🚨 RUPTURA IMINENTE;6,0;655,4;3811,19
+PC001984;Não informado;E;Baixa;5,0;2,7;55,3;55;100;15;6,6;4,71;🟢 OK;0,0;176,84;0,0
+PC006995;Não informado;E;Baixa;1,0;1,6;18,8;55;100;15;19,46;4,71;🔴 Comprar agora;4,0;441,65;1913,23
+PC000160;Não informado;E;Baixa;5,0;13,1;11,5;55;100;15;31,77;4,71;🚨 RUPTURA IMINENTE;39,0;111,4;4291,63
+PC000405;Não informado;E;Baixa;10,0;9,3;32,2;55;100;15;11,33;4,71;🔴 Comprar agora;21,0;302,55;6362,0
+PC001109;Não informado;E;Baixa;7,0;2,0;103,1;55;100;15;3,54;4,71;🟡 Estoque excessivo;0,0;306,14;0,0
+PC007829;Não informado;E;Baixa;6,0;5,0;35,8;55;100;15;10,2;4,71;🔴 Comprar agora;11,0;413,42;4448,09
+PC007744;Não informado;E;Média;2,0;1,7;36,2;55;100;15;10,07;4,71;🔴 Comprar agora;4,0;608,29;2139,68
+PC005267;Não informado;E;Baixa;5,0;4,5;33,5;55;100;15;10,89;4,71;🔴 Comprar agora;10,0;407,9;4048,0
+PC006304;Não informado;E;Média;1,0;1,7;18,0;55;100;15;20,25;4,71;🔴 Comprar agora;5,0;595,35;2708,22
+PC001813;Não informado;E;Média;2,0;1,6;36,8;55;100;15;9,93;4,71;🔴 Comprar agora;3,0;573,05;1971,09
+PC003808;Não informado;E;Baixa;1,0;1,6;18,8;55;100;15;19,43;4,71;🔴 Comprar agora;4,0;510,97;2208,39
+PC007200;Não informado;E;Baixa;3,0;1,0;92,3;55;100;15;3,95;4,71;🟢 OK;0,0;533,34;0,0
+PC005195;Não informado;E;Baixa;15,0;20,8;21,7;55;100;15;16,86;4,71;🔴 Comprar agora;54,0;133,83;7262,64
+PC009898;Não informado;E;Baixa;5,0;10,8;13,9;55;100;15;26,18;4,71;🚨 RUPTURA IMINENTE;31,0;157,74;4867,29
+PC003411;Não informado;E;Baixa;4,0;3,9;30,5;55;100;15;11,98;4,71;🔴 Comprar agora;9,0;574,74;5249,74
+PC001088;Não informado;E;Baixa;6,0;2,1;87,6;55;100;15;4,17;4,71;🟢 OK;0,0;263,37;0,0
+PC009227;Não informado;E;Baixa;7,0;4,1;51,6;55;100;15;7,07;4,71;🔴 Comprar agora;7,0;117,28;769,71
+PC000170;Não informado;E;Baixa;9,0;8,6;31,4;55;100;15;11,61;4,71;🔴 Comprar agora;20,0;171,66;3370,04
+PC004778;Não informado;E;Baixa;5,0;6,1;24,6;55;100;15;14,84;4,71;🔴 Comprar agora;15,0;350,93;5378,02
+PC001419;Não informado;E;Baixa;4,0;10,8;11,1;55;100;15;32,85;4,71;🚨 RUPTURA IMINENTE;32,0;110,6;3538,68
+PC008405;Não informado;E;Baixa;2,0;2,0;29,3;55;100;15;12,46;4,71;🔴 Comprar agora;5,0;270,82;1307,82
+PC003859;Não informado;E;Baixa;9,0;6,4;42,3;55;100;15;8,62;4,71;🔴 Comprar agora;12,0;66,99;821,33
+PC003219;Não informado;E;Baixa;1,0;2,0;14,8;55;100;15;24,74;4,71;🚨 RUPTURA IMINENTE;6,0;217,0;1253,55
+PC003923;Não informado;E;Baixa;3,0;5,1;17,5;55;100;15;20,86;4,71;🔴 Comprar agora;14,0;372,68;5270,76
+PC004842;Não informado;E;Baixa;1,0;3,2;9,5;55;100;15;38,46;4,71;🚨 RUPTURA IMINENTE;10,0;663,26;6324,63
+PC001171;Não informado;E;Baixa;4,0;7,1;17,0;55;100;15;21,5;4,71;🔴 Comprar agora;20,0;242,61;4745,59
+PC002112;Não informado;E;Baixa;2,0;1,8;32,7;55;100;15;11,17;4,71;🔴 Comprar agora;4,0;236,23;972,77
+PC004352;Não informado;E;Baixa;4,0;3,1;38,7;55;100;15;9,42;4,71;🔴 Comprar agora;6,0;195,45;1235,97
+PC005866;Não informado;E;Baixa;3,0;16,9;5,3;55;100;15;68,72;4,71;🚨 RUPTURA IMINENTE;53,0;139,31;7450,21
+PC002645;Não informado;E;Baixa;1,0;5,1;5,8;55;100;15;62,57;4,71;🚨 RUPTURA IMINENTE;16,0;429,59;6934,06
+PC008832;Não informado;E;Baixa;3,0;15,2;5,9;55;100;15;61,55;4,71;🚨 RUPTURA IMINENTE;48,0;100,51;4783,16
+PC009739;Não informado;E;Baixa;1,0;3,1;9,7;55;100;15;37,51;4,71;🚨 RUPTURA IMINENTE;9,0;503,23;4668,39
+PC005920;Não informado;E;Baixa;3,0;1,0;87,6;55;100;15;4,17;4,71;🟢 OK;0,0;361,78;0,0
+PC002656;Não informado;E;Baixa;1,0;4,0;7,5;55;100;15;48,52;4,71;🚨 RUPTURA IMINENTE;12,0;263,15;3234,74
+PC003264;Não informado;E;Baixa;5,0;1,8;83,2;55;100;15;4,38;4,71;🟢 OK;0,0;185,79;0,0
+PC007776;Não informado;E;Baixa;12,0;4,0;89,0;55;100;15;4,1;4,71;🟢 OK;0,0;107,98;0,0
+PC005779;Não informado;E;Baixa;5,0;1,8;81,3;55;100;15;4,49;4,71;🟢 OK;0,0;176,41;0,0
+PC009440;Não informado;E;Baixa;3,0;0,8;107,6;55;100;15;3,39;4,71;🟡 Estoque excessivo;0,0;434,05;0,0
+PC007251;Não informado;E;Baixa;5,0;8,5;17,7;55;100;15;20,66;4,71;🔴 Comprar agora;23,0;63,64;1483,07
+PC005587;Não informado;E;Baixa;2,0;3,9;15,5;55;100;15;23,62;4,71;🔴 Comprar agora;11,0;436,03;4772,27
+PC005738;Não informado;E;Baixa;2,0;3,1;19,6;55;100;15;18,62;4,71;🔴 Comprar agora;8,0;290,5;2382,27
+PC000139;Não informado;E;Baixa;14,0;13,6;31,0;55;100;15;11,78;4,71;🔴 Comprar agora;31,0;95,15;2967,39
+PC002304;Não informado;E;Baixa;1,0;1,0;30,6;55;100;15;11,91;4,71;🔴 Comprar agora;2,0;398,05;901,27
+PC001099;Não informado;E;Baixa;2,0;1,0;57,9;55;100;15;6,3;4,71;🟢 OK;0,0;323,04;0,0
+PC009504;Não informado;E;Baixa;3,0;3,1;29,1;55;100;15;12,53;4,71;🔴 Comprar agora;7,0;683,78;4988,49
+PC004480;Não informado;E;Baixa;0,0;2,0;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;7,0;904,12;6025,93
+PC003616;Não informado;E;Baixa;5,0;5,1;29,6;55;100;15;12,35;4,71;🔴 Comprar agora;12,0;80,49;958,78
+PC006355;Não informado;E;Baixa;3,0;2,0;44,4;55;100;15;8,23;4,71;🔴 Comprar agora;4,0;168,87;635,46
+PC003328;Não informado;E;Baixa;5,0;3,0;50,0;55;100;15;7,3;4,71;🔴 Comprar agora;5,0;396,75;1983,85
+PC008147;Não informado;E;Baixa;0,0;2,1;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;7,0;668,93;4594,23
+PC004650;Não informado;E;Baixa;6,0;8,2;21,8;55;100;15;16,71;4,71;🔴 Comprar agora;21,0;159,68;3428,04
+PC008787;Não informado;E;Baixa;2,0;2,1;28,7;55;100;15;12,7;4,71;🔴 Comprar agora;5,0;183,33;908,97
+PC000106;Não informado;E;Baixa;1,0;2,2;13,4;55;100;15;27,16;4,71;🚨 RUPTURA IMINENTE;6,0;954,63;6149,94
+PC001365;Não informado;E;Baixa;1,0;6,3;4,7;55;100;15;76,92;4,71;🚨 RUPTURA IMINENTE;20,0;372,1;7469,94
+PC004043;Não informado;E;Baixa;1,0;1,7;17,4;55;100;15;20,96;4,71;🔴 Comprar agora;5,0;309,9;1469,77
+PC009995;Não informado;E;Baixa;2,0;2,0;30,4;55;100;15;12,01;4,71;🔴 Comprar agora;5,0;723,53;3314,29
+PC009749;Não informado;E;Baixa;2,0;6,1;9,8;55;100;15;37,29;4,71;🚨 RUPTURA IMINENTE;18,0;335,77;6188,4
+PC006848;Não informado;E;Baixa;2,0;6,1;9,9;55;100;15;36,95;4,71;🚨 RUPTURA IMINENTE;18,0;329,44;6011,81
+PC007571;Não informado;E;Baixa;4,0;1,3;94,5;55;100;15;3,86;4,71;🟢 OK;0,0;337,17;0,0
+PC001683;Não informado;E;Baixa;13,0;3,7;105,8;55;100;15;3,45;4,71;🟡 Estoque excessivo;0,0;71,93;0,0
+PC004138;Não informado;E;Baixa;2,0;1,0;58,4;55;100;15;6,25;4,71;🟢 OK;0,0;407,57;0,0
+PC001002;Não informado;E;Baixa;11,0;6,9;48,1;55;100;15;7,59;4,71;🔴 Comprar agora;12,0;144,3;1712,09
+PC008960;Não informado;E;Baixa;3,0;1,6;55,9;55;100;15;6,53;4,71;🟢 OK;0,0;412,76;0,0
+PC006762;Não informado;E;Baixa;1,0;1,9;15,4;55;100;15;23,7;4,71;🔴 Comprar agora;5,0;186,95;1026,72
+PC007573;Não informado;E;Baixa;3,0;2,0;45,4;55;100;15;8,05;4,71;🔴 Comprar agora;4,0;160,38;579,64
+PC009803;Não informado;E;Baixa;6,0;3,0;59,8;55;100;15;6,1;4,71;🟢 OK;0,0;123,56;0,0
+PC009194;Não informado;E;Baixa;1,0;2,1;14,3;55;100;15;25,54;4,71;🚨 RUPTURA IMINENTE;6,0;557,08;3341,11
+PC002443;Não informado;E;Baixa;2,0;2,1;28,3;55;100;15;12,9;4,71;🔴 Comprar agora;5,0;188,78;956,69
+PC007179;Não informado;E;Baixa;3,0;2,1;43,3;55;100;15;8,43;4,71;🔴 Comprar agora;4,0;160,31;629,86
+PC003242;Não informado;E;Baixa;1,0;2,9;10,2;55;100;15;35,69;4,71;🚨 RUPTURA IMINENTE;9,0;518,46;4551,12
+PC001194;Não informado;E;Baixa;3,0;0,9;96,6;55;100;15;3,78;4,71;🟢 OK;0,0;278,12;0,0
+PC001856;Não informado;E;Baixa;1,0;2,2;13,5;55;100;15;26,98;4,71;🚨 RUPTURA IMINENTE;6,0;912,13;5830,02
+PC009811;Não informado;E;Baixa;2,0;4,1;14,8;55;100;15;24,69;4,71;🚨 RUPTURA IMINENTE;12,0;473,16;5453,75
+PC009706;Não informado;E;Média;1,0;1,7;18,1;55;100;15;20,19;4,71;🔴 Comprar agora;5,0;291,67;1321,48
+PC002955;Não informado;E;Baixa;1,0;4,1;7,3;55;100;15;50,04;4,71;🚨 RUPTURA IMINENTE;13,0;484,69;6160,51
+PC001875;Não informado;E;Baixa;4,0;3,0;39,5;55;100;15;9,25;4,71;🔴 Comprar agora;6,0;381,58;2340,08
+PC002315;Não informado;E;Baixa;10,0;3,8;78,3;55;100;15;4,66;4,71;🟢 OK;0,0;72,19;0,0
+PC000608;Não informado;E;Baixa;2,0;4,2;14,2;55;100;15;25,68;4,71;🚨 RUPTURA IMINENTE;12,0;477,16;5759,8
+PC000083;Não informado;E;Baixa;1,0;1,0;29,4;55;100;15;12,42;4,71;🔴 Comprar agora;2,0;805,35;1934,61
+PC007947;Não informado;E;Baixa;4,0;3,1;38,3;55;100;15;9,54;4,71;🔴 Comprar agora;6,0;99,32;641,22
+PC007850;Não informado;E;Baixa;2,0;0,9;66,8;55;100;15;5,46;4,71;🟢 OK;0,0;340,68;0,0
+PC007699;Não informado;E;Baixa;2,0;1,0;61,7;55;100;15;5,91;4,71;🟢 OK;0,0;330,89;0,0
+PC001877;Não informado;E;Baixa;1,0;0,8;35,6;55;100;15;10,24;4,71;🔴 Comprar agora;2,0;306,71;554,1
+PC004416;Não informado;E;Baixa;1,0;2,8;10,6;55;100;15;34,59;4,71;🚨 RUPTURA IMINENTE;8,0;623,31;5283,15
+PC009483;Não informado;E;Baixa;1,0;0,9;35,0;55;100;15;10,43;4,71;🔴 Comprar agora;2,0;241,07;447,55
+PC009493;Não informado;E;Baixa;3,0;1,0;94,1;55;100;15;3,88;4,71;🟢 OK;0,0;292,39;0,0
+PC007499;Não informado;E;Baixa;1,0;1,0;29,6;55;100;15;12,34;4,71;🔴 Comprar agora;2,0;199,05;473,79
+PC005952;Não informado;E;Baixa;4,0;1,3;90,9;55;100;15;4,02;4,71;🟢 OK;0,0;234,1;0,0
+PC001536;Não informado;E;Baixa;0,0;1,0;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;3,0;555,0;1859,22
+PC005909;Não informado;E;Baixa;2,0;2,8;21,2;55;100;15;17,25;4,71;🔴 Comprar agora;7,0;82,84;617,43
+PC004458;Não informado;E;Baixa;3,0;3,1;28,6;55;100;15;12,74;4,71;🔴 Comprar agora;7,0;137,55;1028,04
+PC009002;Não informado;E;Baixa;3,0;1,1;85,5;55;100;15;4,27;4,71;🟢 OK;0,0;237,51;0,0
+PC002538;Não informado;E;Baixa;2,0;3,0;19,8;55;100;15;18,46;4,71;🔴 Comprar agora;8,0;257,48;2089,67
+PC006795;Não informado;E;Baixa;1,0;1,7;17,8;55;100;15;20,49;4,71;🔴 Comprar agora;5,0;250,7;1156,83
+PC007891;Não informado;E;Baixa;2,0;3,8;15,9;55;100;15;23,0;4,71;🔴 Comprar agora;11,0;257,64;2732,27
+PC006805;Não informado;E;Baixa;1,0;3,1;9,8;55;100;15;37,18;4,71;🚨 RUPTURA IMINENTE;9,0;267,66;2459,02
+PC005440;Não informado;E;Baixa;2,0;1,0;58,7;55;100;15;6,22;4,71;🟢 OK;0,0;662,34;0,0
+PC004608;Não informado;E;Baixa;1,0;1,6;19,0;55;100;15;19,19;4,71;🔴 Comprar agora;4,0;198,13;843,78
+PC005088;Não informado;E;Baixa;2,0;2,0;30,0;55;100;15;12,16;4,71;🔴 Comprar agora;5,0;103,11;480,78
+PC009619;Não informado;E;Baixa;1,0;2,1;14,0;55;100;15;26,0;4,71;🚨 RUPTURA IMINENTE;6,0;464,26;2842,88
+PC004640;Não informado;E;Baixa;3,0;1,8;49,7;55;100;15;7,34;4,71;🔴 Comprar agora;3,0;115,35;350,26
+PC007520;Não informado;E;Baixa;3,0;1,4;63,3;55;100;15;5,76;4,71;🟢 OK;0,0;176,09;0,0
+PC009291;Não informado;E;Baixa;2,0;2,0;29,7;55;100;15;12,27;4,71;🔴 Comprar agora;5,0;380,14;1796,54
+PC002379;Não informado;E;Baixa;1,0;2,0;15,0;55;100;15;24,41;4,71;🚨 RUPTURA IMINENTE;6,0;434,38;2470,34
+PC009344;Não informado;E;Baixa;0,0;1,0;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;3,0;809,95;2667,04
+PC006080;Não informado;E;Baixa;5,0;2,9;51,2;55;100;15;7,12;4,71;🔴 Comprar agora;5,0;290,75;1383,49
+PC008032;Não informado;E;Baixa;7,0;3,0;69,7;55;100;15;5,24;4,71;🟢 OK;0,0;76,58;0,0
+PC001299;Não informado;E;Baixa;1,0;1,0;30,5;55;100;15;11,98;4,71;🔴 Comprar agora;2,0;479,83;1095,01
+PC001024;Não informado;E;Baixa;1,0;3,1;9,7;55;100;15;37,81;4,71;🚨 RUPTURA IMINENTE;9,0;358,0;3350,14
+PC008576;Não informado;E;Baixa;7,0;7,2;29,2;55;100;15;12,48;4,71;🔴 Comprar agora;17,0;90,74;1537,35
+PC007445;Não informado;E;Baixa;2,0;1,0;62,8;55;100;15;5,82;4,71;🟢 OK;0,0;206,36;0,0
+PC003275;Não informado;E;Baixa;5,0;3,1;48,4;55;100;15;7,54;4,71;🔴 Comprar agora;5,0;98,27;524,18
+PC009867;Não informado;E;Baixa;2,0;6,0;10,0;55;100;15;36,61;4,71;🚨 RUPTURA IMINENTE;18,0;88,65;1601,18
+PC007701;Não informado;E;Baixa;4,0;3,5;34,8;55;100;15;10,5;4,71;🔴 Comprar agora;8,0;96,09;721,69
+PC006944;Não informado;E;Baixa;1,0;1,0;29,6;55;100;15;12,32;4,71;🔴 Comprar agora;2,0;714,62;1697,33
+PC003723;Não informado;E;Baixa;7,0;3,2;65,3;55;100;15;5,59;4,71;🟢 OK;0,0;64,73;0,0
+PC007530;Não informado;E;Baixa;2,0;3,2;18,6;55;100;15;19,59;4,71;🔴 Comprar agora;9,0;66,7;582,53
+PC008352;Não informado;E;Baixa;0,0;1,0;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;3,0;378,48;1253,43
+PC000096;Não informado;E;Baixa;4,0;1,6;72,8;55;100;15;5,01;4,71;🟢 OK;0,0;62,79;0,0
+PC007371;Não informado;E;Baixa;0,0;1,0;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;3,0;480,49;1555,73
+PC001619;Não informado;E;Baixa;3,0;2,0;45,8;55;100;15;7,97;4,71;🔴 Comprar agora;4,0;54,62;194,11
+PC000787;Não informado;E;Baixa;9,0;5,2;51,9;55;100;15;7,03;4,71;🔴 Comprar agora;8,0;94,7;788,47
+PC000147;Não informado;E;Média;2,0;1,6;36,6;55;100;15;9,99;4,71;🔴 Comprar agora;3,0;91,29;316,92
+PC004160;Não informado;E;Baixa;0,0;2,1;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;7,0;172,24;1205,76
+PC000288;Não informado;E;Baixa;0,0;1,0;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;3,0;303,07;1033,73
+PC005515;Não informado;E;Baixa;3,0;1,0;86,6;55;100;15;4,22;4,71;🟢 OK;0,0;108,07;0,0
+PC008864;Não informado;E;Baixa;1,0;1,0;29,2;55;100;15;12,5;4,71;🔴 Comprar agora;2,0;508,75;1233,1
+PC001363;Não informado;E;Baixa;1,0;1,0;29,1;55;100;15;12,54;4,71;🔴 Comprar agora;2,0;303,36;738,59
+PC001355;Não informado;E;Baixa;0,0;1,9;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;6,0;133,87;828,87
+PC002346;Não informado;E;Baixa;1,0;1,0;30,8;55;100;15;11,86;4,71;🔴 Comprar agora;2,0;244,78;550,33
+PC002816;Não informado;E;Baixa;2,0;1,0;57,9;55;100;15;6,31;4,71;🟢 OK;0,0;133,6;0,0
+PC001547;Não informado;E;Baixa;0,0;1,0;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;3,0;195,62;675,04
+PC004245;Não informado;E;Baixa;0,0;1,0;0,0;55;100;15;0,0;4,71;🚨 RUPTURA IMINENTE;3,0;180,82;603,01
+PC000331;Não informado;E;Baixa;1,0;0,9;32,3;55;100;15;11,31;4,71;🔴 Comprar agora;2,0;56,67;118,94

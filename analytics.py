@@ -37,7 +37,6 @@ except: STATS_OK = False
 try:
     from prophet import Prophet; PROPHET_OK = True
 except: PROPHET_OK = False
-_DEBUG_ULTIMO_ERRO_PROPHET={"msg":None}
 
 # ═══════════════════════════════════════════════════
 # CONFIG
@@ -53,7 +52,7 @@ st.set_page_config(
 st.markdown("""<style>
 .stApp{background:#FFFCF7;}
 section[data-testid="stSidebar"]{background:linear-gradient(180deg,#0F6E56 0%,#085041 100%)!important;
-  border-right:6px solid #A9762F!important;box-shadow:2px 0 10px rgba(169,118,47,.35)!important;}
+  border-right:1px solid #A9762F!important;box-shadow:1px 0 4px rgba(169,118,47,.18)!important;}
 section[data-testid="stSidebar"] button{background:rgba(255,255,255,.06)!important;
   color:#F2EDE1!important;border:1px solid rgba(169,118,47,.35)!important;}
 section[data-testid="stSidebar"] button:hover{background:rgba(169,118,47,.25)!important;
@@ -1873,10 +1872,7 @@ def treinar(serie,modelo,n=6):
             m=Prophet(changepoint_prior_scale=0.01,yearly_seasonality=True); m.fit(df_p)
             fut=m.make_future_dataframe(periods=n,freq="MS"); fc=m.predict(fut)
             return pd.Series(fc["yhat"].tail(n).values)
-    except Exception as _e_treinar:
-        if modelo=="Prophet":
-            _DEBUG_ULTIMO_ERRO_PROPHET["msg"]=f"{type(_e_treinar).__name__}: {_e_treinar}"
-        pass
+    except: pass
     return None
 
 def treinar_backtest(serie,modelo,timeout_s=10):
@@ -3121,7 +3117,7 @@ with st.sidebar:
         <div style="padding:10px 0 14px;text-align:center">
           <img src="data:image/png;base64,{logo_b64}"
             style="width:100%;max-width:190px;margin-bottom:4px;
-            border:2px solid #A9762F;border-radius:10px;padding:4px"/>
+            border:1px solid #A9762F;border-radius:10px;padding:4px"/>
           <div style="color:#484F58;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;margin-top:2px">
             Analytics BI
           </div>
@@ -3180,12 +3176,17 @@ with st.sidebar:
     st.divider()
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
+                'display:inline-block;margin-bottom:4px">VALIDAÇÃO</div>',unsafe_allow_html=True)
+    if st.button("🔬 Validação Estatística de Previsões", key="sb_ml_produtos", use_container_width=True): ir("ml_produtos")
+
+    st.divider()
+    st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
+                'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">MÓDULO COMERCIAL</div>',unsafe_allow_html=True)
     if st.button("📊 Dashboard Executivo", key="sb_gestao_estoque", use_container_width=True): ir("gestao_estoque")
     if st.button("📦 Gestão Comercial de Compras", key="sb_compras", use_container_width=True): ir("compras")
     if st.button("💰 Fluxo de Caixa Comercial Projetado", key="sb_fluxo_compras", use_container_width=True): ir("fluxo_compras")
     if st.button("🧠 Motor de Previsão Estatística Avançada - ML", key="sb_config_ml", use_container_width=True): ir("config_ml")
-    if st.button("📈 Motor de Previsão por Participação %", key="sb_ml_produtos", use_container_width=True): ir("ml_produtos")
     if st.button("📉 Curva de Pareto", key="sb_pareto", use_container_width=True): ir("pareto")
 
     st.divider()
@@ -3273,8 +3274,8 @@ if pg=="boas_vindas":
             logo_b64 = base64.b64encode(f.read()).decode()
         st.markdown(f'''<div style="text-align:center;margin-bottom:16px">
           <img src="data:image/png;base64,{logo_b64}" style="max-height:110px;
-            border:4px solid #A9762F;border-radius:14px;padding:6px 10px;
-            box-shadow:0 2px 10px rgba(169,118,47,.35)"/>
+            border:2px solid #A9762F;border-radius:14px;padding:6px 10px;
+            box-shadow:0 2px 6px rgba(169,118,47,.25)"/>
         </div>''',unsafe_allow_html=True)
     if st.session_state.get("cid"):
         _cli_bv=load_cli(st.session_state.cid)
@@ -3294,8 +3295,8 @@ if pg=="boas_vindas":
     st.markdown("""<div class="wc-steps">
         <div class="wc-step">
           <div class="wc-step-n">1</div>
-          <div class="wc-step-t">Cadastre um cliente</div>
-          <div class="wc-step-s">Em Novo Cliente</div>
+          <div class="wc-step-t">Acesse sua conta</div>
+          <div class="wc-step-s">Em Clientes</div>
         </div>
         <div class="wc-step">
           <div class="wc-step-n">2</div>
@@ -3352,8 +3353,6 @@ if pg=="boas_vindas":
 # ── CLIENTES ────────────────────────────────────────
 elif pg=="clientes":
     hdr("👥 Clientes")
-    with st.expander("🔧 Debug: Prophet instalado?"):
-        st.code(f"Último erro do Prophet ao treinar: {_DEBUG_ULTIMO_ERRO_PROPHET['msg'] or '(nenhum registrado ainda nessa sessão)'}")
     if st.session_state.get("_limpar_busca_cliente"):
         st.session_state["busca_cliente_nome"]=""
         st.session_state["_limpar_busca_cliente"]=False
@@ -6698,7 +6697,7 @@ elif pg=="pareto":
         st.download_button("📥 Exportar tabela (CSV)",csv_pareto,file_name=f"pareto_{gid(dim_atual)}.csv",use_container_width=True)
 
 elif pg=="ml_produtos":
-    hdr("🧮 ML por Produto (Top N%)","Escolhe o melhor modelo de ML por produto, restrito aos que mais vendem")
+    hdr("🔬 Validação Estatística de Previsões","Testa a confiabilidade da previsão contra o que realmente aconteceu, antes de confiar nela")
     if not STATS_OK:
         st.markdown('<div class="al-d">❌ pip install statsmodels scikit-learn</div>',unsafe_allow_html=True)
     df_v=get_vendas_df()
@@ -6851,7 +6850,6 @@ elif pg=="ml_produtos":
     if len(_meses_disp_mlp)<2:
         st.markdown('<div class="al-w">⚠️ Histórico insuficiente pra validar (precisa de pelo menos 2 meses de dados).</div>',unsafe_allow_html=True)
     else:
-        st.markdown('<div class="al-i">Escolha uma data de corte: o modelo treina SÓ com dado até essa data, prevê os meses seguintes "às cegas", e comparamos com o que realmente aconteceu (se já existir na base).</div>',unsafe_allow_html=True)
         data_corte_mlp=st.selectbox("Treinar até (data de corte)",_meses_disp_mlp[:-1],
             index=max(0,len(_meses_disp_mlp)-7),key="mlp_data_corte")
         n_meses_valid_mlp=st.slider("Quantos meses validar depois do corte",1,12,6,key="mlp_n_valid")
@@ -6860,6 +6858,8 @@ elif pg=="ml_produtos":
             if senha_validar_mlp!=SENHA_MASTER:
                 st.markdown('<div class="al-d">❌ Senha master incorreta — nada foi executado.</div>',unsafe_allow_html=True)
                 st.stop()
+            if st.session_state.cid:
+                save_config_mlp(st.session_state.cid)
             df_treino_mlp=df_v.copy()
             df_treino_mlp["_periodo_val_mlp"]=pd.to_datetime(df_treino_mlp[data_col],errors="coerce",dayfirst=True).dt.to_period("M").astype(str)
             df_treino_mlp=df_treino_mlp[df_treino_mlp["_periodo_val_mlp"]<=data_corte_mlp].copy()
@@ -6945,12 +6945,45 @@ elif pg=="ml_produtos":
                 if _peso_total_val_mlp>0:
                     mape_pond_val_mlp=(_erro_medio_prod_val_mlp*_pesos_val_mlp).sum()/_peso_total_val_mlp
 
-            cv1,cv2,cv3,cv4=st.columns(4)
-            mc(cv1,"MAPE validado",f"{mape_val_mlp:.1f}%","g" if mape_val_mlp<15 else ("y" if mape_val_mlp<30 else "r"))
+            # Score de Validação — resumo num número só (100 - MAPE ponderado, entre
+            # 0 e 100). Ajuda a decidir rápido se o resultado justifica seguir em frente.
+            _score_val_mlp=max(0,min(100,round(100-(mape_pond_val_mlp if mape_pond_val_mlp is not None else mape_val_mlp))))
+            if _score_val_mlp>=90: _label_score_val="🟢 Excelente"
+            elif _score_val_mlp>=70: _label_score_val="🟢 Bom"
+            elif _score_val_mlp>=50: _label_score_val="🟡 Aceitável"
+            else: _label_score_val="🔴 Baixa confiabilidade"
+            st.markdown(
+                f'<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:10px;'
+                f'padding:16px 20px;margin-bottom:14px;text-align:center;border:1px solid #A9762F">'
+                f'<div style="font-size:.75rem;letter-spacing:1px;color:#CFEFE0;text-transform:uppercase">Score de Validação</div>'
+                f'<div style="font-size:2.2rem;font-weight:700;color:#fff;margin:4px 0">{_score_val_mlp}<span style="font-size:1rem;color:#D9F2E6">/100</span></div>'
+                f'<div style="font-size:.85rem;color:#D9BD82">{_label_score_val}</div>'
+                f'</div>',unsafe_allow_html=True)
+
+            cv1,cv2=st.columns(2)
+            mc(cv1,"MAPE validado (erro médio previsto x real)",f"{mape_val_mlp:.1f}%","g" if mape_val_mlp<15 else ("y" if mape_val_mlp<30 else "r"))
             _cor_pond=("g" if (mape_pond_val_mlp or 999)<15 else ("y" if (mape_pond_val_mlp or 999)<30 else "r"))
-            mc(cv2,"MAPE ponderado",f"{mape_pond_val_mlp:.1f}%" if mape_pond_val_mlp is not None else "—",_cor_pond)
-            mc(cv3,"Produtos validados",str(n_produtos_val_mlp),"b")
-            mc(cv4,"Comparações válidas",str(len(df_val_mlp)),"b")
+            mc(cv2,"MAPE ponderado (erro médio previsto x real)",f"{mape_pond_val_mlp:.1f}%" if mape_pond_val_mlp is not None else "—",_cor_pond)
+
+            # MAPE por Curva — os produtos que mais importam (Curva A) estão sendo
+            # bem previstos, ou só os irrelevantes (Curva D/E)?
+            if "_ProdutoUnico" in _ranking_curva_mlp.columns:
+                _mapa_curva_val_mlp=dict(zip(_ranking_curva_mlp["_ProdutoUnico"],_ranking_curva_mlp["classe_abc"]))
+                _df_val_curva_mlp=df_val_mlp.copy()
+                _df_val_curva_mlp["_Curva"]=_df_val_curva_mlp["Produto"].map(_mapa_curva_val_mlp)
+                _mape_por_curva_mlp=_df_val_curva_mlp.groupby("_Curva")["Erro %"].mean().sort_index()
+                if len(_mape_por_curva_mlp)>0:
+                    st.markdown('<div style="font-size:.85rem;color:#6B7280;margin:10px 0 4px">MAPE médio por Curva (não ponderado):</div>',unsafe_allow_html=True)
+                    _cores_por_curva={"A":"#A9762F","B":"#BE8F4A","C":"#8B7355","D":"#9CA3AF","E":"#B8B6B0"}
+                    _cols_curva_mlp=st.columns(len(_mape_por_curva_mlp))
+                    for _i_cv,(_curva_nome,_curva_mape) in enumerate(_mape_por_curva_mlp.items()):
+                        _cor_cv=_cores_por_curva.get(_curva_nome,"#6B7280")
+                        _cols_curva_mlp[_i_cv].markdown(
+                            f'<div style="background:#FFFCF7;border:1px solid {_cor_cv};border-left:4px solid {_cor_cv};'
+                            f'border-radius:6px;padding:6px 8px;text-align:center">'
+                            f'<div style="font-size:.68rem;color:#9CA3AF">Curva {_curva_nome}</div>'
+                            f'<div style="font-size:.95rem;font-weight:600;color:{_cor_cv}">{_curva_mape:.1f}%</div>'
+                            f'</div>',unsafe_allow_html=True)
 
             # MAPE por modelo — quantos produtos cada modelo venceu, e o erro médio
             # daquele grupo especificamente (não do total geral).
@@ -6978,27 +7011,38 @@ elif pg=="ml_produtos":
                 _cols_mostrar_val=["Produto","Mes","Modelo","Previsto","Real","Erro %","Bias"]
                 st.dataframe(df_val_mlp[_cols_mostrar_val],use_container_width=True,height=380)
 
-            _ranks_salvos_val=st.session_state.get("mlp_validacao_ranks")
-            if _ranks_salvos_val is None and st.session_state.cid:
-                _ranks_salvos_val=load_ml_produtos_validacao_ranks(st.session_state.cid,st.session_state.get("mlp_filial_sel"))
-                if _ranks_salvos_val is not None:
-                    st.session_state["mlp_validacao_ranks"]=_ranks_salvos_val
-            _ranks_salvos_val=_ranks_salvos_val or {}
-            if _ranks_salvos_val:
-                with st.expander("🔬 Todos os modelos testados, por produto (não só o vencedor)"):
-                    _prod_ver_ranks=st.selectbox("Produto",sorted(_ranks_salvos_val.keys()),key="mlp_prod_ver_ranks")
-                    _rank_prod_sel=_ranks_salvos_val.get(_prod_ver_ranks,{})
-                    _media_prod_sel=df_val_mlp.loc[df_val_mlp["Produto"]==_prod_ver_ranks,"MediaHistorica"].iloc[0] if "MediaHistorica" in df_val_mlp.columns and (df_val_mlp["Produto"]==_prod_ver_ranks).any() else 1
-                    _linhas_rank_sel=[]
-                    for _mod_r,_mse_r in sorted(_rank_prod_sel.items(),key=lambda x:x[1]):
-                        if _mse_r>=float("inf"):
-                            _linhas_rank_sel.append({"Modelo":_mod_r,"Erro":"Falhou"})
-                        else:
-                            _rmse_r=float(_mse_r**0.5)
-                            _erro_pct_r=safe(_rmse_r,abs(_media_prod_sel))*100
-                            _linhas_rank_sel.append({"Modelo":_mod_r,"Erro":f"{_erro_pct_r:.1f}%"})
-                    st.dataframe(pd.DataFrame(_linhas_rank_sel),use_container_width=True,
-                      height=min(350,80+35*len(_linhas_rank_sel)))
+            # Lista única por produto: MAPE, Curva e Participação % na curva de
+            # faturamento (de acordo com o filtro atual) — ordenada do menor pro
+            # maior erro, pra ver rápido quem está indo bem e quem precisa de atenção.
+            _prod_erro_mlp=df_val_mlp.groupby("Produto")["Erro %"].mean().reset_index().rename(columns={"Erro %":"_mape"})
+
+            # Faturamento médio mensal dos últimos 3 meses disponíveis (não a soma do
+            # período todo) — reflete o momento atual do produto, não o histórico inteiro.
+            _df_fat3_mlp=df_v.copy()
+            _df_fat3_mlp["_periodo_fat3"]=pd.to_datetime(_df_fat3_mlp[data_col],errors="coerce",dayfirst=True).dt.to_period("M")
+            _meses_recentes_fat3=sorted(_df_fat3_mlp["_periodo_fat3"].dropna().unique())[-3:]
+            _df_fat3_mlp=_df_fat3_mlp[_df_fat3_mlp["_periodo_fat3"].isin(_meses_recentes_fat3)].copy()
+            _df_fat3_mlp[metrica_col]=pd.to_numeric(_df_fat3_mlp[metrica_col],errors="coerce")
+            _n_meses_fat3=max(1,len(_meses_recentes_fat3))
+            _fat3_por_produto=(_df_fat3_mlp.groupby("_ProdutoUnico")[metrica_col].sum()/_n_meses_fat3)
+            _total_fat3=_fat3_por_produto.sum()
+            _part3_por_produto=(_fat3_por_produto/_total_fat3*100) if _total_fat3>0 else _fat3_por_produto*0
+
+            if "_ProdutoUnico" in _ranking_curva_mlp.columns:
+                _prod_erro_mlp=_prod_erro_mlp.merge(
+                    _ranking_curva_mlp[["_ProdutoUnico","classe_abc"]],
+                    left_on="Produto",right_on="_ProdutoUnico",how="left")
+            _prod_erro_mlp["_fat3"]=_prod_erro_mlp["Produto"].map(_fat3_por_produto)
+            _prod_erro_mlp["_part3"]=_prod_erro_mlp["Produto"].map(_part3_por_produto)
+            _prod_erro_mlp=_prod_erro_mlp.sort_values("_fat3",ascending=False)
+            _prod_erro_mlp["MAPE"]=_prod_erro_mlp["_mape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+            _prod_erro_mlp["Faturamento (média/mês, últ. 3 meses)"]=_prod_erro_mlp["_fat3"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
+            _prod_erro_mlp["Participação (últ. 3 meses)"]=_prod_erro_mlp["_part3"].apply(lambda v: f"{v:.2f}%" if pd.notna(v) else "—")
+            _prod_erro_mlp=_prod_erro_mlp.rename(columns={"classe_abc":"Curva"})[
+                ["Produto","MAPE","Faturamento (média/mês, últ. 3 meses)","Curva","Participação (últ. 3 meses)"]]
+            with st.expander(f"📋 Produtos por erro — Curva e Participação ({len(_prod_erro_mlp)} produtos)"):
+                st.dataframe(_prod_erro_mlp,use_container_width=True,
+                  height=min(500,80+35*len(_prod_erro_mlp)))
         elif df_val_mlp is not None:
             st.markdown('<div class="al-w">⚠️ Nenhum mês real encontrado depois da data de corte escolhida.</div>',unsafe_allow_html=True)
 elif pg=="config_ml":
@@ -10820,9 +10864,9 @@ elif pg=="gestao_estoque":
     st.markdown("""<style>
 .ge-kpi-box{background:#fff;border:1px solid #EBEBEB;border-radius:10px;padding:7px 6px;text-align:center}
 .block-container{padding-top:1rem!important}
-.ge-kpi-lbl{font-size:.57rem;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;line-height:1.3}
+.ge-kpi-lbl{font-size:.72rem;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;line-height:1.3;font-weight:600}
 .ge-kpi-val{font-family:Georgia,serif;font-size:1.05rem;font-weight:700;color:#14243B;line-height:1.1}
-.ge-kpi-sub{font-size:.60rem;margin-top:2px}
+.ge-kpi-sub{font-size:.68rem;margin-top:2px}
 .ge-kpi-sub.up{color:#059669}.ge-kpi-sub.dn{color:#DC2626}.ge-kpi-sub.nt{color:#aaa}
 .ge-sec{font-family:Georgia,serif;font-size:.78rem;font-weight:700;color:#14243B;
   padding:5px 10px;border-left:3px solid #F0A500;background:#FFFBF0;
@@ -10831,8 +10875,8 @@ elif pg=="gestao_estoque":
 .ge-mini-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;opacity:.8}
 .ge-mini-val{font-family:Georgia,serif;font-size:.95rem;font-weight:700;line-height:1}
 .ge-mini-sub{font-size:.58rem;margin-top:2px;opacity:.7}
-.ge-radar{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.ge-radar-item{border-radius:7px;padding:7px 5px;text-align:center}
+.ge-radar{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;background:linear-gradient(135deg,#FFFCF7 0%,#F8F5EE 100%);border-radius:9px;border:1px solid #EBDFC8}
+.ge-radar-item{border-radius:7px;padding:9px 5px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .ge-radar-n{font-family:Georgia,serif;font-size:1.1rem;font-weight:800;line-height:1}
 .ge-radar-l{font-size:.58rem;text-transform:uppercase;letter-spacing:.03em;margin-top:2px;opacity:.8}
 .ge-alert-list{list-style:none;padding:0;margin:0}
@@ -11015,7 +11059,7 @@ elif pg=="gestao_estoque":
     # Renderizar header com score
     _header_placeholder.markdown(f'''<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);
       border-radius:14px;padding:22px 32px;margin-bottom:4px;box-shadow:0 4px 14px rgba(0,0,0,.12);
-      display:flex;align-items:center;justify-content:space-between;filter:invert(1) hue-rotate(180deg)">
+      display:flex;align-items:center;justify-content:space-between">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="background:#9FE1CB;border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px">📦</div>
         <div>
@@ -11025,7 +11069,7 @@ elif pg=="gestao_estoque":
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <div style="text-align:right">
-          <div style="font-size:.6rem;color:#C9A876;text-transform:uppercase;letter-spacing:.08em">Score NetExame</div>
+          <div style="font-size:.65rem;color:#D9BD82;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Score NetExame</div>
           <div style="font-size:.85rem;color:{score_cor}">{score_stars}</div>
         </div>
         <div style="display:flex;align-items:baseline;gap:3px;background:{score_cor}26;border:1px solid {score_cor}55;
@@ -11041,14 +11085,16 @@ elif pg=="gestao_estoque":
       style="display:inline-block;cursor:help"></div>""", unsafe_allow_html=True)
 
     # ── LINHA 1: KPIs ──────────────────────────────────────────────────
+    # ── LINHA 1: KPIs ──────────────────────────────────────────────────
+    # ── LINHA 1: KPIs ──────────────────────────────────────────────────
     k1,k2,k3,k4,k5,k6,k7,k8=st.columns(8)
 
     # k2 — Giro
     _giro_status = "🟢 Acima do alvo" if giro_ano>=giro_alvo_ano else "🔴 Abaixo do alvo"
     _giro_cor = "#059669" if giro_ano>=giro_alvo_ano else "#DC2626"
     k2.markdown(f'''<div class="ge-kpi-box">
-        <div style="font-size:16px;margin-bottom:3px">🔄</div>
-        <div class="ge-kpi-lbl">Giro Médio do Estoque</div>
+        <div style="font-size:7px;margin-bottom:3px"></div>
+        <div class="ge-kpi-lbl">Giro Médio Estoque</div>
         <div class="ge-kpi-val">{giro_ano}x</div>
         <div class="ge-kpi-sub nt">alvo: {giro_alvo_ano}x</div>
         <div class="ge-kpi-sub" style="color:{_giro_cor};font-size:.62rem">{_giro_status}</div>
@@ -11058,7 +11104,7 @@ elif pg=="gestao_estoque":
     _cob_status = "🟢 Ideal" if 25<=cob_media<=40 else ("🔴 Acima" if cob_media>40 else "⚠️ Baixa")
     _cob_cor = "#059669" if 25<=cob_media<=40 else "#DC2626"
     k3.markdown(f'''<div class="ge-kpi-box">
-        <div style="font-size:16px;margin-bottom:3px">📅</div>
+        <div style="font-size:16px;margin-bottom:3px"></div>
         <div class="ge-kpi-lbl">Cobertura Média</div>
         <div class="ge-kpi-val">{cob_media:.0f} dias</div>
         <div class="ge-kpi-sub nt">meta: 25–40 dias</div>
@@ -11069,7 +11115,7 @@ elif pg=="gestao_estoque":
     _rup_status = "🟢 Controlada" if pct_ruptura<=5 else ("⚠️ Atenção" if pct_ruptura<=15 else "🔴 Crítica")
     _rup_cor = "#059669" if pct_ruptura<=5 else ("#D97706" if pct_ruptura<=15 else "#DC2626")
     k4.markdown(f'''<div class="ge-kpi-box">
-        <div style="font-size:16px;margin-bottom:3px">⚠️</div>
+        <div style="font-size:16px;margin-bottom:3px"></div>
         <div class="ge-kpi-lbl">Ruptura</div>
         <div class="ge-kpi-val" style="color:{_rup_cor}">{pct_ruptura:.1f}%</div>
         <div class="ge-kpi-sub nt">{n_ruptura} produtos</div>
@@ -11080,7 +11126,7 @@ elif pg=="gestao_estoque":
     _cap_status = "🟢 Sem capital parado" if cap_parado==0 else "🔴 Capital imobilizado"
     _cap_cor = "#059669" if cap_parado==0 else "#DC2626"
     k5.markdown(f'''<div class="ge-kpi-box">
-        <div style="font-size:16px;margin-bottom:3px">💰</div>
+        <div style="font-size:16px;margin-bottom:3px"></div>
         <div class="ge-kpi-lbl">Capital Parado</div>
         <div class="ge-kpi-val">{fv(cap_parado)}</div>
         <div class="ge-kpi-sub nt">{n_parado} itens sem giro</div>
@@ -11092,7 +11138,7 @@ elif pg=="gestao_estoque":
     _ml_status = "🟢 Excelente" if mape_ml and mape_ml<10 else ("⚠️ Aceitável" if mape_ml and mape_ml<20 else "🔴 Alto erro")
     _ml_cor = "#059669" if mape_ml and mape_ml<10 else ("#D97706" if mape_ml and mape_ml<20 else "#DC2626")
     k6.markdown(f'''<div class="ge-kpi-box">
-        <div style="font-size:16px;margin-bottom:3px">📈</div>
+        <div style="font-size:16px;margin-bottom:3px"></div>
         <div class="ge-kpi-lbl">Erro Médio</div>
         <div class="ge-kpi-val">{f"{mape_ml:.1f}%" if mape_ml else "—"}</div>
         <div class="ge-kpi-sub nt">precisão: {f"{_precisao:.1f}%" if _precisao else "—"}</div>
@@ -11103,7 +11149,7 @@ elif pg=="gestao_estoque":
     _lt_status = "🟢 Ótimo" if lt_medio<=10 else ("⚠️ Aceitável" if lt_medio<=20 else "🔴 Elevado")
     _lt_cor = "#059669" if lt_medio<=10 else ("#D97706" if lt_medio<=20 else "#DC2626")
     k7.markdown(f'''<div class="ge-kpi-box">
-        <div style="font-size:16px;margin-bottom:3px">🚚</div>
+        <div style="font-size:16px;margin-bottom:3px"></div>
         <div class="ge-kpi-lbl">Lead Time Médio</div>
         <div class="ge-kpi-val">{lt_medio:.0f} dias</div>
         <div class="ge-kpi-sub nt">meta: ≤ 10 dias</div>
@@ -11112,16 +11158,16 @@ elif pg=="gestao_estoque":
 
     # k8 — Caixa p/ Compras
     k8.markdown(f'''<div class="ge-kpi-box">
-        <div style="font-size:16px;margin-bottom:3px">💸</div>
-        <div class="ge-kpi-lbl">Planejamneto de Compras</div>
+        <div style="font-size:16px;margin-bottom:3px"></div>
+        <div class="ge-kpi-lbl">Planejamneto Compras</div>
         <div class="ge-kpi-val">{fv(total_horizon)}</div>
-        <div class="ge-kpi-sub nt">horizonte: {periodo_cal}</div>
+        <div class="ge-kpi-sub nt">{periodo_cal}</div>
     </div>''', unsafe_allow_html=True)
 
     status_est = "🟢 Meta" if val_estoque <= cap_ideal*1.1 else "🔴 Acima"
     cor_est = "#059669" if val_estoque <= cap_ideal*1.1 else "#DC2626"
     k1.markdown(f'''<div class="ge-kpi-box">
-        <div style="font-size:16px;margin-bottom:3px">📦</div>
+        <div style="font-size:16px;margin-bottom:3px"></div>
         <div class="ge-kpi-lbl">Valor do Estoque</div>
         <div class="ge-kpi-val">{fv(val_estoque)}</div>
         <div class="ge-kpi-sub nt">alvo: {fv(cap_ideal)}</div>
@@ -11210,8 +11256,6 @@ elif pg=="gestao_estoque":
             <div style="font-size:.6rem;color:#888;text-transform:uppercase;letter-spacing:.05em">Total Sugerido Imediato</div>
             <div style="font-family:Georgia,serif;font-size:1rem;font-weight:700;color:#14243B">{fv(total_sug)}</div>
         </div>''', unsafe_allow_html=True)
-
-    
 
     st.markdown("<div style='height:0px'></div>", unsafe_allow_html=True)
 
