@@ -2851,7 +2851,7 @@ def load_contas_pr(cid,tipo):
 
 # ═══════════════════════════════════════════════════
 # FILA DE IMPORTAÇÃO — arquivos recebidos aguardando confirmação
-# Hoje alimentada manualmente (upload em "📬 Importar Recebidos").
+# Hoje alimentada manualmente (upload em "📬 Recebidos").
 # É o mesmo ponto onde uma captação automática (e-mail, pasta sincronizada
 # etc.) poderá gravar sozinha no futuro, chamando registrar_pendente()
 # sem precisar de nenhuma mudança nesta tela nem no restante do fluxo.
@@ -2894,7 +2894,7 @@ def detectar_tipo_operacional(df):
 def registrar_pendente(cid,nome_arquivo,dados_bytes,origem="manual"):
     """Salva o arquivo na fila de espera do cliente e tenta classificar
     automaticamente o tipo (reaproveitando detectar_tipo_operacional para
-    Vendas/Estoque e detectar_tipo — já usado em Importar Dados — para
+    Vendas/Estoque e detectar_tipo — já usado em Financeiro — para
     DRE/Balanço/Fluxo). A pessoa sempre pode corrigir o tipo na tela."""
     item_id=uuid.uuid4().hex[:10]
     tipo="DESCONHECIDO"
@@ -3339,11 +3339,11 @@ with st.sidebar:
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">IMPORTAR</div>',unsafe_allow_html=True)
-    if st.button("📥 Importar Dados",  key="sb_importar",   use_container_width=True): ir("importar")
-    if st.button("🔗 Integração ERP",  key="sb_erp",         use_container_width=True): ir("erp")
-    if st.button("🧾 Importar Vendas (Pareto/ML)", key="sb_importar_vendas", use_container_width=True): ir("importar_vendas")
+    if st.button("📊 Financeiro",  key="sb_importar",   use_container_width=True): ir("importar")
+    if st.button("🔗 ERP",  key="sb_erp",         use_container_width=True): ir("erp")
+    if st.button("📈 Vendas", key="sb_importar_vendas", use_container_width=True): ir("importar_vendas")
     _n_pend_sb=len(load_pendentes(st.session_state.cid)) if st.session_state.cid else 0
-    _label_pend_sb=f"📬 Importar Recebidos ({_n_pend_sb})" if _n_pend_sb else "📬 Importar Recebidos"
+    _label_pend_sb=f"📬 Recebidos ({_n_pend_sb})" if _n_pend_sb else "📬 Recebidos"
     if st.button(_label_pend_sb, key="sb_recebidos", use_container_width=True): ir("recebidos")
 
     st.divider()
@@ -3406,7 +3406,7 @@ def sec(txt):
       </div>''',unsafe_allow_html=True)
 
 def no_data():
-    st.markdown('<div class="al-w">⚠️ Nenhum dado carregado. Use <b>📥 Importar Dados</b> ou <b>🔌 Integração ERP</b> no menu.</div>',unsafe_allow_html=True)
+    st.markdown('<div class="al-w">⚠️ Nenhum dado carregado. Use <b>📊 Financeiro</b> ou <b>🔗 ERP</b> no menu.</div>',unsafe_allow_html=True)
 
 def cls_pct(v,inv=False):
     if abs(v)<0.5: return "neu"
@@ -3474,7 +3474,7 @@ if pg=="boas_vindas":
         <div class="wc-step">
           <div class="wc-step-n">2</div>
           <div class="wc-step-t">Importe os dados</div>
-          <div class="wc-step-s">Em Importar Dados</div>
+          <div class="wc-step-s">Em Financeiro</div>
         </div>
         <div class="wc-step">
           <div class="wc-step-n">3</div>
@@ -3686,7 +3686,7 @@ elif pg=="config":
             ak2=""
 
     with st.expander("📧 Captação automática por e-mail (opcional)"):
-        st.markdown('<div class="al-i">Configure uma caixa de e-mail dedicada — ao abrir <b>📬 Importar Recebidos</b>, o sistema verifica sozinho se chegou algo novo dos remetentes autorizados de cada cliente, sem precisar baixar e subir manualmente. No Gmail/Google Workspace use uma "senha de app" (não a senha normal da conta).</div>',unsafe_allow_html=True)
+        st.markdown('<div class="al-i">Configure uma caixa de e-mail dedicada — ao abrir <b>📬 Recebidos</b>, o sistema verifica sozinho se chegou algo novo dos remetentes autorizados de cada cliente, sem precisar baixar e subir manualmente. No Gmail/Google Workspace use uma "senha de app" (não a senha normal da conta).</div>',unsafe_allow_html=True)
         _cfg_email=load_cfg()
         senha_email_cfg=st.text_input("Senha master para alterar",type="password",key="senha_email_cfg")
         if senha_email_cfg==SENHA_MASTER:
@@ -3816,7 +3816,7 @@ elif pg=="config":
 
 # ── IMPORTAR ────────────────────────────────────────
 elif pg=="importar":
-    hdr("📥 Importar Dados","A IA lê qualquer layout — DRE horizontal, vertical, PDF, CSV, Excel")
+    hdr("📊 Financeiro","A IA lê qualquer layout — DRE horizontal, vertical, PDF, CSV, Excel")
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Cadastre e selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
     if not st.session_state.api_key:
@@ -4170,7 +4170,7 @@ elif pg=="importar":
 
 # ── ERP ─────────────────────────────────────────────
 elif pg=="erp":
-    hdr("🔌 Integração ERP","Omie e Conta Azul")
+    hdr("🔗 ERP","Omie e Conta Azul")
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
     erp=st.radio("ERP:",["🟠 Omie","🔵 Conta Azul"],horizontal=True)
@@ -4259,7 +4259,7 @@ elif pg=="erp":
 
 # ── ARQUIVOS RECEBIDOS (fila de confirmação) ─────────
 elif pg=="recebidos":
-    hdr("📬 Importar Recebidos","Fila de confirmação — nada entra nos dashboards sem revisão")
+    hdr("📬 Recebidos","Fila de confirmação — nada entra nos dashboards sem revisão")
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Cadastre e selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
 
@@ -4343,7 +4343,7 @@ elif pg=="recebidos":
                     with cbtn1:
                         st.download_button("⬇️ Baixar arquivo",dados_item,file_name=item["arquivo"],
                             use_container_width=True,key=f"dl_{item['id']}")
-                    st.caption("Financeiro ainda passa por 📥 Importar Dados (IA ou Leitura Direta) — baixe aqui, suba lá, e volte pra marcar como concluído.")
+                    st.caption("Isso ainda passa por 📊 Financeiro (IA ou Leitura Direta) — baixe aqui, suba lá, e volte pra marcar como concluído.")
                     with cbtn2:
                         if st.button("✅ Marcar como concluído",use_container_width=True,key=f"done_{item['id']}"):
                             if senha_pend!=SENHA_MASTER:
@@ -6916,7 +6916,7 @@ elif pg=="cenarios":
         ])
 
 elif pg=="importar_vendas":
-    hdr("📥 Importar Vendas","Base de vendas para Curva de Pareto e ML por Produto (ex: exportação do ERP)")
+    hdr("📈 Vendas","Base de vendas para Curva de Pareto e ML por Produto (ex: exportação do ERP)")
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Cadastre e selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
     arq_v=st.file_uploader("Selecione o arquivo (CSV ou Excel)",type=["csv","xlsx","xls"],key="up_vendas")
@@ -7075,7 +7075,7 @@ elif pg=="ml_produtos":
         st.markdown('<div class="al-d">❌ pip install statsmodels scikit-learn</div>',unsafe_allow_html=True)
     df_v=get_vendas_df()
     if df_v is None or df_v.empty:
-        st.markdown('<div class="al-w">⚠️ Importe a base de vendas primeiro em <b>📥 Importar Vendas</b>.</div>',unsafe_allow_html=True); st.stop()
+        st.markdown('<div class="al-w">⚠️ Importe a base de vendas primeiro em <b>📈 Vendas</b>.</div>',unsafe_allow_html=True); st.stop()
 
     _col_fil_mlp=col_filial(df_v)
     if _col_fil_mlp:
@@ -8559,7 +8559,7 @@ elif pg=="compras":
 
         df_v_compras=get_vendas_df()
         if df_v_compras is None or df_v_compras.empty:
-            st.markdown('<div class="al-w">⚠️ Também é necessário ter uma base de vendas importada (📥 Importar Vendas) para calcular a demanda prevista.</div>',unsafe_allow_html=True)
+            st.markdown('<div class="al-w">⚠️ Também é necessário ter uma base de vendas importada (📈 Vendas) para calcular a demanda prevista.</div>',unsafe_allow_html=True)
             st.stop()
 
         # Seletor de Filial agora fica acima das abas (fora do Configurar) — aqui só aplica o filtro
