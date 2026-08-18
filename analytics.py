@@ -377,9 +377,24 @@ def renderizar_card_cliente(c,prefixo="ab"):
             pre_carregar_cliente(c["id"])
             addlog(f"'{c['nome']}' aberto"); ir("boas_vindas")
     if c4.button("🗑",key=f"{prefixo}_dl_{c['id']}",use_container_width=True):
-        os.remove(path_cli(c["id"]))
-        if st.session_state.cid==c["id"]: st.session_state.cid=None; st.session_state.df_raw=None
+        st.session_state[f"_confirmar_exclusao_{c['id']}"]=True
         st.rerun()
+    if st.session_state.get(f"_confirmar_exclusao_{c['id']}"):
+        st.markdown('<div class="al-d">⚠️ Excluir apaga o cadastro desse cliente permanentemente. '
+                    'Digite a senha master pra confirmar.</div>',unsafe_allow_html=True)
+        _senha_del_cli=st.text_input("Senha master",type="password",key=f"{prefixo}_senha_del_{c['id']}")
+        cdel1,cdel2=st.columns(2)
+        if cdel1.button("✅ Confirmar exclusão",key=f"{prefixo}_confirma_del_{c['id']}",use_container_width=True):
+            if _senha_del_cli!=SENHA_MASTER:
+                st.error("❌ Senha master incorreta.")
+            else:
+                os.remove(path_cli(c["id"]))
+                if st.session_state.cid==c["id"]: st.session_state.cid=None; st.session_state.df_raw=None
+                del st.session_state[f"_confirmar_exclusao_{c['id']}"]
+                st.rerun()
+        if cdel2.button("Cancelar",key=f"{prefixo}_cancela_del_{c['id']}",use_container_width=True):
+            del st.session_state[f"_confirmar_exclusao_{c['id']}"]
+            st.rerun()
     st.divider()
 
 def save_df(cid,df):
