@@ -262,9 +262,17 @@ def ca_(df): return next((c for c in df.columns if c.lower().strip() in ["ano","
 # PERSISTÊNCIA
 # ═══════════════════════════════════════════════════
 def load_cfg():
+    d={}
     try:
-        with open(CFG,encoding="utf-8") as f: return json.load(f)
-    except: return {}
+        with open(CFG,encoding="utf-8") as f: d=json.load(f)
+    except: d={}
+    try:
+        for k in ("anthropic_api_key","imap_host","imap_port","imap_user","imap_pass","imap_ativo"):
+            if not d.get(k) and k in st.secrets:
+                d[k]=st.secrets[k]
+    except Exception:
+        pass
+    return d
 
 def save_cfg(d):
     try:
