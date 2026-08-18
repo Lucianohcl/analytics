@@ -9,7 +9,10 @@ import streamlit.components.v1 as components_v1
 import pandas as pd
 import base64
 import numpy as np
-import json, os, re, io, requests, time, warnings
+import json, os, re, io, requests, time, warnings, uuid
+import imaplib, email
+from email.header import decode_header
+from email.utils import parseaddr
 import concurrent.futures
 from io import BytesIO
 from datetime import datetime
@@ -2833,6 +2836,142 @@ def load_contas_pr(cid,tipo):
     try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig",parse_dates=["Vencimento"])
     except: return None
 
+# ═══════════════════════════════════════════════════
+# FILA DE IMPORTAÇÃO — arquivos recebidos aguardando confirmação
+# Hoje alimentada manualmente (upload em "📬 Arquivos Recebidos").
+# É o mesmo ponto onde uma captação automática (e-mail, pasta sincronizada
+# etc.) poderá gravar sozinha no futuro, chamando registrar_pendente()
+# sem precisar de nenhuma mudança nesta tela nem no restante do fluxo.
+# ═══════════════════════════════════════════════════
+PASTA_PENDENTES=os.path.join(PASTA,"_pendentes")
+os.makedirs(PASTA_PENDENTES,exist_ok=True)
+
+def path_manifest_pendentes(cid): return os.path.join(PASTA_PENDENTES,f"{gid(cid)}_manifest.json")
+
+def load_pendentes(cid):
+    if not cid: return []
+    p=path_manifest_pendentes(cid)
+    if not os.path.exists(p): return []
+    try:
+        with open(p,encoding="utf-8") as f: return json.load(f)
+    except: return []
+
+def save_pendentes(cid,lista):
+    with open(path_manifest_pendentes(cid),"w",encoding="utf-8") as f:
+        json.dump(lista,f,ensure_ascii=False,indent=2)
+
+def path_arquivo_pendente(cid,item_id,nome_arquivo):
+    nome_seguro="".join(c if c.isalnum() or c in "._-" else "_" for c in nome_arquivo)
+    return os.path.join(PASTA_PENDENTES,f"{gid(cid)}__{item_id}__{nome_seguro}")
+
+def detectar_tipo_operacional(df):
+    """Heurística leve pra Vendas/Estoque — mesmas colunas já reconhecidas nas
+    telas de importação existentes. Não tenta adivinhar Contas a Pagar x Receber
+    (a direção do título não dá pra inferir só pelas colunas — fica a critério
+    de quem confirma)."""
+    cols=[str(c).strip().lower() for c in df.columns]
+    tem_produto=any(c in ["produto","codigo","código","sku"] for c in cols)
+    tem_estoque=any(("estoqueatual" in c.replace(" ","")) or c in ["estoque","quantidade","saldo","qtd"] for c in cols)
+    tem_data=any(c in ["emissao","emissão","data"] for c in cols)
+    tem_valor=any(c in ["vlr.total","vlr total","valor total","valor"] for c in cols)
+    if tem_produto and tem_estoque: return "ESTOQUE"
+    if tem_produto and tem_data and tem_valor: return "VENDAS"
+    return None
+
+def registrar_pendente(cid,nome_arquivo,dados_bytes,origem="manual"):
+    """Salva o arquivo na fila de espera do cliente e tenta classificar
+    automaticamente o tipo (reaproveitando detectar_tipo_operacional para
+    Vendas/Estoque e detectar_tipo — já usado em Importar Dados — para
+    DRE/Balanço/Fluxo). A pessoa sempre pode corrigir o tipo na tela."""
+    item_id=uuid.uuid4().hex[:10]
+    tipo="DESCONHECIDO"
+    try:
+        df_prev,_msg_prev=ler(dados_bytes,nome_arquivo)
+        if isinstance(df_prev,pd.DataFrame):
+            tipo=detectar_tipo_operacional(df_prev) or detectar_tipo(df_prev,nome_arquivo) or "DESCONHECIDO"
+    except Exception:
+        pass
+    p=path_arquivo_pendente(cid,item_id,nome_arquivo)
+    with open(p,"wb") as f: f.write(dados_bytes)
+    lista=load_pendentes(cid)
+    lista.append({
+        "id":item_id,"arquivo":nome_arquivo,"tipo":tipo,"origem":origem,
+        "chegou_em":datetime.now().strftime("%Y-%m-%d %H:%M"),"caminho":p,
+    })
+    save_pendentes(cid,lista)
+    return item_id,tipo
+
+def remover_pendente(cid,item_id):
+    lista=load_pendentes(cid)
+    item=next((x for x in lista if x["id"]==item_id),None)
+    lista=[x for x in lista if x["id"]!=item_id]
+    save_pendentes(cid,lista)
+    if item and os.path.exists(item.get("caminho","")):
+        try: os.remove(item["caminho"])
+        except: pass
+
+# ── Captação automática por e-mail (opcional — configurada em ⚙️ Configurações) ──
+def path_emails_autorizados(cid): return os.path.join(PASTA,f"{gid(cid)}_emails_autorizados.json")
+
+def load_emails_autorizados(cid):
+    p=path_emails_autorizados(cid)
+    if not os.path.exists(p): return []
+    try:
+        with open(p,encoding="utf-8") as f: return json.load(f)
+    except: return []
+
+def save_emails_autorizados(cid,lista):
+    with open(path_emails_autorizados(cid),"w",encoding="utf-8") as f:
+        json.dump(lista,f,ensure_ascii=False,indent=2)
+
+EXTENSOES_EMAIL_ACEITAS=(".csv",".xlsx",".xls",".xlsm",".pdf")
+
+def verificar_email_pendentes(cid):
+    """Conecta na caixa dedicada (se configurada e ativa) e joga na fila os
+    anexos de e-mails ainda não lidos vindos dos remetentes autorizados para
+    este cliente. Marca o e-mail como lido depois, pra não importar de novo.
+    Qualquer falha (config incompleta, e-mail fora do ar etc.) só avisa —
+    nunca derruba a tela."""
+    cfg=load_cfg()
+    host=cfg.get("imap_host"); user=cfg.get("imap_user"); senha=cfg.get("imap_pass")
+    ativo=cfg.get("imap_ativo",False)
+    if not (ativo and host and user and senha):
+        return 0,"Captação por e-mail não está configurada/ativa em ⚙️ Configurações."
+    autorizados=[e.strip().lower() for e in load_emails_autorizados(cid) if e.strip()]
+    if not autorizados:
+        return 0,"Cadastre abaixo os e-mails autorizados a enviar dados para este cliente."
+    novos=0
+    try:
+        porta=int(cfg.get("imap_port") or 993)
+        M=imaplib.IMAP4_SSL(host,porta,timeout=20)
+        M.login(user,senha)
+        M.select("INBOX")
+        status,dados=M.search(None,"UNSEEN")
+        if status!="OK":
+            M.logout(); return 0,"Não consegui buscar e-mails novos agora."
+        for num in dados[0].split():
+            status,msg_dados=M.fetch(num,"(RFC822)")
+            if status!="OK": continue
+            msg=email.message_from_bytes(msg_dados[0][1])
+            remetente=parseaddr(msg.get("From",""))[1].lower()
+            if remetente not in autorizados: continue
+            achou_anexo=False
+            for parte in msg.walk():
+                nome_anexo=parte.get_filename()
+                if not nome_anexo: continue
+                dec=decode_header(nome_anexo)[0]
+                nome_anexo=dec[0].decode(dec[1] or "utf-8",errors="ignore") if isinstance(dec[0],bytes) else dec[0]
+                if not nome_anexo.lower().endswith(EXTENSOES_EMAIL_ACEITAS): continue
+                dados_anexo=parte.get_payload(decode=True)
+                if not dados_anexo: continue
+                registrar_pendente(cid,nome_anexo,dados_anexo,origem=f"email:{remetente}")
+                novos+=1; achou_anexo=True
+            if achou_anexo: M.store(num,"+FLAGS","\\Seen")
+        M.logout()
+        return novos,(f"✅ {novos} arquivo(s) novo(s) recebido(s) por e-mail." if novos else "Nenhum e-mail novo dos remetentes autorizados.")
+    except Exception as e:
+        return 0,f"Não consegui verificar o e-mail agora ({e})."
+
 
 def path_cenarios(cid): return os.path.join(PASTA,f"{gid(cid)}_cenarios_ml.json")
 
@@ -3190,6 +3329,9 @@ with st.sidebar:
     if st.button("📥 Importar Dados",  key="sb_importar",   use_container_width=True): ir("importar")
     if st.button("🔗 Integração ERP",  key="sb_erp",         use_container_width=True): ir("erp")
     if st.button("🧾 Importar Vendas (Pareto/ML)", key="sb_importar_vendas", use_container_width=True): ir("importar_vendas")
+    _n_pend_sb=len(load_pendentes(st.session_state.cid)) if st.session_state.cid else 0
+    _label_pend_sb=f"📬 Importar Recebidos ({_n_pend_sb})" if _n_pend_sb else "📬 Importar Recebidos"
+    if st.button(_label_pend_sb, key="sb_recebidos", use_container_width=True): ir("recebidos")
 
     st.divider()
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
@@ -3530,6 +3672,27 @@ elif pg=="config":
         else:
             ak2=""
 
+    with st.expander("📧 Captação automática por e-mail (opcional)"):
+        st.markdown('<div class="al-i">Configure uma caixa de e-mail dedicada — ao abrir <b>📬 Arquivos Recebidos</b>, o sistema verifica sozinho se chegou algo novo dos remetentes autorizados de cada cliente, sem precisar baixar e subir manualmente. No Gmail/Google Workspace use uma "senha de app" (não a senha normal da conta).</div>',unsafe_allow_html=True)
+        _cfg_email=load_cfg()
+        senha_email_cfg=st.text_input("Senha master para alterar",type="password",key="senha_email_cfg")
+        if senha_email_cfg==SENHA_MASTER:
+            ce1,ce2=st.columns(2)
+            imap_host2=ce1.text_input("Servidor IMAP",value=_cfg_email.get("imap_host","imap.gmail.com"),key="imap_host2")
+            imap_port2=ce2.number_input("Porta",value=int(_cfg_email.get("imap_port") or 993),step=1,key="imap_port2")
+            imap_user2=st.text_input("E-mail da caixa dedicada",value=_cfg_email.get("imap_user",""),key="imap_user2")
+            imap_pass2=st.text_input("Senha de app",value="",type="password",placeholder="deixe em branco pra manter a atual",key="imap_pass2")
+            imap_ativo2=st.checkbox("Ativar verificação automática",value=_cfg_email.get("imap_ativo",False),key="imap_ativo2")
+        elif senha_email_cfg:
+            st.markdown('<div class="al-d">❌ Senha incorreta</div>',unsafe_allow_html=True)
+            imap_host2=_cfg_email.get("imap_host",""); imap_port2=_cfg_email.get("imap_port",993)
+            imap_user2=_cfg_email.get("imap_user",""); imap_pass2=""; imap_ativo2=_cfg_email.get("imap_ativo",False)
+        else:
+            _status_email="🟢 ativa" if _cfg_email.get("imap_ativo") and _cfg_email.get("imap_user") else "🔴 não configurada"
+            st.markdown(f'<div class="al-i">Captação por e-mail: {_status_email} — digite a senha master acima para alterar.</div>',unsafe_allow_html=True)
+            imap_host2=_cfg_email.get("imap_host",""); imap_port2=_cfg_email.get("imap_port",993)
+            imap_user2=_cfg_email.get("imap_user",""); imap_pass2=""; imap_ativo2=_cfg_email.get("imap_ativo",False)
+
     with st.expander("Saldo Inicial de Caixa"):
         senha_saldo_ini=st.text_input("Senha master para alterar",type="password",key="senha_saldo_ini")
         if senha_saldo_ini==SENHA_MASTER:
@@ -3565,6 +3728,12 @@ elif pg=="config":
         if ak2 and senha_cfg==SENHA_MASTER:
             st.session_state.api_key=ak2
             c=load_cfg(); c["anthropic_api_key"]=ak2; save_cfg(c)
+        if senha_email_cfg==SENHA_MASTER:
+            c2=load_cfg()
+            c2["imap_host"]=imap_host2; c2["imap_port"]=int(imap_port2); c2["imap_user"]=imap_user2
+            if imap_pass2: c2["imap_pass"]=imap_pass2
+            c2["imap_ativo"]=imap_ativo2
+            save_cfg(c2)
         if p2:
             p2["saldo_ini"]=si
             p2["entradas_vista"]=ev
@@ -4074,6 +4243,161 @@ elif pg=="erp":
                     else:
                         st.markdown('<div class="al-w">⚠️ A busca não retornou nenhum dado financeiro — nada foi salvo. Confira o Access Token.</div>',unsafe_allow_html=True)
                 except Exception as e: st.error(f"Erro: {e}")
+
+# ── ARQUIVOS RECEBIDOS (fila de confirmação) ─────────
+elif pg=="recebidos":
+    hdr("📬 Arquivos Recebidos","Fila de confirmação — nada entra nos dashboards sem revisão")
+    if not st.session_state.cid:
+        st.markdown('<div class="al-w">⚠️ Cadastre e selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
+
+    st.markdown('<div class="al-i">📌 Esta tela reúne arquivos deste cliente que chegaram antes de irem para os dashboards — registrados manualmente abaixo, ou automaticamente pela captação por e-mail (se configurada). Como sempre, nada é gravado sem confirmar com a senha master.</div>',unsafe_allow_html=True)
+
+    with st.expander("📧 Captação automática por e-mail"):
+        st.markdown('<div class="al-i">Configure a caixa dedicada em ⚙️ Configurações. Aqui você só cadastra quais remetentes têm autorização de enviar dados <b>para este cliente</b> — a plataforma ignora e-mails de qualquer outro remetente.</div>',unsafe_allow_html=True)
+        _emails_atuais=load_emails_autorizados(st.session_state.cid)
+        _emails_txt=st.text_area("E-mail(s) autorizado(s) (um por linha)",
+            value="\n".join(_emails_atuais),key="ta_emails_autorizados",height=80)
+        if st.button("💾 Salvar remetentes autorizados",key="btn_salvar_emails"):
+            _lista_nova=[l.strip() for l in _emails_txt.splitlines() if l.strip()]
+            save_emails_autorizados(st.session_state.cid,_lista_nova)
+            st.markdown(f'<div class="al-s">✅ {len(_lista_nova)} remetente(s) autorizado(s) salvo(s).</div>',unsafe_allow_html=True)
+
+        _flag_check=f"_email_checado_{st.session_state.cid}"
+        se1,se2=st.columns([3,1])
+        with se2:
+            verificar_agora=st.button("🔄 Verificar agora",key="btn_verificar_email",use_container_width=True)
+        if verificar_agora or not st.session_state.get(_flag_check):
+            st.session_state[_flag_check]=True
+            _n_novos,_msg_email=verificar_email_pendentes(st.session_state.cid)
+            with se1:
+                st.caption(_msg_email)
+            if _n_novos: st.rerun()
+
+    sec("📤 Registrar arquivo recebido")
+    arqs_pend=st.file_uploader("Arquivo(s) recebido(s) por fora do sistema (e-mail, WhatsApp, pasta etc.)",
+        type=["csv","xlsx","xls","xlsm","pdf"],accept_multiple_files=True,key="up_pendente")
+    if arqs_pend and st.button("📥 Adicionar à fila",use_container_width=True,key="btn_add_pendente"):
+        n_add=0
+        for a_p in arqs_pend:
+            registrar_pendente(st.session_state.cid,a_p.name,a_p.read(),origem="manual")
+            n_add+=1
+        st.markdown(f'<div class="al-s">✅ {n_add} arquivo(s) adicionado(s) à fila.</div>',unsafe_allow_html=True)
+        st.rerun()
+
+    sec("📋 Fila de confirmação")
+    pendentes=load_pendentes(st.session_state.cid)
+    if not pendentes:
+        st.markdown('<div class="al-i">Nenhum arquivo aguardando confirmação no momento.</div>',unsafe_allow_html=True)
+    else:
+        opcoes_tipo=["ESTOQUE","VENDAS","CONTAS_PAGAR","CONTAS_RECEBER","DRE","BALANCO","FLUXO","DESCONHECIDO"]
+        for item in pendentes:
+            _icone_item="📄" if item["tipo"] in ("DRE","BALANCO","FLUXO") else ("📦" if item["tipo"]=="ESTOQUE" else "🧾")
+            with st.expander(f"{_icone_item} {item['arquivo']} — chegou em {item['chegou_em']}"):
+                tipo_corrigido=st.selectbox("Tipo do arquivo",opcoes_tipo,
+                    index=opcoes_tipo.index(item["tipo"]) if item["tipo"] in opcoes_tipo else opcoes_tipo.index("DESCONHECIDO"),
+                    key=f"tipo_{item['id']}")
+
+                try:
+                    with open(item["caminho"],"rb") as f: dados_item=f.read()
+                except FileNotFoundError:
+                    st.markdown('<div class="al-d">❌ Arquivo não encontrado em disco — remova este item da fila.</div>',unsafe_allow_html=True)
+                    if st.button("🗑 Remover da fila",key=f"rm_orfao_{item['id']}"):
+                        remover_pendente(st.session_state.cid,item["id"]); st.rerun()
+                    continue
+
+                df_item,msg_item=ler(dados_item,item["arquivo"])
+                if isinstance(df_item,pd.DataFrame):
+                    st.caption(f"Prévia — {msg_item}")
+                    st.dataframe(df_item.head(8),use_container_width=True)
+                else:
+                    st.markdown(f'<div class="al-w">⚠️ Sem prévia automática ({msg_item}) — confira o arquivo original antes de confirmar.</div>',unsafe_allow_html=True)
+
+                senha_pend=st.text_input("Senha master para confirmar *",type="password",key=f"senha_{item['id']}")
+                cbtn1,cbtn2=st.columns(2)
+
+                if tipo_corrigido in ("DRE","BALANCO","FLUXO"):
+                    with cbtn1:
+                        st.download_button("⬇️ Baixar arquivo",dados_item,file_name=item["arquivo"],
+                            use_container_width=True,key=f"dl_{item['id']}")
+                    st.caption("Financeiro ainda passa por 📥 Importar Dados (IA ou Leitura Direta) — baixe aqui, suba lá, e volte pra marcar como concluído.")
+                    with cbtn2:
+                        if st.button("✅ Marcar como concluído",use_container_width=True,key=f"done_{item['id']}"):
+                            if senha_pend!=SENHA_MASTER:
+                                st.error("❌ Senha master incorreta.")
+                            else:
+                                remover_pendente(st.session_state.cid,item["id"]); st.rerun()
+                    continue
+
+                if not isinstance(df_item,pd.DataFrame):
+                    st.markdown('<div class="al-d">❌ Este arquivo não pôde ser lido automaticamente — corrija e reenvie.</div>',unsafe_allow_html=True)
+                    if st.button("🗑 Remover da fila",key=f"rm_{item['id']}"):
+                        remover_pendente(st.session_state.cid,item["id"]); st.rerun()
+                    continue
+
+                with cbtn1:
+                    confirmar_pend=st.button("✅ Confirmar e importar",use_container_width=True,key=f"conf_{item['id']}")
+                with cbtn2:
+                    descartar_pend=st.button("🗑 Remover da fila",use_container_width=True,key=f"desc_{item['id']}")
+
+                if descartar_pend:
+                    remover_pendente(st.session_state.cid,item["id"]); st.rerun()
+
+                if confirmar_pend:
+                    if senha_pend!=SENHA_MASTER:
+                        st.error("❌ Senha master incorreta.")
+                    elif tipo_corrigido=="VENDAS":
+                        df_v_pend=df_item.copy(); df_v_pend.columns=[str(c).strip() for c in df_v_pend.columns]
+                        st.session_state.vendas_raw=df_v_pend
+                        save_vendas_df(st.session_state.cid,df_v_pend)
+                        remover_pendente(st.session_state.cid,item["id"])
+                        st.markdown(f'<div class="al-s">✅ {len(df_v_pend)} linhas de vendas importadas.</div>',unsafe_allow_html=True)
+                        st.rerun()
+                    elif tipo_corrigido=="ESTOQUE":
+                        df_e_raw=df_item.copy(); df_e_raw.columns=[str(c).strip() for c in df_e_raw.columns]
+                        col_prod_p=next((c for c in df_e_raw.columns if c.strip().lower() in ["produto","codigo","código","sku"]),None)
+                        col_qtd_p=next((c for c in df_e_raw.columns if "estoqueatual" in c.strip().lower().replace(" ","") or c.strip().lower() in ["estoque","quantidade","saldo","qtd"]),None)
+                        col_custo_p=next((c for c in df_e_raw.columns if "custo" in c.strip().lower()),None)
+                        col_forn_p=next((c for c in df_e_raw.columns if "fornecedor" in c.strip().lower()),None)
+                        col_fil_p=col_filial(df_e_raw)
+                        if not col_prod_p or not col_qtd_p:
+                            st.markdown('<div class="al-d">❌ Não encontrei as colunas de Produto e Estoque neste arquivo.</div>',unsafe_allow_html=True)
+                        else:
+                            df_est_p=pd.DataFrame()
+                            df_est_p["Produto"]=df_e_raw[col_prod_p].astype(str).str.strip()
+                            df_est_p["EstoqueAtual"]=parse_valor_brl(df_e_raw[col_qtd_p])
+                            df_est_p["CustoUnitario"]=parse_valor_brl(df_e_raw[col_custo_p]) if col_custo_p else 0.0
+                            df_est_p["Fornecedor"]=df_e_raw[col_forn_p].astype(str).str.strip() if col_forn_p else "Não informado"
+                            if col_fil_p: df_est_p["Filial"]=df_e_raw[col_fil_p].astype(str).str.strip()
+                            st.session_state["compras_df_estoque"]=df_est_p
+                            save_estoque_compras(st.session_state.cid,df_est_p)
+                            remover_pendente(st.session_state.cid,item["id"])
+                            st.markdown(f'<div class="al-s">✅ {len(df_est_p)} produtos de estoque importados.</div>',unsafe_allow_html=True)
+                            st.rerun()
+                    elif tipo_corrigido in ("CONTAS_PAGAR","CONTAS_RECEBER"):
+                        df_c_raw=df_item.copy(); df_c_raw.columns=[str(c).strip() for c in df_c_raw.columns]
+                        col_venc_p=next((c for c in df_c_raw.columns if c.strip().lower() in ["vencimento","data","data vencimento","data de vencimento"]),None)
+                        col_val_p=next((c for c in df_c_raw.columns if c.strip().lower() in ["valor","vlr","valor total"]),None)
+                        col_cat_p=next((c for c in df_c_raw.columns if c.strip().lower() in ["conta","categoria","conta/categoria","natureza","fornecedor","tipo"]),None)
+                        col_fil_p2=col_filial(df_c_raw)
+                        if not col_venc_p or not col_val_p:
+                            st.markdown('<div class="al-d">❌ Não encontrei as colunas Vencimento e Valor neste arquivo.</div>',unsafe_allow_html=True)
+                        else:
+                            tipo_pr="pagar" if tipo_corrigido=="CONTAS_PAGAR" else "receber"
+                            dados_pr={
+                                "Vencimento":pd.to_datetime(df_c_raw[col_venc_p],errors="coerce",dayfirst=True),
+                                "Valor":parse_valor_brl(df_c_raw[col_val_p]) if df_c_raw[col_val_p].dtype==object else df_c_raw[col_val_p],
+                            }
+                            if tipo_pr=="pagar":
+                                dados_pr["Conta"]=df_c_raw[col_cat_p].astype(str) if col_cat_p else "Não informado"
+                            if col_fil_p2: dados_pr["Filial"]=df_c_raw[col_fil_p2].astype(str).str.strip()
+                            df_pr_final=pd.DataFrame(dados_pr).dropna(subset=["Vencimento"])
+                            save_contas_pr(st.session_state.cid,tipo_pr,df_pr_final)
+                            st.session_state[f"ff_contas_{tipo_pr}_df"]=df_pr_final
+                            remover_pendente(st.session_state.cid,item["id"])
+                            st.markdown(f'<div class="al-s">✅ {len(df_pr_final)} lançamento(s) importados.</div>',unsafe_allow_html=True)
+                            st.rerun()
+                    else:
+                        st.markdown('<div class="al-w">⚠️ Escolha um tipo válido acima antes de confirmar.</div>',unsafe_allow_html=True)
 
 # ── DRE ─────────────────────────────────────────────
 elif pg=="dre":
