@@ -267,7 +267,12 @@ def load_cfg():
         with open(CFG,encoding="utf-8") as f: d=json.load(f)
     except: d={}
     try:
-        for k in ("anthropic_api_key","imap_host","imap_port","imap_user","imap_pass","imap_ativo"):
+        if not d.get("anthropic_api_key"):
+            if "anthropic_api_key" in st.secrets:
+                d["anthropic_api_key"]=st.secrets["anthropic_api_key"]
+            elif "openai_api_key" in st.secrets:
+                d["anthropic_api_key"]=st.secrets["openai_api_key"]
+        for k in ("imap_host","imap_port","imap_user","imap_pass","imap_ativo"):
             if not d.get(k) and k in st.secrets:
                 d[k]=st.secrets[k]
     except Exception:
