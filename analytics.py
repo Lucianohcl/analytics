@@ -4263,7 +4263,7 @@ elif pg=="recebidos":
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Cadastre e selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
 
-    st.markdown('<div class="al-i">📌 Esta tela reúne arquivos deste cliente que chegaram antes de irem para os dashboards — registrados manualmente abaixo, ou automaticamente pela captação por e-mail (se configurada). Como sempre, nada é gravado sem confirmar com a senha master.</div>',unsafe_allow_html=True)
+
 
     with st.expander("📧 Captação automática por e-mail"):
         st.markdown('<div class="al-i">Configure a caixa dedicada em ⚙️ Configurações. Aqui você só cadastra quais remetentes têm autorização de enviar dados <b>para este cliente</b> — a plataforma ignora e-mails de qualquer outro remetente.</div>',unsafe_allow_html=True)
@@ -4290,21 +4290,7 @@ elif pg=="recebidos":
                 st.caption(_msg_email)
             if _n_novos: st.rerun()
 
-    sec("📤 Registrar arquivo recebido")
-    arqs_pend=st.file_uploader("Arquivo(s) recebido(s) por fora do sistema (e-mail, WhatsApp, pasta etc.)",
-        type=["csv","xlsx","xls","xlsm","pdf"],accept_multiple_files=True,key="up_pendente")
-    if arqs_pend:
-        senha_add_pend=st.text_input("Senha master para adicionar à fila *",type="password",key="senha_add_pendente")
-    if arqs_pend and st.button("📥 Adicionar à fila",use_container_width=True,key="btn_add_pendente"):
-        if senha_add_pend!=SENHA_MASTER:
-            st.error("❌ Senha master incorreta.")
-        else:
-            n_add=0
-            for a_p in arqs_pend:
-                registrar_pendente(st.session_state.cid,a_p.name,a_p.read(),origem="manual")
-                n_add+=1
-            st.markdown(f'<div class="al-s">✅ {n_add} arquivo(s) adicionado(s) à fila.</div>',unsafe_allow_html=True)
-            st.rerun()
+
 
     sec("📋 Fila de confirmação")
     pendentes=load_pendentes(st.session_state.cid)
