@@ -4270,14 +4270,24 @@ elif pg=="recebidos":
         _emails_atuais=load_emails_autorizados(st.session_state.cid)
         _emails_txt=st.text_area("E-mail(s) autorizado(s) (um por linha)",
             value="\n".join(_emails_atuais),key="ta_emails_autorizados",height=80)
-        senha_emails_aut=st.text_input("Senha master para salvar *",type="password",key="senha_emails_autorizados")
-        if st.button("💾 Salvar remetentes autorizados",key="btn_salvar_emails"):
-            if senha_emails_aut!=SENHA_MASTER:
-                st.error("❌ Senha master incorreta.")
-            else:
-                _lista_nova=[l.strip() for l in _emails_txt.splitlines() if l.strip()]
-                save_emails_autorizados(st.session_state.cid,_lista_nova)
-                st.markdown(f'<div class="al-s">✅ {len(_lista_nova)} remetente(s) autorizado(s) salvo(s).</div>',unsafe_allow_html=True)
+        senha_emails_aut=st.text_input("Senha master para salvar/excluir *",type="password",key="senha_emails_autorizados")
+        cbe1,cbe2=st.columns(2)
+        with cbe1:
+            if st.button("💾 Salvar remetentes autorizados",key="btn_salvar_emails",use_container_width=True):
+                if senha_emails_aut!=SENHA_MASTER:
+                    st.error("❌ Senha master incorreta.")
+                else:
+                    _lista_nova=[l.strip() for l in _emails_txt.splitlines() if l.strip()]
+                    save_emails_autorizados(st.session_state.cid,_lista_nova)
+                    st.markdown(f'<div class="al-s">✅ {len(_lista_nova)} remetente(s) autorizado(s) salvo(s).</div>',unsafe_allow_html=True)
+        with cbe2:
+            if st.button("🗑 Excluir remetentes cadastrados",key="btn_excluir_emails",use_container_width=True):
+                if senha_emails_aut!=SENHA_MASTER:
+                    st.error("❌ Senha master incorreta.")
+                else:
+                    save_emails_autorizados(st.session_state.cid,[])
+                    st.markdown('<div class="al-s">✅ Remetentes autorizados removidos.</div>',unsafe_allow_html=True)
+                    st.rerun()
 
         _flag_check=f"_email_checado_{st.session_state.cid}"
         se1,se2=st.columns([3,1])
