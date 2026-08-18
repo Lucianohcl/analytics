@@ -4286,6 +4286,8 @@ elif pg=="recebidos":
                     st.error("❌ Senha master incorreta.")
                 else:
                     save_emails_autorizados(st.session_state.cid,[])
+                    if "ta_emails_autorizados" in st.session_state:
+                        del st.session_state["ta_emails_autorizados"]
                     st.markdown('<div class="al-s">✅ Remetentes autorizados removidos.</div>',unsafe_allow_html=True)
                     st.rerun()
 
