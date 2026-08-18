@@ -2838,7 +2838,7 @@ def load_contas_pr(cid,tipo):
 
 # ═══════════════════════════════════════════════════
 # FILA DE IMPORTAÇÃO — arquivos recebidos aguardando confirmação
-# Hoje alimentada manualmente (upload em "📬 Arquivos Recebidos").
+# Hoje alimentada manualmente (upload em "📬 Importar Recebidos").
 # É o mesmo ponto onde uma captação automática (e-mail, pasta sincronizada
 # etc.) poderá gravar sozinha no futuro, chamando registrar_pendente()
 # sem precisar de nenhuma mudança nesta tela nem no restante do fluxo.
@@ -3673,7 +3673,7 @@ elif pg=="config":
             ak2=""
 
     with st.expander("📧 Captação automática por e-mail (opcional)"):
-        st.markdown('<div class="al-i">Configure uma caixa de e-mail dedicada — ao abrir <b>📬 Arquivos Recebidos</b>, o sistema verifica sozinho se chegou algo novo dos remetentes autorizados de cada cliente, sem precisar baixar e subir manualmente. No Gmail/Google Workspace use uma "senha de app" (não a senha normal da conta).</div>',unsafe_allow_html=True)
+        st.markdown('<div class="al-i">Configure uma caixa de e-mail dedicada — ao abrir <b>📬 Importar Recebidos</b>, o sistema verifica sozinho se chegou algo novo dos remetentes autorizados de cada cliente, sem precisar baixar e subir manualmente. No Gmail/Google Workspace use uma "senha de app" (não a senha normal da conta).</div>',unsafe_allow_html=True)
         _cfg_email=load_cfg()
         senha_email_cfg=st.text_input("Senha master para alterar",type="password",key="senha_email_cfg")
         if senha_email_cfg==SENHA_MASTER:
@@ -4246,7 +4246,7 @@ elif pg=="erp":
 
 # ── ARQUIVOS RECEBIDOS (fila de confirmação) ─────────
 elif pg=="recebidos":
-    hdr("📬 Arquivos Recebidos","Fila de confirmação — nada entra nos dashboards sem revisão")
+    hdr("📬 Importar Recebidos","Fila de confirmação — nada entra nos dashboards sem revisão")
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Cadastre e selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
 
@@ -4257,10 +4257,14 @@ elif pg=="recebidos":
         _emails_atuais=load_emails_autorizados(st.session_state.cid)
         _emails_txt=st.text_area("E-mail(s) autorizado(s) (um por linha)",
             value="\n".join(_emails_atuais),key="ta_emails_autorizados",height=80)
+        senha_emails_aut=st.text_input("Senha master para salvar *",type="password",key="senha_emails_autorizados")
         if st.button("💾 Salvar remetentes autorizados",key="btn_salvar_emails"):
-            _lista_nova=[l.strip() for l in _emails_txt.splitlines() if l.strip()]
-            save_emails_autorizados(st.session_state.cid,_lista_nova)
-            st.markdown(f'<div class="al-s">✅ {len(_lista_nova)} remetente(s) autorizado(s) salvo(s).</div>',unsafe_allow_html=True)
+            if senha_emails_aut!=SENHA_MASTER:
+                st.error("❌ Senha master incorreta.")
+            else:
+                _lista_nova=[l.strip() for l in _emails_txt.splitlines() if l.strip()]
+                save_emails_autorizados(st.session_state.cid,_lista_nova)
+                st.markdown(f'<div class="al-s">✅ {len(_lista_nova)} remetente(s) autorizado(s) salvo(s).</div>',unsafe_allow_html=True)
 
         _flag_check=f"_email_checado_{st.session_state.cid}"
         se1,se2=st.columns([3,1])
@@ -4276,13 +4280,18 @@ elif pg=="recebidos":
     sec("📤 Registrar arquivo recebido")
     arqs_pend=st.file_uploader("Arquivo(s) recebido(s) por fora do sistema (e-mail, WhatsApp, pasta etc.)",
         type=["csv","xlsx","xls","xlsm","pdf"],accept_multiple_files=True,key="up_pendente")
+    if arqs_pend:
+        senha_add_pend=st.text_input("Senha master para adicionar à fila *",type="password",key="senha_add_pendente")
     if arqs_pend and st.button("📥 Adicionar à fila",use_container_width=True,key="btn_add_pendente"):
-        n_add=0
-        for a_p in arqs_pend:
-            registrar_pendente(st.session_state.cid,a_p.name,a_p.read(),origem="manual")
-            n_add+=1
-        st.markdown(f'<div class="al-s">✅ {n_add} arquivo(s) adicionado(s) à fila.</div>',unsafe_allow_html=True)
-        st.rerun()
+        if senha_add_pend!=SENHA_MASTER:
+            st.error("❌ Senha master incorreta.")
+        else:
+            n_add=0
+            for a_p in arqs_pend:
+                registrar_pendente(st.session_state.cid,a_p.name,a_p.read(),origem="manual")
+                n_add+=1
+            st.markdown(f'<div class="al-s">✅ {n_add} arquivo(s) adicionado(s) à fila.</div>',unsafe_allow_html=True)
+            st.rerun()
 
     sec("📋 Fila de confirmação")
     pendentes=load_pendentes(st.session_state.cid)
@@ -4301,8 +4310,12 @@ elif pg=="recebidos":
                     with open(item["caminho"],"rb") as f: dados_item=f.read()
                 except FileNotFoundError:
                     st.markdown('<div class="al-d">❌ Arquivo não encontrado em disco — remova este item da fila.</div>',unsafe_allow_html=True)
+                    senha_rm_orfao=st.text_input("Senha master para remover *",type="password",key=f"senha_rm_orfao_{item['id']}")
                     if st.button("🗑 Remover da fila",key=f"rm_orfao_{item['id']}"):
-                        remover_pendente(st.session_state.cid,item["id"]); st.rerun()
+                        if senha_rm_orfao!=SENHA_MASTER:
+                            st.error("❌ Senha master incorreta.")
+                        else:
+                            remover_pendente(st.session_state.cid,item["id"]); st.rerun()
                     continue
 
                 df_item,msg_item=ler(dados_item,item["arquivo"])
@@ -4330,8 +4343,12 @@ elif pg=="recebidos":
 
                 if not isinstance(df_item,pd.DataFrame):
                     st.markdown('<div class="al-d">❌ Este arquivo não pôde ser lido automaticamente — corrija e reenvie.</div>',unsafe_allow_html=True)
+                    senha_rm_ilegivel=st.text_input("Senha master para remover *",type="password",key=f"senha_rm_ilegivel_{item['id']}")
                     if st.button("🗑 Remover da fila",key=f"rm_{item['id']}"):
-                        remover_pendente(st.session_state.cid,item["id"]); st.rerun()
+                        if senha_rm_ilegivel!=SENHA_MASTER:
+                            st.error("❌ Senha master incorreta.")
+                        else:
+                            remover_pendente(st.session_state.cid,item["id"]); st.rerun()
                     continue
 
                 with cbtn1:
@@ -4340,7 +4357,10 @@ elif pg=="recebidos":
                     descartar_pend=st.button("🗑 Remover da fila",use_container_width=True,key=f"desc_{item['id']}")
 
                 if descartar_pend:
-                    remover_pendente(st.session_state.cid,item["id"]); st.rerun()
+                    if senha_pend!=SENHA_MASTER:
+                        st.error("❌ Senha master incorreta.")
+                    else:
+                        remover_pendente(st.session_state.cid,item["id"]); st.rerun()
 
                 if confirmar_pend:
                     if senha_pend!=SENHA_MASTER:
