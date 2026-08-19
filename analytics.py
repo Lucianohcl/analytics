@@ -1903,7 +1903,13 @@ def treinar(serie,modelo,n=6):
             else:
                 idx=pd.date_range(end=pd.Timestamp.now(),periods=len(s),freq="MS")
             df_p=pd.DataFrame({"ds":idx,"y":s.values})
-            m=Prophet(changepoint_prior_scale=0.01,yearly_seasonality=True); m.fit(df_p)
+            # Sazonalidade anual do Prophet só é confiável com ~2 anos (730 dias) de
+            # histórico — com menos que isso, o próprio Prophet avisa que fica instável
+            # e tende a perder feio pros outros modelos. Desligando nesse caso, ele
+            # compete de forma justa independente do tamanho do histórico disponível.
+            _dias_hist_p=(idx.max()-idx.min()).days if len(idx)>1 else 0
+            _sazonal_anual_p=_dias_hist_p>=730
+            m=Prophet(changepoint_prior_scale=0.01,yearly_seasonality=_sazonal_anual_p); m.fit(df_p)
             fut=m.make_future_dataframe(periods=n,freq="MS"); fc=m.predict(fut)
             return pd.Series(fc["yhat"].tail(n).values)
     except: pass
@@ -7078,56 +7084,57 @@ elif pg=="ml_produtos":
         st.markdown('<div class="al-w">⚠️ Importe a base de vendas primeiro em <b>📈 Vendas</b>.</div>',unsafe_allow_html=True); st.stop()
 
     _col_fil_mlp=col_filial(df_v)
-    if _col_fil_mlp:
-        _filiais_disp_mlp=sorted(df_v[_col_fil_mlp].dropna().astype(str).unique().tolist())
-        _opcoes_filial_mlp=["(Todas as filiais)"]+_filiais_disp_mlp
+    _filiais_disp_mlp=sorted(df_v[_col_fil_mlp].dropna().astype(str).unique().tolist()) if _col_fil_mlp else []
+    _opcoes_filial_mlp=["(Todas as filiais)"]+_filiais_disp_mlp if _col_fil_mlp else ["(Sem filial na base)"]
 
-        def _on_change_filial_mlp():
-            st.session_state["mlp_filial_sel_backup"]=st.session_state["mlp_filial_sel"]
-            for _k_limpar_mlp in ["ml_produtos_resultado","mlp_produto_col_atual",
-                                   "mlp_metrica_col_atual","mlp_data_col_atual","vendas_raw_com_chave",
-                                   "mlp_validacao_resultado"]:
-                if _k_limpar_mlp in st.session_state:
-                    del st.session_state[_k_limpar_mlp]
+    def _on_change_filial_mlp():
+        st.session_state["mlp_filial_sel_backup"]=st.session_state["mlp_filial_sel"]
+        for _k_limpar_mlp in ["ml_produtos_resultado","mlp_produto_col_atual",
+                               "mlp_metrica_col_atual","mlp_data_col_atual","vendas_raw_com_chave",
+                               "mlp_validacao_resultado"]:
+            if _k_limpar_mlp in st.session_state:
+                del st.session_state[_k_limpar_mlp]
 
-        if "mlp_filial_sel_backup" not in st.session_state:
-            st.session_state["mlp_filial_sel_backup"]=_opcoes_filial_mlp[0]
-        if st.session_state["mlp_filial_sel_backup"] not in _opcoes_filial_mlp:
-            st.session_state["mlp_filial_sel_backup"]=_opcoes_filial_mlp[0]
-        st.session_state["mlp_filial_sel"]=st.session_state["mlp_filial_sel_backup"]
+    if "mlp_filial_sel_backup" not in st.session_state:
+        st.session_state["mlp_filial_sel_backup"]=_opcoes_filial_mlp[0]
+    if st.session_state["mlp_filial_sel_backup"] not in _opcoes_filial_mlp:
+        st.session_state["mlp_filial_sel_backup"]=_opcoes_filial_mlp[0]
+    st.session_state["mlp_filial_sel"]=st.session_state["mlp_filial_sel_backup"]
 
-        filial_sel_mlp=st.selectbox("🏬 Filial",_opcoes_filial_mlp,
-          key="mlp_filial_sel",on_change=_on_change_filial_mlp)
+    # Sempre mostra o seletor, mesmo quando a base não tem coluna de filial — mantém
+    # a tela consistente entre clientes diferentes, em vez de sumir com o campo.
+    filial_sel_mlp=st.selectbox("🏬 Filial",_opcoes_filial_mlp,
+      key="mlp_filial_sel",on_change=_on_change_filial_mlp,disabled=not bool(_col_fil_mlp))
 
-        if filial_sel_mlp!="(Todas as filiais)":
-            df_v=df_v[df_v[_col_fil_mlp].astype(str)==filial_sel_mlp].copy()
+    if _col_fil_mlp and filial_sel_mlp!="(Todas as filiais)":
+        df_v=df_v[df_v[_col_fil_mlp].astype(str)==filial_sel_mlp].copy()
 
     _col_cat_mlp=next((c for c in df_v.columns if c.strip().lower() in ["categoria","segmento","grupo"]),None)
-    if _col_cat_mlp:
-        _categorias_disp_mlp=sorted(df_v[_col_cat_mlp].dropna().astype(str).unique().tolist())
-        _opcoes_categoria_mlp=["(Todas)"]+_categorias_disp_mlp
+    _categorias_disp_mlp=sorted(df_v[_col_cat_mlp].dropna().astype(str).unique().tolist()) if _col_cat_mlp else []
+    _opcoes_categoria_mlp=["(Todas)"]+_categorias_disp_mlp if _col_cat_mlp else ["(Sem categoria na base)"]
 
-        def _on_change_categoria_mlp():
-            st.session_state["mlp_categoria_sel_backup"]=st.session_state["mlp_categoria_sel"]
-            if st.session_state.cid:
-                save_mlp_categoria_pref(st.session_state.cid,st.session_state["mlp_categoria_sel"],
-                    st.session_state.get("mlp_filial_sel"))
-            for _k_limpar_cat_mlp in ["ml_produtos_resultado","mlp_produto_col_atual",
-                                       "mlp_metrica_col_atual","mlp_data_col_atual","vendas_raw_com_chave",
-                                       "mlp_validacao_resultado"]:
-                if _k_limpar_cat_mlp in st.session_state:
-                    del st.session_state[_k_limpar_cat_mlp]
+    def _on_change_categoria_mlp():
+        st.session_state["mlp_categoria_sel_backup"]=st.session_state["mlp_categoria_sel"]
+        if st.session_state.cid:
+            save_mlp_categoria_pref(st.session_state.cid,st.session_state["mlp_categoria_sel"],
+                st.session_state.get("mlp_filial_sel"))
+        for _k_limpar_cat_mlp in ["ml_produtos_resultado","mlp_produto_col_atual",
+                                   "mlp_metrica_col_atual","mlp_data_col_atual","vendas_raw_com_chave",
+                                   "mlp_validacao_resultado"]:
+            if _k_limpar_cat_mlp in st.session_state:
+                del st.session_state[_k_limpar_cat_mlp]
 
-        if "mlp_categoria_sel_backup" not in st.session_state:
-            _cat_salva_mlp=load_mlp_categoria_pref(st.session_state.cid,st.session_state.get("mlp_filial_sel")) if st.session_state.cid else None
-            st.session_state["mlp_categoria_sel_backup"]=_cat_salva_mlp if _cat_salva_mlp else _opcoes_categoria_mlp[0]
-        if st.session_state["mlp_categoria_sel_backup"] not in _opcoes_categoria_mlp:
-            st.session_state["mlp_categoria_sel_backup"]=_opcoes_categoria_mlp[0]
-        st.session_state["mlp_categoria_sel"]=st.session_state["mlp_categoria_sel_backup"]
+    if "mlp_categoria_sel_backup" not in st.session_state:
+        _cat_salva_mlp=load_mlp_categoria_pref(st.session_state.cid,st.session_state.get("mlp_filial_sel")) if st.session_state.cid else None
+        st.session_state["mlp_categoria_sel_backup"]=_cat_salva_mlp if _cat_salva_mlp else _opcoes_categoria_mlp[0]
+    if st.session_state["mlp_categoria_sel_backup"] not in _opcoes_categoria_mlp:
+        st.session_state["mlp_categoria_sel_backup"]=_opcoes_categoria_mlp[0]
+    st.session_state["mlp_categoria_sel"]=st.session_state["mlp_categoria_sel_backup"]
 
-        categoria_sel_mlp=st.selectbox("📦 Categoria (opcional)",_opcoes_categoria_mlp,
-            key="mlp_categoria_sel",on_change=_on_change_categoria_mlp)
-        if categoria_sel_mlp!="(Todas)":
+    # Sempre mostra, mesmo sem coluna de categoria na base — consistência entre clientes.
+    categoria_sel_mlp=st.selectbox("📦 Categoria (opcional)",_opcoes_categoria_mlp,
+        key="mlp_categoria_sel",on_change=_on_change_categoria_mlp,disabled=not bool(_col_cat_mlp))
+    if _col_cat_mlp and categoria_sel_mlp!="(Todas)":
             df_v=df_v[df_v[_col_cat_mlp].astype(str)==categoria_sel_mlp].copy()
 
     cols_v=list(df_v.columns)
@@ -7408,6 +7415,10 @@ elif pg=="ml_produtos":
             _prod_erro_mlp["_fat3"]=_prod_erro_mlp["Produto"].map(_fat3_por_produto)
             _prod_erro_mlp["_part3"]=_prod_erro_mlp["Produto"].map(_part3_por_produto)
             _prod_erro_mlp=_prod_erro_mlp.sort_values("_fat3",ascending=False)
+            # Guarda o Top 10 ANTES do recorte de colunas abaixo (que descarta _mape/_fat3/
+            # classe_abc) — precisa ficar num DataFrame à parte pra sobreviver até o final
+            # da tela, onde ele é exibido de fato.
+            _top10_mape_mlp=_prod_erro_mlp.dropna(subset=["_mape"]).nsmallest(10,"_mape").copy()
             _prod_erro_mlp["MAPE"]=_prod_erro_mlp["_mape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
             _prod_erro_mlp["Faturamento (média/mês, últ. 3 meses)"]=_prod_erro_mlp["_fat3"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
             _prod_erro_mlp["Participação (últ. 3 meses)"]=_prod_erro_mlp["_part3"].apply(lambda v: f"{v:.2f}%" if pd.notna(v) else "—")
@@ -7416,6 +7427,55 @@ elif pg=="ml_produtos":
             with st.expander(f"📋 Produtos por erro — Curva e Participação ({len(_prod_erro_mlp)} produtos)"):
                 st.dataframe(_prod_erro_mlp,use_container_width=True,
                   height=min(500,80+35*len(_prod_erro_mlp)))
+
+            # Destaque — Top 10 produtos com menor erro, mostrando a participação de cada
+            # um no faturamento. Visual propositalmente diferente do resto da tela (fundo
+            # escuro/dourado, tipo pódio), pra chamar atenção quando erro baixo coincide
+            # com participação alta — é aí que a previsão vale mais confiança. Fica no
+            # final da tela, dentro de expander, pra não competir com o resultado principal.
+            # (_top10_mape_mlp já foi calculado mais acima, antes do recorte de colunas.)
+            if len(_top10_mape_mlp)>0:
+                # Moldura dourada em volta do expander pra ele se destacar visualmente
+                # do resto da tela (o expander em si não aceita cor custom, então
+                # embrulha ele numa div colorida por fora).
+                st.markdown('<div style="border:2px solid #A9762F;border-radius:10px;padding:3px;'
+                    'background:linear-gradient(135deg,#FFF8EC 0%,#FDF3DE 100%)">',unsafe_allow_html=True)
+                with st.expander("⭐ Destaque — Top 10 produtos com menor erro"):
+                    _soma_fat_top10=_top10_mape_mlp["_fat3"].sum(skipna=True)
+                    _pct_fat_top10=(_soma_fat_top10/_total_fat3*100) if _total_fat3>0 else 0
+                    _mape_medio_top10=_top10_mape_mlp["_mape"].mean()
+                    st.markdown('<div style="color:#6B6552;font-size:.8rem;margin-bottom:6px">Quando erro '
+                        'baixo coincide com participação alta, é onde a previsão merece mais peso na '
+                        'decisão de compra.</div>'
+                        f'<div style="background:#F5F3EE;border-left:3px solid #A9762F;border-radius:0 6px 6px 0;'
+                        f'padding:4mm 6mm;margin-bottom:10px;font-size:.85rem;color:#3A3A38">'
+                        f'Juntos, esses 10 produtos faturam <b style="color:#0F6E56">{fmt(_soma_fat_top10)}/mês</b> '
+                        f'— <b style="color:#0F6E56">{_pct_fat_top10:.1f}%</b> do faturamento total (média/mês, '
+                        f'últ. 3 meses) — com <b style="color:#0F6E56">MAPE médio de {_mape_medio_top10:.1f}%</b> '
+                        f'entre eles</div>',unsafe_allow_html=True)
+                    _medalhas_mlp=["🥇","🥈","🥉"]
+                    # Continuam sendo os 10 de MENOR erro (critério de seleção não muda) —
+                    # só a ORDEM de exibição passa a ser por faturamento, do maior pro menor,
+                    # pra quem mais pesa no caixa aparecer primeiro.
+                    _top10_ordenado_mlp=_top10_mape_mlp.sort_values("_fat3",ascending=False,na_position="last")
+                    for _i_top,(_,_row_top) in enumerate(_top10_ordenado_mlp.iterrows()):
+                        _icone_top=_medalhas_mlp[_i_top] if _i_top<3 else f"{_i_top+1}º"
+                        _cor_top="#3FB950" if _row_top["_mape"]<10 else ("#D9BD82" if _row_top["_mape"]<20 else "#F0A500")
+                        _curva_top=_row_top.get("classe_abc") or "—"
+                        _part_raw_top=_row_top.get("_part3")
+                        _part_top=f"{_part_raw_top:.2f}%" if pd.notna(_part_raw_top) else "sem venda recente"
+                        st.markdown(f'''<div style="display:flex;align-items:center;gap:12px;background:#0F1C2E;
+                            border-radius:8px;padding:10px 14px;margin-bottom:6px;border-left:3px solid {_cor_top}">
+                            <div style="font-size:1.1rem;min-width:28px">{_icone_top}</div>
+                            <div style="flex:1;color:#fff;font-weight:600;font-size:.85rem">{_row_top["Produto"]}</div>
+                            <div style="color:#9CA3AF;font-size:.72rem;text-align:right;min-width:65px">Curva {_curva_top}</div>
+                            <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:110px">Participação<br>
+                            <b style="color:#D9BD82;font-size:.8rem">{_part_top}</b></div>
+                            <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:60px">Erro Médio<br>
+                            <b style="color:{_cor_top};font-size:1rem">{_row_top["_mape"]:.1f}%</b></div>
+                            </div>''',unsafe_allow_html=True)
+                st.markdown('</div>',unsafe_allow_html=True)
+
         elif df_val_mlp is not None:
             st.markdown('<div class="al-w">⚠️ Nenhum mês real encontrado depois da data de corte escolhida.</div>',unsafe_allow_html=True)
 elif pg=="config_ml":
