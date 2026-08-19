@@ -347,6 +347,16 @@ def pre_carregar_cliente(cid):
     if _cr is not None: st.session_state["ff_contas_receber_df"]=_cr
     _sc_forn=load_scorecard_forn(cid)
     if _sc_forn is not None: st.session_state["gs_scorecard_forn"]=_sc_forn
+    # Limpa o cache da tela de Validação Estatística — sem isso, trocar de cliente
+    # deixava o resultado do cliente ANTERIOR na tela até rodar de novo manualmente
+    # (vazamento de dado entre clientes na mesma sessão).
+    for _k_limpar_troca_cliente in ["ml_produtos_resultado","mlp_produto_col_atual",
+            "mlp_metrica_col_atual","mlp_data_col_atual","vendas_raw_com_chave",
+            "mlp_validacao_resultado","mlp_validacao_ranks",
+            "mlp_filial_sel_backup","mlp_categoria_sel_backup","mlp_curva_sel_backup",
+            "mlp_resultado_categoria_usada","mlp_resultado_curva_usada"]:
+        if _k_limpar_troca_cliente in st.session_state:
+            del st.session_state[_k_limpar_troca_cliente]
     _cfg_ml_config=load_config_ml(cid)
     if _cfg_ml_config:
         for _k,_v in _cfg_ml_config.items():
@@ -3121,6 +3131,14 @@ def limpar_sessao_cliente():
         "dre_filial_sel","dre_filial_sel_backup",
         "bal_filial_sel","bal_filial_sel_backup","dre_dd_expander_aberto","bal_dd_expander_aberto",
         "fx_filial_sel","fx_filial_sel_backup",
+        # Adicionadas quando a Validação Estatística ganhou Curva ABC e persistência —
+        # faltavam aqui, causando o cliente novo herdar o resultado do cliente anterior.
+        "mlp_validacao_resultado","mlp_validacao_ranks",
+        "mlp_categoria_sel","mlp_categoria_sel_backup",
+        "mlp_curva_sel","mlp_curva_sel_backup",
+        "mlp_resultado_categoria_usada","mlp_resultado_curva_usada",
+        "mlp_produto_col_atual","mlp_metrica_col_atual","mlp_data_col_atual",
+        "vendas_raw_com_chave",
     ]
         
     
@@ -7171,10 +7189,19 @@ elif pg=="ml_produtos":
         produto_col_agrupar=desc_col
     produto_col="_ProdutoUnico"
 
+    # Janela dos últimos 3 meses — usada tanto na Curva ABC quanto na Participação
+    # mais abaixo, pra medir as duas coisas no MESMO período (senão um produto Curva A
+    # com histórico antigo grande podia aparecer com Participação recente menor que
+    # um Curva B em crescimento, o que confunde mais do que ajuda).
+    df_v["_periodo_curva_mlp"]=pd.to_datetime(df_v[data_col],errors="coerce",dayfirst=True).dt.to_period("M")
+    _meses_recentes_curva_mlp=sorted(df_v["_periodo_curva_mlp"].dropna().unique())[-3:]
+    _df_curva_ult3m_mlp=df_v[df_v["_periodo_curva_mlp"].isin(_meses_recentes_curva_mlp)].copy()
+
     # Filtro por Curva ABC — usa a classificação de 5 níveis (A a E), a mesma
     # que o Motor de Compras usa, pra ficar consistente com o resto do app
-    # (em vez da versão simples de 3 níveis que a Curva de Pareto usa).
-    _ranking_curva_mlp=pareto_analysis(df_v,"_ProdutoUnico",metrica_col)
+    # (em vez da versão simples de 3 níveis que a Curva de Pareto usa). Calculada só
+    # com os últimos 3 meses — mesma janela da Participação, pra serem comparáveis.
+    _ranking_curva_mlp=pareto_analysis(_df_curva_ult3m_mlp,"_ProdutoUnico",metrica_col)
     def _classe_5niveis_mlp(pct_acum):
         if pct_acum<=70: return "A"
         if pct_acum<=80: return "B"
@@ -7398,9 +7425,12 @@ elif pg=="ml_produtos":
 
             # Faturamento médio mensal dos últimos 3 meses disponíveis (não a soma do
             # período todo) — reflete o momento atual do produto, não o histórico inteiro.
+            # Reaproveita a MESMA janela de 3 meses já usada pra calcular a Curva ABC lá
+            # em cima (em vez de recalcular), garantindo que as duas medidas sejam do
+            # mesmo período — Curva e Participação passam a ser sempre comparáveis.
             _df_fat3_mlp=df_v.copy()
             _df_fat3_mlp["_periodo_fat3"]=pd.to_datetime(_df_fat3_mlp[data_col],errors="coerce",dayfirst=True).dt.to_period("M")
-            _meses_recentes_fat3=sorted(_df_fat3_mlp["_periodo_fat3"].dropna().unique())[-3:]
+            _meses_recentes_fat3=_meses_recentes_curva_mlp
             _df_fat3_mlp=_df_fat3_mlp[_df_fat3_mlp["_periodo_fat3"].isin(_meses_recentes_fat3)].copy()
             _df_fat3_mlp[metrica_col]=pd.to_numeric(_df_fat3_mlp[metrica_col],errors="coerce")
             _n_meses_fat3=max(1,len(_meses_recentes_fat3))
@@ -7418,7 +7448,7 @@ elif pg=="ml_produtos":
             # Guarda o Top 10 ANTES do recorte de colunas abaixo (que descarta _mape/_fat3/
             # classe_abc) — precisa ficar num DataFrame à parte pra sobreviver até o final
             # da tela, onde ele é exibido de fato.
-            _top10_mape_mlp=_prod_erro_mlp.dropna(subset=["_mape"]).nsmallest(10,"_mape").copy()
+            _top10_mape_mlp=_prod_erro_mlp.dropna(subset=["_fat3"]).nlargest(10,"_fat3").copy()
             _prod_erro_mlp["MAPE"]=_prod_erro_mlp["_mape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
             _prod_erro_mlp["Faturamento (média/mês, últ. 3 meses)"]=_prod_erro_mlp["_fat3"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
             _prod_erro_mlp["Participação (últ. 3 meses)"]=_prod_erro_mlp["_part3"].apply(lambda v: f"{v:.2f}%" if pd.notna(v) else "—")
@@ -7428,11 +7458,11 @@ elif pg=="ml_produtos":
                 st.dataframe(_prod_erro_mlp,use_container_width=True,
                   height=min(500,80+35*len(_prod_erro_mlp)))
 
-            # Destaque — Top 10 produtos com menor erro, mostrando a participação de cada
-            # um no faturamento. Visual propositalmente diferente do resto da tela (fundo
-            # escuro/dourado, tipo pódio), pra chamar atenção quando erro baixo coincide
-            # com participação alta — é aí que a previsão vale mais confiança. Fica no
-            # final da tela, dentro de expander, pra não competir com o resultado principal.
+            # Destaque — Top 10 produtos por FATURAMENTO, mostrando o erro de cada um.
+            # Visual propositalmente diferente do resto da tela (fundo escuro/dourado,
+            # tipo pódio), pra ver de cara se a previsão está boa justamente onde mais
+            # importa — nos produtos que mais pesam no caixa. Fica no final da tela,
+            # dentro de expander, pra não competir com o resultado principal.
             # (_top10_mape_mlp já foi calculado mais acima, antes do recorte de colunas.)
             if len(_top10_mape_mlp)>0:
                 # Moldura dourada em volta do expander pra ele se destacar visualmente
@@ -7440,13 +7470,13 @@ elif pg=="ml_produtos":
                 # embrulha ele numa div colorida por fora).
                 st.markdown('<div style="border:2px solid #A9762F;border-radius:10px;padding:3px;'
                     'background:linear-gradient(135deg,#FFF8EC 0%,#FDF3DE 100%)">',unsafe_allow_html=True)
-                with st.expander("⭐ Destaque — Top 10 produtos com menor erro"):
+                with st.expander("⭐ Destaque — Top 10 produtos por faturamento"):
                     _soma_fat_top10=_top10_mape_mlp["_fat3"].sum(skipna=True)
                     _pct_fat_top10=(_soma_fat_top10/_total_fat3*100) if _total_fat3>0 else 0
                     _mape_medio_top10=_top10_mape_mlp["_mape"].mean()
-                    st.markdown('<div style="color:#6B6552;font-size:.8rem;margin-bottom:6px">Quando erro '
-                        'baixo coincide com participação alta, é onde a previsão merece mais peso na '
-                        'decisão de compra.</div>'
+                    st.markdown('<div style="color:#6B6552;font-size:.8rem;margin-bottom:6px">Os 10 produtos '
+                        'que mais faturam — veja se a previsão está acertando justamente onde mais '
+                        'importa pro caixa.</div>'
                         f'<div style="background:#F5F3EE;border-left:3px solid #A9762F;border-radius:0 6px 6px 0;'
                         f'padding:4mm 6mm;margin-bottom:10px;font-size:.85rem;color:#3A3A38">'
                         f'Juntos, esses 10 produtos faturam <b style="color:#0F6E56">{fmt(_soma_fat_top10)}/mês</b> '
@@ -7454,13 +7484,13 @@ elif pg=="ml_produtos":
                         f'últ. 3 meses) — com <b style="color:#0F6E56">MAPE médio de {_mape_medio_top10:.1f}%</b> '
                         f'entre eles</div>',unsafe_allow_html=True)
                     _medalhas_mlp=["🥇","🥈","🥉"]
-                    # Continuam sendo os 10 de MENOR erro (critério de seleção não muda) —
-                    # só a ORDEM de exibição passa a ser por faturamento, do maior pro menor,
-                    # pra quem mais pesa no caixa aparecer primeiro.
-                    _top10_ordenado_mlp=_top10_mape_mlp.sort_values("_fat3",ascending=False,na_position="last")
-                    for _i_top,(_,_row_top) in enumerate(_top10_ordenado_mlp.iterrows()):
+                    # Já vêm ordenados por faturamento (critério de seleção), do maior pro
+                    # menor — não precisa reordenar.
+                    for _i_top,(_,_row_top) in enumerate(_top10_mape_mlp.iterrows()):
                         _icone_top=_medalhas_mlp[_i_top] if _i_top<3 else f"{_i_top+1}º"
-                        _cor_top="#3FB950" if _row_top["_mape"]<10 else ("#D9BD82" if _row_top["_mape"]<20 else "#F0A500")
+                        _mape_top=_row_top.get("_mape")
+                        _cor_top="#3FB950" if pd.notna(_mape_top) and _mape_top<10 else ("#D9BD82" if pd.notna(_mape_top) and _mape_top<20 else "#F0A500")
+                        _mape_disp_top=f"{_mape_top:.1f}%" if pd.notna(_mape_top) else "sem validação"
                         _curva_top=_row_top.get("classe_abc") or "—"
                         _part_raw_top=_row_top.get("_part3")
                         _part_top=f"{_part_raw_top:.2f}%" if pd.notna(_part_raw_top) else "sem venda recente"
@@ -7472,7 +7502,7 @@ elif pg=="ml_produtos":
                             <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:110px">Participação<br>
                             <b style="color:#D9BD82;font-size:.8rem">{_part_top}</b></div>
                             <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:60px">Erro Médio<br>
-                            <b style="color:{_cor_top};font-size:1rem">{_row_top["_mape"]:.1f}%</b></div>
+                            <b style="color:{_cor_top};font-size:1rem">{_mape_disp_top}</b></div>
                             </div>''',unsafe_allow_html=True)
                 st.markdown('</div>',unsafe_allow_html=True)
 
