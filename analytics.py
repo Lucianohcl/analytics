@@ -7245,10 +7245,20 @@ elif pg=="ml_produtos":
                     st.session_state["mlp_minper"]=_cfg_mlp_atual["mlp_minper"]
     if "mlp_pct" not in st.session_state: st.session_state["mlp_pct"]=0.20
     if "mlp_minper" not in st.session_state: st.session_state["mlp_minper"]=12
-    pct_top=st.select_slider("Top % de produtos (por venda)",
-      options=[0.05,0.10,0.20,0.30,0.50,1.00],
-      format_func=lambda v:f"Top {int(v*100)}%",key="mlp_pct")
-    min_periodos=st.slider("Mínimo de meses de histórico",4,24,key="mlp_minper")
+    _opcoes_pct_mlp=[0.05,0.10,0.20,0.30,0.50,1.00]
+    _valor_atual_pct_mlp=st.session_state.get("mlp_pct",0.20)
+    try:
+        _index_atual_pct_mlp=_opcoes_pct_mlp.index(_valor_atual_pct_mlp)
+    except ValueError:
+        _index_atual_pct_mlp=2  # não achou o valor salvo na lista — cai no 20% (meio-termo)
+    pct_top=st.selectbox("Top % de produtos (por venda)",
+      options=_opcoes_pct_mlp, index=_index_atual_pct_mlp,
+      format_func=lambda v:f"Top {int(v*100)}%",key="mlp_pct_widget")
+    st.session_state["mlp_pct"]=pct_top
+    _valor_atual_minper_mlp=st.session_state.get("mlp_minper",12)
+    min_periodos=st.slider("Mínimo de meses de histórico",4,24,
+      value=_valor_atual_minper_mlp,key="mlp_minper_widget")
+    st.session_state["mlp_minper"]=min_periodos
 
     _meses_disp_mlp=[]
     if data_col:
@@ -7342,6 +7352,19 @@ elif pg=="ml_produtos":
             mape_val_mlp=df_val_mlp["Erro %"].mean()
             n_produtos_val_mlp=df_val_mlp["Produto"].nunique()
 
+            # WAPE geral — soma do erro absoluto / soma do real absoluto, em todos os
+            # produtos e meses validados juntos. Não quebra quando algum mês tem venda
+            # real zero (o MAPE quebra nesse caso — um mês zerado pode fazer o MAPE
+            # daquele produto explodir pra centenas de milhares de %, mesmo com a
+            # previsão sendo razoável nos outros meses). É um segundo termômetro, não
+            # substitui o MAPE — os dois continuam existindo lado a lado.
+            wape_val_mlp=None
+            if {"Previsto","Real"}.issubset(df_val_mlp.columns):
+                _soma_erro_wape=(df_val_mlp["Previsto"]-df_val_mlp["Real"]).abs().sum()
+                _soma_real_wape=df_val_mlp["Real"].abs().sum()
+                if _soma_real_wape>0:
+                    wape_val_mlp=_soma_erro_wape/_soma_real_wape*100
+
             # MAPE ponderado — pesa mais os produtos que vendem mais (usa a média
             # histórica de cada produto, calculada durante a própria validação).
             mape_pond_val_mlp=None
@@ -7355,9 +7378,9 @@ elif pg=="ml_produtos":
             # Score de Validação — resumo num número só (100 - MAPE ponderado, entre
             # 0 e 100). Ajuda a decidir rápido se o resultado justifica seguir em frente.
             _score_val_mlp=max(0,min(100,round(100-(mape_pond_val_mlp if mape_pond_val_mlp is not None else mape_val_mlp))))
-            if _score_val_mlp>=90: _label_score_val="🟢 Excelente"
-            elif _score_val_mlp>=70: _label_score_val="🟢 Bom"
-            elif _score_val_mlp>=50: _label_score_val="🟡 Aceitável"
+            if _score_val_mlp>=95: _label_score_val="🟢 Excelente"
+            elif _score_val_mlp>=90: _label_score_val="🟢 Bom"
+            elif _score_val_mlp>=80: _label_score_val="🟡 Aceitável"
             else: _label_score_val="🔴 Baixa confiabilidade"
             st.markdown(
                 f'<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:10px;'
@@ -7367,20 +7390,65 @@ elif pg=="ml_produtos":
                 f'<div style="font-size:.85rem;color:#D9BD82">{_label_score_val}</div>'
                 f'</div>',unsafe_allow_html=True)
 
-            cv1,cv2=st.columns(2)
+            # WAPE ponderado — calcula o WAPE de CADA produto separadamente, depois
+            # tira a média pesada pela importância dele (média histórica de venda) —
+            # mesma lógica do MAPE ponderado, só que em cima da conta do WAPE.
+            wape_pond_val_mlp=None
+            if {"Previsto","Real","MediaHistorica"}.issubset(df_val_mlp.columns):
+                def _wape_prod_val(g):
+                    _sr=g["Real"].abs().sum()
+                    return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+                _wape_por_prod_val=df_val_mlp.groupby("Produto").apply(_wape_prod_val)
+                _peso_por_prod_val=df_val_mlp.groupby("Produto")["MediaHistorica"].first().clip(lower=0)
+                _validos_wape=_wape_por_prod_val.notna()
+                _peso_total_wape=_peso_por_prod_val[_validos_wape].sum()
+                if _peso_total_wape>0:
+                    wape_pond_val_mlp=(_wape_por_prod_val[_validos_wape]*_peso_por_prod_val[_validos_wape]).sum()/_peso_total_wape
+
+            cv1,cv2,cv3,cv4=st.columns(4)
             mc(cv1,"MAPE validado (erro médio previsto x real)",f"{mape_val_mlp:.1f}%","g" if mape_val_mlp<15 else ("y" if mape_val_mlp<30 else "r"))
             _cor_pond=("g" if (mape_pond_val_mlp or 999)<15 else ("y" if (mape_pond_val_mlp or 999)<30 else "r"))
             mc(cv2,"MAPE ponderado (erro médio previsto x real)",f"{mape_pond_val_mlp:.1f}%" if mape_pond_val_mlp is not None else "—",_cor_pond)
+            _cor_wape=("g" if (wape_val_mlp or 999)<15 else ("y" if (wape_val_mlp or 999)<30 else "r"))
+            mc(cv3,"WAPE (não distorce com mês de venda zero)",f"{wape_val_mlp:.1f}%" if wape_val_mlp is not None else "—",_cor_wape)
+            _cor_wape_pond=("g" if (wape_pond_val_mlp or 999)<15 else ("y" if (wape_pond_val_mlp or 999)<30 else "r"))
+            mc(cv4,"WAPE ponderado",f"{wape_pond_val_mlp:.1f}%" if wape_pond_val_mlp is not None else "—",_cor_wape_pond)
+
+            with st.expander("ℹ️ O que significam esses números?"):
+                st.markdown('''
+<b>MAPE</b> — o erro médio, em %, comparando o que foi previsto com o que realmente aconteceu. Quanto menor, melhor.
+
+<b>MAPE ponderado</b> — o mesmo erro, mas dando mais peso aos produtos que vendem mais. Um erro num produto pequeno importa menos que um erro num produto grande — e é <b>esse</b> número que decide o Score de Validação.
+
+<b>WAPE</b> — outra forma de calcular o erro geral, que não quebra quando algum mês teve venda real igual a zero (nesse caso específico, o MAPE pode disparar pra um número gigante e enganoso). Serve como uma segunda opinião, mais estável.
+
+<b>MAPE ponderado por Curva</b> — o mesmo raciocínio do "MAPE ponderado", só que separado por Curva ABC — mostra se os produtos que mais vendem <i>dentro de cada Curva</i> estão indo bem ou mal.
+
+<b>Score de Validação</b> — um resumo de tudo isso num número só, de 0 a 100 (100 − MAPE ponderado). Quanto mais perto de 100, mais dá pra confiar na previsão antes de usá-la numa decisão de compra.
+''', unsafe_allow_html=True)
 
             # MAPE por Curva — os produtos que mais importam (Curva A) estão sendo
             # bem previstos, ou só os irrelevantes (Curva D/E)?
+            # (média histórica de venda) do MAPE ponderado geral, só que separado por
+            # Curva — assim os dois números contam a mesma história, em granularidades
+            # diferentes, em vez de um pesar por tamanho e o outro não.
             if "_ProdutoUnico" in _ranking_curva_mlp.columns:
                 _mapa_curva_val_mlp=dict(zip(_ranking_curva_mlp["_ProdutoUnico"],_ranking_curva_mlp["classe_abc"]))
                 _df_val_curva_mlp=df_val_mlp.copy()
                 _df_val_curva_mlp["_Curva"]=_df_val_curva_mlp["Produto"].map(_mapa_curva_val_mlp)
-                _mape_por_curva_mlp=_df_val_curva_mlp.groupby("_Curva")["Erro %"].mean().sort_index()
+                if "MediaHistorica" in _df_val_curva_mlp.columns:
+                    _pesos_prod_curva_mlp=_df_val_curva_mlp.groupby("Produto")["MediaHistorica"].first().clip(lower=0)
+                    _erro_prod_curva_mlp=_df_val_curva_mlp.groupby("Produto")["Erro %"].mean()
+                    _curva_prod_mlp=_df_val_curva_mlp.groupby("Produto")["_Curva"].first()
+                    _tmp_curva_mlp=pd.DataFrame({"peso":_pesos_prod_curva_mlp,"erro":_erro_prod_curva_mlp,"curva":_curva_prod_mlp})
+                    def _media_pond_curva_mlp(g):
+                        p=g["peso"].sum()
+                        return (g["erro"]*g["peso"]).sum()/p if p>0 else g["erro"].mean()
+                    _mape_por_curva_mlp=_tmp_curva_mlp.groupby("curva").apply(_media_pond_curva_mlp).sort_index()
+                else:
+                    _mape_por_curva_mlp=_df_val_curva_mlp.groupby("_Curva")["Erro %"].mean().sort_index()
                 if len(_mape_por_curva_mlp)>0:
-                    st.markdown('<div style="font-size:.85rem;color:#6B7280;margin:10px 0 4px">MAPE médio por Curva (não ponderado):</div>',unsafe_allow_html=True)
+                    st.markdown('<div style="font-size:.85rem;color:#6B7280;margin:10px 0 4px">MAPE ponderado por Curva:</div>',unsafe_allow_html=True)
                     _cores_por_curva={"A":"#A9762F","B":"#BE8F4A","C":"#8B7355","D":"#9CA3AF","E":"#B8B6B0"}
                     _cols_curva_mlp=st.columns(len(_mape_por_curva_mlp))
                     for _i_cv,(_curva_nome,_curva_mape) in enumerate(_mape_por_curva_mlp.items()):
@@ -7418,10 +7486,15 @@ elif pg=="ml_produtos":
                 _cols_mostrar_val=["Produto","Mes","Modelo","Previsto","Real","Erro %","Bias"]
                 st.dataframe(df_val_mlp[_cols_mostrar_val],use_container_width=True,height=380)
 
-            # Lista única por produto: MAPE, Curva e Participação % na curva de
+            # Lista única por produto: MAPE, WAPE, Curva e Participação % na curva de
             # faturamento (de acordo com o filtro atual) — ordenada do menor pro
             # maior erro, pra ver rápido quem está indo bem e quem precisa de atenção.
             _prod_erro_mlp=df_val_mlp.groupby("Produto")["Erro %"].mean().reset_index().rename(columns={"Erro %":"_mape"})
+            def _wape_por_produto(g):
+                _soma_r=g["Real"].abs().sum()
+                return (g["Previsto"]-g["Real"]).abs().sum()/_soma_r*100 if _soma_r>0 else None
+            _wape_por_prod_mlp=df_val_mlp.groupby("Produto").apply(_wape_por_produto)
+            _prod_erro_mlp["_wape"]=_prod_erro_mlp["Produto"].map(_wape_por_prod_mlp)
 
             # Faturamento médio mensal dos últimos 3 meses disponíveis (não a soma do
             # período todo) — reflete o momento atual do produto, não o histórico inteiro.
@@ -7450,10 +7523,11 @@ elif pg=="ml_produtos":
             # da tela, onde ele é exibido de fato.
             _top10_mape_mlp=_prod_erro_mlp.dropna(subset=["_fat3"]).nlargest(10,"_fat3").copy()
             _prod_erro_mlp["MAPE"]=_prod_erro_mlp["_mape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+            _prod_erro_mlp["WAPE"]=_prod_erro_mlp["_wape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
             _prod_erro_mlp["Faturamento (média/mês, últ. 3 meses)"]=_prod_erro_mlp["_fat3"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
             _prod_erro_mlp["Participação (últ. 3 meses)"]=_prod_erro_mlp["_part3"].apply(lambda v: f"{v:.2f}%" if pd.notna(v) else "—")
             _prod_erro_mlp=_prod_erro_mlp.rename(columns={"classe_abc":"Curva"})[
-                ["Produto","MAPE","Faturamento (média/mês, últ. 3 meses)","Curva","Participação (últ. 3 meses)"]]
+                ["Produto","MAPE","WAPE","Faturamento (média/mês, últ. 3 meses)","Curva","Participação (últ. 3 meses)"]]
             with st.expander(f"📋 Produtos por erro — Curva e Participação ({len(_prod_erro_mlp)} produtos)"):
                 st.dataframe(_prod_erro_mlp,use_container_width=True,
                   height=min(500,80+35*len(_prod_erro_mlp)))
@@ -11598,8 +11672,10 @@ elif pg=="gestao_estoque":
 
     # k6 — Erro Médio ML
     _precisao = round(100-mape_ml,1) if mape_ml else None
-    _ml_status = "🟢 Excelente" if mape_ml and mape_ml<10 else ("⚠️ Aceitável" if mape_ml and mape_ml<20 else "🔴 Alto erro")
-    _ml_cor = "#059669" if mape_ml and mape_ml<10 else ("#D97706" if mape_ml and mape_ml<20 else "#DC2626")
+    if mape_ml and mape_ml<5: _ml_status="🟢 Excelente"; _ml_cor="#059669"
+    elif mape_ml and mape_ml<10: _ml_status="🟢 Bom"; _ml_cor="#059669"
+    elif mape_ml and mape_ml<20: _ml_status="⚠️ Aceitável"; _ml_cor="#D97706"
+    else: _ml_status="🔴 Alto erro"; _ml_cor="#DC2626"
     k6.markdown(f'''<div class="ge-kpi-box">
         <div style="font-size:16px;margin-bottom:3px"></div>
         <div class="ge-kpi-lbl">Erro Médio</div>
