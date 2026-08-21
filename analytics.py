@@ -1886,11 +1886,11 @@ def treinar(serie,modelo,n=6):
         if len(s)<6: return None
         if modelo=="ARIMA" and STATS_OK:
             return ARIMA(s,order=(1,1,1)).fit().forecast(n)
-        if modelo=="SARIMAX" and STATS_OK and len(s)>=24:
+        if modelo=="SARIMAX" and STATS_OK and len(s)>=18:
             return SARIMAX(s,order=(1,1,1),seasonal_order=(1,1,1,12)).fit(disp=False).forecast(n)
         if modelo=="ExponentialSmoothing" and STATS_OK:
             kw={"trend":"add","damped_trend":True}
-            if len(s)>=24: kw.update({"seasonal":"add","seasonal_periods":12})
+            if len(s)>=18: kw.update({"seasonal":"add","seasonal_periods":12})
             return ExponentialSmoothing(s,**kw).fit().forecast(n)
         if modelo=="Holt" and STATS_OK:
             return Holt(s,damped_trend=True).fit().forecast(n)
@@ -1918,7 +1918,7 @@ def treinar(serie,modelo,n=6):
             # e tende a perder feio pros outros modelos. Desligando nesse caso, ele
             # compete de forma justa independente do tamanho do histórico disponível.
             _dias_hist_p=(idx.max()-idx.min()).days if len(idx)>1 else 0
-            _sazonal_anual_p=_dias_hist_p>=730
+            _sazonal_anual_p=_dias_hist_p>=548  # ~18 meses, mesmo limiar dos outros modelos sazonais
             m=Prophet(changepoint_prior_scale=0.01,yearly_seasonality=_sazonal_anual_p); m.fit(df_p)
             fut=m.make_future_dataframe(periods=n,freq="MS"); fc=m.predict(fut)
             return pd.Series(fc["yhat"].tail(n).values)
@@ -2001,6 +2001,99 @@ def melhor_modelo(serie,modelos):
 
     if not validos: return "Média Móvel",res
     return min(validos,key=validos.get),res
+
+def treinar_lightgbm_pooled(df_treino, produto_col, data_col, metrica_col, produtos_lista, n_meses_prever):
+    """Treina um único modelo LightGBM usando TODOS os produtos elegíveis juntos
+    (pooled) — diferente dos outros modelos, que veem cada produto isolado. Detecta
+    automaticamente colunas extras úteis (custo, markup, desconto, vendedor) se
+    existirem na base; usa se tiver, ignora se não tiver, nunca quebra por falta
+    delas. Retorna {produto: array de previsão} só pros produtos com histórico
+    suficiente pra gerar as features de defasagem."""
+    try:
+        import lightgbm as lgb
+    except ImportError:
+        return {}
+    try:
+        df=df_treino.copy()
+        df[data_col]=pd.to_datetime(df[data_col],errors="coerce",dayfirst=True)
+        df["_periodo_lgbm"]=df[data_col].dt.to_period("M")
+        df[metrica_col]=pd.to_numeric(df[metrica_col],errors="coerce")
+
+        _mapa_covar={"custo":None,"mkp":None,"desconto":None,"vendedor":None}
+        for c in df.columns:
+            cl=str(c).strip().lower()
+            if "custo" in cl and _mapa_covar["custo"] is None: _mapa_covar["custo"]=c
+            elif ("mkp" in cl or "markup" in cl or "margem" in cl) and _mapa_covar["mkp"] is None: _mapa_covar["mkp"]=c
+            elif "desconto" in cl and _mapa_covar["desconto"] is None: _mapa_covar["desconto"]=c
+            elif "vendedor" in cl and _mapa_covar["vendedor"] is None: _mapa_covar["vendedor"]=c
+
+        agg_dict={metrica_col:"sum"}
+        if _mapa_covar["custo"]:
+            df[_mapa_covar["custo"]]=pd.to_numeric(df[_mapa_covar["custo"]],errors="coerce")
+            agg_dict[_mapa_covar["custo"]]="sum"
+        if _mapa_covar["mkp"]:
+            _mkp_num=df[_mapa_covar["mkp"]].astype(str).str.replace("%","",regex=False).str.replace(",",".",regex=False)
+            df["_mkp_num_lgbm"]=pd.to_numeric(_mkp_num,errors="coerce")
+            agg_dict["_mkp_num_lgbm"]="mean"
+        if _mapa_covar["desconto"]:
+            df[_mapa_covar["desconto"]]=pd.to_numeric(df[_mapa_covar["desconto"]],errors="coerce")
+            agg_dict[_mapa_covar["desconto"]]="mean"
+        if _mapa_covar["vendedor"]:
+            agg_dict[_mapa_covar["vendedor"]]="nunique"
+
+        mensal=df[df[produto_col].isin(produtos_lista)].groupby([produto_col,"_periodo_lgbm"]).agg(agg_dict).reset_index()
+        mensal=mensal.sort_values([produto_col,"_periodo_lgbm"])
+
+        feats=["lag1","lag2","lag3","media_movel3","mes_num"]
+        mensal["lag1"]=mensal.groupby(produto_col)[metrica_col].shift(1)
+        mensal["lag2"]=mensal.groupby(produto_col)[metrica_col].shift(2)
+        mensal["lag3"]=mensal.groupby(produto_col)[metrica_col].shift(3)
+        mensal["media_movel3"]=mensal.groupby(produto_col)[metrica_col].shift(1).rolling(3).mean().reset_index(0,drop=True)
+        mensal["mes_num"]=mensal["_periodo_lgbm"].dt.month
+        if _mapa_covar["custo"]: feats.append(_mapa_covar["custo"])
+        if _mapa_covar["mkp"]: feats.append("_mkp_num_lgbm")
+        if _mapa_covar["desconto"]: feats.append(_mapa_covar["desconto"])
+        if _mapa_covar["vendedor"]: feats.append(_mapa_covar["vendedor"])
+
+        mensal_ok=mensal.dropna(subset=feats+[metrica_col])
+        if len(mensal_ok)<30 or mensal_ok[produto_col].nunique()<5:
+            return {}  # pouco dado pra "pooled" valer a pena — desiste em silêncio
+
+        model=lgb.LGBMRegressor(n_estimators=100,max_depth=4,verbosity=-1,random_state=42)
+        model.fit(mensal_ok[feats],mensal_ok[metrica_col])
+
+        previsoes={}
+        for prod in produtos_lista:
+            hist_prod=mensal[mensal[produto_col]==prod].sort_values("_periodo_lgbm")
+            if len(hist_prod)<4: continue
+            valores=hist_prod[metrica_col].fillna(0).tolist()
+            ultimo_periodo=hist_prod["_periodo_lgbm"].max()
+            covar_atual={}
+            if _mapa_covar["custo"]: covar_atual[_mapa_covar["custo"]]=hist_prod[_mapa_covar["custo"]].iloc[-1]
+            if _mapa_covar["mkp"]: covar_atual["_mkp_num_lgbm"]=hist_prod["_mkp_num_lgbm"].iloc[-1]
+            if _mapa_covar["desconto"]: covar_atual[_mapa_covar["desconto"]]=hist_prod[_mapa_covar["desconto"]].iloc[-1]
+            if _mapa_covar["vendedor"]: covar_atual[_mapa_covar["vendedor"]]=hist_prod[_mapa_covar["vendedor"]].iloc[-1]
+
+            janela=valores[-3:] if len(valores)>=3 else valores+[valores[-1]]*(3-len(valores))
+            preds=[]
+            for passo in range(n_meses_prever):
+                prox_periodo=ultimo_periodo+passo+1
+                linha={"lag1":janela[-1],"lag2":janela[-2] if len(janela)>=2 else janela[-1],
+                       "lag3":janela[-3] if len(janela)>=3 else janela[-1],
+                       "media_movel3":float(np.mean(janela[-3:])),"mes_num":prox_periodo.month}
+                linha.update(covar_atual)
+                try:
+                    X_pred=pd.DataFrame([linha])[feats]
+                    pred=float(model.predict(X_pred)[0])
+                except Exception:
+                    pred=janela[-1]
+                pred=max(0.0,pred)
+                preds.append(pred)
+                janela.append(pred)
+            previsoes[prod]=np.array(preds)
+        return previsoes
+    except Exception:
+        return {}
 
 def ensemble_forecast(serie, modelos, n, top_k=3):
     """Combina até `top_k` modelos com menor erro de backtest, com peso maior
@@ -3730,113 +3823,9 @@ elif pg=="config":
             imap_host2=_cfg_email.get("imap_host",""); imap_port2=_cfg_email.get("imap_port",993)
             imap_user2=_cfg_email.get("imap_user",""); imap_pass2=""; imap_ativo2=_cfg_email.get("imap_ativo",False)
 
-    with st.expander("Saldo Inicial de Caixa"):
-        senha_saldo_ini=st.text_input("Senha master para alterar",type="password",key="senha_saldo_ini")
-        if senha_saldo_ini==SENHA_MASTER:
-            si=st.number_input("Saldo inicial (R$)",value=float(st.session_state.saldo_ini),step=1000.,format="%.2f")
-        elif senha_saldo_ini:
-            st.markdown('<div class="al-d">❌ Senha incorreta</div>',unsafe_allow_html=True)
-            si=st.session_state.saldo_ini
-        else:
-            st.markdown(f'<div class="al-i">Saldo atual: {fmt(st.session_state.saldo_ini)} — digite a senha master acima para alterar.</div>',unsafe_allow_html=True)
-            si=st.session_state.saldo_ini
+    
 
-    with st.expander("Entradas à Vista"):
-        st.markdown('<div class="al-i">Valor fixo de entradas à vista somado automaticamente ao Fluxo de Caixa.</div>',unsafe_allow_html=True)
-        ev_atual=float(p2.get("entradas_vista",0)) if p2 else 0.
-        freq_atual=p2.get("freq_fluxo","Mensal") if p2 else "Mensal"
-        senha_entradas_vista=st.text_input("Senha master para alterar",type="password",key="senha_entradas_vista")
-        if senha_entradas_vista==SENHA_MASTER:
-            ev=st.number_input("Valor das Entradas à Vista (R$)",value=ev_atual,step=100.,format="%.2f")
-            freq_sel=st.radio("Frequência",["Mensal","Diário"],
-              index=0 if freq_atual=="Mensal" else 1,horizontal=True,
-              help="Mensal: soma R$ X por mês | Diário: soma R$ X × 22 dias úteis")
-        elif senha_entradas_vista:
-            st.markdown('<div class="al-d">❌ Senha incorreta</div>',unsafe_allow_html=True)
-            ev=ev_atual; freq_sel=freq_atual
-        else:
-            st.markdown(f'<div class="al-i">Valor atual: {fmt(ev_atual)} ({freq_atual}) — digite a senha master acima para alterar.</div>',unsafe_allow_html=True)
-            ev=ev_atual; freq_sel=freq_atual
-
-    if st.button("💾 Salvar Configurações",use_container_width=True):
-        st.session_state.saldo_ini=si
-        st.session_state.entradas_vista=ev
-        st.session_state.freq_fluxo=freq_sel
-        if ak2 and senha_cfg==SENHA_MASTER:
-            st.session_state.api_key=ak2
-            c=load_cfg(); c["anthropic_api_key"]=ak2; save_cfg(c)
-        if senha_email_cfg==SENHA_MASTER:
-            c2=load_cfg()
-            c2["imap_host"]=imap_host2; c2["imap_port"]=int(imap_port2); c2["imap_user"]=imap_user2
-            if imap_pass2: c2["imap_pass"]=imap_pass2
-            c2["imap_ativo"]=imap_ativo2
-            save_cfg(c2)
-        if p2:
-            p2["saldo_ini"]=si
-            p2["entradas_vista"]=ev
-            p2["freq_fluxo"]=freq_sel
-            salvar_cli(st.session_state.cid,p2)
-        st.success("✅ Configurações salvas!"); time.sleep(1); ir("importar")
-
-    with st.expander("Rateio de Contas sem Filial"):
-        st.markdown('<div class="al-i">Contas importadas sem filial especificada (ex: impostos corporativos, despesas gerais) — configure aqui como distribuir cada uma entre as lojas. Contas sem rateio configurado continuam aparecendo só no consolidado, sem quebrar nada.</div>',unsafe_allow_html=True)
-        _df_raw_rateio=load_df(st.session_state.cid) if st.session_state.cid else None
-        if _df_raw_rateio is not None and "Filial" in _df_raw_rateio.columns:
-            _mask_sf=_df_raw_rateio["Filial"].isna() | (_df_raw_rateio["Filial"].astype(str).str.strip()=="")
-            _campos_valor_cfg=[c for c in _df_raw_rateio.columns if c not in ("Ano","mês","Filial")]
-            _campos_sem_filial=[]
-            for c in _campos_valor_cfg:
-                try:
-                    if _df_raw_rateio.loc[_mask_sf,c].fillna(0).astype(float).abs().sum()>0:
-                        _campos_sem_filial.append(c)
-                except: pass
-            if not _campos_sem_filial:
-                st.markdown('<div class="al-s">✅ Nenhuma conta sem filial encontrada nos dados importados.</div>',unsafe_allow_html=True)
-            else:
-                _filiais_cfg=sorted(_df_raw_rateio.loc[~_mask_sf,"Filial"].dropna().astype(str).unique().tolist())
-                if not _filiais_cfg:
-                    st.markdown('<div class="al-w">⚠️ Não há nenhuma linha com Filial preenchida pra basear a sugestão — importe dados com filial em pelo menos algumas contas primeiro.</div>',unsafe_allow_html=True)
-                else:
-                    _campo_receita_cfg=next((c for c in _campos_valor_cfg if "receita bruta" in c.lower()),None)
-                    if _campo_receita_cfg:
-                        _receita_fil=_df_raw_rateio[~_mask_sf].groupby("Filial")[_campo_receita_cfg].sum()
-                        _participacao_cfg=(_receita_fil/_receita_fil.sum()*100).round(1) if _receita_fil.sum()>0 else None
-                    else:
-                        _participacao_cfg=None
-                    _rateio_atual=load_rateio_contas(st.session_state.cid)
-                    _linhas_editor=[]
-                    for campo in _campos_sem_filial:
-                        _linha={"Conta":campo}
-                        _cfg_existente=_rateio_atual.get(campo,{})
-                        for fil in _filiais_cfg:
-                            if fil in _cfg_existente:
-                                _linha[fil]=_cfg_existente[fil]
-                            elif _participacao_cfg is not None and fil in _participacao_cfg.index:
-                                _linha[fil]=float(_participacao_cfg[fil])
-                            else:
-                                _linha[fil]=round(100/len(_filiais_cfg),1)
-                        _linhas_editor.append(_linha)
-                    _df_editor_rateio=pd.DataFrame(_linhas_editor)
-                    st.markdown('<div class="al-i">💡 Sugestão automática baseada na participação real de receita de cada loja — ajuste se quiser.</div>',unsafe_allow_html=True)
-                    _df_editado_rateio=st.data_editor(_df_editor_rateio,use_container_width=True,hide_index=True,key="rateio_contas_editor",
-                        column_config={fil:st.column_config.NumberColumn(f"{fil} (%)",min_value=0,max_value=100,step=0.1) for fil in _filiais_cfg})
-                    _somas_rateio=_df_editado_rateio[_filiais_cfg].sum(axis=1)
-                    _linhas_erradas=_df_editado_rateio[(_somas_rateio<99.5)|(_somas_rateio>100.5)]
-                    if not _linhas_erradas.empty:
-                        st.markdown(f'<div class="al-w">⚠️ Essas contas não somam 100%: {", ".join(_linhas_erradas["Conta"].tolist())}. Ajuste antes de salvar.</div>',unsafe_allow_html=True)
-                    senha_rateio_contas=st.text_input("Senha master para salvar",type="password",key="senha_rateio_contas")
-                    if st.button("💾 Salvar Rateio de Contas",key="btn_salvar_rateio_contas",use_container_width=True):
-                        if senha_rateio_contas!=SENHA_MASTER:
-                            st.markdown('<div class="al-d">❌ Senha master incorreta — nada foi salvo.</div>',unsafe_allow_html=True)
-                        elif not _linhas_erradas.empty:
-                            st.markdown('<div class="al-d">❌ Corrija as contas que não somam 100% antes de salvar.</div>',unsafe_allow_html=True)
-                        elif st.session_state.cid:
-                            _novo_rateio={}
-                            for _,r in _df_editado_rateio.iterrows():
-                                _novo_rateio[r["Conta"]]={fil:float(r[fil]) for fil in _filiais_cfg}
-                            save_rateio_contas(st.session_state.cid,_novo_rateio)
-                            st.session_state.df_raw=None
-                            st.markdown('<div class="al-s">✅ Rateio salvo — as telas por loja já vão refletir essa distribuição.</div>',unsafe_allow_html=True)
+    
 
 # ── IMPORTAR ────────────────────────────────────────
 elif pg=="importar":
@@ -4458,696 +4447,804 @@ elif pg=="recebidos":
 elif pg=="dre":
     hdr("📊 DRE","Demonstração do Resultado — Real | AV% | AH%")
 
-    _df_raw_dre=get_df_raw_bruto()
-    _col_fil_dre=col_filial(_df_raw_dre) if _df_raw_dre is not None else None
-    filial_sel_dre=None
-    if _col_fil_dre:
-        _filiais_disp_dre=sorted(v for v in _df_raw_dre[_col_fil_dre].dropna().astype(str).unique().tolist() if v!="(Todas as filiais)")
-        _opcoes_filial_dre=["(Todas as filiais)"]+_filiais_disp_dre
+    tab_resultado, tab_config = st.tabs(["📊 DRE", "⚙️ Configurações"])
+    with tab_config:
+        with st.expander("Rateio de Contas sem Filial"):
+            st.markdown('<div class="al-i">Contas importadas sem filial especificada (ex: impostos corporativos, despesas gerais) — configure aqui como distribuir cada uma entre as lojas. Contas sem rateio configurado continuam aparecendo só no consolidado, sem quebrar nada.</div>',unsafe_allow_html=True)
+            _df_raw_rateio=load_df(st.session_state.cid) if st.session_state.cid else None
+            if _df_raw_rateio is not None and "Filial" in _df_raw_rateio.columns:
+                _mask_sf=_df_raw_rateio["Filial"].isna() | (_df_raw_rateio["Filial"].astype(str).str.strip()=="")
+                _campos_valor_cfg=[c for c in _df_raw_rateio.columns if c not in ("Ano","mês","Filial")]
+                _campos_sem_filial=[]
+                for c in _campos_valor_cfg:
+                    try:
+                        if _df_raw_rateio.loc[_mask_sf,c].fillna(0).astype(float).abs().sum()>0:
+                            _campos_sem_filial.append(c)
+                    except: pass
+                if not _campos_sem_filial:
+                    st.markdown('<div class="al-s">✅ Nenhuma conta sem filial encontrada nos dados importados.</div>',unsafe_allow_html=True)
+                else:
+                    _filiais_cfg=sorted(_df_raw_rateio.loc[~_mask_sf,"Filial"].dropna().astype(str).unique().tolist())
+                    if not _filiais_cfg:
+                        st.markdown('<div class="al-w">⚠️ Não há nenhuma linha com Filial preenchida pra basear a sugestão — importe dados com filial em pelo menos algumas contas primeiro.</div>',unsafe_allow_html=True)
+                    else:
+                        _campo_receita_cfg=next((c for c in _campos_valor_cfg if "receita bruta" in c.lower()),None)
+                        if _campo_receita_cfg:
+                            _receita_fil=_df_raw_rateio[~_mask_sf].groupby("Filial")[_campo_receita_cfg].sum()
+                            _participacao_cfg=(_receita_fil/_receita_fil.sum()*100).round(1) if _receita_fil.sum()>0 else None
+                        else:
+                            _participacao_cfg=None
+                        _rateio_atual=load_rateio_contas(st.session_state.cid)
+                        _linhas_editor=[]
+                        for campo in _campos_sem_filial:
+                            _linha={"Conta":campo}
+                            _cfg_existente=_rateio_atual.get(campo,{})
+                            for fil in _filiais_cfg:
+                                if fil in _cfg_existente:
+                                    _linha[fil]=_cfg_existente[fil]
+                                elif _participacao_cfg is not None and fil in _participacao_cfg.index:
+                                    _linha[fil]=float(_participacao_cfg[fil])
+                                else:
+                                    _linha[fil]=round(100/len(_filiais_cfg),1)
+                            _linhas_editor.append(_linha)
+                        _df_editor_rateio=pd.DataFrame(_linhas_editor)
+                        st.markdown('<div class="al-i">💡 Sugestão automática baseada na participação real de receita de cada loja — ajuste se quiser.</div>',unsafe_allow_html=True)
+                        _df_editado_rateio=st.data_editor(_df_editor_rateio,use_container_width=True,hide_index=True,key="rateio_contas_editor",
+                            column_config={fil:st.column_config.NumberColumn(f"{fil} (%)",min_value=0,max_value=100,step=0.1) for fil in _filiais_cfg})
+                        _somas_rateio=_df_editado_rateio[_filiais_cfg].sum(axis=1)
+                        _linhas_erradas=_df_editado_rateio[(_somas_rateio<99.5)|(_somas_rateio>100.5)]
+                        if not _linhas_erradas.empty:
+                            st.markdown(f'<div class="al-w">⚠️ Essas contas não somam 100%: {", ".join(_linhas_erradas["Conta"].tolist())}. Ajuste antes de salvar.</div>',unsafe_allow_html=True)
+                        senha_rateio_contas=st.text_input("Senha master para salvar",type="password",key="senha_rateio_contas")
+                        if st.button("💾 Salvar Rateio de Contas",key="btn_salvar_rateio_contas",use_container_width=True):
+                            if senha_rateio_contas!=SENHA_MASTER:
+                                st.markdown('<div class="al-d">❌ Senha master incorreta — nada foi salvo.</div>',unsafe_allow_html=True)
+                            elif not _linhas_erradas.empty:
+                                st.markdown('<div class="al-d">❌ Corrija as contas que não somam 100% antes de salvar.</div>',unsafe_allow_html=True)
+                            elif st.session_state.cid:
+                                _novo_rateio={}
+                                for _,r in _df_editado_rateio.iterrows():
+                                    _novo_rateio[r["Conta"]]={fil:float(r[fil]) for fil in _filiais_cfg}
+                                save_rateio_contas(st.session_state.cid,_novo_rateio)
+                                st.session_state.df_raw=None
+                                st.markdown('<div class="al-s">✅ Rateio salvo — as telas por loja já vão refletir essa distribuição.</div>',unsafe_allow_html=True)
 
-        def _on_change_filial_dre():
-            st.session_state["dre_filial_sel_backup"]=st.session_state["dre_filial_sel"]
+    with tab_resultado:
 
-        if "dre_filial_sel_backup" not in st.session_state:
-            st.session_state["dre_filial_sel_backup"]=_opcoes_filial_dre[0]
-        if st.session_state["dre_filial_sel_backup"] not in _opcoes_filial_dre:
-            st.session_state["dre_filial_sel_backup"]=_opcoes_filial_dre[0]
-        st.session_state["dre_filial_sel"]=st.session_state["dre_filial_sel_backup"]
+        _df_raw_dre=get_df_raw_bruto()
+        _col_fil_dre=col_filial(_df_raw_dre) if _df_raw_dre is not None else None
+        filial_sel_dre=None
+        if _col_fil_dre:
+            _filiais_disp_dre=sorted(v for v in _df_raw_dre[_col_fil_dre].dropna().astype(str).unique().tolist() if v!="(Todas as filiais)")
+            _opcoes_filial_dre=["(Todas as filiais)"]+_filiais_disp_dre
 
-        filial_sel_dre=st.selectbox("🏬 Filial",_opcoes_filial_dre,
-          key="dre_filial_sel",on_change=_on_change_filial_dre)
+            def _on_change_filial_dre():
+                st.session_state["dre_filial_sel_backup"]=st.session_state["dre_filial_sel"]
 
-    # Seletor de Categoria — só aparece se houver Vendas importada com coluna Categoria.
-    # Cruza com a Filial escolhida acima (categoria dentro de uma loja específica).
-    categoria_sel_dre="(Nenhuma)"
-    _df_v_dre=get_vendas_df()
-    _col_cat_dre=next((c for c in _df_v_dre.columns if c.strip().lower()=="categoria"),None) if _df_v_dre is not None else None
-    if _col_cat_dre:
-        _categorias_disp_dre=sorted(_df_v_dre[_col_cat_dre].dropna().astype(str).unique().tolist())
-        categoria_sel_dre=st.selectbox("📦 Categoria (opcional)",["(Nenhuma)"]+_categorias_disp_dre,key="dre_categoria_sel")
+            if "dre_filial_sel_backup" not in st.session_state:
+                st.session_state["dre_filial_sel_backup"]=_opcoes_filial_dre[0]
+            if st.session_state["dre_filial_sel_backup"] not in _opcoes_filial_dre:
+                st.session_state["dre_filial_sel_backup"]=_opcoes_filial_dre[0]
+            st.session_state["dre_filial_sel"]=st.session_state["dre_filial_sel_backup"]
 
-    if categoria_sel_dre!="(Nenhuma)":
-        df,_tem_cmv_real_dre=montar_dre_categoria(filial_sel_dre,categoria_sel_dre)
-        if df is None:
-            st.markdown('<div class="al-w">⚠️ Não consegui montar a DRE por categoria — confira se a base de Vendas está importada corretamente.</div>',unsafe_allow_html=True)
-            no_data(); st.stop()
-        _msg_cmv_dre="com CMV real (custo × quantidade vendida)" if _tem_cmv_real_dre else "⚠️ sem arquivo de Estoque/Custo importado — CMV também rateado, não é real"
-        with st.expander(f"📦 Visão da categoria {categoria_sel_dre} — como isso foi calculado"):
-            st.markdown(f'<div class="al-i">📦 Visão da categoria <b>{categoria_sel_dre}</b>{" — "+filial_sel_dre if filial_sel_dre and filial_sel_dre!="(Todas as filiais)" else " — todas as filiais"}. '
-                        f'<b>Receita</b> é real (soma direta da base de Vendas), <b>CMV</b> {_msg_cmv_dre}. '
-                        f'As demais contas (Aluguel, Salários, etc.) são <b>estimadas por rateio</b>, proporcionalmente à participação de receita dessa categoria — não são valores reais, porque o Financeiro não registra essas contas por categoria.</div>',unsafe_allow_html=True)
-    else:
-        df=get_df_filial(filial_sel_dre)
-    if df is None: no_data(); st.stop()
-    cm=cm_(df); ca=ca_(df)
-    anos=sorted({str(a) for a in df[ca].dropna().unique()}) if ca else []
-    ano_f=st.selectbox("Filtrar por ano",["Todos"]+anos) if anos else "Todos"
-    df_v=df[df[ca].astype(str)==ano_f] if ano_f!="Todos" else df
-    ul=df_v.iloc[-1]
-    k=st.columns(5)
-    for col_k,lbl,campo,t in [(k[0],"Rec. Bruta","receita bruta de vendas","brl"),
-      (k[1],"Rec. Líquida","receita líquida","brl"),(k[2],"Lucro Bruto","lucro bruto","brl"),
-      (k[3],"Lucro Líquido","lucro líquido","brl"),(k[4],"EBITDA %","EBITDA %","pct")]:
-        try:
-            v=float(ul.get(campo,0))
-            col_k.markdown(f'<div class="mc"><div class="mc-lbl">{lbl}</div>'
-                          f'<div class="mc-val {cor(v)}">{fmt(v,t)}</div></div>',unsafe_allow_html=True)
-        except: pass
-    g1,g2=st.columns(2)
-    TH_LIGHT=dict(plot_bgcolor="white",paper_bgcolor="white",
-        font=dict(color="#6B7280",size=10,family="Inter"),
-        xaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=False,tickangle=-35),
-        yaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=True),
-        margin=dict(l=8,r=8,t=36,b=8),
-        legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.3,font=dict(size=9)),
-        hovermode="x unified",
-        hoverlabel=dict(bgcolor="white",bordercolor="#E8ECF0",font=dict(color="#111827",size=11)))
-    with g1:
-        fig_rb=go.Figure()
-        v=pd.to_numeric(df_v["receita bruta de vendas"],errors="coerce") if "receita bruta de vendas" in df_v.columns else pd.Series()
-        x=df_v[cm].astype(str) if cm else pd.Series(range(len(df_v))).astype(str)
-        cs=["#2563EB" if val>=0 else "#DC2626" for val in v]
-        fig_rb.add_trace(go.Bar(x=x,y=v,marker_color=cs,
-          text=[fmt(val) for val in v],textposition="outside",textfont=dict(size=8,color="#6B7280")))
-        fig_rb.update_layout(title=dict(text="💰 Receita Bruta",font=dict(size=12,color="#111827")),**TH_LIGHT)
-        st.plotly_chart(fig_rb,use_container_width=True)
-    with g2:
-        fig_mg=go.Figure()
-        x=df_v[cm].astype(str) if cm else pd.Series(range(len(df_v))).astype(str)
-        if ca and cm:
-            x=df_v[cm].astype(str)+"/"+df_v[ca].astype(str).str[-2:]
-        for c,cor_c,nm in [
-          ("margem bruta %","#14243B","Margem Bruta"),
-          ("margem contrib %","#5B7B9A","Margem Contrib."),
-          ("margem líquida %","#A9762F","Margem Líquida"),
-          ("EBITDA %","#8B5E34","EBITDA")]:
-            if c not in df_v.columns: continue
-            fig_mg.add_trace(go.Scatter(x=x,y=pd.to_numeric(df_v[c],errors="coerce"),
-              name=nm,mode="lines+markers",
-              line=dict(color=cor_c,width=2.4),
-              marker=dict(size=6,color=cor_c,line=dict(color="white",width=1.5)),
-              hovertemplate=f"<b>{nm}</b><br>%{{x}}<br>%{{y:.1f}}%<extra></extra>"))
-        fig_mg.update_layout(
-          title=dict(text="Margens (%)",font=dict(size=15,family="Georgia, serif",color="#14243B")),
-          plot_bgcolor="white",paper_bgcolor="white",
-          font=dict(color="#6B7280",size=10,family="Segoe UI, Arial"),
-          margin=dict(l=10,r=10,t=50,b=60),
-          xaxis=dict(gridcolor="#F3F4F6",linecolor="#E5E7EB",showgrid=False,
-            tickangle=-40,tickfont=dict(size=9,color="#4B5563")),
-          yaxis=dict(gridcolor="#F3F4F6",linecolor="#E5E7EB",showgrid=True,zeroline=False,tickfont=dict(size=9)),
-          legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.34,x=0.5,xanchor="center",font=dict(size=10)),
-          hovermode="x unified",height=420,
-          hoverlabel=dict(bgcolor="white",bordercolor="#E5E7EB",font=dict(color="#14243B",size=11)))
-        st.plotly_chart(fig_mg,use_container_width=True)
-    df_12=df_v
-    n=len(df_12)
-    meses_cols=list(df_12[cm].astype(str)) if cm else [str(i) for i in range(n)]
-    def dv(c,i):
-        try: return float(df_12.iloc[i].get(c,0))
-        except: return 0.
-    def av(c,i):
-        # AV% em relação à Receita Bruta (base = 100%)
-        try: return dv(c,i)/(float(df_12.iloc[i].get("receita bruta de vendas",1)) or 1)*100
-        except: return 0.
-    def av_pct(c,i):
-        # Para linhas que já são percentual — retorna o valor direto
-        try: return float(df_12.iloc[i].get(c,0))
-        except: return 0.
-    def ah(c,i):
-        try:
-            v=dv(c,i)
-            if i==0: return 0.
-            v0=float(df_12.iloc[i-1].get(c,1)) or 1
-            return (v-v0)/abs(v0)*100
-        except:
-            return 0.
-    def ah_pct(c,i):
-        try:
-            v=float(df_12.iloc[i].get(c,0))
-            if i==0: return 0.
-            v0=float(df_12.iloc[i-1].get(c,0))
-            return v-v0
-        except:
-            return 0.
-    linhas=[("cat","(+) RECEITA BRUTA","receita bruta de vendas",False),
-            ("sub","  Impostos s/ Vendas","impostos sobre vendas",True),
-            ("sub","  Devoluções","devoluções de vendas",True),
-            ("tot","= RECEITA LÍQUIDA","receita líquida",False),
-            ("cat","(-) CMV","CMV (custo da mercadoria vendida)",True),
-            ("tot","= LUCRO BRUTO","lucro bruto",False),
-            ("pct","  Margem Bruta %","margem bruta %",False),
-            ("sub","  (-) Desp. Comerciais","despesas comerciais",True),
-            ("tot","= MARGEM CONTRIB.","margem contrib",False),
-            ("pct","  Margem Contrib. %","margem contrib %",False),
-            ("sub","  (-) Desp. Adm.","despesas administrativas",True),
-            ("sub","  (-) Desp. Fin.","despesas financeiras líquidas",True),
-            ("sub","  (-) Depreciação","despesas com depreciações e amortizações",True),
-            ("tot","= LUCRO OPERACIONAL","lucro operacional",False),
-            ("pct","  Margem Op. %","margem op %",False),
-            ("sub","  (+/-) Não Operac.","receitas não operacionais",False),
-            ("sub","  (-) IR/CSLL","provisão para imposto de renda",True),
-            ("tot","= LUCRO LÍQUIDO","lucro líquido",False),
-            ("pct","  Margem Líquida %","margem líquida %",False),
-            ("tot","  EBITDA","EBITDA",False),
-            ("pct","  EBITDA %","EBITDA %",False)]
-    header="<tr><th>Descrição</th>"+"".join(f"<th>{m}</th><th>AV%</th><th>AH%</th>" for m in meses_cols)+"</tr>"
-    rows=""
-    for tipo,desc,campo,inv in linhas:
-        cls_tr={"cat":"cat","tot":"tot","pct":"pct","sub":"sub"}.get(tipo,"")
-        row=f'<tr class="{cls_tr}"><td>{desc}</td>'
-        for i in range(n):
-            if tipo=="pct":
-                v=av_pct(campo,i)
-                delta=ah_pct(campo,i)
-                cls_d="pos" if delta>0 else ("neg" if delta<0 else "neu")
-                row+=f'<td class="pct">{fmt(v,"pct")}</td>'
-                row+=f'<td class="{cls_d}" style="font-size:.7rem">{"▲" if delta>0 else "▼"}{abs(delta):.1f}pp</td>'
-                row+=f'<td></td>'
-            else:
-                v=dv(campo,i); a_v=av(campo,i); a_h=ah(campo,i)
-                cls_v=""
-                row+=f'<td class="{cls_v}">{fmt(v)}</td>'
-                row+=f'<td class="{cls_pct(a_v,inv)}">{fmt(a_v,"pct")}</td>'
-                row+=f'<td class="{cls_pct(a_h,inv)}">{fmt(a_h,"pct")}</td>'
-        rows+=row+"</tr>"
-    st.markdown(f'<div class="dre-wrap"><table class="dre">{header}{rows}</table></div>',unsafe_allow_html=True)
+            filial_sel_dre=st.selectbox("🏬 Filial",_opcoes_filial_dre,
+              key="dre_filial_sel",on_change=_on_change_filial_dre)
 
-    # Botão de exportação formatada em Excel
-    def gerar_excel_dre():
-        from openpyxl import Workbook
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-        from openpyxl.utils import get_column_letter
+        # Seletor de Categoria — só aparece se houver Vendas importada com coluna Categoria.
+        # Cruza com a Filial escolhida acima (categoria dentro de uma loja específica).
+        categoria_sel_dre="(Nenhuma)"
+        _df_v_dre=get_vendas_df()
+        _col_cat_dre=next((c for c in _df_v_dre.columns if c.strip().lower()=="categoria"),None) if _df_v_dre is not None else None
+        if _col_cat_dre:
+            _categorias_disp_dre=sorted(_df_v_dre[_col_cat_dre].dropna().astype(str).unique().tolist())
+            categoria_sel_dre=st.selectbox("📦 Categoria (opcional)",["(Nenhuma)"]+_categorias_disp_dre,key="dre_categoria_sel")
 
-        wb=Workbook()
-        ws=wb.active
-        ws.title="DRE"
-
-        cor_azul=PatternFill("solid",start_color="2563EB",end_color="2563EB")
-        cor_cinza_clara=PatternFill("solid",start_color="F3F4F6",end_color="F3F4F6")
-        cor_branco_bold=Font(bold=True,color="FFFFFF",size=11)
-        cor_preto=Font(color="111827",size=10)
-        cor_verde=Font(color="059669",size=10)
-        cor_vermelho=Font(color="DC2626",size=10)
-        cor_cinza_texto=Font(color="9CA3AF",size=10)
-        borda_fina=Border(bottom=Side(style="thin",color="E8ECF0"))
-
-        # Linha de contexto: qual filtro estava ativo na exportação
-        filtro_txt=f"Filtro aplicado: Ano = {ano_f}" if ano_f!="Todos" else "Filtro aplicado: Todos os períodos"
-        ws.cell(row=1,column=1,value=filtro_txt).font=Font(italic=True,color="6B7280",size=9)
-        ws.merge_cells(start_row=1,start_column=1,end_row=1,end_column=4)
-
-        # Cabeçalho (linha 2) — mês/ano combinados para evitar ambiguidade entre anos diferentes
-        meses_cols_completo=list(df_12[ca].astype(str)+"/"+df_12[cm].astype(str)) if ca and cm else meses_cols
-        ws.cell(row=2,column=1,value="Descrição").font=cor_branco_bold
-        ws.cell(row=2,column=1).fill=cor_azul
-        col=2
-        for m in meses_cols_completo:
-            for sub in ["Real","AV%","AH%"]:
-                c=ws.cell(row=2,column=col,value=f"{m} - {sub}")
-                c.font=cor_branco_bold; c.fill=cor_azul
-                c.alignment=Alignment(horizontal="center")
-                col+=1
-
-        linha_excel=3
+        if categoria_sel_dre!="(Nenhuma)":
+            df,_tem_cmv_real_dre=montar_dre_categoria(filial_sel_dre,categoria_sel_dre)
+            if df is None:
+                st.markdown('<div class="al-w">⚠️ Não consegui montar a DRE por categoria — confira se a base de Vendas está importada corretamente.</div>',unsafe_allow_html=True)
+                no_data(); st.stop()
+            _msg_cmv_dre="com CMV real (custo × quantidade vendida)" if _tem_cmv_real_dre else "⚠️ sem arquivo de Estoque/Custo importado — CMV também rateado, não é real"
+            with st.expander(f"📦 Visão da categoria {categoria_sel_dre} — como isso foi calculado"):
+                st.markdown(f'<div class="al-i">📦 Visão da categoria <b>{categoria_sel_dre}</b>{" — "+filial_sel_dre if filial_sel_dre and filial_sel_dre!="(Todas as filiais)" else " — todas as filiais"}. '
+                            f'<b>Receita</b> é real (soma direta da base de Vendas), <b>CMV</b> {_msg_cmv_dre}. '
+                            f'As demais contas (Aluguel, Salários, etc.) são <b>estimadas por rateio</b>, proporcionalmente à participação de receita dessa categoria — não são valores reais, porque o Financeiro não registra essas contas por categoria.</div>',unsafe_allow_html=True)
+        else:
+            df=get_df_filial(filial_sel_dre)
+        if df is None: no_data(); st.stop()
+        cm=cm_(df); ca=ca_(df)
+        anos=sorted({str(a) for a in df[ca].dropna().unique()}) if ca else []
+        ano_f=st.selectbox("Filtrar por ano",["Todos"]+anos) if anos else "Todos"
+        df_v=df[df[ca].astype(str)==ano_f] if ano_f!="Todos" else df
+        ul=df_v.iloc[-1]
+        k=st.columns(5)
+        for col_k,lbl,campo,t in [(k[0],"Rec. Bruta","receita bruta de vendas","brl"),
+          (k[1],"Rec. Líquida","receita líquida","brl"),(k[2],"Lucro Bruto","lucro bruto","brl"),
+          (k[3],"Lucro Líquido","lucro líquido","brl"),(k[4],"EBITDA %","EBITDA %","pct")]:
+            try:
+                v=float(ul.get(campo,0))
+                col_k.markdown(f'<div class="mc"><div class="mc-lbl">{lbl}</div>'
+                              f'<div class="mc-val {cor(v)}">{fmt(v,t)}</div></div>',unsafe_allow_html=True)
+            except: pass
+        g1,g2=st.columns(2)
+        TH_LIGHT=dict(plot_bgcolor="white",paper_bgcolor="white",
+            font=dict(color="#6B7280",size=10,family="Inter"),
+            xaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=False,tickangle=-35),
+            yaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=True),
+            margin=dict(l=8,r=8,t=36,b=8),
+            legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.3,font=dict(size=9)),
+            hovermode="x unified",
+            hoverlabel=dict(bgcolor="white",bordercolor="#E8ECF0",font=dict(color="#111827",size=11)))
+        with g1:
+            fig_rb=go.Figure()
+            v=pd.to_numeric(df_v["receita bruta de vendas"],errors="coerce") if "receita bruta de vendas" in df_v.columns else pd.Series()
+            x=df_v[cm].astype(str) if cm else pd.Series(range(len(df_v))).astype(str)
+            cs=["#2563EB" if val>=0 else "#DC2626" for val in v]
+            fig_rb.add_trace(go.Bar(x=x,y=v,marker_color=cs,
+              text=[fmt(val) for val in v],textposition="outside",textfont=dict(size=8,color="#6B7280")))
+            fig_rb.update_layout(title=dict(text="💰 Receita Bruta",font=dict(size=12,color="#111827")),**TH_LIGHT)
+            st.plotly_chart(fig_rb,use_container_width=True)
+        with g2:
+            fig_mg=go.Figure()
+            x=df_v[cm].astype(str) if cm else pd.Series(range(len(df_v))).astype(str)
+            if ca and cm:
+                x=df_v[cm].astype(str)+"/"+df_v[ca].astype(str).str[-2:]
+            for c,cor_c,nm in [
+              ("margem bruta %","#14243B","Margem Bruta"),
+              ("margem contrib %","#5B7B9A","Margem Contrib."),
+              ("margem líquida %","#A9762F","Margem Líquida"),
+              ("EBITDA %","#8B5E34","EBITDA")]:
+                if c not in df_v.columns: continue
+                fig_mg.add_trace(go.Scatter(x=x,y=pd.to_numeric(df_v[c],errors="coerce"),
+                  name=nm,mode="lines+markers",
+                  line=dict(color=cor_c,width=2.4),
+                  marker=dict(size=6,color=cor_c,line=dict(color="white",width=1.5)),
+                  hovertemplate=f"<b>{nm}</b><br>%{{x}}<br>%{{y:.1f}}%<extra></extra>"))
+            fig_mg.update_layout(
+              title=dict(text="Margens (%)",font=dict(size=15,family="Georgia, serif",color="#14243B")),
+              plot_bgcolor="white",paper_bgcolor="white",
+              font=dict(color="#6B7280",size=10,family="Segoe UI, Arial"),
+              margin=dict(l=10,r=10,t=50,b=60),
+              xaxis=dict(gridcolor="#F3F4F6",linecolor="#E5E7EB",showgrid=False,
+                tickangle=-40,tickfont=dict(size=9,color="#4B5563")),
+              yaxis=dict(gridcolor="#F3F4F6",linecolor="#E5E7EB",showgrid=True,zeroline=False,tickfont=dict(size=9)),
+              legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.34,x=0.5,xanchor="center",font=dict(size=10)),
+              hovermode="x unified",height=420,
+              hoverlabel=dict(bgcolor="white",bordercolor="#E5E7EB",font=dict(color="#14243B",size=11)))
+            st.plotly_chart(fig_mg,use_container_width=True)
+        df_12=df_v
+        n=len(df_12)
+        meses_cols=list(df_12[cm].astype(str)) if cm else [str(i) for i in range(n)]
+        def dv(c,i):
+            try: return float(df_12.iloc[i].get(c,0))
+            except: return 0.
+        def av(c,i):
+            # AV% em relação à Receita Bruta (base = 100%)
+            try: return dv(c,i)/(float(df_12.iloc[i].get("receita bruta de vendas",1)) or 1)*100
+            except: return 0.
+        def av_pct(c,i):
+            # Para linhas que já são percentual — retorna o valor direto
+            try: return float(df_12.iloc[i].get(c,0))
+            except: return 0.
+        def ah(c,i):
+            try:
+                v=dv(c,i)
+                if i==0: return 0.
+                v0=float(df_12.iloc[i-1].get(c,1)) or 1
+                return (v-v0)/abs(v0)*100
+            except:
+                return 0.
+        def ah_pct(c,i):
+            try:
+                v=float(df_12.iloc[i].get(c,0))
+                if i==0: return 0.
+                v0=float(df_12.iloc[i-1].get(c,0))
+                return v-v0
+            except:
+                return 0.
+        linhas=[("cat","(+) RECEITA BRUTA","receita bruta de vendas",False),
+                ("sub","  Impostos s/ Vendas","impostos sobre vendas",True),
+                ("sub","  Devoluções","devoluções de vendas",True),
+                ("tot","= RECEITA LÍQUIDA","receita líquida",False),
+                ("cat","(-) CMV","CMV (custo da mercadoria vendida)",True),
+                ("tot","= LUCRO BRUTO","lucro bruto",False),
+                ("pct","  Margem Bruta %","margem bruta %",False),
+                ("sub","  (-) Desp. Comerciais","despesas comerciais",True),
+                ("tot","= MARGEM CONTRIB.","margem contrib",False),
+                ("pct","  Margem Contrib. %","margem contrib %",False),
+                ("sub","  (-) Desp. Adm.","despesas administrativas",True),
+                ("sub","  (-) Desp. Fin.","despesas financeiras líquidas",True),
+                ("sub","  (-) Depreciação","despesas com depreciações e amortizações",True),
+                ("tot","= LUCRO OPERACIONAL","lucro operacional",False),
+                ("pct","  Margem Op. %","margem op %",False),
+                ("sub","  (+/-) Não Operac.","receitas não operacionais",False),
+                ("sub","  (-) IR/CSLL","provisão para imposto de renda",True),
+                ("tot","= LUCRO LÍQUIDO","lucro líquido",False),
+                ("pct","  Margem Líquida %","margem líquida %",False),
+                ("tot","  EBITDA","EBITDA",False),
+                ("pct","  EBITDA %","EBITDA %",False)]
+        header="<tr><th>Descrição</th>"+"".join(f"<th>{m}</th><th>AV%</th><th>AH%</th>" for m in meses_cols)+"</tr>"
+        rows=""
         for tipo,desc,campo,inv in linhas:
-            desc_limpo=desc.strip()
-            if desc_limpo.startswith("="):
-                desc_limpo="'"+desc_limpo
-            ws.cell(row=linha_excel,column=1,value=desc_limpo)
-            if tipo=="tot":
-                ws.cell(row=linha_excel,column=1).font=Font(bold=True,color="2563EB",size=10)
-                ws.cell(row=linha_excel,column=1).fill=cor_cinza_clara
-            elif tipo=="cat":
-                ws.cell(row=linha_excel,column=1).font=Font(bold=True,color="111827",size=10)
-            else:
-                ws.cell(row=linha_excel,column=1).font=cor_preto
-
-            col=2
+            cls_tr={"cat":"cat","tot":"tot","pct":"pct","sub":"sub"}.get(tipo,"")
+            row=f'<tr class="{cls_tr}"><td>{desc}</td>'
             for i in range(n):
                 if tipo=="pct":
-                    v=av_pct(campo,i); delta=ah_pct(campo,i)
-                    c1=ws.cell(row=linha_excel,column=col,value=v/100); c1.number_format="0.0%"
-                    c2=ws.cell(row=linha_excel,column=col+1,value=delta/100); c2.number_format="+0.0%;-0.0%"
-                    c2.font=cor_verde if delta>0 else (cor_vermelho if delta<0 else cor_cinza_texto)
-                    col+=3
+                    v=av_pct(campo,i)
+                    delta=ah_pct(campo,i)
+                    cls_d="pos" if delta>0 else ("neg" if delta<0 else "neu")
+                    row+=f'<td class="pct">{fmt(v,"pct")}</td>'
+                    row+=f'<td class="{cls_d}" style="font-size:.7rem">{"▲" if delta>0 else "▼"}{abs(delta):.1f}pp</td>'
+                    row+=f'<td></td>'
                 else:
                     v=dv(campo,i); a_v=av(campo,i); a_h=ah(campo,i)
-                    c1=ws.cell(row=linha_excel,column=col,value=v)
-                    c1.number_format='R$ #,##0;[RED](R$ #,##0)'
-                    c1.font=cor_vermelho if (inv and v!=0) else (cor_verde if v>0 else cor_preto)
-                    c2=ws.cell(row=linha_excel,column=col+1,value=a_v/100); c2.number_format="0.0%"
-                    c3=ws.cell(row=linha_excel,column=col+2,value=a_h/100); c3.number_format="+0.0%;-0.0%"
-                    col+=3
-            for cc in range(1,col):
-                ws.cell(row=linha_excel,column=cc).border=borda_fina
-            linha_excel+=1
+                    cls_v=""
+                    row+=f'<td class="{cls_v}">{fmt(v)}</td>'
+                    row+=f'<td class="{cls_pct(a_v,inv)}">{fmt(a_v,"pct")}</td>'
+                    row+=f'<td class="{cls_pct(a_h,inv)}">{fmt(a_h,"pct")}</td>'
+            rows+=row+"</tr>"
+        st.markdown(f'<div class="dre-wrap"><table class="dre">{header}{rows}</table></div>',unsafe_allow_html=True)
 
-        ws.column_dimensions["A"].width=28
-        for cc in range(2,col):
-            ws.column_dimensions[get_column_letter(cc)].width=14
-        ws.freeze_panes="B2"
+        # Botão de exportação formatada em Excel
+        def gerar_excel_dre():
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+            from openpyxl.utils import get_column_letter
 
-        # Aba de Drill-down (subcontas), se existir
-        if st.session_state.cid:
-            path_detalhe_xls=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
-            if os.path.exists(path_detalhe_xls):
-                df_det_xls=pd.read_csv(path_detalhe_xls,sep=";",decimal=",",encoding="utf-8-sig")
-                campos_dre_xls=DEMONSTRACOES_CAMPOS.get("DRE",[])
-                df_det_dre_xls=df_det_xls[df_det_xls["campo_pai"].isin(campos_dre_xls)]
-                if ano_f!="Todos":
-                    df_det_dre_xls=df_det_dre_xls[df_det_dre_xls["ano"].astype(str)==ano_f]
-                if not df_det_dre_xls.empty:
-                    ws2=wb.create_sheet("Drill-down")
-                    ws2.cell(row=1,column=1,value="Conta Principal").font=cor_branco_bold
-                    ws2.cell(row=1,column=2,value="Subconta").font=cor_branco_bold
-                    ws2.cell(row=1,column=3,value="Ano").font=cor_branco_bold
-                    ws2.cell(row=1,column=4,value="Mês").font=cor_branco_bold
-                    ws2.cell(row=1,column=5,value="Valor (R$)").font=cor_branco_bold
-                    for cc in range(1,6):
-                        ws2.cell(row=1,column=cc).fill=cor_azul
-                    linha2=2
-                    for _,r in df_det_dre_xls.sort_values(["campo_pai","subconta","ano","mes"]).iterrows():
-                        ws2.cell(row=linha2,column=1,value=r["campo_pai"])
-                        ws2.cell(row=linha2,column=2,value=r["subconta"])
-                        ws2.cell(row=linha2,column=3,value=str(r["ano"]))
-                        ws2.cell(row=linha2,column=4,value=r["mes"])
-                        c_val=ws2.cell(row=linha2,column=5,value=float(r["valor"]))
-                        c_val.number_format='R$ #,##0'
-                        linha2+=1
-                    for cc,w in zip("ABCDE",[26,28,8,8,16]):
-                        ws2.column_dimensions[cc].width=w
-                    ws2.freeze_panes="A2"
+            wb=Workbook()
+            ws=wb.active
+            ws.title="DRE"
 
-        buf=BytesIO(); wb.save(buf); buf.seek(0)
-        return buf.getvalue()
+            cor_azul=PatternFill("solid",start_color="2563EB",end_color="2563EB")
+            cor_cinza_clara=PatternFill("solid",start_color="F3F4F6",end_color="F3F4F6")
+            cor_branco_bold=Font(bold=True,color="FFFFFF",size=11)
+            cor_preto=Font(color="111827",size=10)
+            cor_verde=Font(color="059669",size=10)
+            cor_vermelho=Font(color="DC2626",size=10)
+            cor_cinza_texto=Font(color="9CA3AF",size=10)
+            borda_fina=Border(bottom=Side(style="thin",color="E8ECF0"))
 
-    st.download_button("📥 Exportar esta DRE (Excel formatado)",gerar_excel_dre(),
-      file_name=f"DRE_{ano_f if ano_f!='Todos' else 'completa'}.xlsx",
-      mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      use_container_width=True)
+            # Linha de contexto: qual filtro estava ativo na exportação
+            filtro_txt=f"Filtro aplicado: Ano = {ano_f}" if ano_f!="Todos" else "Filtro aplicado: Todos os períodos"
+            ws.cell(row=1,column=1,value=filtro_txt).font=Font(italic=True,color="6B7280",size=9)
+            ws.merge_cells(start_row=1,start_column=1,end_row=1,end_column=4)
 
-    # Drill-down de subcontas
-    if st.session_state.cid:
-        path_detalhe=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
-        if os.path.exists(path_detalhe):
-            df_det=pd.read_csv(path_detalhe,sep=";",decimal=",",encoding="utf-8-sig")
-            campos_dre_dd=DEMONSTRACOES_CAMPOS.get("DRE",[])
-            df_det_dre=df_det[df_det["campo_pai"].isin(campos_dre_dd)]
-            if not df_det_dre.empty:
-              if "dre_dd_expander_aberto" not in st.session_state:
-                  st.session_state["dre_dd_expander_aberto"]=False
-              with st.expander("🔍 Ver detalhamento por subconta (drill-down)",expanded=st.session_state["dre_dd_expander_aberto"]):
-                st.session_state["dre_dd_expander_aberto"]=True
-                campos_pai=sorted(df_det_dre["campo_pai"].unique().tolist())
-                campo_sel_dd=st.selectbox("Selecione a conta",campos_pai,key="dd_campo")
-                df_det_f=df_det_dre[df_det_dre["campo_pai"]==campo_sel_dd]
-                if ano_f!="Todos":
-                    df_det_f=df_det_f[df_det_f["ano"].astype(str)==ano_f]
-                if not df_det_f.empty:
-                    df_det_f=df_det_f.copy()
-                    df_det_f["periodo"]=df_det_f["mes"].astype(str)+"/"+df_det_f["ano"].astype(str).str[-2:]
-                    pivot=df_det_f.pivot_table(index="subconta",columns="periodo",values="valor",
-                                                aggfunc="sum",fill_value=0)
-                    ordem_meses=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"]
-                    cols_ordenadas=sorted(pivot.columns,
-                      key=lambda x: (x.split("/")[1], ordem_meses.index(x.split("/")[0]) if x.split("/")[0] in ordem_meses else 99))
-                    pivot=pivot[cols_ordenadas]
-                    pivot["Total"]=pivot.sum(axis=1)
-                    pivot=pivot.sort_values("Total",ascending=False)
-                    pivot_fmt=pivot.copy()
-                    for c in pivot_fmt.columns:
-                        pivot_fmt[c]=pivot_fmt[c].apply(lambda v: fmt(v))
-                    st.dataframe(pivot_fmt,use_container_width=True)
+            # Cabeçalho (linha 2) — mês/ano combinados para evitar ambiguidade entre anos diferentes
+            meses_cols_completo=list(df_12[ca].astype(str)+"/"+df_12[cm].astype(str)) if ca and cm else meses_cols
+            ws.cell(row=2,column=1,value="Descrição").font=cor_branco_bold
+            ws.cell(row=2,column=1).fill=cor_azul
+            col=2
+            for m in meses_cols_completo:
+                for sub in ["Real","AV%","AH%"]:
+                    c=ws.cell(row=2,column=col,value=f"{m} - {sub}")
+                    c.font=cor_branco_bold; c.fill=cor_azul
+                    c.alignment=Alignment(horizontal="center")
+                    col+=1
+
+            linha_excel=3
+            for tipo,desc,campo,inv in linhas:
+                desc_limpo=desc.strip()
+                if desc_limpo.startswith("="):
+                    desc_limpo="'"+desc_limpo
+                ws.cell(row=linha_excel,column=1,value=desc_limpo)
+                if tipo=="tot":
+                    ws.cell(row=linha_excel,column=1).font=Font(bold=True,color="2563EB",size=10)
+                    ws.cell(row=linha_excel,column=1).fill=cor_cinza_clara
+                elif tipo=="cat":
+                    ws.cell(row=linha_excel,column=1).font=Font(bold=True,color="111827",size=10)
                 else:
-                    st.info("Sem detalhamento disponível para esta conta no período selecionado.")
+                    ws.cell(row=linha_excel,column=1).font=cor_preto
 
-    sec("🌊 Waterfall — Último Período")
-    wf_c=["receita bruta de vendas","deduções","CMV (custo da mercadoria vendida)",
-          "despesas comerciais","despesas administrativas","despesas financeiras líquidas","lucro líquido"]
-    wf_l=["Rec. Bruta","(-) Deduções","(-) CMV","(-) D.Com","(-) D.Adm","(-) D.Fin","= Luc. Líq."]
-    wf_v=[float(ul.get(c,0)) for c in wf_c]
-    if any(v!=0 for v in wf_v):
-        fig_wf=go.Figure(go.Waterfall(orientation="v",measure=["relative"]*len(wf_l),x=wf_l,y=wf_v,
-          connector=dict(line=dict(color="#E8ECF0",width=1)),
-          increasing=dict(marker=dict(color="#059669")),
-          decreasing=dict(marker=dict(color="#DC2626")),
-          totals=dict(marker=dict(color="#2563EB")),
-          text=[fmt(v) for v in wf_v],textposition="outside",
-          textfont=dict(size=9,color="#6B7280")))
-        fig_wf.update_layout(
-          title=dict(text="🌊 Composição do Resultado — Último Período",
-                     font=dict(size=12,color="#111827")),
-          plot_bgcolor="white",paper_bgcolor="white",
-          font=dict(color="#6B7280",size=10,family="Inter"),
-          margin=dict(l=8,r=8,t=44,b=8),
-          xaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=False),
-          yaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=True),
-          showlegend=False)
-        st.plotly_chart(fig_wf,use_container_width=True)
+                col=2
+                for i in range(n):
+                    if tipo=="pct":
+                        v=av_pct(campo,i); delta=ah_pct(campo,i)
+                        c1=ws.cell(row=linha_excel,column=col,value=v/100); c1.number_format="0.0%"
+                        c2=ws.cell(row=linha_excel,column=col+1,value=delta/100); c2.number_format="+0.0%;-0.0%"
+                        c2.font=cor_verde if delta>0 else (cor_vermelho if delta<0 else cor_cinza_texto)
+                        col+=3
+                    else:
+                        v=dv(campo,i); a_v=av(campo,i); a_h=ah(campo,i)
+                        c1=ws.cell(row=linha_excel,column=col,value=v)
+                        c1.number_format='R$ #,##0;[RED](R$ #,##0)'
+                        c1.font=cor_vermelho if (inv and v!=0) else (cor_verde if v>0 else cor_preto)
+                        c2=ws.cell(row=linha_excel,column=col+1,value=a_v/100); c2.number_format="0.0%"
+                        c3=ws.cell(row=linha_excel,column=col+2,value=a_h/100); c3.number_format="+0.0%;-0.0%"
+                        col+=3
+                for cc in range(1,col):
+                    ws.cell(row=linha_excel,column=cc).border=borda_fina
+                linha_excel+=1
+
+            ws.column_dimensions["A"].width=28
+            for cc in range(2,col):
+                ws.column_dimensions[get_column_letter(cc)].width=14
+            ws.freeze_panes="B2"
+
+            # Aba de Drill-down (subcontas), se existir
+            if st.session_state.cid:
+                path_detalhe_xls=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
+                if os.path.exists(path_detalhe_xls):
+                    df_det_xls=pd.read_csv(path_detalhe_xls,sep=";",decimal=",",encoding="utf-8-sig")
+                    campos_dre_xls=DEMONSTRACOES_CAMPOS.get("DRE",[])
+                    df_det_dre_xls=df_det_xls[df_det_xls["campo_pai"].isin(campos_dre_xls)]
+                    if ano_f!="Todos":
+                        df_det_dre_xls=df_det_dre_xls[df_det_dre_xls["ano"].astype(str)==ano_f]
+                    if not df_det_dre_xls.empty:
+                        ws2=wb.create_sheet("Drill-down")
+                        ws2.cell(row=1,column=1,value="Conta Principal").font=cor_branco_bold
+                        ws2.cell(row=1,column=2,value="Subconta").font=cor_branco_bold
+                        ws2.cell(row=1,column=3,value="Ano").font=cor_branco_bold
+                        ws2.cell(row=1,column=4,value="Mês").font=cor_branco_bold
+                        ws2.cell(row=1,column=5,value="Valor (R$)").font=cor_branco_bold
+                        for cc in range(1,6):
+                            ws2.cell(row=1,column=cc).fill=cor_azul
+                        linha2=2
+                        for _,r in df_det_dre_xls.sort_values(["campo_pai","subconta","ano","mes"]).iterrows():
+                            ws2.cell(row=linha2,column=1,value=r["campo_pai"])
+                            ws2.cell(row=linha2,column=2,value=r["subconta"])
+                            ws2.cell(row=linha2,column=3,value=str(r["ano"]))
+                            ws2.cell(row=linha2,column=4,value=r["mes"])
+                            c_val=ws2.cell(row=linha2,column=5,value=float(r["valor"]))
+                            c_val.number_format='R$ #,##0'
+                            linha2+=1
+                        for cc,w in zip("ABCDE",[26,28,8,8,16]):
+                            ws2.column_dimensions[cc].width=w
+                        ws2.freeze_panes="A2"
+
+            buf=BytesIO(); wb.save(buf); buf.seek(0)
+            return buf.getvalue()
+
+        st.download_button("📥 Exportar esta DRE (Excel formatado)",gerar_excel_dre(),
+          file_name=f"DRE_{ano_f if ano_f!='Todos' else 'completa'}.xlsx",
+          mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          use_container_width=True)
+
+        # Drill-down de subcontas
+        if st.session_state.cid:
+            path_detalhe=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
+            if os.path.exists(path_detalhe):
+                df_det=pd.read_csv(path_detalhe,sep=";",decimal=",",encoding="utf-8-sig")
+                campos_dre_dd=DEMONSTRACOES_CAMPOS.get("DRE",[])
+                df_det_dre=df_det[df_det["campo_pai"].isin(campos_dre_dd)]
+                if not df_det_dre.empty:
+                  if "dre_dd_expander_aberto" not in st.session_state:
+                      st.session_state["dre_dd_expander_aberto"]=False
+                  with st.expander("🔍 Ver detalhamento por subconta (drill-down)",expanded=st.session_state["dre_dd_expander_aberto"]):
+                    st.session_state["dre_dd_expander_aberto"]=True
+                    campos_pai=sorted(df_det_dre["campo_pai"].unique().tolist())
+                    campo_sel_dd=st.selectbox("Selecione a conta",campos_pai,key="dd_campo")
+                    df_det_f=df_det_dre[df_det_dre["campo_pai"]==campo_sel_dd]
+                    if ano_f!="Todos":
+                        df_det_f=df_det_f[df_det_f["ano"].astype(str)==ano_f]
+                    if not df_det_f.empty:
+                        df_det_f=df_det_f.copy()
+                        df_det_f["periodo"]=df_det_f["mes"].astype(str)+"/"+df_det_f["ano"].astype(str).str[-2:]
+                        pivot=df_det_f.pivot_table(index="subconta",columns="periodo",values="valor",
+                                                    aggfunc="sum",fill_value=0)
+                        ordem_meses=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"]
+                        cols_ordenadas=sorted(pivot.columns,
+                          key=lambda x: (x.split("/")[1], ordem_meses.index(x.split("/")[0]) if x.split("/")[0] in ordem_meses else 99))
+                        pivot=pivot[cols_ordenadas]
+                        pivot["Total"]=pivot.sum(axis=1)
+                        pivot=pivot.sort_values("Total",ascending=False)
+                        pivot_fmt=pivot.copy()
+                        for c in pivot_fmt.columns:
+                            pivot_fmt[c]=pivot_fmt[c].apply(lambda v: fmt(v))
+                        st.dataframe(pivot_fmt,use_container_width=True)
+                    else:
+                        st.info("Sem detalhamento disponível para esta conta no período selecionado.")
+
+        sec("🌊 Waterfall — Último Período")
+        wf_c=["receita bruta de vendas","deduções","CMV (custo da mercadoria vendida)",
+              "despesas comerciais","despesas administrativas","despesas financeiras líquidas","lucro líquido"]
+        wf_l=["Rec. Bruta","(-) Deduções","(-) CMV","(-) D.Com","(-) D.Adm","(-) D.Fin","= Luc. Líq."]
+        wf_v=[float(ul.get(c,0)) for c in wf_c]
+        if any(v!=0 for v in wf_v):
+            fig_wf=go.Figure(go.Waterfall(orientation="v",measure=["relative"]*len(wf_l),x=wf_l,y=wf_v,
+              connector=dict(line=dict(color="#E8ECF0",width=1)),
+              increasing=dict(marker=dict(color="#059669")),
+              decreasing=dict(marker=dict(color="#DC2626")),
+              totals=dict(marker=dict(color="#2563EB")),
+              text=[fmt(v) for v in wf_v],textposition="outside",
+              textfont=dict(size=9,color="#6B7280")))
+            fig_wf.update_layout(
+              title=dict(text="🌊 Composição do Resultado — Último Período",
+                         font=dict(size=12,color="#111827")),
+              plot_bgcolor="white",paper_bgcolor="white",
+              font=dict(color="#6B7280",size=10,family="Inter"),
+              margin=dict(l=8,r=8,t=44,b=8),
+              xaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=False),
+              yaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=True),
+              showlegend=False)
+            st.plotly_chart(fig_wf,use_container_width=True)
 
 # ── FLUXO ───────────────────────────────────────────
 elif pg=="fluxo":
     hdr("💰 Fluxo de Caixa","Entradas, saídas, saldo e alertas automáticos")
 
-    _df_raw_fx=get_df_raw_bruto()
-    _col_fil_fx=col_filial(_df_raw_fx) if _df_raw_fx is not None else None
-    filial_sel_fx=None
-    if _col_fil_fx:
-        _filiais_disp_fx=sorted(v for v in _df_raw_fx[_col_fil_fx].dropna().astype(str).unique().tolist() if v!="(Todas as filiais)")
-        _opcoes_filial_fx=["(Todas as filiais)"]+_filiais_disp_fx
+    tab_resultado, tab_config = st.tabs(["📊 Fluxo de Caixa", "⚙️ Configurações"])
+    with tab_config:
+        p2_fx=load_cli(st.session_state.cid) if st.session_state.cid else None
+        with st.expander("Saldo Inicial de Caixa", expanded=True):
+            senha_saldo_ini_fx=st.text_input("Senha master para alterar",type="password",key="senha_saldo_ini_fx")
+            if senha_saldo_ini_fx==SENHA_MASTER:
+                si_cfg=st.number_input("Saldo inicial (R$)",value=float(st.session_state.saldo_ini),step=1000.,format="%.2f")
+            elif senha_saldo_ini_fx:
+                st.markdown('<div class="al-d">❌ Senha incorreta</div>',unsafe_allow_html=True)
+                si_cfg=st.session_state.saldo_ini
+            else:
+                st.markdown(f'<div class="al-i">Saldo atual: {fmt(st.session_state.saldo_ini)} — digite a senha master acima para alterar.</div>',unsafe_allow_html=True)
+                si_cfg=st.session_state.saldo_ini
 
-        def _on_change_filial_fx():
-            st.session_state["fx_filial_sel_backup"]=st.session_state["fx_filial_sel"]
+        with st.expander("Entradas à Vista", expanded=True):
+            st.markdown('<div class="al-i">Valor fixo de entradas à vista somado automaticamente ao Fluxo de Caixa.</div>',unsafe_allow_html=True)
+            ev_atual_fx=float(p2_fx.get("entradas_vista",0)) if p2_fx else 0.
+            freq_atual_fx=p2_fx.get("freq_fluxo","Mensal") if p2_fx else "Mensal"
+            senha_entradas_vista_fx=st.text_input("Senha master para alterar",type="password",key="senha_entradas_vista_fx")
+            if senha_entradas_vista_fx==SENHA_MASTER:
+                ev_cfg=st.number_input("Valor das Entradas à Vista (R$)",value=ev_atual_fx,step=100.,format="%.2f")
+                freq_sel_cfg=st.radio("Frequência",["Mensal","Diário"],
+                  index=0 if freq_atual_fx=="Mensal" else 1,horizontal=True,
+                  help="Mensal: soma R$ X por mês | Diário: soma R$ X × 22 dias úteis")
+            elif senha_entradas_vista_fx:
+                st.markdown('<div class="al-d">❌ Senha incorreta</div>',unsafe_allow_html=True)
+                ev_cfg=ev_atual_fx; freq_sel_cfg=freq_atual_fx
+            else:
+                st.markdown(f'<div class="al-i">Valor atual: {fmt(ev_atual_fx)} ({freq_atual_fx}) — digite a senha master acima para alterar.</div>',unsafe_allow_html=True)
+                ev_cfg=ev_atual_fx; freq_sel_cfg=freq_atual_fx
 
-        if "fx_filial_sel_backup" not in st.session_state:
-            st.session_state["fx_filial_sel_backup"]=_opcoes_filial_fx[0]
-        if st.session_state["fx_filial_sel_backup"] not in _opcoes_filial_fx:
-            st.session_state["fx_filial_sel_backup"]=_opcoes_filial_fx[0]
-        st.session_state["fx_filial_sel"]=st.session_state["fx_filial_sel_backup"]
+        if st.button("💾 Salvar Configurações do Fluxo de Caixa",use_container_width=True,key="btn_salvar_fluxo_config"):
+            st.session_state.saldo_ini=si_cfg
+            st.session_state.entradas_vista=ev_cfg
+            st.session_state.freq_fluxo=freq_sel_cfg
+            if p2_fx:
+                p2_fx["saldo_ini"]=si_cfg
+                p2_fx["entradas_vista"]=ev_cfg
+                p2_fx["freq_fluxo"]=freq_sel_cfg
+                salvar_cli(st.session_state.cid,p2_fx)
+            st.success("✅ Configurações salvas!"); time.sleep(1); ir("fluxo")
 
-        filial_sel_fx=st.selectbox("🏬 Filial",_opcoes_filial_fx,
-          key="fx_filial_sel",on_change=_on_change_filial_fx)
+    with tab_resultado:
 
-    df=get_df_filial(filial_sel_fx)
-    if df is None: no_data(); st.stop()
-    cm=cm_(df); ca=ca_(df); si=st.session_state.saldo_ini
+        _df_raw_fx=get_df_raw_bruto()
+        _col_fil_fx=col_filial(_df_raw_fx) if _df_raw_fx is not None else None
+        filial_sel_fx=None
+        if _col_fil_fx:
+            _filiais_disp_fx=sorted(v for v in _df_raw_fx[_col_fil_fx].dropna().astype(str).unique().tolist() if v!="(Todas as filiais)")
+            _opcoes_filial_fx=["(Todas as filiais)"]+_filiais_disp_fx
 
-    # Filtros
-    col_f1,col_f2=st.columns(2)
-    anos_disp=["Todos"]+sorted({str(a) for a in df[ca].dropna().unique().tolist()}) if ca else ["Todos"]
-    ano_sel=col_f1.selectbox("Ano",anos_disp,key="fluxo_ano")
-    df=df[df[ca].astype(str)==ano_sel].reset_index(drop=True) if ano_sel!="Todos" else df.reset_index(drop=True)
-    meses_disp=["Todos"]+df[cm].dropna().unique().tolist() if cm else ["Todos"]
-    mes_sel=col_f2.selectbox("Mês",meses_disp,key="fluxo_mes")
-    df=df[df[cm]==mes_sel].reset_index(drop=True) if mes_sel!="Todos" else df.reset_index(drop=True)
-    if df.empty: st.warning("Sem dados para este período."); st.stop()
-    df_f=df.copy()
-    ent=pd.to_numeric(df_f.get("Disponibilidades entradas",pd.Series(0,index=df_f.index)),errors="coerce").fillna(0)
-    sai=pd.to_numeric(df_f.get("Disponibilidades Saida",pd.Series(0,index=df_f.index)),errors="coerce").fillna(0)
-    ev=float(st.session_state.get("entradas_vista",0))
-    freq=st.session_state.get("freq_fluxo","Mensal")
-    if ev>0:
-        ent_vista=pd.Series([ev*22 if freq=="Diário" else ev]*len(df_f),index=df_f.index)
-        df_f["entradas à vista"]=ent_vista
-        ent=ent+ent_vista
-    df_f["tot entradas"]=ent; df_f["tot saidas"]=sai
-    df_f["saldo período"]=ent-sai; df_f["saldo acumulado"]=si+(ent-sai).cumsum()
-    ul=df_f.iloc[-1]
-    k=st.columns(4)
-    mc(k[0],"Saldo Inicial",fmt(si),"b")
-    mc(k[1],"Total Entradas",fmt(ent.sum()),"g",f"Média: {fmt(ent.mean())}/mês")
-    mc(k[2],"Total Saídas",fmt(sai.sum()),"r",f"Média: {fmt(sai.mean())}/mês")
-    sf=float(ul.get("saldo acumulado",si)); mc(k[3],"Saldo Final",fmt(sf),cor(sf))
-    sec("🚨 Alertas de Caixa")
-    neg=df_f[df_f["saldo acumulado"]<0]
-    if len(neg)>0:
-        mn=neg[cm].tolist() if cm else list(neg.index)
-        st.markdown(f'<div class="al-d">🔴 Caixa NEGATIVO em <b>{len(neg)}</b> período(s): {", ".join(str(m) for m in mn)}<br>Ação: negociar prazos com fornecedores ou antecipar recebíveis.</div>',unsafe_allow_html=True)
-    elif len(df_f[df_f["saldo acumulado"]<df_f["saldo acumulado"].mean()*.3])>0:
-        st.markdown('<div class="al-w">⚠️ Caixa abaixo de 30% da média em alguns períodos.</div>',unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="al-s">✅ Caixa positivo em todos os períodos.</div>',unsafe_allow_html=True)
+            def _on_change_filial_fx():
+                st.session_state["fx_filial_sel_backup"]=st.session_state["fx_filial_sel"]
 
-    
-    sec("📈 Evolução")
-    g1,g2=st.columns(2)
-    x=df_f[cm].astype(str) if cm else pd.Series(range(len(df_f))).astype(str)
-    if ca and cm:
-        x=df_f[cm].astype(str)+"/"+df_f[ca].astype(str).str[-2:]
-    TH_FC=dict(plot_bgcolor="white",paper_bgcolor="white",
-        font=dict(color="#6B7280",size=10,family="Inter"),
-        xaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=False,tickangle=-35),
-        yaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=True),
-        margin=dict(l=8,r=8,t=40,b=40),
-        legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.3,font=dict(size=9)),
-        hovermode="x unified",
-        hoverlabel=dict(bgcolor="white",bordercolor="#E8ECF0",font=dict(color="#111827",size=11)))
-    with g1:
-        fig_fc=go.Figure()
-        fig_fc.add_trace(go.Bar(x=x,y=df_f["tot entradas"],name="Entradas",
-          marker=dict(color="#059669",line=dict(color="white",width=0.6)),opacity=.9,
-          hovertemplate="<b>Entradas</b><br>%{x}<br>R$ %{y:,.0f}<extra></extra>"))
-        fig_fc.add_trace(go.Bar(x=x,y=-df_f["tot saidas"],name="Saídas",
-          marker=dict(color="#DC2626",line=dict(color="white",width=0.6)),opacity=.9,
-          hovertemplate="<b>Saídas</b><br>%{x}<br>R$ %{customdata:,.0f}<extra></extra>",
-          customdata=df_f["tot saidas"]))
-        fig_fc.add_hline(y=0,line_dash="dot",line_color="#9CA3AF",opacity=0.5)
-        fig_fc.update_layout(title=dict(text="Entradas vs Saídas",
-          font=dict(size=13,family="Georgia, serif",color="#14243B")),
-          barmode="relative",bargap=0.28,**TH_FC)
-        st.plotly_chart(fig_fc,use_container_width=True)
-    with g2:
-        saldo=df_f["saldo acumulado"]
-        cor_saldo="#059669" if float(saldo.iloc[-1])>=0 else "#DC2626"
-        fig_sal=go.Figure()
-        fig_sal.add_trace(go.Scatter(x=x,y=saldo,fill="tozeroy",mode="lines+markers",
-          line=dict(color=cor_saldo,width=2.8),
-          fillcolor="rgba(5,150,105,.08)" if cor_saldo=="#059669" else "rgba(220,38,38,.08)",
-          marker=dict(size=6,color=cor_saldo,line=dict(color="white",width=2)),
-          hovertemplate="<b>Saldo Acumulado</b><br>%{x}<br>R$ %{y:,.0f}<extra></extra>"))
-        fig_sal.add_hline(y=0,line_dash="dot",line_color="#9CA3AF",opacity=0.5)
-        fig_sal.update_layout(title=dict(text="Saldo Acumulado",
-          font=dict(size=13,family="Georgia, serif",color="#14243B")),**TH_FC,showlegend=False)
-        st.plotly_chart(fig_sal,use_container_width=True)
-    sec("📊 Detalhamento")
-    t1,t2=st.tabs(["Entradas por tipo","Saídas por Centro"])
-    CORES_LIGHT=["#0F6E56","#A9762F","#059669","#2563EB","#7C3AED","#0891B2","#6b7280","#14B8A6"]
+            if "fx_filial_sel_backup" not in st.session_state:
+                st.session_state["fx_filial_sel_backup"]=_opcoes_filial_fx[0]
+            if st.session_state["fx_filial_sel_backup"] not in _opcoes_filial_fx:
+                st.session_state["fx_filial_sel_backup"]=_opcoes_filial_fx[0]
+            st.session_state["fx_filial_sel"]=st.session_state["fx_filial_sel_backup"]
 
-    # Lê do mesmo arquivo de detalhamento que alimenta o drill-down — garante que o gráfico
-    # mostre exatamente as mesmas subcontas reais, com os mesmos nomes, em qualquer formato de origem
-    # Só lê o detalhamento se o Fluxo de Caixa realmente foi importado nesse cliente (totais reais
-    # na tabela, não zerados) — evita mostrar gráfico "fantasma" de uma importação antiga
-    df_det_graf=None
-    fluxo_tem_dado_real=float(df_f["tot entradas"].sum() or 0)!=0 or float(df_f["tot saidas"].sum() or 0)!=0
-    if st.session_state.cid and fluxo_tem_dado_real:
-        path_det_graf=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
-        if os.path.exists(path_det_graf):
-            df_det_graf=pd.read_csv(path_det_graf,sep=";",decimal=",",encoding="utf-8-sig")
+            filial_sel_fx=st.selectbox("🏬 Filial",_opcoes_filial_fx,
+              key="fx_filial_sel",on_change=_on_change_filial_fx)
 
-    def _totais_por_subconta(campo_pai_alvo,top_n=7):
-        """Agrupa o detalhamento por subconta, somando todos os períodos visíveis (df_f).
-        Retorna as top_n maiores + 'Outras' com o restante, para manter o gráfico legível."""
-        if df_det_graf is None: return {}
-        dfd=df_det_graf[df_det_graf["campo_pai"]==campo_pai_alvo]
-        if dfd.empty: return {}
-        # Restringe aos períodos que estão sendo exibidos no momento (respeita filtro de ano/mês)
-        anos_visiveis=set(df_f[ca].astype(str)) if ca and ca in df_f.columns else None
-        if anos_visiveis:
-            dfd=dfd[dfd["ano"].astype(str).isin(anos_visiveis)]
-        soma_sub=dfd.groupby("subconta")["valor"].sum().sort_values(ascending=False)
-        if len(soma_sub)<=top_n:
-            return soma_sub.to_dict()
-        top=soma_sub.head(top_n)
-        resto=soma_sub.iloc[top_n:].sum()
-        resultado=top.to_dict()
-        if resto>0: resultado["Outras"]=resto
-        return resultado
+        df=get_df_filial(filial_sel_fx)
+        if df is None: no_data(); st.stop()
+        cm=cm_(df); ca=ca_(df); si=st.session_state.saldo_ini
 
-    with t1:
-        totais_ent=_totais_por_subconta("Disponibilidades entradas")
-        # Entradas à Vista (estimativa configurada manualmente, não vem do detalhamento)
+        # Filtros
+        col_f1,col_f2=st.columns(2)
+        anos_disp=["Todos"]+sorted({str(a) for a in df[ca].dropna().unique().tolist()}) if ca else ["Todos"]
+        ano_sel=col_f1.selectbox("Ano",anos_disp,key="fluxo_ano")
+        df=df[df[ca].astype(str)==ano_sel].reset_index(drop=True) if ano_sel!="Todos" else df.reset_index(drop=True)
+        meses_disp=["Todos"]+df[cm].dropna().unique().tolist() if cm else ["Todos"]
+        mes_sel=col_f2.selectbox("Mês",meses_disp,key="fluxo_mes")
+        df=df[df[cm]==mes_sel].reset_index(drop=True) if mes_sel!="Todos" else df.reset_index(drop=True)
+        if df.empty: st.warning("Sem dados para este período."); st.stop()
+        df_f=df.copy()
+        ent=pd.to_numeric(df_f.get("Disponibilidades entradas",pd.Series(0,index=df_f.index)),errors="coerce").fillna(0)
+        sai=pd.to_numeric(df_f.get("Disponibilidades Saida",pd.Series(0,index=df_f.index)),errors="coerce").fillna(0)
         ev=float(st.session_state.get("entradas_vista",0))
         freq=st.session_state.get("freq_fluxo","Mensal")
         if ev>0:
-            vals_vista_total=(ev*22 if freq=="Diário" else ev)*len(df_f)
-            totais_ent["À Vista"]=vals_vista_total
-        if totais_ent:
-            fig_ent=go.Figure(go.Bar(x=list(totais_ent.keys()),y=list(totais_ent.values()),
-              marker=dict(color=CORES_LIGHT[:len(totais_ent)],line=dict(color="white",width=0.8)),
-              opacity=.92,text=[f"R$ {v/1e6:.1f}M" for v in totais_ent.values()],
-              textposition="outside",textfont=dict(size=9,color="#374151")))
-            fig_ent.update_layout(title=dict(text="Entradas por Subconta",
-              font=dict(size=13,family="Georgia, serif",color="#14243B")),
-              bargap=0.35,**TH_FC,showlegend=False)
-            st.plotly_chart(fig_ent,use_container_width=True)
-            fig_pie=go.Figure(go.Pie(
-              labels=list(totais_ent.keys()),
-              values=list(totais_ent.values()),
-              marker=dict(colors=CORES_LIGHT[:len(totais_ent)],line=dict(color="white",width=2)),
-              hole=.5,textfont=dict(size=10,color="#FFFFFF"),
-              textinfo="percent",hovertemplate="<b>%{label}</b><br>R$ %{value:,.0f}<br>%{percent}<extra></extra>"))
-            fig_pie.update_layout(
-              title=dict(text="Distribuição das Entradas",font=dict(size=13,family="Georgia, serif",color="#14243B")),
-              plot_bgcolor="white",paper_bgcolor="white",
-              font=dict(color="#6B7280",size=10),
-              margin=dict(l=8,r=8,t=40,b=8),height=300,
-              legend=dict(bgcolor="rgba(0,0,0,0)",font=dict(size=9),orientation="v",x=1.02))
-            st.plotly_chart(fig_pie,use_container_width=True)
+            ent_vista=pd.Series([ev*22 if freq=="Diário" else ev]*len(df_f),index=df_f.index)
+            df_f["entradas à vista"]=ent_vista
+            ent=ent+ent_vista
+        df_f["tot entradas"]=ent; df_f["tot saidas"]=sai
+        df_f["saldo período"]=ent-sai; df_f["saldo acumulado"]=si+(ent-sai).cumsum()
+        ul=df_f.iloc[-1]
+        k=st.columns(4)
+        mc(k[0],"Saldo Inicial",fmt(si),"b")
+        mc(k[1],"Total Entradas",fmt(ent.sum()),"g",f"Média: {fmt(ent.mean())}/mês")
+        mc(k[2],"Total Saídas",fmt(sai.sum()),"r",f"Média: {fmt(sai.mean())}/mês")
+        sf=float(ul.get("saldo acumulado",si)); mc(k[3],"Saldo Final",fmt(sf),cor(sf))
+        sec("🚨 Alertas de Caixa")
+        neg=df_f[df_f["saldo acumulado"]<0]
+        if len(neg)>0:
+            mn=neg[cm].tolist() if cm else list(neg.index)
+            st.markdown(f'<div class="al-d">🔴 Caixa NEGATIVO em <b>{len(neg)}</b> período(s): {", ".join(str(m) for m in mn)}<br>Ação: negociar prazos com fornecedores ou antecipar recebíveis.</div>',unsafe_allow_html=True)
+        elif len(df_f[df_f["saldo acumulado"]<df_f["saldo acumulado"].mean()*.3])>0:
+            st.markdown('<div class="al-w">⚠️ Caixa abaixo de 30% da média em alguns períodos.</div>',unsafe_allow_html=True)
         else:
-            st.markdown('<div class="al-i">Dados de entradas não disponíveis neste arquivo.</div>',unsafe_allow_html=True)
-    with t2:
-        totais_sai=_totais_por_subconta("Disponibilidades Saida")
-        if totais_sai:
-            fig_sai=go.Figure(go.Bar(x=list(totais_sai.keys()),y=list(totais_sai.values()),
-              marker=dict(color=CORES_LIGHT[:len(totais_sai)],line=dict(color="white",width=0.8)),
-              opacity=.92,text=[f"R$ {v/1e6:.1f}M" for v in totais_sai.values()],
-              textposition="outside",textfont=dict(size=9,color="#374151")))
-            fig_sai.update_layout(title=dict(text="Saídas por Subconta",
+            st.markdown('<div class="al-s">✅ Caixa positivo em todos os períodos.</div>',unsafe_allow_html=True)
+
+    
+        sec("📈 Evolução")
+        g1,g2=st.columns(2)
+        x=df_f[cm].astype(str) if cm else pd.Series(range(len(df_f))).astype(str)
+        if ca and cm:
+            x=df_f[cm].astype(str)+"/"+df_f[ca].astype(str).str[-2:]
+        TH_FC=dict(plot_bgcolor="white",paper_bgcolor="white",
+            font=dict(color="#6B7280",size=10,family="Inter"),
+            xaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=False,tickangle=-35),
+            yaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=True),
+            margin=dict(l=8,r=8,t=40,b=40),
+            legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.3,font=dict(size=9)),
+            hovermode="x unified",
+            hoverlabel=dict(bgcolor="white",bordercolor="#E8ECF0",font=dict(color="#111827",size=11)))
+        with g1:
+            fig_fc=go.Figure()
+            fig_fc.add_trace(go.Bar(x=x,y=df_f["tot entradas"],name="Entradas",
+              marker=dict(color="#059669",line=dict(color="white",width=0.6)),opacity=.9,
+              hovertemplate="<b>Entradas</b><br>%{x}<br>R$ %{y:,.0f}<extra></extra>"))
+            fig_fc.add_trace(go.Bar(x=x,y=-df_f["tot saidas"],name="Saídas",
+              marker=dict(color="#DC2626",line=dict(color="white",width=0.6)),opacity=.9,
+              hovertemplate="<b>Saídas</b><br>%{x}<br>R$ %{customdata:,.0f}<extra></extra>",
+              customdata=df_f["tot saidas"]))
+            fig_fc.add_hline(y=0,line_dash="dot",line_color="#9CA3AF",opacity=0.5)
+            fig_fc.update_layout(title=dict(text="Entradas vs Saídas",
               font=dict(size=13,family="Georgia, serif",color="#14243B")),
-              bargap=0.35,**TH_FC,showlegend=False)
-            st.plotly_chart(fig_sai,use_container_width=True)
-            fig_pie_sai=go.Figure(go.Pie(
-              labels=list(totais_sai.keys()),
-              values=list(totais_sai.values()),
-              marker=dict(colors=CORES_LIGHT[:len(totais_sai)],line=dict(color="white",width=2)),
-              hole=.5,textfont=dict(size=10,color="#111827"),
-              textinfo="percent",hovertemplate="<b>%{label}</b><br>R$ %{value:,.0f}<br>%{percent}<extra></extra>"))
-            fig_pie_sai.update_layout(
-              title=dict(text="Distribuição das Saídas",font=dict(size=13,family="Georgia, serif",color="#14243B")),
-              plot_bgcolor="white",paper_bgcolor="white",
-              font=dict(color="#6B7280",size=10),
-              margin=dict(l=8,r=8,t=40,b=8),height=300,
-              legend=dict(bgcolor="rgba(0,0,0,0)",font=dict(size=9),orientation="v",x=1.02))
-            st.plotly_chart(fig_pie_sai,use_container_width=True)
-        else:
-            st.markdown('<div class="al-i">Dados de centro de custo não disponíveis.</div>',unsafe_allow_html=True)
+              barmode="relative",bargap=0.28,**TH_FC)
+            st.plotly_chart(fig_fc,use_container_width=True)
+        with g2:
+            saldo=df_f["saldo acumulado"]
+            cor_saldo="#059669" if float(saldo.iloc[-1])>=0 else "#DC2626"
+            fig_sal=go.Figure()
+            fig_sal.add_trace(go.Scatter(x=x,y=saldo,fill="tozeroy",mode="lines+markers",
+              line=dict(color=cor_saldo,width=2.8),
+              fillcolor="rgba(5,150,105,.08)" if cor_saldo=="#059669" else "rgba(220,38,38,.08)",
+              marker=dict(size=6,color=cor_saldo,line=dict(color="white",width=2)),
+              hovertemplate="<b>Saldo Acumulado</b><br>%{x}<br>R$ %{y:,.0f}<extra></extra>"))
+            fig_sal.add_hline(y=0,line_dash="dot",line_color="#9CA3AF",opacity=0.5)
+            fig_sal.update_layout(title=dict(text="Saldo Acumulado",
+              font=dict(size=13,family="Georgia, serif",color="#14243B")),**TH_FC,showlegend=False)
+            st.plotly_chart(fig_sal,use_container_width=True)
+        sec("📊 Detalhamento")
+        t1,t2=st.tabs(["Entradas por tipo","Saídas por Centro"])
+        CORES_LIGHT=["#0F6E56","#A9762F","#059669","#2563EB","#7C3AED","#0891B2","#6b7280","#14B8A6"]
 
-    if st.session_state.cid and fluxo_tem_dado_real:
-        path_detalhe_fc=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
-        if os.path.exists(path_detalhe_fc):
-            df_det_fc=pd.read_csv(path_detalhe_fc,sep=";",decimal=",",encoding="utf-8-sig")
-            df_det_fc_fluxo=df_det_fc[df_det_fc["campo_pai"].isin(["Disponibilidades entradas","Disponibilidades Saida"])]
-            if not df_det_fc_fluxo.empty:
-                with st.expander("🔍 Ver detalhamento por categoria (drill-down)"):
-                    campos_pai_fc=sorted(df_det_fc_fluxo["campo_pai"].unique().tolist())
-                    campo_sel_fc=st.selectbox("Selecione",campos_pai_fc,key="dd_fluxo_campo",
-                      format_func=lambda x: "Entradas" if x=="Disponibilidades entradas" else "Saídas")
-                    df_det_f_fc=df_det_fc_fluxo[df_det_fc_fluxo["campo_pai"]==campo_sel_fc]
-                    if ano_sel!="Todos":
-                        df_det_f_fc=df_det_f_fc[df_det_f_fc["ano"].astype(str)==ano_sel]
-                    if mes_sel!="Todos":
-                        mes_sel_3=str(mes_sel).lower()[:3]
-                        df_det_f_fc=df_det_f_fc[df_det_f_fc["mes"].astype(str).str.lower()==mes_sel_3]
-                    if not df_det_f_fc.empty:
-                        df_det_f_fc=df_det_f_fc.copy()
-                        df_det_f_fc["periodo"]=df_det_f_fc["mes"].astype(str)+"/"+df_det_f_fc["ano"].astype(str).str[-2:]
-                        pivot_fc=df_det_f_fc.pivot_table(index="subconta",columns="periodo",values="valor",
-                                                        aggfunc="sum",fill_value=0)
-                        ordem_meses_fc=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"]
-                        cols_ordenadas_fc=sorted(pivot_fc.columns,
-                          key=lambda x: (x.split("/")[1], ordem_meses_fc.index(x.split("/")[0]) if x.split("/")[0] in ordem_meses_fc else 99))
-                        pivot_fc=pivot_fc[cols_ordenadas_fc]
-                        pivot_fc["Total"]=pivot_fc.sum(axis=1)
-                        pivot_fc=pivot_fc.sort_values("Total",ascending=False)
-                        pivot_fc_fmt=pivot_fc.copy()
-                        for c in pivot_fc_fmt.columns:
-                            pivot_fc_fmt[c]=pivot_fc_fmt[c].apply(lambda v: fmt(v))
-                        st.dataframe(pivot_fc_fmt,use_container_width=True)
-                    else:
-                        st.info("Sem detalhamento disponível para este período.")
+        # Lê do mesmo arquivo de detalhamento que alimenta o drill-down — garante que o gráfico
+        # mostre exatamente as mesmas subcontas reais, com os mesmos nomes, em qualquer formato de origem
+        # Só lê o detalhamento se o Fluxo de Caixa realmente foi importado nesse cliente (totais reais
+        # na tabela, não zerados) — evita mostrar gráfico "fantasma" de uma importação antiga
+        df_det_graf=None
+        fluxo_tem_dado_real=float(df_f["tot entradas"].sum() or 0)!=0 or float(df_f["tot saidas"].sum() or 0)!=0
+        if st.session_state.cid and fluxo_tem_dado_real:
+            path_det_graf=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
+            if os.path.exists(path_det_graf):
+                df_det_graf=pd.read_csv(path_det_graf,sep=";",decimal=",",encoding="utf-8-sig")
 
-    def gerar_excel_fluxo():
-        from openpyxl import Workbook
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-        from openpyxl.utils import get_column_letter
+        def _totais_por_subconta(campo_pai_alvo,top_n=7):
+            """Agrupa o detalhamento por subconta, somando todos os períodos visíveis (df_f).
+            Retorna as top_n maiores + 'Outras' com o restante, para manter o gráfico legível."""
+            if df_det_graf is None: return {}
+            dfd=df_det_graf[df_det_graf["campo_pai"]==campo_pai_alvo]
+            if dfd.empty: return {}
+            # Restringe aos períodos que estão sendo exibidos no momento (respeita filtro de ano/mês)
+            anos_visiveis=set(df_f[ca].astype(str)) if ca and ca in df_f.columns else None
+            if anos_visiveis:
+                dfd=dfd[dfd["ano"].astype(str).isin(anos_visiveis)]
+            soma_sub=dfd.groupby("subconta")["valor"].sum().sort_values(ascending=False)
+            if len(soma_sub)<=top_n:
+                return soma_sub.to_dict()
+            top=soma_sub.head(top_n)
+            resto=soma_sub.iloc[top_n:].sum()
+            resultado=top.to_dict()
+            if resto>0: resultado["Outras"]=resto
+            return resultado
 
-        wb=Workbook()
-        ws=wb.active
-        ws.title="Fluxo de Caixa"
-
-        cor_azul=PatternFill("solid",start_color="2563EB",end_color="2563EB")
-        cor_cinza_clara=PatternFill("solid",start_color="F3F4F6",end_color="F3F4F6")
-        cor_branco_bold=Font(bold=True,color="FFFFFF",size=11)
-        cor_preto=Font(color="111827",size=10)
-        cor_verde=Font(color="059669",size=10)
-        cor_vermelho=Font(color="DC2626",size=10)
-        cor_cinza_texto=Font(color="9CA3AF",size=10)
-        borda_fina=Border(bottom=Side(style="thin",color="E8ECF0"))
-
-        filtro_txt=f"Filtro aplicado: Ano = {ano_sel}" if ano_sel!="Todos" else "Filtro aplicado: Todos os períodos"
-        if mes_sel!="Todos": filtro_txt+=f" | Mês = {mes_sel}"
-        ws.cell(row=1,column=1,value=filtro_txt).font=Font(italic=True,color="6B7280",size=9)
-        ws.merge_cells(start_row=1,start_column=1,end_row=1,end_column=3)
-
-        meses_cols_fc=list(df_f[ca].astype(str)+"/"+df_f[cm].astype(str)) if ca and cm and ca in df_f.columns else list(df_f[cm].astype(str)) if cm else []
-        ws.cell(row=2,column=1,value="Descrição").font=cor_branco_bold
-        ws.cell(row=2,column=1).fill=cor_azul
-        col=2
-        for m in meses_cols_fc:
-            c=ws.cell(row=2,column=col,value=m)
-            c.font=cor_branco_bold; c.fill=cor_azul
-            c.alignment=Alignment(horizontal="center")
-            col+=1
-
-        linhas_fc_xls=[
-            ("tot","Total Entradas","Disponibilidades entradas",False),
-            ("sub","  Receita Serviços","Centro de Custos Entradas 1",False),
-            ("sub","  Receita Produtos","Centro de Custos Entradas 2",False),
-            ("sub","  Recebimento Clientes","Centro de Custos Entradas 3",False),
-            ("sub","  Receita Financeira/Outras","Centro de Custos Entradas 4",False),
-            ("tot","Total Saídas","Disponibilidades Saida",True),
-            ("sub","  Folha","Centro de Custos Saidas 1",True),
-            ("sub","  Fornecedores","Centro de Custos Saidas 2",True),
-            ("sub","  Impostos/Operacionais","Centro de Custos Saidas 3",True),
-            ("sub","  Investimentos","Centro de Custos Saidas 4",True),
-            ("tot","Saldo Acumulado","saldo acumulado",False),
-        ]
-
-        linha_excel=3
-        for tipo,desc,campo,inv in linhas_fc_xls:
-            if campo not in df_f.columns: continue
-            ws.cell(row=linha_excel,column=1,value=desc.strip())
-            if tipo=="tot":
-                ws.cell(row=linha_excel,column=1).font=Font(bold=True,color="2563EB",size=10)
-                ws.cell(row=linha_excel,column=1).fill=cor_cinza_clara
+        with t1:
+            totais_ent=_totais_por_subconta("Disponibilidades entradas")
+            # Entradas à Vista (estimativa configurada manualmente, não vem do detalhamento)
+            ev=float(st.session_state.get("entradas_vista",0))
+            freq=st.session_state.get("freq_fluxo","Mensal")
+            if ev>0:
+                vals_vista_total=(ev*22 if freq=="Diário" else ev)*len(df_f)
+                totais_ent["À Vista"]=vals_vista_total
+            if totais_ent:
+                fig_ent=go.Figure(go.Bar(x=list(totais_ent.keys()),y=list(totais_ent.values()),
+                  marker=dict(color=CORES_LIGHT[:len(totais_ent)],line=dict(color="white",width=0.8)),
+                  opacity=.92,text=[f"R$ {v/1e6:.1f}M" for v in totais_ent.values()],
+                  textposition="outside",textfont=dict(size=9,color="#374151")))
+                fig_ent.update_layout(title=dict(text="Entradas por Subconta",
+                  font=dict(size=13,family="Georgia, serif",color="#14243B")),
+                  bargap=0.35,**TH_FC,showlegend=False)
+                st.plotly_chart(fig_ent,use_container_width=True)
+                fig_pie=go.Figure(go.Pie(
+                  labels=list(totais_ent.keys()),
+                  values=list(totais_ent.values()),
+                  marker=dict(colors=CORES_LIGHT[:len(totais_ent)],line=dict(color="white",width=2)),
+                  hole=.5,textfont=dict(size=10,color="#FFFFFF"),
+                  textinfo="percent",hovertemplate="<b>%{label}</b><br>R$ %{value:,.0f}<br>%{percent}<extra></extra>"))
+                fig_pie.update_layout(
+                  title=dict(text="Distribuição das Entradas",font=dict(size=13,family="Georgia, serif",color="#14243B")),
+                  plot_bgcolor="white",paper_bgcolor="white",
+                  font=dict(color="#6B7280",size=10),
+                  margin=dict(l=8,r=8,t=40,b=8),height=300,
+                  legend=dict(bgcolor="rgba(0,0,0,0)",font=dict(size=9),orientation="v",x=1.02))
+                st.plotly_chart(fig_pie,use_container_width=True)
             else:
-                ws.cell(row=linha_excel,column=1).font=cor_preto
+                st.markdown('<div class="al-i">Dados de entradas não disponíveis neste arquivo.</div>',unsafe_allow_html=True)
+        with t2:
+            totais_sai=_totais_por_subconta("Disponibilidades Saida")
+            if totais_sai:
+                fig_sai=go.Figure(go.Bar(x=list(totais_sai.keys()),y=list(totais_sai.values()),
+                  marker=dict(color=CORES_LIGHT[:len(totais_sai)],line=dict(color="white",width=0.8)),
+                  opacity=.92,text=[f"R$ {v/1e6:.1f}M" for v in totais_sai.values()],
+                  textposition="outside",textfont=dict(size=9,color="#374151")))
+                fig_sai.update_layout(title=dict(text="Saídas por Subconta",
+                  font=dict(size=13,family="Georgia, serif",color="#14243B")),
+                  bargap=0.35,**TH_FC,showlegend=False)
+                st.plotly_chart(fig_sai,use_container_width=True)
+                fig_pie_sai=go.Figure(go.Pie(
+                  labels=list(totais_sai.keys()),
+                  values=list(totais_sai.values()),
+                  marker=dict(colors=CORES_LIGHT[:len(totais_sai)],line=dict(color="white",width=2)),
+                  hole=.5,textfont=dict(size=10,color="#111827"),
+                  textinfo="percent",hovertemplate="<b>%{label}</b><br>R$ %{value:,.0f}<br>%{percent}<extra></extra>"))
+                fig_pie_sai.update_layout(
+                  title=dict(text="Distribuição das Saídas",font=dict(size=13,family="Georgia, serif",color="#14243B")),
+                  plot_bgcolor="white",paper_bgcolor="white",
+                  font=dict(color="#6B7280",size=10),
+                  margin=dict(l=8,r=8,t=40,b=8),height=300,
+                  legend=dict(bgcolor="rgba(0,0,0,0)",font=dict(size=9),orientation="v",x=1.02))
+                st.plotly_chart(fig_pie_sai,use_container_width=True)
+            else:
+                st.markdown('<div class="al-i">Dados de centro de custo não disponíveis.</div>',unsafe_allow_html=True)
 
+        if st.session_state.cid and fluxo_tem_dado_real:
+            path_detalhe_fc=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
+            if os.path.exists(path_detalhe_fc):
+                df_det_fc=pd.read_csv(path_detalhe_fc,sep=";",decimal=",",encoding="utf-8-sig")
+                df_det_fc_fluxo=df_det_fc[df_det_fc["campo_pai"].isin(["Disponibilidades entradas","Disponibilidades Saida"])]
+                if not df_det_fc_fluxo.empty:
+                    with st.expander("🔍 Ver detalhamento por categoria (drill-down)"):
+                        campos_pai_fc=sorted(df_det_fc_fluxo["campo_pai"].unique().tolist())
+                        campo_sel_fc=st.selectbox("Selecione",campos_pai_fc,key="dd_fluxo_campo",
+                          format_func=lambda x: "Entradas" if x=="Disponibilidades entradas" else "Saídas")
+                        df_det_f_fc=df_det_fc_fluxo[df_det_fc_fluxo["campo_pai"]==campo_sel_fc]
+                        if ano_sel!="Todos":
+                            df_det_f_fc=df_det_f_fc[df_det_f_fc["ano"].astype(str)==ano_sel]
+                        if mes_sel!="Todos":
+                            mes_sel_3=str(mes_sel).lower()[:3]
+                            df_det_f_fc=df_det_f_fc[df_det_f_fc["mes"].astype(str).str.lower()==mes_sel_3]
+                        if not df_det_f_fc.empty:
+                            df_det_f_fc=df_det_f_fc.copy()
+                            df_det_f_fc["periodo"]=df_det_f_fc["mes"].astype(str)+"/"+df_det_f_fc["ano"].astype(str).str[-2:]
+                            pivot_fc=df_det_f_fc.pivot_table(index="subconta",columns="periodo",values="valor",
+                                                            aggfunc="sum",fill_value=0)
+                            ordem_meses_fc=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"]
+                            cols_ordenadas_fc=sorted(pivot_fc.columns,
+                              key=lambda x: (x.split("/")[1], ordem_meses_fc.index(x.split("/")[0]) if x.split("/")[0] in ordem_meses_fc else 99))
+                            pivot_fc=pivot_fc[cols_ordenadas_fc]
+                            pivot_fc["Total"]=pivot_fc.sum(axis=1)
+                            pivot_fc=pivot_fc.sort_values("Total",ascending=False)
+                            pivot_fc_fmt=pivot_fc.copy()
+                            for c in pivot_fc_fmt.columns:
+                                pivot_fc_fmt[c]=pivot_fc_fmt[c].apply(lambda v: fmt(v))
+                            st.dataframe(pivot_fc_fmt,use_container_width=True)
+                        else:
+                            st.info("Sem detalhamento disponível para este período.")
+
+        def gerar_excel_fluxo():
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+            from openpyxl.utils import get_column_letter
+
+            wb=Workbook()
+            ws=wb.active
+            ws.title="Fluxo de Caixa"
+
+            cor_azul=PatternFill("solid",start_color="2563EB",end_color="2563EB")
+            cor_cinza_clara=PatternFill("solid",start_color="F3F4F6",end_color="F3F4F6")
+            cor_branco_bold=Font(bold=True,color="FFFFFF",size=11)
+            cor_preto=Font(color="111827",size=10)
+            cor_verde=Font(color="059669",size=10)
+            cor_vermelho=Font(color="DC2626",size=10)
+            cor_cinza_texto=Font(color="9CA3AF",size=10)
+            borda_fina=Border(bottom=Side(style="thin",color="E8ECF0"))
+
+            filtro_txt=f"Filtro aplicado: Ano = {ano_sel}" if ano_sel!="Todos" else "Filtro aplicado: Todos os períodos"
+            if mes_sel!="Todos": filtro_txt+=f" | Mês = {mes_sel}"
+            ws.cell(row=1,column=1,value=filtro_txt).font=Font(italic=True,color="6B7280",size=9)
+            ws.merge_cells(start_row=1,start_column=1,end_row=1,end_column=3)
+
+            meses_cols_fc=list(df_f[ca].astype(str)+"/"+df_f[cm].astype(str)) if ca and cm and ca in df_f.columns else list(df_f[cm].astype(str)) if cm else []
+            ws.cell(row=2,column=1,value="Descrição").font=cor_branco_bold
+            ws.cell(row=2,column=1).fill=cor_azul
             col=2
-            for i in range(len(df_f)):
-                v=float(df_f.iloc[i].get(campo,0) or 0)
-                c1=ws.cell(row=linha_excel,column=col,value=v)
-                c1.number_format='R$ #,##0;[RED](R$ #,##0)'
-                c1.font=cor_vermelho if (inv and v!=0) else (cor_verde if v>0 else cor_preto)
-                ws.cell(row=linha_excel,column=col).border=borda_fina
+            for m in meses_cols_fc:
+                c=ws.cell(row=2,column=col,value=m)
+                c.font=cor_branco_bold; c.fill=cor_azul
+                c.alignment=Alignment(horizontal="center")
                 col+=1
-            linha_excel+=1
 
-        ws.column_dimensions["A"].width=26
-        for cc in range(2,col):
-            ws.column_dimensions[get_column_letter(cc)].width=13
-        ws.freeze_panes="B3"
+            linhas_fc_xls=[
+                ("tot","Total Entradas","Disponibilidades entradas",False),
+                ("sub","  Receita Serviços","Centro de Custos Entradas 1",False),
+                ("sub","  Receita Produtos","Centro de Custos Entradas 2",False),
+                ("sub","  Recebimento Clientes","Centro de Custos Entradas 3",False),
+                ("sub","  Receita Financeira/Outras","Centro de Custos Entradas 4",False),
+                ("tot","Total Saídas","Disponibilidades Saida",True),
+                ("sub","  Folha","Centro de Custos Saidas 1",True),
+                ("sub","  Fornecedores","Centro de Custos Saidas 2",True),
+                ("sub","  Impostos/Operacionais","Centro de Custos Saidas 3",True),
+                ("sub","  Investimentos","Centro de Custos Saidas 4",True),
+                ("tot","Saldo Acumulado","saldo acumulado",False),
+            ]
 
-        if st.session_state.cid:
-            path_detalhe_xls=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
-            if os.path.exists(path_detalhe_xls):
-                df_det_xls=pd.read_csv(path_detalhe_xls,sep=";",decimal=",",encoding="utf-8-sig")
-                df_det_fc_xls=df_det_xls[df_det_xls["campo_pai"].isin(["Disponibilidades entradas","Disponibilidades Saida"])]
-                if ano_sel!="Todos":
-                    df_det_fc_xls=df_det_fc_xls[df_det_fc_xls["ano"].astype(str)==ano_sel]
-                if not df_det_fc_xls.empty:
-                    ws2=wb.create_sheet("Drill-down")
-                    ws2.cell(row=1,column=1,value="Conta Principal").font=cor_branco_bold
-                    ws2.cell(row=1,column=2,value="Subconta").font=cor_branco_bold
-                    ws2.cell(row=1,column=3,value="Ano").font=cor_branco_bold
-                    ws2.cell(row=1,column=4,value="Mês").font=cor_branco_bold
-                    ws2.cell(row=1,column=5,value="Valor (R$)").font=cor_branco_bold
-                    for cc in range(1,6):
-                        ws2.cell(row=1,column=cc).fill=cor_azul
-                    linha2=2
-                    for _,r in df_det_fc_xls.sort_values(["campo_pai","subconta","ano","mes"]).iterrows():
-                        ws2.cell(row=linha2,column=1,value=r["campo_pai"])
-                        ws2.cell(row=linha2,column=2,value=r["subconta"])
-                        ws2.cell(row=linha2,column=3,value=str(r["ano"]))
-                        ws2.cell(row=linha2,column=4,value=r["mes"])
-                        c_val=ws2.cell(row=linha2,column=5,value=float(r["valor"]))
-                        c_val.number_format='R$ #,##0'
-                        linha2+=1
-                    for cc,w in zip("ABCDE",[26,28,8,8,16]):
-                        ws2.column_dimensions[cc].width=w
-                    ws2.freeze_panes="A2"
+            linha_excel=3
+            for tipo,desc,campo,inv in linhas_fc_xls:
+                if campo not in df_f.columns: continue
+                ws.cell(row=linha_excel,column=1,value=desc.strip())
+                if tipo=="tot":
+                    ws.cell(row=linha_excel,column=1).font=Font(bold=True,color="2563EB",size=10)
+                    ws.cell(row=linha_excel,column=1).fill=cor_cinza_clara
+                else:
+                    ws.cell(row=linha_excel,column=1).font=cor_preto
 
-        buf=BytesIO(); wb.save(buf); buf.seek(0)
-        return buf.getvalue()
+                col=2
+                for i in range(len(df_f)):
+                    v=float(df_f.iloc[i].get(campo,0) or 0)
+                    c1=ws.cell(row=linha_excel,column=col,value=v)
+                    c1.number_format='R$ #,##0;[RED](R$ #,##0)'
+                    c1.font=cor_vermelho if (inv and v!=0) else (cor_verde if v>0 else cor_preto)
+                    ws.cell(row=linha_excel,column=col).border=borda_fina
+                    col+=1
+                linha_excel+=1
 
-    st.download_button("📥 Exportar este Fluxo de Caixa (Excel formatado)",gerar_excel_fluxo(),
-      file_name=f"FluxoCaixa_{ano_sel if ano_sel!='Todos' else 'completo'}.xlsx",
-      mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      use_container_width=True)
+            ws.column_dimensions["A"].width=26
+            for cc in range(2,col):
+                ws.column_dimensions[get_column_letter(cc)].width=13
+            ws.freeze_panes="B3"
 
-    cols_show=[c for c in [cm,"tot entradas","tot saidas","saldo período","saldo acumulado"] if c and c in df_f.columns]
-    with st.expander(f"📋 Tabela Completa ({len(df_f)} períodos)"):
-        st.dataframe(df_f[cols_show] if cols_show else df_f,use_container_width=True)
+            if st.session_state.cid:
+                path_detalhe_xls=os.path.join(PASTA,f"{gid(st.session_state.cid)}_detalhamento.csv")
+                if os.path.exists(path_detalhe_xls):
+                    df_det_xls=pd.read_csv(path_detalhe_xls,sep=";",decimal=",",encoding="utf-8-sig")
+                    df_det_fc_xls=df_det_xls[df_det_xls["campo_pai"].isin(["Disponibilidades entradas","Disponibilidades Saida"])]
+                    if ano_sel!="Todos":
+                        df_det_fc_xls=df_det_fc_xls[df_det_fc_xls["ano"].astype(str)==ano_sel]
+                    if not df_det_fc_xls.empty:
+                        ws2=wb.create_sheet("Drill-down")
+                        ws2.cell(row=1,column=1,value="Conta Principal").font=cor_branco_bold
+                        ws2.cell(row=1,column=2,value="Subconta").font=cor_branco_bold
+                        ws2.cell(row=1,column=3,value="Ano").font=cor_branco_bold
+                        ws2.cell(row=1,column=4,value="Mês").font=cor_branco_bold
+                        ws2.cell(row=1,column=5,value="Valor (R$)").font=cor_branco_bold
+                        for cc in range(1,6):
+                            ws2.cell(row=1,column=cc).fill=cor_azul
+                        linha2=2
+                        for _,r in df_det_fc_xls.sort_values(["campo_pai","subconta","ano","mes"]).iterrows():
+                            ws2.cell(row=linha2,column=1,value=r["campo_pai"])
+                            ws2.cell(row=linha2,column=2,value=r["subconta"])
+                            ws2.cell(row=linha2,column=3,value=str(r["ano"]))
+                            ws2.cell(row=linha2,column=4,value=r["mes"])
+                            c_val=ws2.cell(row=linha2,column=5,value=float(r["valor"]))
+                            c_val.number_format='R$ #,##0'
+                            linha2+=1
+                        for cc,w in zip("ABCDE",[26,28,8,8,16]):
+                            ws2.column_dimensions[cc].width=w
+                        ws2.freeze_panes="A2"
+
+            buf=BytesIO(); wb.save(buf); buf.seek(0)
+            return buf.getvalue()
+
+        st.download_button("📥 Exportar este Fluxo de Caixa (Excel formatado)",gerar_excel_fluxo(),
+          file_name=f"FluxoCaixa_{ano_sel if ano_sel!='Todos' else 'completo'}.xlsx",
+          mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          use_container_width=True)
+
+        cols_show=[c for c in [cm,"tot entradas","tot saidas","saldo período","saldo acumulado"] if c and c in df_f.columns]
+        with st.expander(f"📋 Tabela Completa ({len(df_f)} períodos)"):
+            st.dataframe(df_f[cols_show] if cols_show else df_f,use_container_width=True)
 
 # ── BALANÇO ─────────────────────────────────────────
 elif pg=="balanco":
@@ -7014,7 +7111,6 @@ elif pg=="pareto":
     if not col_valor:
         st.markdown('<div class="al-d">❌ Não encontrei a coluna de valor total (ex: "Vlr.Total") nesta base.</div>',unsafe_allow_html=True); st.stop()
 
-    sec("⚙️ Ver curva por")
     _opcoes_visao_pareto=["👥 Cliente (Vendas por Cliente)","📦 Produto (Vendas por Produto)"]
 
     def _on_change_visao_pareto():
@@ -7082,16 +7178,30 @@ elif pg=="pareto":
     if resultado is not None:
         n_a=int((resultado["classe_abc"]=="A").sum())
         n_total=len(resultado)
-        mc_cols=st.columns(3)
-        mc(mc_cols[0],"Itens Classe A (80%)",f"{n_a} de {n_total}","g",f"{n_a/n_total*100:.1f}% dos itens")
-        mc(mc_cols[1],"Itens Classe B (80-95%)",str(int((resultado["classe_abc"]=="B").sum())),"y")
-        mc(mc_cols[2],"Itens Classe C (95-100%)",str(int((resultado["classe_abc"]=="C").sum())),"r")
+        pct_itens_a=n_a/n_total*100 if n_total>0 else 0
         dim_atual=st.session_state.get("pareto_dim_atual",dim_sel)
+        rotulo_dim="produtos" if col_prod==dim_atual else "clientes"
+
+        # O princípio de Pareto na forma clássica: qual fatia MÍNIMA de itens já
+        # responde pela MAIOR parte do faturamento (aqui, 80%). Não é sempre
+        # exatamente "20%" — esse número varia conforme a concentração real da
+        # base — mas o espírito é esse: poucos itens, a maior parte do resultado.
+        st.markdown(
+            f'<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);'
+            f'border-radius:10px;padding:18px 22px;margin:12px 0;border:1px solid #A9762F;text-align:center">'
+            f'<div style="color:#D9BD82;font-size:.75rem;letter-spacing:1px;text-transform:uppercase">Princípio de Pareto</div>'
+            f'<div style="color:#fff;font-size:1.4rem;font-weight:700;margin:6px 0">'
+            f'{pct_itens_a:.1f}% dos {rotulo_dim} concentram 80% do faturamento</div>'
+            f'<div style="color:#9FE1CB;font-size:.8rem">{n_a} {rotulo_dim}, de {n_total} no total</div>'
+            f'</div>',unsafe_allow_html=True)
+
         st.plotly_chart(grafico_pareto_plotly(resultado,f"Vlr.Total por {dim_atual}",top_n),use_container_width=True)
-        with st.expander(f"📋 Tabela Completa ({len(resultado)} produtos)"):
-            st.dataframe(resultado,use_container_width=True,height=400)
+
+        resultado_vital=resultado[resultado["classe_abc"]=="A"].copy()
+        with st.expander(f"⭐ Os {n_a} {rotulo_dim} que respondem por 80% do faturamento",expanded=True):
+            st.dataframe(resultado_vital,use_container_width=True,height=min(500,80+35*len(resultado_vital)))
         csv_pareto=resultado.to_csv(sep=";",decimal=",",index=False).encode("utf-8-sig")
-        st.download_button("📥 Exportar tabela (CSV)",csv_pareto,file_name=f"pareto_{gid(dim_atual)}.csv",use_container_width=True)
+        st.download_button("📥 Exportar tabela completa (CSV)",csv_pareto,file_name=f"pareto_{gid(dim_atual)}.csv",use_container_width=True)
 
 elif pg=="ml_produtos":
     hdr("🔬 Validação Estatística de Previsões","Testa a confiabilidade da previsão contra o que realmente aconteceu, antes de confiar nela")
@@ -7299,6 +7409,14 @@ elif pg=="ml_produtos":
                 _msg_val_mlp+=f' ⚠️ {_descartados_hist_val_mlp} de {_total_universo_val_mlp} produtos da base foram descartados por terem menos de {min_periodos} meses com venda registrada.'
             st.markdown(f'<div class="al-i">{_msg_val_mlp}</div>',unsafe_allow_html=True)
 
+            # LightGBM (pooled) — treinado UMA VEZ com todos os produtos elegíveis
+            # juntos, antes do loop, diferente dos outros modelos (que veem cada
+            # produto isolado). Entra como mais um candidato na disputa de cada
+            # produto, dentro do loop, do mesmo jeito que os outros já competem.
+            _previsoes_lgbm_pool_mlp=treinar_lightgbm_pooled(
+                df_treino_mlp,"_ProdutoUnico",data_col,metrica_col,
+                top_produtos_val_mlp,n_meses_valid_mlp)
+
             pb_val_mlp=st.progress(0)
             texto_pb_val_mlp=st.empty()
             linhas_val_mlp=[]
@@ -7323,6 +7441,20 @@ elif pg=="ml_produtos":
                     serie_real_pos_mlp=serie_completa_val_mlp[serie_completa_val_mlp.index>corte_ts_mlp].head(n_meses_valid_mlp)
                     _media_hist_val_mlp=float(serie_val_mlp.mean()) if len(serie_val_mlp)>0 else 0.0
                     proj_lista_val_mlp=proj_val_mlp.tolist()
+
+                    # LightGBM entra na disputa aqui: se tiver previsão pra esse
+                    # produto (pooled, treinado antes do loop), compara o erro dele
+                    # contra o vencedor clássico, nos MESMOS meses reais — fica com
+                    # quem realmente errar menos.
+                    _real_vals_mlp=[float(v) for v in serie_real_pos_mlp.tolist()]
+                    if prod_val_mlp in _previsoes_lgbm_pool_mlp and len(_real_vals_mlp)>0:
+                        _prev_lgbm_mlp=_previsoes_lgbm_pool_mlp[prod_val_mlp][:len(_real_vals_mlp)]
+                        _erro_classico_mlp=sum((p-r)**2 for p,r in zip(proj_lista_val_mlp[:len(_real_vals_mlp)],_real_vals_mlp))
+                        _erro_lgbm_mlp=sum((p-r)**2 for p,r in zip(_prev_lgbm_mlp,_real_vals_mlp))
+                        if _erro_lgbm_mlp<_erro_classico_mlp:
+                            melhor_val_mlp="LightGBM (pooled)"
+                            proj_lista_val_mlp=list(_prev_lgbm_mlp)
+
                     for i_vm in range(min(len(proj_lista_val_mlp),len(serie_real_pos_mlp))):
                         real_vm=float(serie_real_pos_mlp.iloc[i_vm])
                         prev_vm=float(proj_lista_val_mlp[i_vm])
@@ -7375,24 +7507,10 @@ elif pg=="ml_produtos":
                 if _peso_total_val_mlp>0:
                     mape_pond_val_mlp=(_erro_medio_prod_val_mlp*_pesos_val_mlp).sum()/_peso_total_val_mlp
 
-            # Score de Validação — resumo num número só (100 - MAPE ponderado, entre
-            # 0 e 100). Ajuda a decidir rápido se o resultado justifica seguir em frente.
-            _score_val_mlp=max(0,min(100,round(100-(mape_pond_val_mlp if mape_pond_val_mlp is not None else mape_val_mlp))))
-            if _score_val_mlp>=95: _label_score_val="🟢 Excelente"
-            elif _score_val_mlp>=90: _label_score_val="🟢 Bom"
-            elif _score_val_mlp>=80: _label_score_val="🟡 Aceitável"
-            else: _label_score_val="🔴 Baixa confiabilidade"
-            st.markdown(
-                f'<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:10px;'
-                f'padding:16px 20px;margin-bottom:14px;text-align:center;border:1px solid #A9762F">'
-                f'<div style="font-size:.75rem;letter-spacing:1px;color:#CFEFE0;text-transform:uppercase">Score de Validação</div>'
-                f'<div style="font-size:2.2rem;font-weight:700;color:#fff;margin:4px 0">{_score_val_mlp}<span style="font-size:1rem;color:#D9F2E6">/100</span></div>'
-                f'<div style="font-size:.85rem;color:#D9BD82">{_label_score_val}</div>'
-                f'</div>',unsafe_allow_html=True)
-
             # WAPE ponderado — calcula o WAPE de CADA produto separadamente, depois
             # tira a média pesada pela importância dele (média histórica de venda) —
             # mesma lógica do MAPE ponderado, só que em cima da conta do WAPE.
+            # (Precisa vir ANTES do Score, que depende desse valor já calculado.)
             wape_pond_val_mlp=None
             if {"Previsto","Real","MediaHistorica"}.issubset(df_val_mlp.columns):
                 def _wape_prod_val(g):
@@ -7405,27 +7523,25 @@ elif pg=="ml_produtos":
                 if _peso_total_wape>0:
                     wape_pond_val_mlp=(_wape_por_prod_val[_validos_wape]*_peso_por_prod_val[_validos_wape]).sum()/_peso_total_wape
 
-            cv1,cv2,cv3,cv4=st.columns(4)
-            mc(cv1,"MAPE validado (erro médio previsto x real)",f"{mape_val_mlp:.1f}%","g" if mape_val_mlp<15 else ("y" if mape_val_mlp<30 else "r"))
-            _cor_pond=("g" if (mape_pond_val_mlp or 999)<15 else ("y" if (mape_pond_val_mlp or 999)<30 else "r"))
-            mc(cv2,"MAPE ponderado (erro médio previsto x real)",f"{mape_pond_val_mlp:.1f}%" if mape_pond_val_mlp is not None else "—",_cor_pond)
-            _cor_wape=("g" if (wape_val_mlp or 999)<15 else ("y" if (wape_val_mlp or 999)<30 else "r"))
-            mc(cv3,"WAPE (não distorce com mês de venda zero)",f"{wape_val_mlp:.1f}%" if wape_val_mlp is not None else "—",_cor_wape)
+            # Score de Validação — resumo num número só (100 - WAPE ponderado, entre
+            # 0 e 100). Ajuda a decidir rápido se o resultado justifica seguir em frente.
+            _score_val_mlp=max(0,min(100,round(100-(wape_pond_val_mlp if wape_pond_val_mlp is not None else (wape_val_mlp if wape_val_mlp is not None else mape_val_mlp)))))
+            if _score_val_mlp>=95: _label_score_val="🟢 Excelente"
+            elif _score_val_mlp>=90: _label_score_val="🟢 Bom"
+            elif _score_val_mlp>=80: _label_score_val="🟡 Aceitável"
+            else: _label_score_val="🔴 Baixa confiabilidade"
+            st.markdown(
+                f'<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:10px;'
+                f'padding:16px 20px;margin-bottom:14px;text-align:center;border:1px solid #A9762F">'
+                f'<div style="font-size:.75rem;letter-spacing:1px;color:#CFEFE0;text-transform:uppercase">Score de Validação</div>'
+                f'<div style="font-size:2.2rem;font-weight:700;color:#fff;margin:4px 0">{_score_val_mlp}<span style="font-size:1rem;color:#D9F2E6">/100</span></div>'
+                f'<div style="font-size:.85rem;color:#D9BD82">{_label_score_val}</div>'
+                f'</div>',unsafe_allow_html=True)
+
+            cv1,=st.columns(1)
             _cor_wape_pond=("g" if (wape_pond_val_mlp or 999)<15 else ("y" if (wape_pond_val_mlp or 999)<30 else "r"))
-            mc(cv4,"WAPE ponderado",f"{wape_pond_val_mlp:.1f}%" if wape_pond_val_mlp is not None else "—",_cor_wape_pond)
-
-            with st.expander("ℹ️ O que significam esses números?"):
-                st.markdown('''
-<b>MAPE</b> — o erro médio, em %, comparando o que foi previsto com o que realmente aconteceu. Quanto menor, melhor.
-
-<b>MAPE ponderado</b> — o mesmo erro, mas dando mais peso aos produtos que vendem mais. Um erro num produto pequeno importa menos que um erro num produto grande — e é <b>esse</b> número que decide o Score de Validação.
-
-<b>WAPE</b> — outra forma de calcular o erro geral, que não quebra quando algum mês teve venda real igual a zero (nesse caso específico, o MAPE pode disparar pra um número gigante e enganoso). Serve como uma segunda opinião, mais estável.
-
-<b>MAPE ponderado por Curva</b> — o mesmo raciocínio do "MAPE ponderado", só que separado por Curva ABC — mostra se os produtos que mais vendem <i>dentro de cada Curva</i> estão indo bem ou mal.
-
-<b>Score de Validação</b> — um resumo de tudo isso num número só, de 0 a 100 (100 − MAPE ponderado). Quanto mais perto de 100, mais dá pra confiar na previsão antes de usá-la numa decisão de compra.
-''', unsafe_allow_html=True)
+            mc(cv1,"WAPE ponderado (erro médio previsto x real)",
+               f"{wape_pond_val_mlp:.1f}%" if wape_pond_val_mlp is not None else "—",_cor_wape_pond)
 
             # MAPE por Curva — os produtos que mais importam (Curva A) estão sendo
             # bem previstos, ou só os irrelevantes (Curva D/E)?
@@ -7436,48 +7552,79 @@ elif pg=="ml_produtos":
                 _mapa_curva_val_mlp=dict(zip(_ranking_curva_mlp["_ProdutoUnico"],_ranking_curva_mlp["classe_abc"]))
                 _df_val_curva_mlp=df_val_mlp.copy()
                 _df_val_curva_mlp["_Curva"]=_df_val_curva_mlp["Produto"].map(_mapa_curva_val_mlp)
+
+                # WAPE por produto — soma erro / soma real, direto das colunas
+                # Previsto/Real já disponíveis aqui — mesma robustez contra mês de
+                # venda zero que o WAPE já tem no resto da tela.
+                def _wape_por_produto_curva(g):
+                    _sr=g["Real"].abs().sum()
+                    return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+                _wape_prod_curva_mlp=_df_val_curva_mlp.groupby("Produto").apply(_wape_por_produto_curva)
+
                 if "MediaHistorica" in _df_val_curva_mlp.columns:
                     _pesos_prod_curva_mlp=_df_val_curva_mlp.groupby("Produto")["MediaHistorica"].first().clip(lower=0)
                     _erro_prod_curva_mlp=_df_val_curva_mlp.groupby("Produto")["Erro %"].mean()
                     _curva_prod_mlp=_df_val_curva_mlp.groupby("Produto")["_Curva"].first()
-                    _tmp_curva_mlp=pd.DataFrame({"peso":_pesos_prod_curva_mlp,"erro":_erro_prod_curva_mlp,"curva":_curva_prod_mlp})
+                    _tmp_curva_mlp=pd.DataFrame({"peso":_pesos_prod_curva_mlp,"erro":_erro_prod_curva_mlp,
+                                                  "wape":_wape_prod_curva_mlp,"curva":_curva_prod_mlp})
                     def _media_pond_curva_mlp(g):
                         p=g["peso"].sum()
                         return (g["erro"]*g["peso"]).sum()/p if p>0 else g["erro"].mean()
+                    def _wape_pond_curva_mlp(g):
+                        g2=g.dropna(subset=["wape"])
+                        p=g2["peso"].sum()
+                        return (g2["wape"]*g2["peso"]).sum()/p if p>0 else (g2["wape"].mean() if len(g2)>0 else None)
                     _mape_por_curva_mlp=_tmp_curva_mlp.groupby("curva").apply(_media_pond_curva_mlp).sort_index()
+                    _wape_por_curva_mlp=_tmp_curva_mlp.groupby("curva").apply(_wape_pond_curva_mlp).sort_index()
                 else:
                     _mape_por_curva_mlp=_df_val_curva_mlp.groupby("_Curva")["Erro %"].mean().sort_index()
-                if len(_mape_por_curva_mlp)>0:
-                    st.markdown('<div style="font-size:.85rem;color:#6B7280;margin:10px 0 4px">MAPE ponderado por Curva:</div>',unsafe_allow_html=True)
-                    _cores_por_curva={"A":"#A9762F","B":"#BE8F4A","C":"#8B7355","D":"#9CA3AF","E":"#B8B6B0"}
-                    _cols_curva_mlp=st.columns(len(_mape_por_curva_mlp))
-                    for _i_cv,(_curva_nome,_curva_mape) in enumerate(_mape_por_curva_mlp.items()):
+                    _wape_por_curva_mlp=_df_val_curva_mlp.groupby("_Curva").apply(_wape_por_produto_curva).sort_index()
+                _cores_por_curva={"A":"#A9762F","B":"#BE8F4A","C":"#8B7355","D":"#9CA3AF","E":"#B8B6B0"}
+                if len(_wape_por_curva_mlp.dropna())>0:
+                    st.markdown('<div style="font-size:.85rem;color:#6B7280;margin:10px 0 4px">WAPE ponderado por Curva:</div>',unsafe_allow_html=True)
+                    _cols_curva_wape_mlp=st.columns(len(_wape_por_curva_mlp))
+                    for _i_cv,(_curva_nome,_curva_wape) in enumerate(_wape_por_curva_mlp.items()):
                         _cor_cv=_cores_por_curva.get(_curva_nome,"#6B7280")
-                        _cols_curva_mlp[_i_cv].markdown(
+                        _disp_wape_cv=f"{_curva_wape:.1f}%" if pd.notna(_curva_wape) else "—"
+                        _cols_curva_wape_mlp[_i_cv].markdown(
                             f'<div style="background:#FFFCF7;border:1px solid {_cor_cv};border-left:4px solid {_cor_cv};'
                             f'border-radius:6px;padding:6px 8px;text-align:center">'
                             f'<div style="font-size:.68rem;color:#9CA3AF">Curva {_curva_nome}</div>'
-                            f'<div style="font-size:.95rem;font-weight:600;color:{_cor_cv}">{_curva_mape:.1f}%</div>'
+                            f'<div style="font-size:.95rem;font-weight:600;color:{_cor_cv}">{_disp_wape_cv}</div>'
                             f'</div>',unsafe_allow_html=True)
 
-            # MAPE por modelo — quantos produtos cada modelo venceu, e o erro médio
-            # daquele grupo especificamente (não do total geral).
-            _breakdown_val_mlp=df_val_mlp.groupby("Modelo").agg(
-                Produtos=("Produto","nunique"),
-                _mape_medio=("Erro %","mean")
-            ).reset_index().sort_values("Produtos",ascending=False)
-            _breakdown_val_mlp["MAPE médio"]=_breakdown_val_mlp["_mape_medio"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
-            _breakdown_val_mlp=_breakdown_val_mlp[["Modelo","Produtos","MAPE médio"]]
-            with st.expander(f"📊 MAPE por modelo ({len(_breakdown_val_mlp)} modelos usados)"):
+            # WAPE ponderado por modelo — quantos produtos cada modelo venceu, e o
+            # WAPE de cada produto daquele grupo, ponderado pela importância dele
+            # (média histórica) — não é média simples, é média pesada.
+            def _wape_por_produto_modelo(g):
+                _sr=g["Real"].abs().sum()
+                return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+            def _wape_pond_grupo(g):
+                _wape_prod=g.groupby("Produto").apply(_wape_por_produto_modelo)
+                _peso_prod=g.groupby("Produto")["MediaHistorica"].first().clip(lower=0) if "MediaHistorica" in g.columns else None
+                if _peso_prod is None: return _wape_prod.mean() if len(_wape_prod.dropna())>0 else None
+                _validos=_wape_prod.notna()
+                _peso_total=_peso_prod[_validos].sum()
+                if _peso_total>0: return (_wape_prod[_validos]*_peso_prod[_validos]).sum()/_peso_total
+                return _wape_prod.mean() if len(_wape_prod.dropna())>0 else None
+
+            _breakdown_val_mlp=df_val_mlp.groupby("Modelo")["Produto"].nunique().reset_index().rename(columns={"Produto":"Produtos"})
+            _breakdown_val_mlp["_wape_pond"]=_breakdown_val_mlp["Modelo"].apply(
+                lambda m: _wape_pond_grupo(df_val_mlp[df_val_mlp["Modelo"]==m]))
+            _breakdown_val_mlp=_breakdown_val_mlp.sort_values("Produtos",ascending=False)
+            _breakdown_val_mlp["WAPE ponderado"]=_breakdown_val_mlp["_wape_pond"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+            _breakdown_val_mlp=_breakdown_val_mlp[["Modelo","Produtos","WAPE ponderado"]]
+            with st.expander(f"📊 WAPE por modelo ({len(_breakdown_val_mlp)} modelos usados)"):
                 st.dataframe(_breakdown_val_mlp,use_container_width=True,
                   height=min(420,80+35*len(_breakdown_val_mlp)))
-                st.markdown("**Ver produtos de cada modelo** (ordenados do pior MAPE pro melhor, pra achar rápido quem está puxando a média):")
+                st.markdown("**Ver produtos de cada modelo** (ordenados do pior WAPE pro melhor, pra achar rápido quem está puxando a média):")
                 for _modelo_det_val_mlp in _breakdown_val_mlp["Modelo"]:
-                    _prods_modelo_val_mlp=df_val_mlp[df_val_mlp["Modelo"]==_modelo_det_val_mlp].groupby("Produto").agg(
-                        _erro_medio=("Erro %","mean"),_meses=("Mes","nunique")
-                    ).reset_index().sort_values("_erro_medio",ascending=False)
-                    _prods_modelo_val_mlp["MAPE"]=_prods_modelo_val_mlp["_erro_medio"].apply(lambda v: f"{v:.1f}%")
-                    _tab_det_val_mlp=_prods_modelo_val_mlp.rename(columns={"_meses":"Meses validados"})[["Produto","MAPE","Meses validados"]]
+                    _sub_modelo_val_mlp=df_val_mlp[df_val_mlp["Modelo"]==_modelo_det_val_mlp]
+                    _wape_prod_modelo=_sub_modelo_val_mlp.groupby("Produto").apply(_wape_por_produto_modelo)
+                    _meses_prod_modelo=_sub_modelo_val_mlp.groupby("Produto")["Mes"].nunique()
+                    _prods_modelo_val_mlp=pd.DataFrame({"_wape":_wape_prod_modelo,"_meses":_meses_prod_modelo}).reset_index().sort_values("_wape",ascending=False)
+                    _prods_modelo_val_mlp["WAPE"]=_prods_modelo_val_mlp["_wape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+                    _tab_det_val_mlp=_prods_modelo_val_mlp.rename(columns={"_meses":"Meses validados"})[["Produto","WAPE","Meses validados"]]
                     with st.expander(f"🔎 {_modelo_det_val_mlp} — {len(_prods_modelo_val_mlp)} produto(s)"):
                         st.dataframe(_tab_det_val_mlp,use_container_width=True,
                           height=min(400,60+35*len(_tab_det_val_mlp)))
@@ -7522,12 +7669,11 @@ elif pg=="ml_produtos":
             # classe_abc) — precisa ficar num DataFrame à parte pra sobreviver até o final
             # da tela, onde ele é exibido de fato.
             _top10_mape_mlp=_prod_erro_mlp.dropna(subset=["_fat3"]).nlargest(10,"_fat3").copy()
-            _prod_erro_mlp["MAPE"]=_prod_erro_mlp["_mape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
             _prod_erro_mlp["WAPE"]=_prod_erro_mlp["_wape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
             _prod_erro_mlp["Faturamento (média/mês, últ. 3 meses)"]=_prod_erro_mlp["_fat3"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
             _prod_erro_mlp["Participação (últ. 3 meses)"]=_prod_erro_mlp["_part3"].apply(lambda v: f"{v:.2f}%" if pd.notna(v) else "—")
             _prod_erro_mlp=_prod_erro_mlp.rename(columns={"classe_abc":"Curva"})[
-                ["Produto","MAPE","WAPE","Faturamento (média/mês, últ. 3 meses)","Curva","Participação (últ. 3 meses)"]]
+                ["Produto","WAPE","Faturamento (média/mês, últ. 3 meses)","Curva","Participação (últ. 3 meses)"]]
             with st.expander(f"📋 Produtos por erro — Curva e Participação ({len(_prod_erro_mlp)} produtos)"):
                 st.dataframe(_prod_erro_mlp,use_container_width=True,
                   height=min(500,80+35*len(_prod_erro_mlp)))
@@ -7547,7 +7693,17 @@ elif pg=="ml_produtos":
                 with st.expander("⭐ Destaque — Top 10 produtos por faturamento"):
                     _soma_fat_top10=_top10_mape_mlp["_fat3"].sum(skipna=True)
                     _pct_fat_top10=(_soma_fat_top10/_total_fat3*100) if _total_fat3>0 else 0
-                    _mape_medio_top10=_top10_mape_mlp["_mape"].mean()
+                    # Ponderados pelo faturamento dos próprios 10 produtos — o que mais
+                    # fatura entre eles pesa mais no número final, mesma lógica do
+                    # MAPE/WAPE ponderado geral, só que restrita a esse grupo.
+                    _pesos_top10=_top10_mape_mlp["_fat3"].fillna(0)
+                    _soma_pesos_top10=_pesos_top10.sum()
+                    if _soma_pesos_top10>0:
+                        _mape_pond_top10=(_top10_mape_mlp["_mape"].fillna(0)*_pesos_top10).sum()/_soma_pesos_top10
+                        _wape_pond_top10=(_top10_mape_mlp["_wape"].fillna(0)*_pesos_top10).sum()/_soma_pesos_top10
+                    else:
+                        _mape_pond_top10=_top10_mape_mlp["_mape"].mean()
+                        _wape_pond_top10=_top10_mape_mlp["_wape"].mean()
                     st.markdown('<div style="color:#6B6552;font-size:.8rem;margin-bottom:6px">Os 10 produtos '
                         'que mais faturam — veja se a previsão está acertando justamente onde mais '
                         'importa pro caixa.</div>'
@@ -7555,16 +7711,16 @@ elif pg=="ml_produtos":
                         f'padding:4mm 6mm;margin-bottom:10px;font-size:.85rem;color:#3A3A38">'
                         f'Juntos, esses 10 produtos faturam <b style="color:#0F6E56">{fmt(_soma_fat_top10)}/mês</b> '
                         f'— <b style="color:#0F6E56">{_pct_fat_top10:.1f}%</b> do faturamento total (média/mês, '
-                        f'últ. 3 meses) — com <b style="color:#0F6E56">MAPE médio de {_mape_medio_top10:.1f}%</b> '
-                        f'entre eles</div>',unsafe_allow_html=True)
+                        f'últ. 3 meses)<br>WAPE ponderado: <b style="color:#0F6E56">{_wape_pond_top10:.1f}%</b> entre eles</div>',
+                        unsafe_allow_html=True)
                     _medalhas_mlp=["🥇","🥈","🥉"]
                     # Já vêm ordenados por faturamento (critério de seleção), do maior pro
                     # menor — não precisa reordenar.
                     for _i_top,(_,_row_top) in enumerate(_top10_mape_mlp.iterrows()):
                         _icone_top=_medalhas_mlp[_i_top] if _i_top<3 else f"{_i_top+1}º"
-                        _mape_top=_row_top.get("_mape")
-                        _cor_top="#3FB950" if pd.notna(_mape_top) and _mape_top<10 else ("#D9BD82" if pd.notna(_mape_top) and _mape_top<20 else "#F0A500")
-                        _mape_disp_top=f"{_mape_top:.1f}%" if pd.notna(_mape_top) else "sem validação"
+                        _wape_top=_row_top.get("_wape")
+                        _cor_top="#3FB950" if pd.notna(_wape_top) and _wape_top<10 else ("#D9BD82" if pd.notna(_wape_top) and _wape_top<20 else "#F0A500")
+                        _wape_disp_top=f"{_wape_top:.1f}%" if pd.notna(_wape_top) else "sem validação"
                         _curva_top=_row_top.get("classe_abc") or "—"
                         _part_raw_top=_row_top.get("_part3")
                         _part_top=f"{_part_raw_top:.2f}%" if pd.notna(_part_raw_top) else "sem venda recente"
@@ -7575,8 +7731,8 @@ elif pg=="ml_produtos":
                             <div style="color:#9CA3AF;font-size:.72rem;text-align:right;min-width:65px">Curva {_curva_top}</div>
                             <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:110px">Participação<br>
                             <b style="color:#D9BD82;font-size:.8rem">{_part_top}</b></div>
-                            <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:60px">Erro Médio<br>
-                            <b style="color:{_cor_top};font-size:1rem">{_mape_disp_top}</b></div>
+                            <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:60px">WAPE<br>
+                            <b style="color:{_cor_top};font-size:1rem">{_wape_disp_top}</b></div>
                             </div>''',unsafe_allow_html=True)
                 st.markdown('</div>',unsafe_allow_html=True)
 
@@ -7634,6 +7790,43 @@ elif pg=="config_ml":
         if col_data_cfg:
             datas_cfg=pd.to_datetime(df_v[col_data_cfg],errors="coerce",dayfirst=True).dropna()
             meses_disponiveis_cfg=sorted(datas_cfg.dt.to_period("M").astype(str).unique().tolist())
+
+        # Filtro por Curva ABC (opcional) — mesma classificação de 5 níveis usada na
+        # Validação Estatística e no Motor de Compras, calculada aqui cedo (antes do
+        # Escopo) pra já filtrar o que entra em todo o resto da tela.
+        _metrica_curva_cfg=next((c for c in cols_v if c.strip().lower() in ["vlr.total","vlr total","valor total","valor"]),None)
+        if col_prod and _metrica_curva_cfg:
+            _df_curva_cfg=df_v.copy()
+            _df_curva_cfg[_metrica_curva_cfg]=parse_valor_brl(_df_curva_cfg[_metrica_curva_cfg])
+            _ranking_curva_cfg=pareto_analysis(_df_curva_cfg,col_prod,_metrica_curva_cfg)
+            def _classe_5niveis_cfg(pct_acum):
+                if pct_acum<=70: return "A"
+                if pct_acum<=80: return "B"
+                if pct_acum<=90: return "C"
+                if pct_acum<=97: return "D"
+                return "E"
+            _ranking_curva_cfg["classe_abc"]=_ranking_curva_cfg["pct_acumulado"].apply(_classe_5niveis_cfg)
+            _mapa_curva_cfg=dict(zip(_ranking_curva_cfg[col_prod],_ranking_curva_cfg["classe_abc"]))
+            df_v["_CurvaABC"]=df_v[col_prod].map(_mapa_curva_cfg)
+            _curvas_disp_cfg=sorted(df_v["_CurvaABC"].dropna().unique().tolist())
+            _opcoes_curva_cfg=["(Todas)"]+_curvas_disp_cfg
+
+            def _on_change_curva_cfg():
+                st.session_state["cfgml_curva_sel_backup"]=st.session_state["cfgml_curva_sel"]
+                for _k_limpar_curva_cfg in ["cfgml_resultado_atual","cfgml_df_comp_bruto","cfgml_df_escopo_val"]:
+                    if _k_limpar_curva_cfg in st.session_state:
+                        del st.session_state[_k_limpar_curva_cfg]
+
+            if "cfgml_curva_sel_backup" not in st.session_state:
+                st.session_state["cfgml_curva_sel_backup"]=_opcoes_curva_cfg[0]
+            if st.session_state["cfgml_curva_sel_backup"] not in _opcoes_curva_cfg:
+                st.session_state["cfgml_curva_sel_backup"]=_opcoes_curva_cfg[0]
+            st.session_state["cfgml_curva_sel"]=st.session_state["cfgml_curva_sel_backup"]
+
+            curva_sel_cfg=st.selectbox("📈 Curva ABC (opcional)",_opcoes_curva_cfg,
+                key="cfgml_curva_sel",on_change=_on_change_curva_cfg)
+            if curva_sel_cfg!="(Todas)":
+                df_v=df_v[df_v["_CurvaABC"]==curva_sel_cfg].copy()
 
         sec("1️⃣ Escopo")
         _opcoes_escopo_ml=["🏷️ Categoria/Grupo inteiro","📦 Produto específico","🌐 Catálogo inteiro"]
@@ -7957,6 +8150,27 @@ elif pg=="config_ml":
                     produtos_com_hist=n_periodos_prod[n_periodos_prod>=min_hist_cfg].index
                     ranking_elegivel=ranking_prog[ranking_prog[produto_col_cfg].isin(produtos_com_hist)]
                     top_produtos_cfg=ranking_elegivel[produto_col_cfg].tolist()
+
+                    # Produtos que ficaram de fora só por causa do histórico mínimo — não
+                    # entram na disputa de modelos (pouco dado pra validar direito), mas na
+                    # prática o cliente ainda vai precisar decidir se compra ou não. Em vez
+                    # de sumir silenciosamente, calcula uma média móvel simples (usa o que
+                    # tiver, mesmo que seja só 1 mês) e guarda separado, sinalizado como
+                    # estimativa de baixa confiança — nunca misturado com o resultado
+                    # validado dos outros produtos.
+                    produtos_baixo_hist_cfg=ranking_prog[~ranking_prog[produto_col_cfg].isin(produtos_com_hist)][produto_col_cfg].tolist()
+                    linhas_baixo_hist_cfg=[]
+                    for _prod_bh in produtos_baixo_hist_cfg:
+                        _serie_bh=serie_mensal_produto(df_rodar,produto_col_cfg,_prod_bh,col_data_cfg,metrica_cfg)
+                        if len(_serie_bh)==0: continue
+                        _n_meses_bh=len(_serie_bh)
+                        _media_bh=float(_serie_bh.mean())
+                        linhas_baixo_hist_cfg.append({
+                            "Produto":_prod_bh,"MesesDisponiveis":_n_meses_bh,
+                            "MediaMovelMensal":round(_media_bh,2),
+                        })
+                    if st.session_state.cid:
+                        save_snap(st.session_state.cid,"cfgml_baixo_hist",linhas_baixo_hist_cfg,filial=filial_sel_cfgml)
                     usa_exog_cfg = bool(meses_pico_usar) or bool(meses_promo_usar)
                     if meses_excluir_usar:
                         st.markdown(f'<div class="al-i">🚫 {len(meses_excluir_usar)} mês(es) excluído(s) do treino: {", ".join(meses_excluir_usar)}</div>',unsafe_allow_html=True)
@@ -7966,6 +8180,30 @@ elif pg=="config_ml":
                     if meses_excluir_usar and col_data_cfg:
                         df_rodar["_periodo_str_ex"]=pd.to_datetime(df_rodar[col_data_cfg],errors="coerce",dayfirst=True).dt.to_period("M").astype(str)
                         df_rodar=df_rodar[~df_rodar["_periodo_str_ex"].isin(meses_excluir_usar)]
+
+                    # LightGBM (pooled) — treinado UMA VEZ com todos os produtos juntos,
+                    # antes do loop. Pra competir de forma justa com os outros modelos
+                    # (que fazem backtest interno escondendo os últimos meses), preciso
+                    # de duas rodadas: uma escondendo os últimos meses (pra comparar erro
+                    # contra o que realmente foi vendido neles — mesma lógica dos outros
+                    # modelos), outra com o histórico completo (pra gerar a previsão real,
+                    # só usada se ele vencer esse backtest).
+                    _janela_bt_lgbm_cfg=6
+                    _meses_disp_lgbm_cfg=sorted(df_rodar["_periodo_ml"].dropna().unique())
+                    _prev_bt_lgbm_cfg={}; _reais_bt_lgbm_cfg={}
+                    if len(_meses_disp_lgbm_cfg)>_janela_bt_lgbm_cfg+6:
+                        _corte_bt_lgbm_cfg=_meses_disp_lgbm_cfg[-_janela_bt_lgbm_cfg-1]
+                        _df_treino_bt_lgbm_cfg=df_rodar[df_rodar["_periodo_ml"]<=_corte_bt_lgbm_cfg]
+                        _prev_bt_lgbm_cfg=treinar_lightgbm_pooled(
+                            _df_treino_bt_lgbm_cfg,produto_col_cfg,col_data_cfg,metrica_cfg,
+                            top_produtos_cfg,_janela_bt_lgbm_cfg)
+                        _corte_ts_bt_lgbm_cfg=_corte_bt_lgbm_cfg.to_timestamp()
+                        for _p_bt in top_produtos_cfg:
+                            _serie_real_bt_p=serie_mensal_produto(df_rodar,produto_col_cfg,_p_bt,col_data_cfg,metrica_cfg)
+                            _reais_bt_lgbm_cfg[_p_bt]=_serie_real_bt_p[_serie_real_bt_p.index>_corte_ts_bt_lgbm_cfg].head(_janela_bt_lgbm_cfg).tolist()
+                    _prev_final_lgbm_cfg=treinar_lightgbm_pooled(
+                        df_rodar,produto_col_cfg,col_data_cfg,metrica_cfg,
+                        top_produtos_cfg,meses_prev_cfg)
 
                     for idx_p,prod_p in enumerate(top_produtos_cfg):
                         texto_pb.caption(f"Processando {idx_p+1} de {len(top_produtos_cfg)}: {str(prod_p)[:50]}")
@@ -8000,6 +8238,22 @@ elif pg=="config_ml":
                             proj_p,nome_exog_p=treinar_com_exog(serie_p,exog_hist_p,exog_fut_p,meses_prev_cfg)
                             if proj_p is not None:
                                 melhor_p=nome_exog_p
+
+                        # LightGBM (pooled) entra na disputa aqui — compara o erro dele
+                        # (calculado escondendo os últimos meses, igual os outros) contra
+                        # quem está ganhando até agora (exógeno ou clássico). Só assume
+                        # se realmente errar menos.
+                        if (prod_p in _prev_bt_lgbm_cfg and prod_p in _reais_bt_lgbm_cfg
+                                and prod_p in _prev_final_lgbm_cfg):
+                            _reais_p_lgbm=_reais_bt_lgbm_cfg[prod_p]
+                            _prev_p_lgbm=_prev_bt_lgbm_cfg[prod_p][:len(_reais_p_lgbm)]
+                            if len(_reais_p_lgbm)>0 and len(_prev_p_lgbm)==len(_reais_p_lgbm):
+                                _mse_lgbm_p=float(np.mean([(pv-rv)**2 for pv,rv in zip(_prev_p_lgbm,_reais_p_lgbm)]))
+                                _mse_vencedor_atual_p=mse_exog_p if exog_venceu_p else _rank_p.get(melhor_comparativo_p,float("inf"))
+                                if _mse_lgbm_p<_mse_vencedor_atual_p:
+                                    melhor_p="LightGBM (pooled)"
+                                    proj_p=np.array(_prev_final_lgbm_cfg[prod_p][:meses_prev_cfg])
+
                         if proj_p is None:
                             melhor_p=melhor_comparativo_p
                             proj_p=treinar(serie_p,melhor_p,meses_prev_cfg)
@@ -8292,6 +8546,16 @@ elif pg=="config_ml":
                     top_produtos_val=ranking_elegivel_val[produto_col_val].tolist()
 
                     st.markdown(f'<div class="al-i">🔎 {len(top_produtos_val)} produtos elegíveis para validação.</div>',unsafe_allow_html=True)
+
+                    # LightGBM (pooled) — mesmo padrão já usado na Validação Estatística e
+                    # na geração principal do Config ML: treina uma vez, com todos os
+                    # produtos elegíveis juntos, ANTES do loop. Sem isso, essa validação
+                    # interna ficava sistematicamente diferente das outras duas telas, que
+                    # já davam ao LightGBM a chance de competir.
+                    _prev_lgbm_val=treinar_lightgbm_pooled(
+                        df_treino_val,produto_col_val,col_data_cfg,metrica_val,
+                        top_produtos_val,n_meses_valid)
+
                     pb_val=st.progress(0)
                     texto_pb_val=st.empty()
                     linhas_val=[]
@@ -8316,6 +8580,7 @@ elif pg=="config_ml":
                             exog_fut_v2=montar_exog_calendario(datas_fut_v2, meses_pico_usar, meses_promo_usar)
                             proj_v2,nome_v2=treinar_com_exog(serie_v2,exog_hist_v2,exog_fut_v2,n_meses_valid)
                             if proj_v2 is not None: melhor_v2=nome_v2
+
                         if proj_v2 is None:
                             melhor_v2=melhor_comparativo_v2
                             proj_v2=treinar(serie_v2,melhor_v2,n_meses_valid)
@@ -8324,6 +8589,7 @@ elif pg=="config_ml":
                             proj_lista_v2=[max(0.0,v) for v in proj_lista_v2]
                             linhas_val.append({produto_col_val:prod_v2,"n_periodos":len(serie_v2),
                                 "modelo_escolhido":melhor_v2,"ultimo_real":ultimo_v2,
+                                "media_historica":float(serie_v2.mean()) if len(serie_v2)>0 else 0.0,
                                 "previsao":[round(v,2) for v in proj_lista_v2],"status":"ok","rank":rank_v2})
                         if len(top_produtos_val)>0:
                             pb_val.progress((idx_val+1)/len(top_produtos_val))
@@ -8346,6 +8612,21 @@ elif pg=="config_ml":
                             corte_ts=pd.Period(data_corte).to_timestamp()
                             serie_real_pos=serie_completa_v[serie_completa_v.index>corte_ts].head(n_meses_valid)
                             proj_v=linha_v["previsao"]
+                            _media_hist_v=linha_v.get("media_historica",0.0)
+
+                            # LightGBM entra na disputa aqui, comparando contra o real —
+                            # mesmo critério das outras duas telas: só assume se realmente
+                            # errar menos que o modelo que já estava ganhando.
+                            if prod_v in _prev_lgbm_val and len(serie_real_pos)>0:
+                                _reais_lgbm_v=[float(x) for x in serie_real_pos.tolist()]
+                                _prev_lgbm_v=_prev_lgbm_val[prod_v][:len(_reais_lgbm_v)]
+                                if len(_prev_lgbm_v)==len(_reais_lgbm_v):
+                                    _erro_atual_v=sum((float(proj_v[i])-_reais_lgbm_v[i])**2
+                                        for i in range(min(len(proj_v),len(_reais_lgbm_v))))
+                                    _erro_lgbm_v=sum((p-r)**2 for p,r in zip(_prev_lgbm_v,_reais_lgbm_v))
+                                    if _erro_lgbm_v<_erro_atual_v:
+                                        proj_v=list(_prev_lgbm_v)
+
                             for i_v in range(min(len(proj_v),len(serie_real_pos))):
                                 real_v=float(serie_real_pos.iloc[i_v])
                                 prev_v=float(proj_v[i_v])
@@ -8353,7 +8634,8 @@ elif pg=="config_ml":
                                 erro_pct_v=safe(erro_abs_v,abs(real_v))*100
                                 linhas_comp.append({"Produto":prod_v,"Mes":str(serie_real_pos.index[i_v]),
                                     "Previsto":round(prev_v,2),"Real":round(real_v,2),
-                                    "Erro %":round(erro_pct_v,1),"Bias":round(prev_v-real_v,2)})
+                                    "Erro %":round(erro_pct_v,1),"Bias":round(prev_v-real_v,2),
+                                    "MediaHistorica":round(_media_hist_v,2)})
                         st.session_state["cfgml_df_comp_bruto"]=pd.DataFrame(linhas_comp) if linhas_comp else None
                         st.session_state["cfgml_df_escopo_val"]=df_escopo_val
                         if st.session_state.cid and linhas_comp:
@@ -8392,7 +8674,15 @@ elif pg=="config_ml":
                         save_config_ml(st.session_state.cid)
                         st.success(f"✅ Filtro de {limite_erro_aceitavel}% salvo — o Painel vai mostrar o Erro Médio com esse valor até você salvar outro.")
 
-                erro_medio_por_produto=df_comp_bruto.groupby("Produto")["Erro %"].mean()
+                # WAPE por produto (soma erro / soma real) em vez de MAPE clássico — o
+                # MAPE por produto pode explodir com um único mês de venda zero, fazendo
+                # o slider "distorcer muito" mesmo com o produto sendo bem previsto no
+                # resto do tempo. WAPE não sofre disso, mesmo padrão usado no resto da tela.
+                def _wape_prod_filtro(g):
+                    _sr=g["Real"].abs().sum()
+                    return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+                erro_medio_por_produto=df_comp_bruto.groupby("Produto").apply(_wape_prod_filtro)
+                erro_medio_por_produto=erro_medio_por_produto.dropna()
                 produtos_dentro=erro_medio_por_produto[erro_medio_por_produto<=limite_erro_aceitavel].index
                 n_total_prod_val=len(erro_medio_por_produto)
                 n_dentro_val=len(produtos_dentro)
@@ -8402,10 +8692,29 @@ elif pg=="config_ml":
                 df_comp=df_comp_bruto[df_comp_bruto["Produto"].isin(produtos_dentro)]
                 if df_comp.empty:
                     st.markdown('<div class="al-w">⚠️ Nenhum produto ficou dentro do limite escolhido. Aumente o limite acima para ver resultados.</div>',unsafe_allow_html=True)
-                mape_geral=df_comp["Erro %"].mean() if not df_comp.empty else 0
+                # WAPE ponderado — calcula o WAPE de CADA produto separadamente, depois
+                # pesa pela importância dele (média do Real, já que aqui não temos a
+                # coluna MediaHistorica que a Validação Estatística usa) — mesma lógica
+                # de agregação da Validação, pra as duas telas sempre baterem quando
+                # testadas nas mesmas condições.
+                if not df_comp.empty and {"Previsto","Real"}.issubset(df_comp.columns):
+                    def _wape_prod_cfg(g):
+                        _sr=g["Real"].abs().sum()
+                        return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+                    _wape_por_prod_cfg=df_comp.groupby("Produto").apply(_wape_prod_cfg)
+                    if "MediaHistorica" in df_comp.columns:
+                        _peso_por_prod_cfg=df_comp.groupby("Produto")["MediaHistorica"].first().clip(lower=0)
+                    else:
+                        _peso_por_prod_cfg=df_comp.groupby("Produto")["Real"].mean().clip(lower=0)
+                    _validos_cfg=_wape_por_prod_cfg.notna()
+                    _peso_total_cfg=_peso_por_prod_cfg[_validos_cfg].sum()
+                    wape_geral=((_wape_por_prod_cfg[_validos_cfg]*_peso_por_prod_cfg[_validos_cfg]).sum()
+                                 /_peso_total_cfg) if _peso_total_cfg>0 else 0
+                else:
+                    wape_geral=0
                 bias_geral=df_comp["Bias"].mean() if not df_comp.empty else 0
                 c_v1,c_v2,c_v3=st.columns(3)
-                mc(c_v1,"MAPE (Erro Médio)",f"{mape_geral:.1f}%","g" if mape_geral<15 else ("y" if mape_geral<30 else "r"))
+                mc(c_v1,"WAPE (Erro Médio)",f"{wape_geral:.1f}%","g" if wape_geral<15 else ("y" if wape_geral<30 else "r"))
                 mc(c_v2,"Bias Médio",fmt(bias_geral),"r" if bias_geral>0 else "g",
                 "Modelo superestima" if bias_geral>0 else "Modelo subestima")
                 mc(c_v3,"Comparações válidas",str(len(df_comp)),"b")
@@ -8446,22 +8755,30 @@ elif pg=="config_ml":
 
                         if linhas_comp_media:
                             df_comp_media=pd.DataFrame(linhas_comp_media)
-                            mape_ml=df_comp_media["Erro_ML"].mean()
-                            mape_media=df_comp_media["Erro_Media"].mean()
+                            _real_abs_total_cfg=df_comp_media["Real"].abs().sum()
+                            mape_ml=((df_comp_media["Previsto_ML"]-df_comp_media["Real"]).abs().sum()
+                                      /_real_abs_total_cfg*100) if _real_abs_total_cfg>0 else 0
+                            mape_media=((df_comp_media["Previsto_Media"]-df_comp_media["Real"]).abs().sum()
+                                         /_real_abs_total_cfg*100) if _real_abs_total_cfg>0 else 0
                             ganho=mape_media-mape_ml
                             economia_pct=ganho/mape_media*100 if mape_media>0 else 0
 
                             # KPIs comparativos
                             c_m1,c_m2,c_m3=st.columns(3)
-                            mc(c_m1,f"MAPE Média {n_meses_media} meses",f"{mape_media:.1f}%","r")
-                            mc(c_m2,"MAPE Motor ML",f"{mape_ml:.1f}%","g")
+                            mc(c_m1,f"WAPE Média {n_meses_media} meses",f"{mape_media:.1f}%","r")
+                            mc(c_m2,"WAPE Motor ML",f"{mape_ml:.1f}%","g")
                             mc(c_m3,"Redução de Erro",f"{ganho:.1f}p.p. ({economia_pct:.0f}%)","b")
 
                             # Gráfico comparativo por produto
-                            df_plot=df_comp_media.groupby("Produto").agg(
-                                Erro_ML=("Erro_ML","mean"),
-                                Erro_Media=("Erro_Media","mean")).reset_index()
-                            df_plot=df_plot.sort_values("Erro_Media",ascending=False).head(30)
+                            def _wape_prod_media_cfg(g):
+                                _sr=g["Real"].abs().sum()
+                                if _sr<=0: return pd.Series({"Erro_ML":None,"Erro_Media":None})
+                                return pd.Series({
+                                    "Erro_ML":(g["Previsto_ML"]-g["Real"]).abs().sum()/_sr*100,
+                                    "Erro_Media":(g["Previsto_Media"]-g["Real"]).abs().sum()/_sr*100,
+                                })
+                            df_plot=df_comp_media.groupby("Produto").apply(_wape_prod_media_cfg).reset_index()
+                            df_plot=df_plot.dropna(subset=["Erro_Media"]).sort_values("Erro_Media",ascending=False).head(30)
 
                             fig_comp=go.Figure()
                             fig_comp.add_trace(go.Bar(
@@ -8529,7 +8846,7 @@ elif pg=="config_ml":
 
                 if not df_comp.empty:
                     sec("📊 Erro por Faixa de Valor")
-                    st.markdown('<div class="al-i">O MAPE geral pode enganar quando mistura produtos de alto e baixo valor — produtos pequenos naturalmente têm % de erro maior mesmo com boa previsão em R$. Veja o erro separado por faixa.</div>',unsafe_allow_html=True)
+                    st.markdown('<div class="al-i">O erro geral pode enganar quando mistura produtos de alto e baixo valor — produtos pequenos naturalmente têm % de erro maior mesmo com boa previsão em R$. Veja o WAPE separado por faixa (soma do erro / soma do real de cada faixa — não distorce com mês de venda zero).</div>',unsafe_allow_html=True)
                     valor_medio_produto=df_comp.groupby("Produto")["Real"].mean()
                     limite_baixo=valor_medio_produto.quantile(0.33)
                     limite_alto=valor_medio_produto.quantile(0.67)
@@ -8539,18 +8856,37 @@ elif pg=="config_ml":
                         return "🟢 Alto Valor"
                     df_comp=df_comp.copy()
                     df_comp["Faixa"]=df_comp["Produto"].map(valor_medio_produto).apply(classificar_faixa)
-                    resumo_faixa=df_comp.groupby("Faixa").agg(
-                        MAPE=("Erro %","mean"),
-                        Bias=("Bias","mean"),
-                        Produtos=("Produto","nunique"),
-                        Comparacoes=("Produto","count")
+                    def _wape_faixa(g):
+                        # WAPE ponderado — calcula por produto primeiro, depois pesa pela
+                        # média histórica de cada um (mesmo critério já usado na Validação
+                        # Estatística, no Config ML e no Dashboard Executivo).
+                        def _wape_prod_faixa(gp):
+                            _sr=gp["Real"].abs().sum()
+                            return (gp["Previsto"]-gp["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+                        _wape_por_prod=g.groupby("Produto").apply(_wape_prod_faixa)
+                        if "MediaHistorica" in g.columns:
+                            _peso=g.groupby("Produto")["MediaHistorica"].first().clip(lower=0)
+                        else:
+                            _peso=g.groupby("Produto")["Real"].mean().clip(lower=0)
+                        _validos=_wape_por_prod.notna()
+                        _peso_total=_peso[_validos].sum()
+                        if _peso_total>0:
+                            return (_wape_por_prod[_validos]*_peso[_validos]).sum()/_peso_total
+                        return _wape_por_prod.dropna().mean() if len(_wape_por_prod.dropna())>0 else None
+                    resumo_faixa=df_comp.groupby("Faixa").apply(
+                        lambda g: pd.Series({
+                            "WAPE":_wape_faixa(g),
+                            "Bias":g["Bias"].mean(),
+                            "Produtos":g["Produto"].nunique(),
+                            "Comparacoes":len(g),
+                        })
                     ).reindex(["🟢 Alto Valor","🟡 Médio Valor","🔵 Baixo Valor"]).dropna()
                     cols_faixa=st.columns(len(resumo_faixa)) if len(resumo_faixa)>0 else []
                     for i_f,(faixa,row_f) in enumerate(resumo_faixa.iterrows()):
-                        cls_f="g" if row_f["MAPE"]<15 else ("y" if row_f["MAPE"]<30 else "r")
+                        cls_f="g" if row_f["WAPE"]<15 else ("y" if row_f["WAPE"]<30 else "r")
                         cols_faixa[i_f].markdown(f'''<div class="mc">
                         <div class="mc-lbl">{faixa}</div>
-                        <div class="mc-val {cls_f}">{row_f["MAPE"]:.1f}%</div>
+                        <div class="mc-val {cls_f}">{row_f["WAPE"]:.1f}%</div>
                         <div class="mc-sub">{int(row_f["Produtos"])} produto(s) · {int(row_f["Comparacoes"])} comparações</div>
                         </div>''',unsafe_allow_html=True)
 
@@ -8560,7 +8896,7 @@ elif pg=="config_ml":
 
     Este teste treina o modelo <b>apenas com dados até a data de corte escolhida</b> — o modelo nunca vê o período seguinte. Depois, comparamos a previsão gerada com o que <b>realmente aconteceu</b> nesse período, que já está registrado na base. É um teste cego: a mesma lógica usada para validar modelos de previsão em empresas de grande porte.
 
-    <p><b>MAPE (Erro Médio Percentual)</b> — mede o quanto a previsão errou, na média, em relação ao valor real, sem considerar direção.</p>
+    <p><b>WAPE (Erro Percentual Ponderado)</b> — mede o quanto a previsão errou, em relação ao valor real, somando erro e real antes de dividir (em vez de tirar média das % mês a mês) — não distorce quando algum mês teve venda real igual a zero.</p>
     <ul>
     <li>Até 10%: excelente</li>
     <li>10% a 20%: bom, confiável para a maioria das decisões</li>
@@ -8575,9 +8911,9 @@ elif pg=="config_ml":
     <li>Próximo de zero: sem tendência sistemática de erro, o modelo erra "para os dois lados" de forma equilibrada</li>
     </ul>
 
-    <p><b>Comparações válidas</b> — quantos meses reais existiam na base para comparar com a previsão nesse teste. Quanto mais meses validados, mais confiável é a conclusão sobre o MAPE e o Bias.</p>
+    <p><b>Comparações válidas</b> — quantos meses reais existiam na base para comparar com a previsão nesse teste. Quanto mais meses validados, mais confiável é a conclusão sobre o WAPE e o Bias.</p>
 
-    <p><b>Recomendação de uso:</b> utilize este teste antes de aplicar qualquer previsão a uma decisão real de compra ou estoque. Um MAPE baixo com Bias próximo de zero é o cenário ideal — indica que o modelo é preciso e não tem tendência de erro sistemático em nenhuma direção.</p>
+    <p><b>Recomendação de uso:</b> utilize este teste antes de aplicar qualquer previsão a uma decisão real de compra ou estoque. Um WAPE baixo com Bias próximo de zero é o cenário ideal — indica que o modelo é preciso e não tem tendência de erro sistemático em nenhuma direção.</p>
 
     </div>
     """,unsafe_allow_html=True)
@@ -9487,6 +9823,23 @@ elif pg=="compras":
                 st.session_state["compras_calendario"]=_cal_disco
                 st.session_state["compras_morto"]=_morto_disco
                 df_res_compras=_res_disco
+        _baixo_hist_compras=load_snap(st.session_state.cid,"cfgml_baixo_hist",filial=st.session_state.get("compras_filial_sel")) if st.session_state.cid else None
+        if _baixo_hist_compras:
+            st.markdown('<div style="border:2px solid #D97706;border-radius:10px;padding:3px;'
+                'background:linear-gradient(135deg,#FFFBEB 0%,#FEF3C7 100%);margin-bottom:14px">',
+                unsafe_allow_html=True)
+            with st.expander(f"⚠️ Produtos fora da previsão validada — {len(_baixo_hist_compras)} produtos com histórico curto"):
+                st.markdown('<div style="color:#78350F;font-size:.85rem;margin-bottom:10px">Esses produtos '
+                    'não entraram na disputa de modelos por terem pouco histórico — não passaram pela '
+                    'validação estatística. A estimativa abaixo é uma <b>média móvel simples</b> (usa o '
+                    'que tiver de dado, mesmo que seja só 1 mês) — revise manualmente antes de confiar, '
+                    'principalmente pros produtos com menos meses disponíveis.</div>',unsafe_allow_html=True)
+                _df_baixo_hist=pd.DataFrame(_baixo_hist_compras).sort_values("MesesDisponiveis")
+                _df_baixo_hist["Estimativa"]=_df_baixo_hist["MediaMovelMensal"].apply(fmt)
+                st.dataframe(_df_baixo_hist[["Produto","MesesDisponiveis","Estimativa"]],
+                    use_container_width=True,height=min(400,80+35*len(_df_baixo_hist)))
+            st.markdown('</div>',unsafe_allow_html=True)
+
         if df_res_compras is not None and not df_res_compras.empty:
             sec("⚡ Radar de Estoque — Ação Imediata")
             n_ruptura=int((df_res_compras["Status"]=="🚨 RUPTURA IMINENTE").sum())
@@ -10758,7 +11111,7 @@ Score Executivo: {_sp['score_final']}/100 ({_sp['score_lbl']})
 Valor do Estoque: {fmt(_sp['val_estoque'])} | Capital na Política Ideal: {fmt(_sp['cap_ideal'])} | Capital Liberável (excesso, giro normal): {fmt(_sp['cap_liberavel'])}
 Capital Parado (sem giro / candidatos a liquidação): {_cap_parado_txt}
 Ruptura: {_sp['pct_ruptura']:.1f}% dos produtos | Cobertura média: {_sp['cob_media']:.0f} dias | Giro médio: {_sp['giro_ano']}x/ano | Lead Time médio: {_sp['lt_medio']:.0f} dias
-MAPE do modelo de previsão (validação out-of-sample): {f"{_sp['mape_ml']:.1f}%" if _sp.get('mape_ml') else "não validado ainda"}
+WAPE do modelo de previsão (validação out-of-sample): {f"{_sp['mape_ml']:.1f}%" if _sp.get('mape_ml') else "não validado ainda"}
 Radar de Estoque — ação imediata: {_radar_txt}
 Giro e Capital por Classe ABC/D/E: {_classe_txt}
 Configuração do modelo de ML usado: {_mlconfig_txt}
@@ -10789,7 +11142,7 @@ IMPORTANTE SOBRE DATAS: sempre que citar saldo, semana crítica ou projeção, d
 
 REFERÊNCIAS DE MERCADO PARA CLASSIFICAR CADA MÉTRICA (diga explicitamente onde cada número se encaixa):
 - Score Executivo (0-100): <40 Crítico | 40-59 Regular | 60-74 Bom | 75-89 Muito Bom | ≥90 Excelente
-- MAPE: <10% Excelente | 10-20% Bom | 20-30% Aceitável | >30% Baixa confiabilidade
+- WAPE: <10% Excelente | 10-20% Bom | 20-30% Aceitável | >30% Baixa confiabilidade
 - Cobertura de estoque (dias): <15 Enxuta | 15-45 Saudável | 45-90 Alta | >90 Excessiva
 - Giro de estoque (x/ano): <4x Baixo | 4-8x Moderado | 8-15x Bom | >15x Excelente
 - Lead Time médio: até 15d Ótimo | 16-30d Aceitável | >30d Elevado
@@ -10799,8 +11152,8 @@ REFERÊNCIAS DE MERCADO PARA CLASSIFICAR CADA MÉTRICA (diga explicitamente onde
 - Concentração de fornecedor (participação nas compras): <20% Saudável | 20-30% Atenção | >30% Risco de dependência
 
 GLOSSÁRIO — explique estes conceitos de forma educativa quando relevante:
-Score Executivo: nota de 0-100 resumindo a saúde do estoque, considerando Ruptura (fator mais determinante, por afetar receita diretamente), Giro, Cobertura, Capital Parado, MAPE e Lead Time.
-MAPE e Validação às Cegas (Out-of-Sample): o modelo é treinado só com dado até uma data de corte, "prevê" os meses seguintes sem ver o que aconteceu, e comparamos com a realidade já conhecida — garante que o erro medido reflete uma previsão real, sem "colar".
+Score Executivo: nota de 0-100 resumindo a saúde do estoque, considerando Ruptura (fator mais determinante, por afetar receita diretamente), Giro, Cobertura, Capital Parado, WAPE e Lead Time.
+WAPE e Validação às Cegas (Out-of-Sample): o modelo é treinado só com dado até uma data de corte, "prevê" os meses seguintes sem ver o que aconteceu, e comparamos com a realidade já conhecida — garante que o erro medido reflete uma previsão real, sem "colar".
 Como o motor de previsão escolhe modelo: para cada produto, testa vários modelos estatísticos e de Machine Learning diferentes (cada um captura tendência/sazonalidade/ruído de um jeito), e usa automaticamente o que teve menor erro para aquele produto especificamente — produtos diferentes podem usar modelos diferentes.
 Calibrações disponíveis no sistema (capacidades, independente de estarem ativas nesta rodada): Sazonalidade (marcar meses de pico conhecidos), Promoções/Eventos (isolar esse efeito da sazonalidade normal), Exclusão de Outliers, Correção de Preço/Reajustes, Fatores Condicionantes de Mercado (câmbio, crise de fornecimento).
 
@@ -10816,13 +11169,13 @@ DESEMPENHO DE FORNECEDORES (Prazo/Qualidade/OTIF — avaliação manual, vale pa
 TAREFA:
 Escreva um parecer executivo em português, rico, profissional e ESPECÍFICO (não genérico), para um Coordenador/Gerente de Controladoria que supervisiona as {len(FILIAIS_PARECER)} filiais. Estruture assim:
 
-**1. Diagnóstico Geral e Comparativo entre Filiais** — explique em 1-2 frases o que é o Score Executivo (métrica composta considerando Ruptura, Giro, Cobertura, Capital Parado, MAPE e Lead Time; Ruptura é o fator mais determinante por impactar receita diretamente). Depois cite o Score de CADA UMA das {len(FILIAIS_PARECER)} filiais individualmente (nunca resuma como "varia entre X e Y" sem nomear cada uma), classificando cada uma pela régua de referência acima. Só afirme que a situação é "semelhante" ou "muito diferente" entre filiais se os números que você já vai citar nas seções seguintes realmente sustentarem essa afirmação — não conclua isso antes de checar. APRENDIZADO CRUZADO (obrigatório): identifique a filial com MELHOR desempenho num indicador-chave (Score, Giro de Classe A, ou Ruptura) e a com PIOR desempenho no mesmo indicador — aponte a diferença numérica entre as duas, e sugira, com base nos dados disponíveis (fornecedor, cobertura, lead time), uma hipótese do que a melhor está fazendo diferente que a pior poderia adotar.
+**1. Diagnóstico Geral e Comparativo entre Filiais** — explique em 1-2 frases o que é o Score Executivo (métrica composta considerando Ruptura, Giro, Cobertura, Capital Parado, WAPE e Lead Time; Ruptura é o fator mais determinante por impactar receita diretamente). Depois cite o Score de CADA UMA das {len(FILIAIS_PARECER)} filiais individualmente (nunca resuma como "varia entre X e Y" sem nomear cada uma), classificando cada uma pela régua de referência acima. Só afirme que a situação é "semelhante" ou "muito diferente" entre filiais se os números que você já vai citar nas seções seguintes realmente sustentarem essa afirmação — não conclua isso antes de checar. APRENDIZADO CRUZADO (obrigatório): identifique a filial com MELHOR desempenho num indicador-chave (Score, Giro de Classe A, ou Ruptura) e a com PIOR desempenho no mesmo indicador — aponte a diferença numérica entre as duas, e sugira, com base nos dados disponíveis (fornecedor, cobertura, lead time), uma hipótese do que a melhor está fazendo diferente que a pior poderia adotar.
 
 **2. Radar de Estoque — Ação Imediata, por Filial** — para cada filial, cite: ruptura iminente/comprar agora (total sugerido), quantidade de produtos em Estoque Excessivo, e o valor de Capital Parado (sem giro). Esses 3 números (ruptura, estoque excessivo, capital parado) estão nos dados de cada filial abaixo — cite todos os 3 aqui, mesmo que só formalmente, porque a Seção 7 vai precisar reusar alguns deles. Se uma filial está bem pior que as outras em algum desses pontos, destaque isso com os números lado a lado.
 
 **3. Estoque e Capital por Curva — Onde Focar Primeiro** — para CADA filial, cite o capital liberável (nunca omita nenhuma, mesmo que o valor seja pequeno ou zero) E o giro por classe (não só capital — cite pelo menos a Classe A de cada filial: giro atual vs alvo). Cruzando as filiais, diga onde está o maior capital liberável no total, para priorizar a ação. Você pode citar a Curva de Pareto como contexto adicional, mas NUNCA aplique o percentual dela sobre a Classe A do Giro/Capital — são bases diferentes.
 
-**4. Confiabilidade da Previsão** — ABRA a seção citando o MAPE (erro médio) de CADA filial, com a classificação da régua de referência acima (ex: "a Loja X está em Y%, classificada como Bom") — o número vem primeiro, antes de qualquer explicação de método. Só depois explique brevemente a validação às cegas e como o motor escolhe modelo por produto. Apresente as calibrações disponíveis como capacidade educativa, depois diga quais estavam ativas em cada filial nesta rodada (sem inventar nenhuma que não foi informada).
+**4. Confiabilidade da Previsão** — ABRA a seção citando o WAPE (erro médio) de CADA filial, com a classificação da régua de referência acima (ex: "a Loja X está em Y%, classificada como Bom") — o número vem primeiro, antes de qualquer explicação de método. Só depois explique brevemente a validação às cegas e como o motor escolhe modelo por produto. Apresente as calibrações disponíveis como capacidade educativa, depois diga quais estavam ativas em cada filial nesta rodada (sem inventar nenhuma que não foi informada).
 
 **5. Situação de Caixa — Padrão entre Filiais** — para cada filial com semana negativa, você recebeu a lista completa, cronológica, de todas as semanas negativas com seus saldos. NÃO liste as semanas uma por uma no texto — em vez disso, identifique e descreva o PADRÃO: a situação piora progressivamente até um ponto e depois melhora? Há um pico isolado destoante do resto? O problema é concentrado em um período específico (ex: um trimestre) ou espalhado ao longo de todo o horizonte? Cite a semana mais crítica como ponto de referência, mas a narrativa deve ser sobre a tendência, não sobre cada dado individual. Só afirme que as semanas críticas "coincidem" ou "não coincidem" entre filiais se houver pelo menos 2 filiais com semana crítica pra comparar — se só 1 filial tiver, diga apenas que só ela apresentou criticidade, sem tentar comparar padrão.
 
@@ -11551,16 +11904,43 @@ elif pg=="gestao_estoque":
         if _cfg_ml_disco_ge and "cfgml_limite_erro" in _cfg_ml_disco_ge:
             _limite_erro_ge=_cfg_ml_disco_ge["cfgml_limite_erro"]
 
+    def _wape_de(_df_wape_ge):
+        # WAPE ponderado por produto — mesmo critério usado na Validação Estatística
+        # e no Config ML: calcula o WAPE de cada produto separado, depois pesa pela
+        # média histórica dele. Sem isso, esse número (soma tudo junto) nunca bate
+        # com os outros dois lugares que já usam o critério ponderado.
+        if _df_wape_ge is None or _df_wape_ge.empty or not {"Previsto","Real"}.issubset(_df_wape_ge.columns):
+            return None
+        def _wape_prod_de(g):
+            _sr=g["Real"].abs().sum()
+            return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+        _wape_por_prod_de=_df_wape_ge.groupby("Produto").apply(_wape_prod_de) if "Produto" in _df_wape_ge.columns else None
+        if _wape_por_prod_de is None or _wape_por_prod_de.dropna().empty:
+            _sr_ge=_df_wape_ge["Real"].abs().sum()
+            return round(float((_df_wape_ge["Previsto"]-_df_wape_ge["Real"]).abs().sum()/_sr_ge*100),1) if _sr_ge>0 else None
+        if "MediaHistorica" in _df_wape_ge.columns:
+            _peso_de=_df_wape_ge.groupby("Produto")["MediaHistorica"].first().clip(lower=0)
+        else:
+            _peso_de=_df_wape_ge.groupby("Produto")["Real"].mean().clip(lower=0)
+        _validos_de=_wape_por_prod_de.notna()
+        _peso_total_de=_peso_de[_validos_de].sum()
+        if _peso_total_de>0:
+            return round(float((_wape_por_prod_de[_validos_de]*_peso_de[_validos_de]).sum()/_peso_total_de),1)
+        return round(float(_wape_por_prod_de.dropna().mean()),1) if len(_wape_por_prod_de.dropna())>0 else None
+
     mape_ml=None
     if df_comp_val is not None and not df_comp_val.empty and "Erro %" in df_comp_val.columns:
         if "Produto" in df_comp_val.columns:
+            # O filtro por produto continua usando MAPE (decide QUAIS produtos entram
+            # na visão), mas o número final exibido agora é WAPE (mais robusto contra
+            # mês de venda zero) — mesmo padrão já usado na Validação e no Config ML.
             _erro_medio_prod_ge=df_comp_val.groupby("Produto")["Erro %"].mean()
             _produtos_dentro_ge=_erro_medio_prod_ge[_erro_medio_prod_ge<=_limite_erro_ge].index
             _df_comp_filtrado_ge=df_comp_val[df_comp_val["Produto"].isin(_produtos_dentro_ge)]
             if not _df_comp_filtrado_ge.empty:
-                mape_ml=round(float(_df_comp_filtrado_ge["Erro %"].mean()),1)
+                mape_ml=_wape_de(_df_comp_filtrado_ge)
         if mape_ml is None:
-            mape_ml=round(float(df_comp_val["Erro %"].mean()),1)        
+            mape_ml=_wape_de(df_comp_val)        
 
             
 
