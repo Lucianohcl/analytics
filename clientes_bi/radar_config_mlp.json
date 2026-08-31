@@ -1,1 +1,1 @@
-{"mlp_pct": 1.0, "mlp_meses": null, "mlp_minper": 12}
+{"mlp_pct": 1.0, "mlp_meses": null, "mlp_minper": 24, "mlp_data_corte": "2024-12", "mlp_n_valid": 4, "mlp_curva_sel": "(Todas)", "mlp_janelas_descoberta": []}

@@ -1,0 +1,6 @@
+﻿Produto;Filial;Fornecedor;Classe;Volatilidade;EstoqueAtual;DemandaPrevMes(un);CoberturaDias;MinDias;MaxDias;LeadTimeDias;GiroAtual;GiroAlvo;Status;QtdSugerida;CustoUnitario;ValorSugerido;FontePrevisao;ModeloUsado;CapitalParado
+0EBTMAVULAPTZ40;(Todas as filiais);ProteMax Comercial;A;Média;137,0;26,0;158,3;15;30;15,0;2,31;16,22;🟡 Estoque excessivo;0,0;45,13;0,0;1-Config ML (Painel);Holt;6182,81
+0EBTMAVULAPTZ42;(Todas as filiais);ProteMax Comercial;A;Média;95,0;8,3;341,3;15;30;15,0;1,07;16,22;🟡 Estoque excessivo;0,0;45,28;0,0;1-Config ML (Painel);ARIMA;4301,6
+0EBTMAVULAPTZ41;(Todas as filiais);EquipSeg Industrial;A;Média;88,0;5,0;528,2;15;30;15,0;0,69;16,22;🟡 Estoque excessivo;0,0;45,09;0,0;1-Config ML (Painel);Holt;3967,92
+0EBTMANOBKMRZ40;(Todas as filiais);SafetyPro Distribuidora;A;Média;23,0;6,5;106,1;15;30;15,0;3,44;16,22;🟡 Estoque excessivo;0,0;102,07;0,0;1-Config ML (Painel);Holt;2347,6099999999997
+1EUFVBCMCSCZZZM;(Todas as filiais);SafetyPro Distribuidora;A;Média;23,0;16,1;42,9;15;30;15,0;8,5;16,22;🟡 Estoque excessivo;0,0;30,13;0,0;1-Config ML (Painel);Holt;692,99
