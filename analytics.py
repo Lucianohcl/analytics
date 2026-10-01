@@ -9,7 +9,7 @@ import streamlit.components.v1 as components_v1
 import pandas as pd
 import base64
 import numpy as np
-import json, os, re, io, requests, time, warnings, uuid
+import json, os, re, io, requests, time, warnings, uuid, shutil
 import imaplib, email
 from email.header import decode_header
 from email.utils import parseaddr
@@ -34,10 +34,16 @@ try:
     from statsmodels.tsa.arima.model import ARIMA
     from statsmodels.tsa.holtwinters import ExponentialSmoothing, Holt
     from statsmodels.tsa.statespace.sarimax import SARIMAX
+    from statsmodels.tsa.stattools import adfuller
     from sklearn.metrics import mean_squared_error
+    from scipy.stats import binomtest
     STATS_OK = True
 except: STATS_OK = False
 try:
+    os.environ["STAN_NUM_THREADS"]="1"  # elimina variação de ponto flutuante entre
+    # threads do Stan — sem isso, o mesmo dado pode gerar Previstos levemente
+    # diferentes a cada treino do Prophet, mesmo com seed fixa (a seed só cobre
+    # a parte aleatória, não a ordem de soma em paralelo do otimizador).
     from prophet import Prophet; PROPHET_OK = True
 except: PROPHET_OK = False
 
@@ -116,11 +122,57 @@ table.dre tr:hover td{background:#F9FAFB!important;}
    sao invertidos de volta pra nao ficar com cor estranha) */
 html{filter:invert(1) hue-rotate(180deg);}
 img, iframe{filter:invert(1) hue-rotate(180deg);}
-.wc-hero{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:16px;
-  padding:36px 40px;margin-bottom:26px;box-shadow:0 4px 14px rgba(0,0,0,.15);
+.wc-hero{position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0F6E56,#085041,#0F6E56);background-size:200% 200%;
+  animation:wcGrad 10s ease infinite;border-radius:16px;
+  padding:64px 40px;margin-bottom:26px;
+  box-shadow:0 0 34px rgba(159,225,203,.28),0 4px 14px rgba(0,0,0,.15);
   text-align:center;border:3px solid #A9762F;}
-.wc-hero h1{font-family:Georgia,serif;font-weight:600;color:#fff;font-size:1.5rem;margin:0 0 8px;}
-.wc-hero p{color:#9FE1CB;font-size:.92rem;letter-spacing:.01em;margin:0;}
+.wc-hero h1{position:relative;z-index:3;font-family:Georgia,serif;font-weight:600;color:#fff;
+  font-size:1.7rem;margin:0 0 10px;text-shadow:0 0 18px rgba(159,225,203,.55);}
+.wc-hero p{position:relative;z-index:3;color:#9FE1CB;font-size:.92rem;letter-spacing:.01em;margin:0;}
+@keyframes wcGrad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+/* piso em grade 3D que "corre" em perspectiva */
+.wc-grid{position:absolute;left:-50%;right:-50%;bottom:-45%;height:130%;z-index:1;
+  background-image:linear-gradient(rgba(159,225,203,.38) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(159,225,203,.38) 1px,transparent 1px);
+  background-size:46px 46px;transform:perspective(420px) rotateX(64deg);transform-origin:center bottom;
+  animation:wcGridMove 2.4s linear infinite;
+  -webkit-mask-image:linear-gradient(to top,#000 10%,transparent 80%);
+  mask-image:linear-gradient(to top,#000 10%,transparent 80%);}
+@keyframes wcGridMove{from{background-position:0 0}to{background-position:0 46px}}
+/* aneis 3D girando atras do titulo */
+.wc-ring{position:absolute;top:50%;left:50%;width:300px;height:300px;margin:-150px 0 0 -150px;
+  border-radius:50%;border:1px solid rgba(159,225,203,.45);z-index:1;
+  box-shadow:0 0 16px rgba(159,225,203,.25),inset 0 0 16px rgba(159,225,203,.15);
+  animation:wcRing 9s linear infinite;}
+.wc-ring.r2{width:220px;height:220px;margin:-110px 0 0 -110px;border-color:rgba(217,189,130,.55);
+  animation:wcRing2 7s linear infinite;}
+@keyframes wcRing{from{transform:rotateX(70deg) rotateZ(0)}to{transform:rotateX(70deg) rotateZ(360deg)}}
+@keyframes wcRing2{from{transform:rotateY(70deg) rotateZ(0)}to{transform:rotateY(70deg) rotateZ(-360deg)}}
+/* cubos 3D flutuando e girando nos lados */
+.wc-cube{position:absolute;top:50%;width:56px;height:56px;margin-top:-28px;z-index:2;
+  transform-style:preserve-3d;animation:wcCube 12s linear infinite;}
+.wc-cube.c1{left:9%;}
+.wc-cube.c2{right:9%;animation-direction:reverse;animation-duration:15s;}
+.wc-cube i{position:absolute;inset:0;border:1px solid #D9BD82;background:rgba(217,189,130,.14);
+  box-shadow:inset 0 0 12px rgba(217,189,130,.4);}
+.wc-cube i:nth-child(1){transform:translateZ(28px)}
+.wc-cube i:nth-child(2){transform:rotateY(180deg) translateZ(28px)}
+.wc-cube i:nth-child(3){transform:rotateY(90deg) translateZ(28px)}
+.wc-cube i:nth-child(4){transform:rotateY(-90deg) translateZ(28px)}
+.wc-cube i:nth-child(5){transform:rotateX(90deg) translateZ(28px)}
+.wc-cube i:nth-child(6){transform:rotateX(-90deg) translateZ(28px)}
+@keyframes wcCube{from{transform:rotateX(-20deg) rotateY(0)}to{transform:rotateX(-20deg) rotateY(360deg)}}
+/* faixa de luz varrendo o card */
+.wc-hero::after{content:"";position:absolute;top:0;bottom:0;width:35%;z-index:2;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(159,225,203,.22),transparent);
+  animation:wcScan 5s ease-in-out infinite;}
+@keyframes wcScan{0%{left:-40%}100%{left:110%}}
+@media (prefers-reduced-motion:reduce){
+  .wc-hero,.wc-grid,.wc-ring,.wc-cube,.wc-hero::after{animation:none !important;}
+}
+@media (max-width:600px){.wc-cube{display:none;}}
 .wc-back{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:16px;
   padding:48px 40px;text-align:center;margin-bottom:26px;box-shadow:0 4px 14px rgba(0,0,0,.15);
   border:3px solid #A9762F;}
@@ -136,19 +188,104 @@ img, iframe{filter:invert(1) hue-rotate(180deg);}
   font-weight:700;font-size:1.05rem;margin:0 auto 12px;border:2px solid rgba(169,118,47,.6);}
 .wc-step-t{font-weight:700;color:#14243B;font-size:.9rem;margin-bottom:3px;}
 .wc-step-s{color:#9CA3AF;font-size:.76rem;}
-.wc-card-exp{background:linear-gradient(150deg,#0F6E56 0%,#085041 100%);color:#fff;border-radius:14px;
-  padding:20px 22px;margin-bottom:16px;border:1px solid rgba(169,118,47,.55);cursor:pointer;
-  box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .15s ease, box-shadow .15s ease;}
-.wc-card-exp:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.26);border-color:#D9BD82;}
-.wc-card-exp summary{font-family:Georgia,serif;font-weight:700;font-size:.95rem;
-  letter-spacing:.03em;list-style:none;cursor:pointer;color:#fff;}
+.wc-card-exp{background:
+    radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),
+    linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%);
+  background-size:180% 180%,200% 200%;
+  color:#fff;border-radius:16px;padding:24px 24px 22px;margin-bottom:16px;
+  border:1px solid rgba(217,189,130,.55);cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,0,0,.3),0 0 0 1px rgba(217,189,130,.08) inset,
+    0 0 18px rgba(217,189,130,.18);
+  position:relative;overflow:hidden;
+  animation:wcGoldBreathe 4.5s ease-in-out infinite;
+  transform:perspective(900px) rotateX(0) rotateY(0) translateY(0);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, border-color .3s ease, background-position .6s ease;}
+@keyframes wcGoldBreathe{
+  0%,100%{box-shadow:0 6px 20px rgba(0,0,0,.3),0 0 0 1px rgba(217,189,130,.08) inset,0 0 18px rgba(217,189,130,.18);}
+  50%{box-shadow:0 6px 24px rgba(0,0,0,.3),0 0 0 1px rgba(217,189,130,.14) inset,0 0 30px rgba(217,189,130,.38);}
+}
+/* barra superior com luz correndo */
+.wc-card-exp::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#A9762F,#D9BD82,#F4E4BC,#D9BD82,#A9762F);background-size:300% 100%;
+  animation:wcBar 4s linear infinite;}
+@keyframes wcBar{from{background-position:0 0}to{background-position:300% 0}}
+/* brilho que atravessa o card no hover */
+.wc-card-exp::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,244,220,.45),transparent);
+  transform:skewX(-18deg);}
+.wc-card-exp:hover::after{animation:wcShine .9s ease;}
+@keyframes wcShine{from{left:-60%}to{left:130%}}
+/* efeito 3D: cada card inclina para um lado diferente */
+.wc-card-exp:hover{transform:perspective(900px) rotateX(3deg) rotateY(-4deg) translateY(-6px) scale(1.02);
+  background-position:100% 100%,100% 100%;border-color:#F4E4BC;
+  box-shadow:0 18px 38px rgba(0,0,0,.4),0 0 34px rgba(217,189,130,.55),0 0 16px rgba(244,228,188,.35);}
+[data-testid="column"]:nth-child(2) .wc-card-exp:hover{transform:perspective(900px) rotateX(3deg) rotateY(0) translateY(-6px) scale(1.02);}
+[data-testid="column"]:nth-child(3) .wc-card-exp:hover{transform:perspective(900px) rotateX(3deg) rotateY(4deg) translateY(-6px) scale(1.02);}
+.wc-card-exp:active{transform:perspective(900px) scale(.98);}
+/* icone: flutua e gira ao passar o mouse */
+.wc-card-exp-icon{width:42px;height:42px;border-radius:12px;background:rgba(217,189,130,.16);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:12px;
+  border:1px solid rgba(217,189,130,.4);transition:transform .4s ease, background .3s ease, box-shadow .3s ease;}
+.wc-card-exp:hover .wc-card-exp-icon{transform:rotate(-8deg) scale(1.12);background:rgba(217,189,130,.3);
+  box-shadow:0 0 16px rgba(217,189,130,.5);}
+.wc-card-exp[open] .wc-card-exp-icon{animation:wcFloat 2.6s ease-in-out infinite;}
+@keyframes wcFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.wc-card-exp summary{font-family:Georgia,serif;font-weight:700;font-size:1.02rem;
+  letter-spacing:.02em;list-style:none;cursor:pointer;color:#fff;display:flex;
+  align-items:center;justify-content:space-between;transition:letter-spacing .3s ease, color .3s ease;}
+.wc-card-exp:hover summary{letter-spacing:.05em;color:#fff;}
 .wc-card-exp summary::-webkit-details-marker{display:none;}
-.wc-card-exp summary::after{content:"▾";float:right;color:#D9BD82;}
-.wc-card-exp[open] summary::after{content:"▴";}
-.wc-card-exp-content{margin-top:14px;padding-top:12px;border-top:1px solid rgba(217,189,130,.35);}
-.wc-card-exp ul{list-style:none;margin:0;padding:0;font-size:.8rem;line-height:1.95;color:#F0FBF7;}
-.wc-card-exp li{margin-bottom:4px;padding-left:20px;position:relative;}
-.wc-card-exp li::before{content:"✓";position:absolute;left:0;color:#D9BD82;font-weight:700;}
+.wc-card-exp summary::after{content:"▾";color:#D9BD82;font-size:.95rem;
+  transition:transform .35s ease;animation:wcPulse 1.8s ease-in-out infinite;}
+.wc-card-exp[open] summary::after{transform:rotate(180deg);animation:none;}
+@keyframes wcPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+/* conteudo: aparece deslizando e os itens entram um a um */
+.wc-card-exp-content{margin-top:16px;padding-top:14px;border-top:1px solid rgba(217,189,130,.3);}
+.wc-card-exp[open] .wc-card-exp-content{animation:wcOpen .45s ease both;}
+@keyframes wcOpen{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.wc-card-exp ul{list-style:none;margin:0;padding:0;font-size:.82rem;line-height:1.85;color:#EAF6F1;}
+.wc-card-exp li{margin-bottom:7px;padding-left:22px;position:relative;
+  transition:transform .25s ease, color .25s ease;}
+.wc-card-exp[open] li{animation:wcItem .5s ease both;}
+.wc-card-exp[open] li:nth-child(1){animation-delay:.05s}
+.wc-card-exp[open] li:nth-child(2){animation-delay:.14s}
+.wc-card-exp[open] li:nth-child(3){animation-delay:.23s}
+.wc-card-exp[open] li:nth-child(4){animation-delay:.32s}
+.wc-card-exp[open] li:nth-child(5){animation-delay:.41s}
+@keyframes wcItem{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:translateX(0)}}
+.wc-card-exp li:hover{transform:translateX(6px);color:#fff;}
+.wc-card-exp li::before{content:"✓";position:absolute;left:0;top:0;color:#F4E4BC;font-weight:700;
+  transition:transform .25s ease, text-shadow .25s ease;}
+.wc-card-exp li:hover::before{transform:scale(1.4);text-shadow:0 0 8px #F4E4BC;}
+@media (prefers-reduced-motion:reduce){
+  .wc-card-exp,.wc-card-exp *,.wc-card-exp::before,.wc-card-exp::after{animation:none !important;transition:none !important;}
+}
+@media (hover:none){
+  .wc-card-exp:hover{transform:none;}
+}
+/* logo: borda resplandecente + giro ao abrir */
+.wc-logo{position:relative;display:inline-block;border-radius:16px;padding:3px;overflow:hidden;
+  animation:wcLogoIn 1.4s cubic-bezier(.2,.8,.2,1) both, wcLogoGlow 3s ease-in-out 1.4s infinite;
+  transform-style:preserve-3d;cursor:pointer;}
+.wc-logo::before{content:"";position:absolute;inset:-60%;
+  background:conic-gradient(from 0deg,#A9762F,#D9BD82,#9FE1CB,#0F6E56,#9FE1CB,#D9BD82,#A9762F);
+  animation:wcLogoSpin 4s linear infinite;}
+.wc-logo-in{position:relative;z-index:1;background:#fff;border-radius:13px;padding:6px 10px;}
+.wc-logo-in img{display:block;max-height:110px;}
+@keyframes wcLogoSpin{to{transform:rotate(360deg)}}
+@keyframes wcLogoIn{
+  0%{transform:perspective(700px) rotateY(-360deg) scale(.4);opacity:0}
+  100%{transform:perspective(700px) rotateY(0) scale(1);opacity:1}}
+@keyframes wcLogoGlow{
+  0%,100%{box-shadow:0 0 10px rgba(169,118,47,.45),0 0 22px rgba(159,225,203,.20)}
+  50%{box-shadow:0 0 22px rgba(217,189,130,.85),0 0 46px rgba(159,225,203,.50)}}
+@keyframes wcLogoTurn{
+  from{transform:perspective(700px) rotateY(0)}
+  to{transform:perspective(700px) rotateY(360deg)}}
+.wc-logo:hover{animation:wcLogoTurn .9s ease-in-out, wcLogoGlow 3s ease-in-out infinite;}
+@media (prefers-reduced-motion:reduce){
+  .wc-logo,.wc-logo::before{animation:none !important;}
+}
 </style>""", unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════════
@@ -192,6 +329,12 @@ DEMONSTRACOES_CAMPOS = {
             "Centro de Custos Saidas 1","Centro de Custos Saidas 2",
             "Centro de Custos Saidas 3","Centro de Custos Saidas 4"],
 }
+# "Indicadores" não tem conta própria — todo indicador (Margem, Liquidez, ROE,
+# Ciclo de Caixa...) é SEMPRE calculado combinando DRE + Balanço. Por isso é a
+# união das duas listas, não uma lista nova — testar "Indicadores" testa essas
+# contas de origem combinadas, e os indicadores em si entram como Subtotais.
+DEMONSTRACOES_CAMPOS["Indicadores"]=list(dict.fromkeys(
+    DEMONSTRACOES_CAMPOS["DRE"]+DEMONSTRACOES_CAMPOS["Balanço"]))
 
 CAMPOS_DRE = ["receita bruta de vendas","impostos sobre vendas","devoluções de vendas",
     "CMV (custo da mercadoria vendida)","estoque inicial do mês de mercadorias para revenda saldo",
@@ -324,8 +467,12 @@ def pre_carregar_cliente(cid):
         st.session_state["compras_morto"]=_morto
     _est=load_estoque_compras(cid)
     if _est is not None: st.session_state["compras_df_estoque"]=_est
-    _cfg_ml=load_cfgml_resultado(cid)
-    if _cfg_ml is not None: st.session_state["cfgml_resultado_atual"]=_cfg_ml
+    # Removido: pré-carregar cfgml_resultado aqui usava filial=None (cai no arquivo
+    # "Todas as filiais"/consolidado) e jogava isso na sessão ANTES do usuário
+    # escolher a filial na tela — a página do Motor de Previsão já carrega sob
+    # demanda, com a filial certa (cfgml_filial_sel_pag), então isso só causava
+    # F5 mostrando resultado de "Todas as filiais" (ou o que estivesse ali) em
+    # vez do resultado da filial que a pessoa realmente estava vendo.
     _val_full=load_validacao_full(cid)
     if _val_full is not None and _val_full.get("df_comp") is not None:
         st.session_state["cfgml_df_comp_bruto"]=_val_full["df_comp"]
@@ -370,6 +517,16 @@ def pre_carregar_cliente(cid):
         for _k,_v in _cfg_ml_config.items():
             st.session_state[_k]=_v
         st.session_state["cfgml_config_carregada"]=True
+    # Restauração customizada de "cfgml_crescimento_por_produto" removida —
+    # agora leva sufixo de Categoria e já é restaurada pelo load_config_ml
+    # genérico logo acima, que preserva cada chave exatamente como foi salva.
+    # Restauração customizada de "mlf_crescimento_por_conta" removida — agora
+    # a chave leva sufixo de Demonstração e já é restaurada automaticamente
+    # pelo load_config_ml genérico (linha ~379), que preserva cada chave
+    # (incluindo o sufixo) exatamente como foi salva.
+    _cache_previsao_conta_mlf_disco=load_cache_previsao_conta_mlf(cid)
+    if _cache_previsao_conta_mlf_disco:
+        st.session_state["mlf_cache_previsao_conta"]=_cache_previsao_conta_mlf_disco
     _cfg_compras=load_config_compras(cid)
     if _cfg_compras:
         for _k,_v in _cfg_compras.items():
@@ -432,7 +589,29 @@ def renderizar_card_cliente(c,prefixo="ab"):
     st.divider()
 
 def save_df(cid,df):
-    df.to_csv(os.path.join(PASTA,f"{gid(cid)}_dados.csv"),sep=";",decimal=",",index=False,encoding="utf-8-sig")
+    _path_dados=os.path.join(PASTA,f"{gid(cid)}_dados.csv")
+    # Backup automático ANTES de sobrescrever — se o arquivo já existe,
+    # copia ele com timestamp antes de substituir. Protege contra perda
+    # acidental (ex: uma importação errada apagando dados corretos que já
+    # estavam lá). Mantém só os 5 backups mais recentes, pra não acumular
+    # arquivo infinito.
+    try:
+        if os.path.exists(_path_dados):
+            _pasta_backup=os.path.join(PASTA,"_backups")
+            os.makedirs(_pasta_backup,exist_ok=True)
+            _timestamp_bkp=datetime.now().strftime("%Y%m%d_%H%M%S")
+            _nome_bkp=f"{gid(cid)}_dados_{_timestamp_bkp}.csv"
+            shutil.copy2(_path_dados,os.path.join(_pasta_backup,_nome_bkp))
+            # Limpa backups antigos — mantém só os 5 mais recentes desse cliente
+            _backups_cliente=sorted(
+                [f for f in os.listdir(_pasta_backup) if f.startswith(f"{gid(cid)}_dados_")],
+                reverse=True)
+            for _bkp_antigo in _backups_cliente[5:]:
+                try: os.remove(os.path.join(_pasta_backup,_bkp_antigo))
+                except Exception: pass
+    except Exception:
+        pass  # nunca deixa uma falha de backup impedir o salvamento principal
+    df.to_csv(_path_dados,sep=";",decimal=",",index=False,encoding="utf-8-sig")
 
 def load_df(cid):
     p=os.path.join(PASTA,f"{gid(cid)}_dados.csv")
@@ -1034,7 +1213,6 @@ def parser_dre(df):
     totais_evitar=["receita bruta de vendas","lucro bruto","lucro operacional","EBITDA",
                    "lucro líquido","CMV (custo da mercadoria vendida)"]
     # Linhas que são SUBcontas (detalhamento) somam; linhas TOTAIS (maiúsculas) não somam, usam direto
-    import sys
     for _,row in df.iterrows():
         desc_raw=str(row.get(col_desc,"")).strip()
         desc=desc_raw.lower()
@@ -1042,8 +1220,6 @@ def parser_dre(df):
         campo_dest=None
         for k,v in mapa.items():
             if k in desc: campo_dest=v; break
-        if "devoluç" in desc:
-            print(f"DEBUG ACHEI LINHA: desc={desc!r} campo_dest={campo_dest!r}",file=sys.stderr)
         if not campo_dest: continue
         e_total=desc_raw.isupper() and len(desc_raw)>3
         for col,(ano,mes) in periodos.items():
@@ -1062,9 +1238,6 @@ def parser_dre(df):
                                              "subconta":desc_raw,"valor":abs(v)})
             except: pass
 
-    import sys
-    n_dev=sum(1 for (a,m,c) in acumulado.keys() if c=="devoluções de vendas")
-    print(f"DEBUG: chaves de devolucoes no acumulado = {n_dev}", file=sys.stderr)
     celulas=[{"ano":a,"mes":m,"campo":c,"valor":v} for (a,m,c),v in acumulado.items()]
     if detalhamento:
         celulas.append({"_detalhamento":detalhamento})
@@ -1878,24 +2051,180 @@ def score_label(s):
         return "⚫ Insolvência Iminente","r","#6B7280"
     except: return "—","","#6B7280"
 
-def detectar_anomalias(serie,janela=3,mult=1.3):
+def detectar_anomalias(serie,meses=None,mult=2.5):
+    """Detecta pontos fora do padrão — CIENTE DE SAZONALIDADE. Se souber o mês
+    de cada ponto (parâmetro `meses`), compara cada valor contra a média dos
+    OUTROS anos do MESMO mês (ex.: Dezembro contra outros Dezembros) — não
+    contra meses vizinhos genéricos. Isso evita marcar um pico sazonal
+    recorrente (ex.: Nov/Dez sempre mais altos, todo ano) como "anomalia"
+    todo ano — o detector aprende que aquele nível É o normal daquele mês
+    específico, e só marca se o valor for diferente até dos OUTROS anos do
+    mesmo mês. O desvio-padrão usado é o RESÍDUO (valor menos a média sazonal
+    do próprio mês) de toda a série, agrupado — mais estável que calcular um
+    desvio separado pra cada mês com poucos anos de histórico. Sem `meses`
+    informado, cai no método antigo (compara contra vizinhos)."""
     s=pd.to_numeric(serie,errors="coerce").fillna(0)
-    if len(s)<4: return pd.Series([False]*len(s),index=s.index)
-    mm=s.rolling(janela,center=True,min_periods=1).mean()
-    std=s.rolling(janela,center=True,min_periods=1).std().fillna(1)
-    return (s-mm).abs()>mult*std
+    n=len(s)
+    if n<6: return pd.Series([False]*n,index=s.index)
+
+    if meses is not None:
+        meses_s=pd.Series(list(meses),index=s.index)
+        media_sazonal=s.groupby(meses_s).transform(
+            lambda g: (g.sum()-g)/(len(g)-1) if len(g)>1 else g*0+g.mean())
+        residuo=s-media_sazonal
+        std_residuo=residuo.std()
+        if not std_residuo or std_residuo==0: return pd.Series([False]*n,index=s.index)
+        return residuo.abs()>mult*std_residuo
+
+    # Sem info de mês — método de vizinhos (fallback)
+    soma_jan=s.rolling(5,center=True,min_periods=2).sum()
+    cont_jan=s.rolling(5,center=True,min_periods=2).count()
+    cont_sem_self=(cont_jan-1).replace(0,np.nan)
+    media_sem_self=(soma_jan-s)/cont_sem_self
+    std_global=s.std()
+    if not std_global or std_global==0: return pd.Series([False]*n,index=s.index)
+    return (s-media_sem_self).abs()>mult*std_global
 
 # ═══════════════════════════════════════════════════
 # ML
 # ═══════════════════════════════════════════════════
-def treinar(serie,modelo,n=6):
+# Sobe esse número toda vez que a lógica de descoberta de d/D mudar — ordens
+# salvas em disco com versão diferente são tratadas como cache-miss e
+# recalculadas do zero, em vez de reaproveitar um (p,d,q) achado sob a lógica
+# antiga pra sempre, silenciosamente.
+VERSAO_ORDEM_ML=2
+
+def _melhor_ordem_arima(s,max_p=2,max_q=2,d=None):
+    """Busca leve de ordem (p,d,q) pro ARIMA, por AIC — testa uma grade pequena
+    (até (max_p+1)×(max_q+1) combinações). `d` (grau de diferenciação) é
+    descoberto pelo próprio ADF em vez de fixo: testa a série crua, e se o ADF
+    não rejeitar não-estacionariedade (p-valor>=0.05), testa a série
+    diferenciada 1x, e se ainda não estacionária, vai pra d=2 (teto padrão em
+    séries financeiras mensais). Fallback pra (1,1,1) se nada convergir."""
+    if d is None:
+        d=0
+        _s_teste=s
+        for _ in range(2):
+            try:
+                if adfuller(_s_teste.dropna())[1]<0.05:
+                    break
+            except Exception:
+                break
+            _s_teste=_s_teste.diff()
+            d+=1
+    melhor_aic=float("inf")
+    melhor_ordem=(1,d,1)
+    for p in range(max_p+1):
+        for q in range(max_q+1):
+            if p==0 and q==0: continue
+            try:
+                res=ARIMA(s,order=(p,d,q)).fit()
+                if res.aic<melhor_aic:
+                    melhor_aic=res.aic
+                    melhor_ordem=(p,d,q)
+            except Exception:
+                continue
+    return melhor_ordem
+
+def _melhor_ordem_sarimax(s,ordem_fixa=(1,1,1),max_P=1,max_Q=1,D=None,m=12):
+    """Mesma ideia do ARIMA, só que pra parte SAZONAL do SARIMAX — testa uma
+    grade pequena de (P,D,Q,m), mantendo a parte não-sazonal fixa em (1,1,1)
+    pra não explodir o número de combinações. `D` (diferenciação sazonal) é
+    descoberto pelo ADF em vez de fixo: testa a série crua, e se o ADF não
+    rejeitar não-estacionariedade sazonal (p-valor>=0.05), testa a série
+    diferenciada 1x no período sazonal (m meses), e se ainda não estacionária,
+    vai pra D=2 (teto padrão). Fallback pra (1,1,1,12) se nada convergir."""
+    if D is None:
+        D=0
+        _s_teste=s
+        for _ in range(2):
+            _s_teste_valido=_s_teste.dropna()
+            if len(_s_teste_valido)<2*m:
+                # Não sobra dado suficiente pra um teste ADF confiável depois
+                # de diferenciar sazonalmente de novo (regra prática: pelo
+                # menos 2 ciclos sazonais completos) — para aqui, com o D já
+                # descoberto até agora, em vez de arriscar um adfuller() com
+                # dado degenerado demais pra funcionar direito.
+                break
+            try:
+                if adfuller(_s_teste_valido)[1]<0.05:
+                    break
+            except Exception:
+                break
+            _s_teste=_s_teste.diff(m)
+            D+=1
+    melhor_aic=float("inf")
+    melhor_ordem_sazonal=(1,D,1,m)
+    for P in range(max_P+1):
+        for Q in range(max_Q+1):
+            if P==0 and Q==0: continue
+            try:
+                res=SARIMAX(s,order=ordem_fixa,seasonal_order=(P,D,Q,m)).fit(disp=False)
+                if res.aic<melhor_aic:
+                    melhor_aic=res.aic
+                    melhor_ordem_sazonal=(P,D,Q,m)
+            except Exception:
+                continue
+    return melhor_ordem_sazonal
+
+def treinar_com_ordem(serie,modelo,n=6,buscar_ordem=False,ordem_sugerida=None,normalizar_arima=False):
+    """Como treinar(), mas devolve também a ordem (p,d,q)/(P,D,Q,m) usada
+    quando o modelo é ARIMA/SARIMAX — só chamada na previsão FINAL (depois que
+    o modelo já venceu a disputa), pra poder cachear a ordem descoberta e
+    reaproveitar na PRÓXIMA execução (ver ordens_cache em
+    escolher_modelo_e_prever). Se ordem_sugerida vier preenchida (cache de uma
+    execução anterior pra esse produto), usa ela direto — sem repetir a busca
+    inteira. normalizar_arima (opcional, desligado por padrão): estabiliza o
+    ajuste do ARIMA em séries de valor grande (dividindo pela média antes,
+    multiplicando de volta depois) — não muda a matemática do modelo, só a
+    estabilidade numérica do otimizador. Retorna (previsao, ordem_usada_ou_None)."""
+    s=pd.to_numeric(serie,errors="coerce").dropna()
+    if modelo=="ARIMA" and STATS_OK and len(s)>=6:
+        try:
+            _escala_ordem=1.0
+            _s_ordem=s
+            if normalizar_arima and s.mean()!=0:
+                _escala_ordem=s.mean()
+                _s_ordem=s/_escala_ordem
+            _ordem=tuple(ordem_sugerida) if ordem_sugerida else (_melhor_ordem_arima(_s_ordem) if buscar_ordem else (1,1,1))
+            _prev_ordem=ARIMA(_s_ordem,order=_ordem).fit().forecast(n)
+            return (_prev_ordem*_escala_ordem if _escala_ordem!=1.0 else _prev_ordem), list(_ordem)
+        except Exception:
+            pass
+    if modelo=="SARIMAX" and STATS_OK and len(s)>=18:
+        try:
+            _ordem_saz=tuple(ordem_sugerida) if ordem_sugerida else (_melhor_ordem_sarimax(s) if buscar_ordem else (1,1,1,12))
+            return SARIMAX(s,order=(1,1,1),seasonal_order=_ordem_saz).fit(disp=False).forecast(n), list(_ordem_saz)
+        except Exception:
+            pass
+    return treinar(serie,modelo,n,buscar_ordem=buscar_ordem,normalizar_arima=normalizar_arima), None
+
+def treinar(serie,modelo,n=6,buscar_ordem=False,normalizar_arima=False):
     try:
         s=pd.to_numeric(serie,errors="coerce").dropna()
         if len(s)<6: return None
+        # Normalização OPCIONAL (desligada por padrão — comercial nunca muda).
+        # Números grandes (contas financeiras, R$ centenas de milhares+) podem
+        # gerar instabilidade numérica no otimizador do ARIMA — dividir pela
+        # média antes de treinar, multiplicar de volta depois, resolve isso
+        # sem mudar a matemática do modelo (ARIMA é linear).
+        _escala_arima=1.0
+        if normalizar_arima and modelo=="ARIMA" and s.mean()!=0:
+            _escala_arima=s.mean()
+            s=s/_escala_arima
         if modelo=="ARIMA" and STATS_OK:
-            return ARIMA(s,order=(1,1,1)).fit().forecast(n)
+            # A busca de ordem (Fase 5) só compensa o custo na previsão FINAL, do
+            # modelo que já venceu a disputa — buscar durante a disputa em si
+            # (melhor_modelo_multi_janela testa cada candidato em 3 janelas)
+            # multiplicava o custo por ~9x sem necessidade, já que a maioria dos
+            # candidatos nem vence. buscar_ordem=False (padrão) usa (1,1,1),
+            # rápido, igual antes da Fase 5 — só liga a busca quando pedido.
+            _ordem_arima=_melhor_ordem_arima(s) if buscar_ordem else (1,1,1)
+            _previsao_arima=ARIMA(s,order=_ordem_arima).fit().forecast(n)
+            return _previsao_arima*_escala_arima if _escala_arima!=1.0 else _previsao_arima
         if modelo=="SARIMAX" and STATS_OK and len(s)>=18:
-            return SARIMAX(s,order=(1,1,1),seasonal_order=(1,1,1,12)).fit(disp=False).forecast(n)
+            _ordem_sazonal_sarimax=_melhor_ordem_sarimax(s) if buscar_ordem else (1,1,1,12)
+            return SARIMAX(s,order=(1,1,1),seasonal_order=_ordem_sazonal_sarimax).fit(disp=False).forecast(n)
         if modelo=="ExponentialSmoothing" and STATS_OK:
             kw={"trend":"add","damped_trend":True}
             if len(s)>=18: kw.update({"seasonal":"add","seasonal_periods":12})
@@ -1912,10 +2241,13 @@ def treinar(serie,modelo,n=6):
             modelos_base=[m for m,ok in MODELOS_ML.items() if ok and m!="Ensemble"]
             proj_ens,_=ensemble_forecast(s,modelos_base,n)
             return proj_ens
-        if modelo=="Prophet" and PROPHET_OK:
-            # Usa as datas REAIS da série (não "hoje") — importante principalmente no
-            # backtest, onde a série treinada termina 6 meses antes do fim de verdade;
-            # usar "hoje" bagunçava a sazonalidade que o Prophet tenta calcular.
+        if modelo=="Prophet" and PROPHET_OK and len(s)>=18:
+            # Mesmo limiar de 18 meses que o SARIMAX já usa (linha acima) — antes,
+            # só a sazonalidade anual desligava com histórico curto, mas o Prophet
+            # continuava treinando o modelo inteiro (caro: changepoint + otimização)
+            # mesmo sabendo, pelo próprio comentário abaixo, que costuma perder pros
+            # outros modelos nesse caso. Pular o treino inteiro economiza tempo sem
+            # mudar quem vence — ele já perdia de qualquer jeito.
             if isinstance(s.index,pd.DatetimeIndex) and len(s.index)==len(s):
                 idx=s.index
             else:
@@ -1927,11 +2259,380 @@ def treinar(serie,modelo,n=6):
             # compete de forma justa independente do tamanho do histórico disponível.
             _dias_hist_p=(idx.max()-idx.min()).days if len(idx)>1 else 0
             _sazonal_anual_p=_dias_hist_p>=548  # ~18 meses, mesmo limiar dos outros modelos sazonais
-            m=Prophet(changepoint_prior_scale=0.01,yearly_seasonality=_sazonal_anual_p); m.fit(df_p)
+            m=Prophet(changepoint_prior_scale=0.01,yearly_seasonality=_sazonal_anual_p); m.fit(df_p,seed=42)
             fut=m.make_future_dataframe(periods=n,freq="MS"); fc=m.predict(fut)
             return pd.Series(fc["yhat"].tail(n).values)
-    except: pass
-    return None
+    except Exception as _e_treinar:
+        import streamlit as _st_debug
+        if "_ultimo_erro_treinar" not in _st_debug.session_state:
+            _st_debug.session_state["_ultimo_erro_treinar"]={}
+        _st_debug.session_state["_ultimo_erro_treinar"][modelo]=f"{type(_e_treinar).__name__}: {_e_treinar}"
+
+
+def obter_p10_p50_p90_arrays(serie_treino, modelo_nome, n=6):
+    """Mesma lógica de calcular_fator_risco_intervalo_nativo, mas devolve os
+    3 arrays brutos (P10, P50, P90) mês a mês — usado pra checar CALIBRAÇÃO
+    (será que o P90 realmente cobre ~90% dos casos reais, olhando pra trás?),
+    não só pra calcular um fator médio de proteção."""
+    try:
+        s=pd.to_numeric(serie_treino,errors="coerce").dropna()
+        if modelo_nome=="ARIMA" and STATS_OK and len(s)>=6:
+            _fc=ARIMA(s,order=(1,1,1)).fit().get_forecast(n)
+            _p50=_fc.predicted_mean.values
+            _ci=_fc.conf_int(alpha=0.20)
+            _p10=_ci.iloc[:,0].values; _p90=_ci.iloc[:,1].values
+        elif modelo_nome=="SARIMAX" and STATS_OK and len(s)>=18:
+            _fc=SARIMAX(s,order=(1,1,1),seasonal_order=(1,1,1,12)).fit(disp=False).get_forecast(n)
+            _p50=_fc.predicted_mean.values
+            _ci=_fc.conf_int(alpha=0.20)
+            _p10=_ci.iloc[:,0].values; _p90=_ci.iloc[:,1].values
+        elif modelo_nome=="Prophet" and PROPHET_OK and len(s)>=18:
+            idx=s.index if isinstance(s.index,pd.DatetimeIndex) else pd.date_range(end=pd.Timestamp.now(),periods=len(s),freq="MS")
+            df_p=pd.DataFrame({"ds":idx,"y":s.values})
+            m=Prophet(changepoint_prior_scale=0.01,interval_width=0.80); m.fit(df_p,seed=42)
+            fc=m.predict(m.make_future_dataframe(periods=n,freq="MS")).tail(n)
+            _p50=fc["yhat"].values; _p10=fc["yhat_lower"].values; _p90=fc["yhat_upper"].values
+        elif modelo_nome in ("ExponentialSmoothing","Holt") and STATS_OK:
+            _modelo_ajustado=ExponentialSmoothing(s,trend="add" if modelo_nome=="Holt" else None,
+                seasonal=None).fit() if modelo_nome=="ExponentialSmoothing" else Holt(s).fit()
+            _fitted=_modelo_ajustado.fittedvalues
+            _residuos=(s.values-_fitted.values)
+            _std_residuo=float(np.std(_residuos)) if len(_residuos)>1 else 0.0
+            _p50=_modelo_ajustado.forecast(n).values
+            _p10=_p50-1.2816*_std_residuo
+            _p90=_p50+1.2816*_std_residuo
+        else:
+            return None,None,None
+        return _p10,_p50,_p90
+    except Exception:
+        return None,None,None
+
+def calcular_fator_risco_intervalo_nativo(serie_treino, modelo_nome, n=6):
+    """Quantile Forecasting inspirado em CONFORMAL PREDICTION (Vovk,
+    Gammerman & Shafer, 2005; Lei et al., 2018, "Distribution-Free
+    Predictive Inference for Regression", JASA) — usa o erro REAL
+    observado (walk-forward), em vez da suposição interna de cada modelo
+    (normalidade, homocedasticidade), que testamos e confirmamos ser
+    inadequada aqui (painel "Calibração do Intervalo": Prophet cobria só
+    38% do prometido, ARIMA 60%, nenhum bateu os 90% nominais).
+
+    Mecânica: retreina o modelo em 3 cortes ANTERIORES dentro do próprio
+    histórico de treino (walk-forward), mede o erro real (Real−Previsto)
+    em cada um. Usa o percentil 90 desses erros REAIS — não uma suposição
+    teórica — como a distância entre o Previsto e P90/P10.
+
+    IMPORTANTE (não superestimar): isso é um mecanismo de RECALIBRAÇÃO
+    empírica, inspirado no princípio conformal — não uma implementação
+    com garantia formal de cobertura exata. A literatura clássica de
+    Conformal Prediction assume exchangeability (trocabilidade) entre
+    observações, premissa que séries temporais violam por definição
+    (dependência temporal, possível mudança de distribuição ao longo do
+    tempo). A cobertura reportada no painel "Calibração do Intervalo" é
+    EMPÍRICA (medida, não garantida a priori) — é ela que sustenta a
+    confiança no método, não uma prova formal de cobertura.
+
+    Retorna (fator_upside, fator_downside), None se não houver histórico
+    suficiente pra pelo menos 2 cortes de calibração."""
+    try:
+        s=pd.to_numeric(serie_treino,errors="coerce").dropna()
+        if len(s)<14: return None,None
+
+        _residuos_pct=[]
+        _n_cortes_calib=3
+        for _i_corte in range(_n_cortes_calib,0,-1):
+            _corte_idx=len(s)-6-_i_corte*3
+            if _corte_idx<8: continue
+            _treino_calib=s.iloc[:_corte_idx]
+            _real_calib=s.iloc[_corte_idx:_corte_idx+6]
+            if len(_real_calib)==0: continue
+            try:
+                _prev_calib=treinar(_treino_calib,modelo_nome,len(_real_calib))
+            except Exception:
+                _prev_calib=None
+            if _prev_calib is None: continue
+            for _r,_p in zip(_real_calib.values,list(_prev_calib)):
+                if _p>0: _residuos_pct.append((_r-_p)/_p)
+
+        if len(_residuos_pct)<4: return None,None
+
+        _pos=[r for r in _residuos_pct if r>0]
+        _neg=[abs(r) for r in _residuos_pct if r<0]
+        _banda_up=float(np.percentile(_pos,90)) if len(_pos)>=2 else (float(np.percentile(_residuos_pct,90)) if _residuos_pct else 0.0)
+        _banda_down=float(np.percentile(_neg,90)) if len(_neg)>=2 else 0.0
+
+        _fator_up=max(0.7,min(2.0,1.0+_banda_up))
+        _fator_down=max(0.0,min(1.0,1.0-_banda_down))
+        return _fator_up,_fator_down
+    except Exception:
+        return None,None
+
+def calcular_fator_risco_produto(serie_completa, modelo_nome, corte_atual, janelas=(12,18,24), horizonte_teste=6,
+                                   previsoes_lgbm_por_corte=None, produto=None):
+    """Fator de risco por produto (P90 ÷ Previsto), calculado em cima do erro
+    REAL do backtest — não é margem arbitrária. Testa múltiplas janelas
+    (12/18/24 meses antes do corte atual), reaproveitando a MESMA lógica de
+    treino já usada na Validação (mesmo modelo, mesmo horizonte de 6 meses),
+    só que guardando cada razão Real÷Previsto individual em vez de resumir
+    tudo num WAPE médio.
+
+    Produto previsível (erros sempre perto de 1.0) → fator perto de 1.0,
+    quase não muda a compra de hoje. Produto instável (erros variam muito
+    pra cima) → fator bem acima de 1.0, folga extra justificada por dado real.
+
+    Fator sempre entre 0.7 e 2.0 — sem isso, 1-2 outliers no backtest de um
+    produto com histórico curto poderiam gerar um fator absurdo (tipo 5x),
+    por ruído, não por risco real.
+
+    `previsoes_lgbm_por_corte` (opcional): dict {corte_str: {produto: array}}
+    — necessário quando modelo_nome=="LightGBM (pooled)", já que esse modelo
+    não treina sozinho por produto (precisa ser treinado em pool, ANTES,
+    pelo chamador, um pool por corte usado aqui). `produto` é a chave pra
+    buscar dentro desse dict.
+
+    Retorna None se não houver amostra suficiente (menos de 6 razões
+    coletadas no total, somando as janelas) — nesse caso, o chamador deve
+    usar a política uniforme de hoje, sem fator nenhum."""
+    razoes=[]
+    _corte_periodo_atual=pd.Period(corte_atual,freq="M")
+    for janela in janelas:
+        _corte_desc=_corte_periodo_atual-janela
+        _corte_desc_str=str(_corte_desc)
+        _corte_desc_ts=_corte_desc.to_timestamp(how="end").normalize()
+        serie_treino=serie_completa[serie_completa.index<=_corte_desc_ts]
+        if len(serie_treino)<8:
+            continue
+        if modelo_nome=="LightGBM (pooled)":
+            if previsoes_lgbm_por_corte is None or produto is None:
+                continue
+            proj=previsoes_lgbm_por_corte.get(_corte_desc_str,{}).get(produto)
+        else:
+            try:
+                proj=treinar(serie_treino,modelo_nome,horizonte_teste)
+            except Exception:
+                proj=None
+        if proj is None:
+            continue
+        serie_real_pos=serie_completa[serie_completa.index>_corte_desc_ts].head(horizonte_teste)
+        reais=serie_real_pos.tolist()
+        proj_lista=list(proj)[:len(reais)]
+        for p,r in zip(proj_lista,reais):
+            if p>0 and r>=0:
+                razoes.append(r/p)
+
+    if len(razoes)<6:
+        return None
+
+    p90=float(np.percentile(razoes,90))
+    fator=max(0.7,min(2.0,p90))
+    return fator
+
+def simular_fator_risco_economico(serie_completa, corte, horizonte_meses, estoque_inicial,
+                                    preco_venda, custo_unit, min_dias, max_dias, modelo_nome, fator_risco,
+                                    proj_modelo_pronta=None, fator_downside=None):
+    """Testa o Fator de Risco em R$ ANTES de deixar aplicar de verdade — mesma
+    disciplina da Validação Econômica de ontem, só que a pergunta agora é
+    outra: "vale a pena refinar a margem de segurança (max_dias × fator),
+    comparado à política uniforme de hoje?" — não é mais Modelo vs Naive, é
+    a MESMA previsão do modelo nos dois cenários, só a margem que muda.
+
+    Fase 1 (decisão): gera eventos de compra duas vezes — uma com max_dias
+    puro (política atual), outra com max_dias×fator_risco (proposta nova).
+    Fase 2 (avaliação): aplica cada conjunto de eventos contra a demanda REAL
+    que já aconteceu — nunca re-decide nada na Fase 2, mesmo princípio de ontem.
+
+    LIMITAÇÃO METODOLÓGICA (importante pra documento acadêmico): a demanda
+    mensal prevista é distribuída em consumo DIÁRIO UNIFORME (valor_mes/30),
+    não a distribuição real dia-a-dia (que tem picos, vales, fins de semana,
+    sazonalidade intra-mês). O resultado em R$ é, portanto, uma SIMULAÇÃO sob
+    essa premissa simplificadora — não uma reconstrução da economia
+    REALIZADA de fato. É uma aproximação razoável pra comparar políticas
+    entre si (o viés da uniformização afeta os dois cenários testados de
+    forma parecida, então a COMPARAÇÃO relativa entre eles tende a ser mais
+    robusta que o valor absoluto isolado) — mas não deve ser apresentada como
+    "economia real obtida", e sim como "economia estimada, sob simulação com
+    consumo diário uniformizado".
+
+    Retorna None se não houver meses reais suficientes pra avaliar, ou se a
+    previsão do modelo falhar."""
+    _corte_ts=pd.Period(corte,freq="M").to_timestamp(how="end").normalize()
+    serie_treino=serie_completa[serie_completa.index<=_corte_ts]
+    serie_real_pos=serie_completa[serie_completa.index>_corte_ts].head(horizonte_meses)
+    if len(serie_real_pos)==0 or len(serie_treino)<3:
+        return None
+
+    if proj_modelo_pronta is not None:
+        proj_modelo=proj_modelo_pronta
+    else:
+        proj_modelo=treinar(serie_treino,modelo_nome,horizonte_meses)
+    if proj_modelo is None:
+        return None
+    proj_modelo=pd.Series(proj_modelo)
+
+    def _gerar_eventos_compra(max_dias_usar,min_dias_usar=None):
+        _min_usar=min_dias_usar if min_dias_usar is not None else min_dias
+        estoque_sim=estoque_inicial
+        eventos=[]
+        total_dias=horizonte_meses*30
+        for dia in range(total_dias):
+            mes_idx=min(dia//30,horizonte_meses-1)
+            if mes_idx>=len(proj_modelo): break
+            valor_mes=max(0.0,float(proj_modelo.iloc[mes_idx]))
+            demanda_unid_dia=(valor_mes/preco_venda/30) if preco_venda>0 else 0
+            if demanda_unid_dia<=0: continue
+            estoque_sim-=demanda_unid_dia
+            cobertura=safe(max(estoque_sim,0),demanda_unid_dia,999)
+            if estoque_sim<=0 or cobertura<_min_usar:
+                qtd=max(0.0,(max_dias_usar*demanda_unid_dia)-max(estoque_sim,0))
+                if qtd>0:
+                    eventos.append((dia,qtd))
+                    estoque_sim+=qtd
+        return eventos
+
+    def _avaliar_com_demanda_real(eventos):
+        estoque_sim=estoque_inicial
+        eventos_por_dia={}
+        for dia,qtd in eventos:
+            eventos_por_dia[dia]=eventos_por_dia.get(dia,0)+qtd
+        receita_perdida=0.0
+        soma_estoque_parado=0.0
+        total_dias=horizonte_meses*30
+        _dias_computados=0
+        for dia in range(total_dias):
+            mes_idx=min(dia//30,horizonte_meses-1)
+            if mes_idx>=len(serie_real_pos): break
+            valor_mes_real=max(0.0,float(serie_real_pos.iloc[mes_idx]))
+            demanda_unid_dia_real=(valor_mes_real/preco_venda/30) if preco_venda>0 else 0
+            if dia in eventos_por_dia:
+                estoque_sim+=eventos_por_dia[dia]
+            if demanda_unid_dia_real>estoque_sim:
+                receita_perdida+=(demanda_unid_dia_real-estoque_sim)*preco_venda
+                estoque_sim=0
+            else:
+                estoque_sim-=demanda_unid_dia_real
+            soma_estoque_parado+=max(0.0,estoque_sim)
+            _dias_computados+=1
+        capital_parado=(soma_estoque_parado/_dias_computados if _dias_computados>0 else 0.0)*custo_unit
+        return receita_perdida,capital_parado
+
+    # Downside entra na SIMULAÇÃO de verdade agora — testa o Mínimo reduzido
+    # junto com o Máximo aumentado, exatamente a combinação que "Aplicar
+    # seleção" realmente aplica. Sem isso, a economia mostrada não refletia
+    # o efeito real do downside, só um resíduo dele aparecendo de raspão.
+    _min_dias_com_fator=max(1,round(min_dias*fator_downside)) if fator_downside is not None and fator_downside<1.0 else min_dias
+    eventos_atual=_gerar_eventos_compra(max_dias)
+    eventos_com_fator=_gerar_eventos_compra(max_dias*fator_risco,min_dias_usar=_min_dias_com_fator)
+    receita_perdida_atual,capital_parado_atual=_avaliar_com_demanda_real(eventos_atual)
+    receita_perdida_fator,capital_parado_fator=_avaliar_com_demanda_real(eventos_com_fator)
+
+    return {
+        "custo_total_atual":receita_perdida_atual+capital_parado_atual,
+        "custo_total_com_fator":receita_perdida_fator+capital_parado_fator,
+        "receita_perdida_atual":receita_perdida_atual,
+        "capital_parado_atual":capital_parado_atual,
+        "receita_perdida_fator":receita_perdida_fator,
+        "capital_parado_fator":capital_parado_fator,
+    }
+
+def simular_decisao_compra_economica(serie_completa, corte, horizonte_meses, estoque_inicial,
+                                       preco_venda, custo_unit, min_dias, max_dias, modelo_nome,
+                                       proj_modelo_pronta=None):
+    """Validação ECONÔMICA (não estatística) do Motor de Compras — usa a MESMA
+    lógica de decisão já existente (estoque simulado dia a dia, evento de
+    compra quando cobertura cai abaixo do mínimo) pra comparar, em R$ real:
+    a decisão que o MODELO teria tomado vs a decisão de um NAIVE simples
+    (média móvel 3 meses), ambas avaliadas contra a demanda REAL que já
+    aconteceu depois do corte (não contra a previsão de novo).
+
+    Fase 1 (decisão): usa a previsão (modelo ou naive) pra decidir QUANDO e
+    QUANTO comprar — código idêntico ao "Rodar Motor de Compras".
+    Fase 2 (avaliação): aplica os MESMOS eventos de compra já decididos, mas
+    deplete o estoque com a demanda REAL — nunca re-decide nada na Fase 2.
+
+    Retorna None se não houver meses reais suficientes depois do corte pra
+    avaliar, ou se a previsão do modelo falhar."""
+    # serie_mensal_produto() (comercial) devolve índice de Timestamp, não de
+    # Período — diferente do financeiro. Compara em Timestamp aqui.
+    _corte_ts=pd.Period(corte,freq="M").to_timestamp(how="end").normalize()
+    serie_treino=serie_completa[serie_completa.index<=_corte_ts]
+    serie_real_pos=serie_completa[serie_completa.index>_corte_ts].head(horizonte_meses)
+    if len(serie_real_pos)==0 or len(serie_treino)<3:
+        return None
+
+    if proj_modelo_pronta is not None:
+        proj_modelo=proj_modelo_pronta
+    else:
+        proj_modelo=treinar(serie_treino,modelo_nome,horizonte_meses)
+    if proj_modelo is None:
+        return None
+    proj_modelo=pd.Series(proj_modelo)
+
+    _naive_valor=float(serie_treino.tail(3).mean()) if len(serie_treino)>=3 else float(serie_treino.mean())
+    proj_naive=pd.Series([_naive_valor]*horizonte_meses)
+
+    def _gerar_eventos_compra(proj_horizonte):
+        estoque_sim=estoque_inicial
+        eventos=[]
+        total_dias=horizonte_meses*30
+        for dia in range(total_dias):
+            mes_idx=min(dia//30,horizonte_meses-1)
+            if mes_idx>=len(proj_horizonte): break
+            valor_mes=max(0.0,float(proj_horizonte.iloc[mes_idx]))
+            demanda_unid_dia=(valor_mes/preco_venda/30) if preco_venda>0 else 0
+            if demanda_unid_dia<=0: continue
+            estoque_sim-=demanda_unid_dia
+            cobertura=safe(max(estoque_sim,0),demanda_unid_dia,999)
+            if estoque_sim<=0 or cobertura<min_dias:
+                qtd=max(0.0,(max_dias*demanda_unid_dia)-max(estoque_sim,0))
+                if qtd>0:
+                    eventos.append((dia,qtd))
+                    estoque_sim+=qtd
+        return eventos
+
+    def _avaliar_com_demanda_real(eventos):
+        estoque_sim=estoque_inicial
+        eventos_por_dia={}
+        for dia,qtd in eventos:
+            eventos_por_dia[dia]=eventos_por_dia.get(dia,0)+qtd
+        receita_perdida=0.0
+        soma_estoque_parado=0.0  # capital parado = MÉDIA ao longo do período,
+        # não só o saldo do último dia — sem isso, compra antecipada (pra um
+        # pico que só chegaria depois do fim da janela testada) era penalizada
+        # como se fosse desperdício, mesmo quando o estoque girou normalmente
+        # durante o resto do período.
+        total_dias=horizonte_meses*30
+        _dias_computados=0
+        for dia in range(total_dias):
+            mes_idx=min(dia//30,horizonte_meses-1)
+            if mes_idx>=len(serie_real_pos): break
+            valor_mes_real=max(0.0,float(serie_real_pos.iloc[mes_idx]))
+            demanda_unid_dia_real=(valor_mes_real/preco_venda/30) if preco_venda>0 else 0
+            if dia in eventos_por_dia:
+                estoque_sim+=eventos_por_dia[dia]
+            if demanda_unid_dia_real>estoque_sim:
+                receita_perdida+=(demanda_unid_dia_real-estoque_sim)*preco_venda
+                estoque_sim=0
+            else:
+                estoque_sim-=demanda_unid_dia_real
+            soma_estoque_parado+=max(0.0,estoque_sim)
+            _dias_computados+=1
+        capital_parado=(soma_estoque_parado/_dias_computados if _dias_computados>0 else 0.0)*custo_unit
+        return receita_perdida,capital_parado
+
+    eventos_modelo=_gerar_eventos_compra(proj_modelo)
+    eventos_naive=_gerar_eventos_compra(proj_naive)
+    receita_perdida_modelo,capital_parado_modelo=_avaliar_com_demanda_real(eventos_modelo)
+    receita_perdida_naive,capital_parado_naive=_avaliar_com_demanda_real(eventos_naive)
+
+    return {
+        "custo_total_modelo":receita_perdida_modelo+capital_parado_modelo,
+        "custo_total_naive":receita_perdida_naive+capital_parado_naive,
+        "receita_perdida_modelo":receita_perdida_modelo,
+        "capital_parado_modelo":capital_parado_modelo,
+        "receita_perdida_naive":receita_perdida_naive,
+        "capital_parado_naive":capital_parado_naive,
+        "n_compras_modelo":len(eventos_modelo),
+        "n_compras_naive":len(eventos_naive),
+    }
 
 def treinar_backtest(serie,modelo,timeout_s=10,offset_meses=0):
     """Treina escondendo uma janela de 6 meses e devolve (mse, previsao, real)
@@ -1967,20 +2668,149 @@ def melhor_modelo_multi_janela(serie,modelos,n_janelas=3,tamanho_janela=6):
     períodos diferentes (a mais recente, depois a anterior a essa, etc.) e usa
     a MÉDIA do erro entre as janelas onde o modelo conseguiu rodar. Modelos que
     não conseguem rodar em nenhuma janela ficam de fora. Retorna
-    (nome_do_modelo_vencedor, dict com o erro médio de cada modelo testado)."""
+    (nome_do_modelo_vencedor, dict com o erro médio de cada modelo testado).
+
+    Critério de escolha: WAPE (mesma métrica usada no resto do sistema pra
+    reportar e comparar resultado). Testei trocar por MASE (erro ÷ erro de
+    "repetir o mês anterior", medido no treino) pra tentar evitar o WAPE
+    explodir quando o período testado vende perto de zero — mas testado
+    empiricamente em base real, o MASE piorou o resultado agregado em vez de
+    melhorar (inclusive nos produtos com meses zerados, que era o caso que se
+    queria proteger). Revertido pra WAPE, que segue validado como a opção
+    melhor sustentada por teste real.
+
+    NOTA METODOLÓGICA (ARIMA/SARIMAX): treinar_backtest(), chamado abaixo, usa
+    ordem FIXA (1,1,1) pra ARIMA/SARIMAX durante essa disputa — não busca a
+    melhor ordem (via AIC) pra cada candidato dentro de cada janela. A busca de
+    ordem só acontece DEPOIS, uma vez, só pro modelo que já venceu aqui, na
+    hora de gerar a previsão final (ver escolher_modelo_e_prever /
+    treinar_com_ordem). Ou seja: o que essa função valida é a FAMÍLIA do
+    modelo (ARIMA/SARIMAX com configuração padrão) contra as outras famílias
+    — não valida a configuração exata (ordem otimizada) que efetivamente vai
+    gerar a previsão final. É uma escolha consciente de custo computacional
+    (buscar ordem em cada candidato, em cada janela, seria caro), mas não deve
+    ser descrita como "cada candidato testado já na sua configuração ótima"
+    em documento acadêmico — o correto é "a família do modelo é validada
+    multi-janela; a configuração fina (ordem) é otimizada depois, só pro
+    vencedor"."""
     modelos_base=[m for m in modelos if m!="Ensemble"]
     medias={}
     for m in modelos_base:
         erros_m=[]
         for _janela_idx in range(n_janelas):
             _offset=_janela_idx*tamanho_janela
-            mse,_,_=treinar_backtest(serie,m,offset_meses=_offset)
-            if mse<float("inf"):
-                erros_m.append(mse)
+            _,prev,real=treinar_backtest(serie,m,offset_meses=_offset)
+            if prev is not None and real is not None:
+                _soma_real=float(np.sum(np.abs(real)))
+                if _soma_real>0:
+                    _wape=float(np.sum(np.abs(np.array(prev)-np.array(real))))/_soma_real
+                    erros_m.append(_wape)
         if erros_m:
             medias[m]=sum(erros_m)/len(erros_m)
     if not medias: return "Média Móvel",medias
     return min(medias,key=medias.get),medias
+
+def escolher_modelo_e_prever(serie, modelos_candidatos, n_prever, produto,
+                              prev_lgbm_final, prev_lgbm_bt_janelas, reais_lgbm_bt_janelas,
+                              modelo_reaproveitado=None, ordens_cache=None,
+                              n_janelas_disputa=3, tamanho_janela_disputa=6,
+                              normalizar_arima=False):
+    """ÚNICO lugar do sistema que decide qual modelo vence pra um produto
+    (clássico multi-janela vs LightGBM pooled) e gera a previsão final. Usado
+    tanto por "Rodar Validação" quanto por "Rodar Cenário" — propositalmente a
+    MESMA função nos dois lugares, pra garantir que as duas telas SEMPRE
+    decidem de forma idêntica.
+
+    serie: série mensal do produto (já com correção de preço aplicada).
+    modelos_candidatos: modelos clássicos elegíveis (já filtrado Croston/TSB
+        por intermitência).
+    n_prever: quantos meses prever pra frente na previsão FINAL reportada.
+    produto: chave do produto nos dicionários de LightGBM abaixo.
+    prev_lgbm_final: {produto: array} — LightGBM treinado com o histórico
+        completo disponível; essa previsão só é usada se ele vencer o teste cego.
+    prev_lgbm_bt_janelas: LISTA de dicts {produto: array} — LightGBM testado em
+        VÁRIAS janelas cegas (mesmo esquema multi-janela dos modelos clássicos,
+        não só uma), pra não escolher LightGBM por sorte numa janela só.
+    reais_lgbm_bt_janelas: LISTA de dicts {produto: lista} — valores reais de
+        cada uma dessas janelas escondidas, na mesma ordem.
+    modelo_reaproveitado: se um escopo já validado escolheu modelo pra esse
+        produto, pula a disputa clássica e usa esse direto (ainda testa contra
+        o LightGBM, do mesmo jeito).
+    n_janelas_disputa/tamanho_janela_disputa: tamanho da disputa multi-janela
+        entre os modelos clássicos. Valores padrão (3 janelas de 6 meses) são
+        os mesmos de sempre — comercial nunca passa esses argumentos, então
+        nunca muda de comportamento. Existe pra telas com histórico mais curto
+        (financeiro, por enquanto) poderem pedir uma disputa menor em vez de
+        falhar silenciosamente por falta de dado pra 3 janelas de 6 meses.
+
+    Retorna (nome_modelo_vencedor, previsao_array_ou_None, rank_dict).
+    """
+    if modelo_reaproveitado:
+        melhor=modelo_reaproveitado
+        rank={}
+    else:
+        melhor,rank=melhor_modelo_multi_janela(serie,modelos_candidatos,
+            n_janelas=n_janelas_disputa,tamanho_janela=tamanho_janela_disputa)
+
+    proj=None
+
+    # Reaproveitado como LightGBM especificamente: busca a previsão dele DIRETO,
+    # sem depender do teste cego (mais embaixo) ter dado válido pra esse produto.
+    # Reaproveitar SIGNIFICA que já confiamos nesse modelo — não devia precisar
+    # revalidar de novo pra simplesmente usar a previsão. Sem isso, quando o
+    # teste cego não tem dado suficiente pra esse produto específico, o código
+    # caía tentando ajustar "LightGBM (pooled)" como se fosse nome de modelo
+    # clássico (não é), produzindo um resultado errado sem avisar.
+    if modelo_reaproveitado=="LightGBM (pooled)" and produto in prev_lgbm_final:
+        proj=np.array(prev_lgbm_final[produto][:n_prever])
+        return melhor,proj,rank
+
+    _wapes_lgbm=[]
+    for _prev_bt_j,_reais_bt_j in zip(prev_lgbm_bt_janelas,reais_lgbm_bt_janelas):
+        if produto in _prev_bt_j and produto in _reais_bt_j:
+            reais_bt=_reais_bt_j[produto]
+            prev_bt=_prev_bt_j[produto][:len(reais_bt)]
+            if len(reais_bt)>0 and len(prev_bt)==len(reais_bt):
+                _soma_real_bt=float(np.sum(np.abs(reais_bt)))
+                if _soma_real_bt>0:
+                    _wapes_lgbm.append(float(np.sum(np.abs(np.array(prev_bt)-np.array(reais_bt))))/_soma_real_bt)
+
+    if _wapes_lgbm and produto in prev_lgbm_final:
+        wape_lgbm=sum(_wapes_lgbm)/len(_wapes_lgbm)
+        if melhor in rank:
+            wape_classico=rank[melhor]
+        else:
+            # Modelo reaproveitado -> rank veio vazio. Sem isso, cairia em
+            # infinito e o LightGBM venceria por padrão, não importa quem
+            # realmente era melhor.
+            _,prev_classico_bt,real_classico_bt=treinar_backtest(serie,melhor)
+            wape_classico=float("inf")
+            if prev_classico_bt is not None and real_classico_bt is not None:
+                _soma_real_classico=float(np.sum(np.abs(real_classico_bt)))
+                if _soma_real_classico>0:
+                    wape_classico=float(np.sum(np.abs(np.array(prev_classico_bt)-np.array(real_classico_bt))))/_soma_real_classico
+        if wape_lgbm<wape_classico:
+            melhor="LightGBM (pooled)"
+            proj=np.array(prev_lgbm_final[produto][:n_prever])
+
+    if proj is None:
+        # Reaproveita a ordem descoberta numa execução ANTERIOR pra esse mesmo
+        # produto, se o modelo vencedor continuar o mesmo E a versão da lógica
+        # de descoberta bater — só refaz a busca completa se for a primeira
+        # vez, se o vencedor mudou, ou se a lógica de d/D mudou desde que essa
+        # ordem foi salva (sinal de que o comportamento da série, ou a forma
+        # de decidir, mudou o suficiente pra merecer buscar de novo).
+        _ordem_sugerida=None
+        if ordens_cache is not None:
+            _entrada_cache=ordens_cache.get(produto)
+            if (_entrada_cache and _entrada_cache.get("modelo")==melhor
+                and _entrada_cache.get("_versao_ordem")==VERSAO_ORDEM_ML):
+                _ordem_sugerida=_entrada_cache.get("ordem")
+        proj,_ordem_usada=treinar_com_ordem(serie,melhor,n_prever,buscar_ordem=True,ordem_sugerida=_ordem_sugerida,normalizar_arima=normalizar_arima)
+        if ordens_cache is not None and _ordem_usada is not None:
+            ordens_cache[produto]={"modelo":melhor,"ordem":_ordem_usada,"_versao_ordem":VERSAO_ORDEM_ML}
+
+    return melhor,proj,rank
 
 def calcular_vies_residual_multi_janela(serie, modelo, n_janelas=3, tamanho_janela=6, limite_desvio=0.25, limite_minimo=0.02, retornar_diagnostico=False):
     """Calcula o viés sistemático (direção do erro, não só magnitude) de um
@@ -2073,7 +2903,7 @@ def melhor_modelo(serie,modelos):
     return min(validos,key=validos.get),res
 
 def treinar_lightgbm_pooled(df_treino, produto_col, data_col, metrica_col, produtos_lista, n_meses_prever,
-                             meses_pico=None, meses_promo=None, reajustes=None):
+                             meses_pico=None, meses_promo=None, reajustes=None, retornar_quantis=False):
     """Treina um único modelo LightGBM usando TODOS os produtos elegíveis juntos
     (pooled) — diferente dos outros modelos, que veem cada produto isolado. Detecta
     automaticamente colunas extras úteis (custo, markup, desconto, vendedor) se
@@ -2131,11 +2961,18 @@ def treinar_lightgbm_pooled(df_treino, produto_col, data_col, metrica_col, produ
                 return g
             mensal=mensal.groupby(produto_col,group_keys=False).apply(_aplicar_reajuste_grupo_lgbm)
 
-        feats=["lag1","lag2","lag3","media_movel3","mes_num"]
+        feats=["lag1","lag2","lag3","lag12","media_movel3","mes_num"]
         mensal["lag1"]=mensal.groupby(produto_col)[metrica_col].shift(1)
         mensal["lag2"]=mensal.groupby(produto_col)[metrica_col].shift(2)
         mensal["lag3"]=mensal.groupby(produto_col)[metrica_col].shift(3)
         mensal["media_movel3"]=mensal.groupby(produto_col)[metrica_col].shift(1).rolling(3).mean().reset_index(0,drop=True)
+        # lag12 = mesmo mês do ano passado — o sinal mais forte que existe pra
+        # sazonalidade real (Natal, Dia das Mães, etc.), que lag1/lag2/lag3
+        # sozinhos não capturam. Produto com menos de 12 meses de histórico
+        # ainda não tem esse dado — preenche com a média móvel como fallback
+        # neutro, em vez de descartar o produto inteiro do treino.
+        mensal["lag12"]=mensal.groupby(produto_col)[metrica_col].shift(12)
+        mensal["lag12"]=mensal["lag12"].fillna(mensal["media_movel3"])
         mensal["mes_num"]=mensal["_periodo_lgbm"].dt.month
         _meses_nomes_lgbm=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
         if meses_pico:
@@ -2156,40 +2993,70 @@ def treinar_lightgbm_pooled(df_treino, produto_col, data_col, metrica_col, produ
         model=lgb.LGBMRegressor(n_estimators=100,max_depth=4,verbosity=-1,random_state=42)
         model.fit(mensal_ok[feats],mensal_ok[metrica_col])
 
-        previsoes={}
-        for prod in produtos_lista:
-            hist_prod=mensal[mensal[produto_col]==prod].sort_values("_periodo_lgbm")
-            if len(hist_prod)<4: continue
-            valores=hist_prod[metrica_col].fillna(0).tolist()
-            ultimo_periodo=hist_prod["_periodo_lgbm"].max()
-            covar_atual={}
-            if _mapa_covar["custo"]: covar_atual[_mapa_covar["custo"]]=hist_prod[_mapa_covar["custo"]].iloc[-1]
-            if _mapa_covar["mkp"]: covar_atual["_mkp_num_lgbm"]=hist_prod["_mkp_num_lgbm"].iloc[-1]
-            if _mapa_covar["desconto"]: covar_atual[_mapa_covar["desconto"]]=hist_prod[_mapa_covar["desconto"]].iloc[-1]
-            if _mapa_covar["vendedor"]: covar_atual[_mapa_covar["vendedor"]]=hist_prod[_mapa_covar["vendedor"]].iloc[-1]
+        # Quantile Forecasting nativo do LightGBM — objective="quantile" treina
+        # um modelo que aprende a prever DIRETO o percentil pedido (não é
+        # aproximação por erro histórico). Só treina os 2 extras se pedido
+        # explicitamente — chamador que só quer o ponto central (todo o resto
+        # do sistema, comercial e financeiro) nem paga esse custo a mais.
+        model_p10=model_p90=None
+        if retornar_quantis:
+            model_p10=lgb.LGBMRegressor(n_estimators=100,max_depth=4,verbosity=-1,random_state=42,
+                objective="quantile",alpha=0.10)
+            model_p10.fit(mensal_ok[feats],mensal_ok[metrica_col])
+            model_p90=lgb.LGBMRegressor(n_estimators=100,max_depth=4,verbosity=-1,random_state=42,
+                objective="quantile",alpha=0.90)
+            model_p90.fit(mensal_ok[feats],mensal_ok[metrica_col])
 
-            janela=valores[-3:] if len(valores)>=3 else valores+[valores[-1]]*(3-len(valores))
-            preds=[]
-            for passo in range(n_meses_prever):
-                prox_periodo=ultimo_periodo+passo+1
-                linha={"lag1":janela[-1],"lag2":janela[-2] if len(janela)>=2 else janela[-1],
-                       "lag3":janela[-3] if len(janela)>=3 else janela[-1],
-                       "media_movel3":float(np.mean(janela[-3:])),"mes_num":prox_periodo.month}
-                if meses_pico: linha["sazonal_pico"]=1 if _meses_nomes_lgbm[prox_periodo.month-1] in meses_pico else 0
-                if meses_promo: linha["promocao"]=1 if _meses_nomes_lgbm[prox_periodo.month-1] in meses_promo else 0
-                linha.update(covar_atual)
-                try:
-                    X_pred=pd.DataFrame([linha])[feats]
-                    pred=float(model.predict(X_pred)[0])
-                except Exception:
-                    pred=janela[-1]
-                pred=max(0.0,pred)
-                preds.append(pred)
-                janela.append(pred)
-            previsoes[prod]=np.array(preds)
+        def _prever_recursivo(modelo_usar):
+            """Roda a previsão recursiva (mês a mês, usando a própria previsão
+            anterior como lag) — mesma lógica de sempre, extraída aqui pra
+            poder rodar 1x (ponto central) ou 3x (ponto + P10 + P90) sem
+            duplicar o código."""
+            _previsoes_local={}
+            for prod in produtos_lista:
+                hist_prod=mensal[mensal[produto_col]==prod].sort_values("_periodo_lgbm")
+                if len(hist_prod)<4: continue
+                valores=hist_prod[metrica_col].fillna(0).tolist()
+                ultimo_periodo=hist_prod["_periodo_lgbm"].max()
+                covar_atual={}
+                if _mapa_covar["custo"]: covar_atual[_mapa_covar["custo"]]=hist_prod[_mapa_covar["custo"]].iloc[-1]
+                if _mapa_covar["mkp"]: covar_atual["_mkp_num_lgbm"]=hist_prod["_mkp_num_lgbm"].iloc[-1]
+                if _mapa_covar["desconto"]: covar_atual[_mapa_covar["desconto"]]=hist_prod[_mapa_covar["desconto"]].iloc[-1]
+                if _mapa_covar["vendedor"]: covar_atual[_mapa_covar["vendedor"]]=hist_prod[_mapa_covar["vendedor"]].iloc[-1]
+
+                janela=valores[-3:] if len(valores)>=3 else valores+[valores[-1]]*(3-len(valores))
+                historico_completo_lgbm=list(valores)
+                preds=[]
+                for passo in range(n_meses_prever):
+                    prox_periodo=ultimo_periodo+passo+1
+                    _lag12_atual=historico_completo_lgbm[-12] if len(historico_completo_lgbm)>=12 else float(np.mean(janela[-3:]))
+                    linha={"lag1":janela[-1],"lag2":janela[-2] if len(janela)>=2 else janela[-1],
+                           "lag3":janela[-3] if len(janela)>=3 else janela[-1],
+                           "lag12":_lag12_atual,
+                           "media_movel3":float(np.mean(janela[-3:])),"mes_num":prox_periodo.month}
+                    if meses_pico: linha["sazonal_pico"]=1 if _meses_nomes_lgbm[prox_periodo.month-1] in meses_pico else 0
+                    if meses_promo: linha["promocao"]=1 if _meses_nomes_lgbm[prox_periodo.month-1] in meses_promo else 0
+                    linha.update(covar_atual)
+                    try:
+                        X_pred=pd.DataFrame([linha])[feats]
+                        pred=float(modelo_usar.predict(X_pred)[0])
+                    except Exception:
+                        pred=janela[-1]
+                    pred=max(0.0,pred)
+                    preds.append(pred)
+                    janela.append(pred)
+                    historico_completo_lgbm.append(pred)
+                _previsoes_local[prod]=np.array(preds)
+            return _previsoes_local
+
+        previsoes=_prever_recursivo(model)
+        if retornar_quantis:
+            previsoes_p10=_prever_recursivo(model_p10) if model_p10 is not None else {}
+            previsoes_p90=_prever_recursivo(model_p90) if model_p90 is not None else {}
+            return previsoes,previsoes_p10,previsoes_p90
         return previsoes
     except Exception:
-        return {}
+        return ({},{},{}) if retornar_quantis else {}
 
 def ensemble_forecast(serie, modelos, n, top_k=3):
     """Combina até `top_k` modelos com menor erro de backtest, com peso maior
@@ -2349,13 +3216,24 @@ def ajustar_corte_por_produto(serie_completa, corte_global_ts, n_meses_valid):
     return max(serie_completa.index,key=_n_meses_apos)
 
 def serie_mensal_produto(df, produto_col, produto_valor, data_col, metrica):
-    """Série histórica mensal (soma da métrica por mês) de um único produto."""
+    """Série histórica mensal (soma da métrica por mês) de um único produto.
+    Calendário mensal CONTÍNUO: meses sem nenhuma venda no meio do período de
+    vida do produto entram como zero, em vez de simplesmente desaparecerem da
+    série. Sem isso, lag1/lag2/lag3/lag12 do LightGBM passam a representar
+    "a linha anterior" em vez de "o mês anterior de verdade", e as janelas de
+    backtest (offset_meses=6) cobrem uma distância de calendário diferente da
+    que o nome sugere — tudo silenciosamente errado, sem nenhum aviso na tela.
+    Nunca extrapola: só preenche buraco ENTRE o primeiro e o último mês real
+    de venda desse produto, nunca antes ou depois."""
     sub = df[df[produto_col] == produto_valor].copy()
     sub["_data"] = pd.to_datetime(sub[data_col], errors="coerce", dayfirst=True)
     sub = sub.dropna(subset=["_data"])
     sub["_periodo"] = sub["_data"].dt.to_period("M")
     sub["_valor_serie"] = parse_valor_brl(sub[metrica])
     serie = sub.groupby("_periodo")["_valor_serie"].sum().sort_index()
+    if len(serie)>0:
+        _periodo_completo=pd.period_range(serie.index.min(),serie.index.max(),freq="M")
+        serie=serie.reindex(_periodo_completo,fill_value=0.0)
     serie.index = serie.index.to_timestamp()
     return serie
 
@@ -2518,10 +3396,13 @@ def detectar_candidatos_outliers(df, produto_col, data_col, metrica_col, top_pro
                 _mesmo_mes=mensal[(mensal.index.month==periodo.month)&(mensal.index!=periodo)]
                 _eh_outlier=False
                 if len(_mesmo_mes)<2:
-                    _resto=mensal.drop(periodo)
-                    media_geral=_resto.mean(); desvio_geral=_resto.std()
-                    if desvio_geral and desvio_geral>0 and abs((valor-media_geral)/desvio_geral)>z_limite:
-                        _eh_outlier=True
+                    # Sem 2+ anos do MESMO mês pra comparar, não dá pra saber se esse
+                    # valor é anomalia ou só o padrão sazonal normal desse mês — cair
+                    # num fallback comparando contra a média da série inteira (que
+                    # mistura época de pico com época de baixa) gera falso positivo,
+                    # igual já vimos acontecer com Sazonalidade antes de exigirmos 2+
+                    # anos ali. Sem evidência suficiente, não marca como outlier.
+                    pass
                 else:
                     media_mes=_mesmo_mes.mean(); desvio_mes=_mesmo_mes.std()
                     if not desvio_mes or desvio_mes<=0:
@@ -2598,7 +3479,8 @@ def detectar_crescimento_patamar(df, produto_col, data_col, metrica_col, top_pro
 
 def _treinar_um_produto_cache(df_treino, df_completo, produto_col, data_col, metrica_col,
                                 prod, data_corte, n_meses_valid, previsoes_lgbm_pool,
-                                modelos_disponiveis, reajustes, modelo_fixo=None, vies_fixo=None):
+                                modelos_disponiveis, reajustes, modelo_fixo=None, vies_fixo=None,
+                                ordens_cache=None, normalizar_arima=False):
     """Treina UM produto (mesma lógica de sempre, mesmos modelos, sem cortar
     nenhum) — separado em função própria pra poder rodar vários produtos em
     paralelo, não em fila. Se `modelo_fixo` for passado (nome de um modelo já
@@ -2614,40 +3496,85 @@ def _treinar_um_produto_cache(df_treino, df_completo, produto_col, data_col, met
     serie=serie_mensal_produto(df_treino,produto_col,prod,data_col,metrica_col)
     serie=aplicar_correcao_precos(serie,reajustes)
     if modelo_fixo:
-        melhor=modelo_fixo
+        # Modelo já decidido numa "Rodar Validação" anterior (via
+        # escolher_modelo_e_prever, sem espiar a resposta) — CONFIA nessa
+        # decisão em vez de decidir de novo aqui. Essa função usada a decidir
+        # LightGBM-vs-clássico comparando direto contra real_vals (o período
+        # que vira o resultado reportado) era uma cópia separada do mesmo
+        # vazamento de dado corrigido em escolher_modelo_e_prever — só que
+        # nunca tinha sido atualizada, e continuava rodando por baixo da
+        # Auto-Calibração inteira (baseline e cada janela testada).
+        melhor="LightGBM (pooled)" if modelo_fixo=="LightGBM (pooled)" else modelo_fixo
+        _venceu_classico=(melhor!="LightGBM (pooled)")
+        if melhor=="LightGBM (pooled)":
+            if prod not in previsoes_lgbm_pool: return None
+            serie_completa=serie_mensal_produto(df_completo,produto_col,prod,data_col,metrica_col)
+            serie_real_pos=serie_completa[serie_completa.index>corte_ts].head(n_meses_valid)
+            real_vals=[float(v) for v in serie_real_pos.tolist()]
+            if len(real_vals)==0: return None
+            proj_lista=list(previsoes_lgbm_pool[prod][:len(real_vals)])
+        else:
+            # Mesmo mecanismo de reaproveitar ordem ARIMA/SARIMAX que
+            # escolher_modelo_e_prever já usa — sem isso, reajustar "o mesmo
+            # modelo" do zero pode convergir numa ordem ligeiramente diferente,
+            # gerando um WAPE que não bate exatamente com a Validação principal.
+            # Mesma checagem de versão: ordem salva sob lógica antiga de d/D
+            # não é reaproveitada.
+            _ordem_sugerida_cache=None
+            if ordens_cache is not None:
+                _entrada_cache_prod=ordens_cache.get(prod)
+                if (_entrada_cache_prod and _entrada_cache_prod.get("modelo")==melhor
+                    and _entrada_cache_prod.get("_versao_ordem")==VERSAO_ORDEM_ML):
+                    _ordem_sugerida_cache=_entrada_cache_prod.get("ordem")
+            proj,_ordem_usada_cache=treinar_com_ordem(serie,melhor,n_meses_valid,buscar_ordem=True,ordem_sugerida=_ordem_sugerida_cache,normalizar_arima=normalizar_arima)
+            if ordens_cache is not None and _ordem_usada_cache is not None:
+                ordens_cache[prod]={"modelo":melhor,"ordem":_ordem_usada_cache,"_versao_ordem":VERSAO_ORDEM_ML}
+            if proj is None: return None
+            serie_completa=serie_mensal_produto(df_completo,produto_col,prod,data_col,metrica_col)
+            serie_real_pos=serie_completa[serie_completa.index>corte_ts].head(n_meses_valid)
+            real_vals=[float(v) for v in serie_real_pos.tolist()]
+            if len(real_vals)==0: return None
+            proj_lista=proj.tolist()[:len(real_vals)]
     else:
+        # Sem modelo já decidido (primeira rodada, nada pra reaproveitar) —
+        # ainda usa o critério antigo aqui (decisão isolada, sem o esquema de
+        # janelas cegas completo). Caso mais raro na prática — a Auto-Calibração
+        # quase sempre reaproveita o que a Validação já escolheu.
         pct_zeros=float((pd.to_numeric(serie,errors="coerce").fillna(0)==0).mean()) if len(serie)>0 else 0.0
         modelos_p=[m for m in modelos_disponiveis if m not in ("Croston","TSB")] if pct_zeros<0.30 else modelos_disponiveis
         melhor,rank=melhor_modelo_multi_janela(serie,modelos_p)
-    proj=treinar(serie,melhor,n_meses_valid)
-    if proj is None: return None
-    serie_completa=serie_mensal_produto(df_completo,produto_col,prod,data_col,metrica_col)
-    serie_real_pos=serie_completa[serie_completa.index>corte_ts].head(n_meses_valid)
-    real_vals=[float(v) for v in serie_real_pos.tolist()]
-    if len(real_vals)==0: return None
-    proj_lista=proj.tolist()[:len(real_vals)]
-    _venceu_classico=True
-    if prod in previsoes_lgbm_pool:
-        prev_lgbm=previsoes_lgbm_pool[prod][:len(real_vals)]
-        if len(prev_lgbm)==len(real_vals):
-            erro_classico=sum((p-r)**2 for p,r in zip(proj_lista,real_vals))
-            erro_lgbm=sum((p-r)**2 for p,r in zip(prev_lgbm,real_vals))
-            if erro_lgbm<erro_classico:
-                proj_lista=list(prev_lgbm)
-                _venceu_classico=False
+        proj=treinar(serie,melhor,n_meses_valid,normalizar_arima=normalizar_arima)
+        if proj is None: return None
+        serie_completa=serie_mensal_produto(df_completo,produto_col,prod,data_col,metrica_col)
+        serie_real_pos=serie_completa[serie_completa.index>corte_ts].head(n_meses_valid)
+        real_vals=[float(v) for v in serie_real_pos.tolist()]
+        if len(real_vals)==0: return None
+        proj_lista=proj.tolist()[:len(real_vals)]
+        _venceu_classico=True
+        if prod in previsoes_lgbm_pool:
+            prev_lgbm=previsoes_lgbm_pool[prod][:len(real_vals)]
+            if len(prev_lgbm)==len(real_vals):
+                erro_classico=sum((p-r)**2 for p,r in zip(proj_lista,real_vals))
+                erro_lgbm=sum((p-r)**2 for p,r in zip(prev_lgbm,real_vals))
+                if erro_lgbm<erro_classico:
+                    proj_lista=list(prev_lgbm)
+                    _venceu_classico=False
     if _venceu_classico and vies_fixo:
         proj_lista=[max(0.0,p*vies_fixo) for p in proj_lista]
     _media_hist_cache=max(0.0,float(serie.mean())) if len(serie)>0 else 0.0
-    return {"proj":proj_lista,"real":real_vals,"datas":serie_real_pos.index[:len(real_vals)],"media_hist":_media_hist_cache}
+    return {"produto":prod,"proj":proj_lista,"real":real_vals,"datas":serie_real_pos.index[:len(real_vals)],"media_hist":_media_hist_cache}
 
 def _construir_cache_sequencial(df_treino, df_completo, produto_col, data_col, metrica_col,
                                    top_produtos, data_corte, n_meses_valid, previsoes_lgbm_pool,
-                                   modelos_disponiveis, reajustes, progress_callback, modelos_fixos=None, vieses_fixos=None):
+                                   modelos_disponiveis, reajustes, progress_callback, modelos_fixos=None, vieses_fixos=None,
+                                   ordens_cache=None, normalizar_arima=False):
     """Caminho de reserva — um produto de cada vez. Usado se o paralelismo real
     (processos separados) falhar por qualquer motivo, pra nunca travar o app.
     `modelos_fixos` (opcional): dict {produto: nome_do_modelo} — se o produto
     estiver aqui, pula a disputa de modelos, usa o já escolhido direto.
-    `vieses_fixos` (opcional): dict {produto: fator_de_correção}."""
+    `vieses_fixos` (opcional): dict {produto: fator_de_correção}.
+    `ordens_cache` (opcional, só financeiro passa): reaproveita ordem
+    ARIMA/SARIMAX já descoberta, em vez de reotimizar do zero a cada retreino."""
     cache=[]
     for idx,prod in enumerate(top_produtos):
         if progress_callback: progress_callback(idx,len(top_produtos))
@@ -2655,14 +3582,16 @@ def _construir_cache_sequencial(df_treino, df_completo, produto_col, data_col, m
         _vies_fixo_prod=vieses_fixos.get(prod) if vieses_fixos else None
         resultado=_treinar_um_produto_cache(df_treino,df_completo,produto_col,data_col,
             metrica_col,prod,data_corte,n_meses_valid,previsoes_lgbm_pool,modelos_disponiveis,
-            reajustes,modelo_fixo=_modelo_fixo_prod,vies_fixo=_vies_fixo_prod)
+            reajustes,modelo_fixo=_modelo_fixo_prod,vies_fixo=_vies_fixo_prod,ordens_cache=ordens_cache,
+            normalizar_arima=normalizar_arima)
         if resultado is not None:
             cache.append(resultado)
     return cache
 
 def construir_cache_previsoes(df_treino, df_completo, produto_col, data_col, metrica_col,
                                 top_produtos, data_corte, n_meses_valid, previsoes_lgbm_pool,
-                                modelos_disponiveis, reajustes=None, progress_callback=None, status_out=None, modelos_fixos=None, vieses_fixos=None):
+                                modelos_disponiveis, reajustes=None, progress_callback=None, status_out=None, modelos_fixos=None, vieses_fixos=None,
+                                ordens_cache=None, normalizar_arima=False):
     """Roda a disputa de modelos (clássico vs LightGBM) UMA VEZ, sem nenhuma
     calibração de calendário (Sazonalidade/Promoção) — mas já em cima do
     histórico que o chamador preparou (Reajuste aplicado na série de cada
@@ -2673,13 +3602,15 @@ def construir_cache_previsoes(df_treino, df_completo, produto_col, data_col, met
     multi-janela) — quando presente, pula a disputa de modelos inteira pra
     esses produtos, só retreina o modelo já escolhido no novo recorte de dado.
     `vieses_fixos` (opcional): dict {produto: fator_de_correção_de_viés}.
+    `ordens_cache` (opcional, só financeiro passa; comercial fica idêntico).
     Retorna uma lista de dicts {"proj","real","datas","media_hist"}."""
     if status_out is not None: status_out["modo"]="sequencial (paralelismo desativado)"
     return _construir_cache_sequencial(df_treino,df_completo,produto_col,data_col,metrica_col,
         top_produtos,data_corte,n_meses_valid,previsoes_lgbm_pool,modelos_disponiveis,
-        reajustes,progress_callback,modelos_fixos=modelos_fixos,vieses_fixos=vieses_fixos)
+        reajustes,progress_callback,modelos_fixos=modelos_fixos,vieses_fixos=vieses_fixos,ordens_cache=ordens_cache,
+        normalizar_arima=normalizar_arima)
 
-def _wape_cache_calendario(cache, indices_pico, indices_promo, fator_crescimento=None, meses_crescimento=None, fator_vies=None):
+def _wape_cache_calendario(cache, indices_pico, indices_promo, fator_crescimento=None, meses_crescimento=None, fator_vies=None, retornar_detalhe=False, pesar_por_periodo_teste=False):
     """WAPE PONDERADO por produto (pesado pela média histórica de cada um) —
     mesmo critério usado em toda a Validação/Config Avançado/Dashboard, pra a
     busca gulosa decidir os meses com o mesmo critério que a tela final usa
@@ -2689,7 +3620,14 @@ def _wape_cache_calendario(cache, indices_pico, indices_promo, fator_crescimento
     aplica em todos. `fator_vies` (opcional): multiplicador de correção de viés
     residual (o mesmo aplicado em "Rodar Validação"), pra a Auto-Calibração
     comparar contra a MESMA referência já corrigida, em vez de uma baseline
-    diferente."""
+    diferente. `retornar_detalhe=True`: além do WAPE agregado, devolve também
+    a lista (produto, wape, peso) de cada produto — usada pra cruzar com a
+    faixa de confiabilidade depois, sem precisar recalcular nada.
+    `pesar_por_periodo_teste=False` (padrão, comercial nunca passa isso — zero
+    mudança de comportamento pra ele): pesa por `media_hist` (média de todo o
+    treino). `=True` (só financeiro): pesa pela soma real do PERÍODO TESTADO
+    (mesmo critério do card de Confiabilidade), pra o baseline "sem calibração"
+    sempre bater com o WAPE geral quando não há nada aplicado."""
     _meses_nomes_wcc=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
     resultados_prod=[]
     for c in cache:
@@ -2708,13 +3646,18 @@ def _wape_cache_calendario(cache, indices_pico, indices_promo, fator_crescimento
         _sr=sum(abs(r) for r in c["real"])
         if _sr<=0: continue
         _w=sum(abs(p-r) for p,r in zip(proj_ajustado,c["real"]))/_sr*100
-        resultados_prod.append((_w,c.get("media_hist",0.0)))
-    _peso_total=sum(peso for _,peso in resultados_prod)
+        _peso_item=_sr if pesar_por_periodo_teste else c.get("media_hist",0.0)
+        resultados_prod.append((c.get("produto"),_w,_peso_item))
+    _peso_total=sum(peso for _,_,peso in resultados_prod)
     if _peso_total>0:
-        return sum(w*peso for w,peso in resultados_prod)/_peso_total
-    if resultados_prod:
-        return sum(w for w,_ in resultados_prod)/len(resultados_prod)
-    return None
+        _agregado=sum(w*peso for _,w,peso in resultados_prod)/_peso_total
+    elif resultados_prod:
+        _agregado=sum(w for _,w,_ in resultados_prod)/len(resultados_prod)
+    else:
+        _agregado=None
+    if retornar_detalhe:
+        return _agregado,resultados_prod
+    return _agregado
 
 def buscar_melhor_calendario(df_treino, produto_col, data_col, metrica_col, cache,
                                calcular_indice_fn, meses_fixos_outro=None, tipo_outro="pico",
@@ -2755,7 +3698,13 @@ def buscar_melhor_calendario(df_treino, produto_col, data_col, metrica_col, cach
         if not candidatos: break
         melhor_mes=min(candidatos,key=candidatos.get)
         melhor_wape=candidatos[melhor_mes]
-        if wape_atual-melhor_wape<melhora_minima_pct:
+        # Correção por múltiplas comparações: testar N meses candidatos ao mesmo
+        # tempo aumenta a chance de um deles "melhorar" só por acaso (quanto mais
+        # hipóteses testadas, maior a chance de uma parecer boa por sorte) — exige
+        # uma melhora proporcionalmente maior quanto mais candidatos concorreram
+        # nesse passo, em vez do mesmo limiar fixo pra 12 candidatos ou pra 1.
+        _limiar_passo=melhora_minima_pct*(len(candidatos)**0.5)
+        if wape_atual-melhor_wape<_limiar_passo:
             break
         selecionados.append(melhor_mes)
         wape_atual=melhor_wape
@@ -2831,7 +3780,8 @@ def rodar_validacao_com_calibracao(df_v, produto_col, data_col, metrica_col, top
 
 def construir_cache_real_para_combinacao(df_v, produto_col, data_col, metrica_col, top_produtos,
                                             data_corte, n_meses_valid, reajustes, outliers,
-                                            modelos_disponiveis, status_out=None, modelos_fixos=None, vieses_fixos=None):
+                                            modelos_disponiveis, status_out=None, modelos_fixos=None, vieses_fixos=None,
+                                            ordens_cache=None, normalizar_arima=False):
     """Constrói (uma vez) o cache de previsão pro corte REAL, pra uma combinação
     específica de Reajuste+Outliers. Várias janelas do walk-forward costumam
     dar a MESMA combinação (Reajuste/Outliers detectados são os mesmos, só
@@ -2839,7 +3789,8 @@ def construir_cache_real_para_combinacao(df_v, produto_col, data_col, metrica_co
     retreinar o mesmo modelo repetidas vezes. `modelos_fixos` (opcional): dict
     {produto: nome_do_modelo}, vindo de uma Fase 0 — pula a disputa de modelos
     pra esses produtos, só retreina o já escolhido. `vieses_fixos` (opcional):
-    dict {produto: fator_de_correção_de_viés}. Retorna (cache, df_treino) — o
+    dict {produto: fator_de_correção_de_viés}. `ordens_cache` (opcional, só
+    financeiro passa; comercial fica idêntico). Retorna (cache, df_treino) — o
     df_treino é necessário depois pra calcular os índices de calendário."""
     df_treino=df_v.copy()
     df_treino["_periodo_cache_real"]=pd.to_datetime(df_treino[data_col],errors="coerce",dayfirst=True).dt.to_period("M").astype(str)
@@ -2852,39 +3803,16 @@ def construir_cache_real_para_combinacao(df_v, produto_col, data_col, metrica_co
     cache=construir_cache_previsoes(
         df_treino,df_v,produto_col,data_col,metrica_col,top_produtos,
         data_corte,n_meses_valid,previsoes_lgbm,modelos_disponiveis,reajustes=reajustes,
-        status_out=status_out,modelos_fixos=modelos_fixos,vieses_fixos=vieses_fixos)
+        status_out=status_out,modelos_fixos=modelos_fixos,vieses_fixos=vieses_fixos,ordens_cache=ordens_cache,
+        normalizar_arima=normalizar_arima)
     return cache,df_treino
 
-def _escolher_um_modelo_fixo(df_treino, produto_col, data_col, metrica_col, prod, reajustes, modelos_disponiveis):
-    """Fase 0 de UM produto — escolhe o modelo mais consistente (testando em
-    várias janelas), separado em função própria pra poder paralelizar entre
-    produtos, do mesmo jeito que já fazemos pro treino em si."""
-    serie=serie_mensal_produto(df_treino,produto_col,prod,data_col,metrica_col)
-    serie=aplicar_correcao_precos(serie,reajustes)
-    pct_zeros=float((pd.to_numeric(serie,errors="coerce").fillna(0)==0).mean()) if len(serie)>0 else 0.0
-    modelos_p=[m for m in modelos_disponiveis if m not in ("Croston","TSB")] if pct_zeros<0.30 else modelos_disponiveis
-    melhor,_=melhor_modelo_multi_janela(serie,modelos_p)
-    return prod,melhor
 
-def escolher_modelos_fixos(df_treino, produto_col, data_col, metrica_col, top_produtos,
-                             reajustes, modelos_disponiveis, progress_callback=None):
-    """Fase 0 — roda UMA VEZ, escolhendo o modelo mais consistente (testado em
-    várias janelas) pra cada produto. O resultado (dict {produto:modelo}) é
-    reaproveitado depois em toda a Auto-Calibração — cada combinação de
-    Reajuste/Outliers/janela testada não compete os modelos de novo, só
-    retreina o já escolhido, bem mais rápido. Sequencial por padrão (o
-    paralelismo por processos já causou travamento de conexão nesse app antes
-    — só reativar isso de propósito, testado, não por padrão)."""
-    modelos_fixos={}
-    for idx,prod in enumerate(top_produtos):
-        if progress_callback: progress_callback(idx,len(top_produtos))
-        _,melhor=_escolher_um_modelo_fixo(df_treino,produto_col,data_col,metrica_col,prod,reajustes,modelos_disponiveis)
-        modelos_fixos[prod]=melhor
-    return modelos_fixos
 
 def descobrir_calibracao_uma_janela(df_v, produto_col, data_col, metrica_col, top_produtos,
                                       corte_descoberta, n_meses_descoberta, modelos_disponiveis,
-                                      max_meses_saz=4, max_meses_promo=4, melhora_minima_pct=0.3, modelos_fixos=None, vieses_fixos=None):
+                                      max_meses_saz=4, max_meses_promo=4, melhora_minima_pct=0.3, modelos_fixos=None, vieses_fixos=None,
+                                      ordens_cache=None, normalizar_arima=False):
     """Roda uma passada completa de descoberta de calibração (Reajuste, Outliers,
     Sazonalidade, Promoção), usando SÓ dado até `corte_descoberta` — nunca vê o
     período de validação real, é a peça central do walk-forward. `modelos_fixos`
@@ -2914,7 +3842,8 @@ def descobrir_calibracao_uma_janela(df_v, produto_col, data_col, metrica_col, to
     cache=construir_cache_previsoes(
         df_treino,df_v,produto_col,data_col,metrica_col,top_produtos,
         corte_descoberta,n_meses_descoberta,previsoes_lgbm,modelos_disponiveis,
-        reajustes=candidatos_reajuste,modelos_fixos=modelos_fixos,vieses_fixos=vieses_fixos)
+        reajustes=candidatos_reajuste,modelos_fixos=modelos_fixos,vieses_fixos=vieses_fixos,ordens_cache=ordens_cache,
+        normalizar_arima=normalizar_arima)
 
     # Com janela de descoberta curta (menos de 6 meses), o "teste às cegas
     # interno" dessa busca também é curto — fácil demais de "acertar" um padrão
@@ -2925,14 +3854,21 @@ def descobrir_calibracao_uma_janela(df_v, produto_col, data_col, metrica_col, to
     # Reajuste/Outliers, que têm suas próprias exigências de robustez (mínimo
     # de transações, sustentação, comparação com múltiplos anos).
     if n_meses_descoberta>=6:
+        # Limiar de melhora escalado pelo tamanho da janela de descoberta: com
+        # menos meses reais pra testar, o WAPE calculado tem muito mais ruído
+        # (uma amostra pequena varia bastante por acaso), então exige uma
+        # melhora maior antes de confiar num padrão. 6 meses é o piso mínimo
+        # pra sazonalidade/promoção (linha acima), então usamos ele como
+        # referência — janela de 6 meses mantém o limiar original.
+        _melhora_min_efetiva=melhora_minima_pct*((6.0/max(n_meses_descoberta,1))**0.5)
         meses_pico,_,hist_saz=buscar_melhor_calendario(
             df_treino,produto_col,data_col,metrica_col,cache,
-            calcular_indice_sazonal_calendario,max_meses=max_meses_saz,melhora_minima_pct=melhora_minima_pct)
+            calcular_indice_sazonal_calendario,max_meses=max_meses_saz,melhora_minima_pct=_melhora_min_efetiva)
 
         meses_promo,_,hist_promo=buscar_melhor_calendario(
             df_treino,produto_col,data_col,metrica_col,cache,
             calcular_indice_promocao_calendario,meses_fixos_outro=meses_pico,
-            tipo_outro="pico",max_meses=max_meses_promo,melhora_minima_pct=melhora_minima_pct)
+            tipo_outro="pico",max_meses=max_meses_promo,melhora_minima_pct=_melhora_min_efetiva)
 
         _janela_cresc_usada=6
         fator_bruto_crescimento=detectar_crescimento_patamar(
@@ -2943,6 +3879,7 @@ def descobrir_calibracao_uma_janela(df_v, produto_col, data_col, metrica_col, to
                 df_treino,produto_col,data_col,metrica_col,top_produtos,corte_descoberta,janela_meses=3)
     else:
         meses_pico=[]; meses_promo=[]; fator_bruto_crescimento=None; _janela_cresc_usada=0
+        _melhora_min_efetiva=melhora_minima_pct
         hist_saz=[{"passo":0,"meses":[],"wape":None}]
         hist_promo=[{"passo":0,"meses":[],"wape":None}]
 
@@ -2960,10 +3897,11 @@ def descobrir_calibracao_uma_janela(df_v, produto_col, data_col, metrica_col, to
         _indices_promo_fixos=calcular_indice_promocao_calendario(df_treino,produto_col,data_col,metrica_col,meses_promo) if meses_promo else {}
         _wape_sem_cresc=_wape_cache_calendario(cache,_indices_pico_fixos,_indices_promo_fixos)
         _melhor_intensidade=0.0; _melhor_wape_cresc=_wape_sem_cresc
+        _limiar_cresc=0.1*((6.0/max(n_meses_descoberta,1))**0.5)
         for _intensidade in (0.2,0.4,0.6,0.8,1.0):
             _fator_teste=1.0+(fator_bruto_crescimento-1.0)*_intensidade
             _w=_wape_cache_calendario(cache,_indices_pico_fixos,_indices_promo_fixos,fator_crescimento=_fator_teste)
-            if _w is not None and _melhor_wape_cresc is not None and _w<_melhor_wape_cresc-0.1:
+            if _w is not None and _melhor_wape_cresc is not None and _w<_melhor_wape_cresc-_limiar_cresc:
                 _melhor_wape_cresc=_w; _melhor_intensidade=_intensidade
         if _melhor_intensidade>0:
             fator_crescimento=1.0+(fator_bruto_crescimento-1.0)*_melhor_intensidade
@@ -2986,7 +3924,7 @@ def descobrir_calibracao_uma_janela(df_v, produto_col, data_col, metrica_col, to
                     _teste_meses=meses_crescimento+[_mes]
                     _w=_wape_cache_calendario(cache,_indices_pico_fixos,_indices_promo_fixos,
                         fator_crescimento=fator_crescimento,meses_crescimento=_teste_meses)
-                    if _w is not None and _w<_melhor_w_cresc-0.1:
+                    if _w is not None and _w<_melhor_w_cresc-_limiar_cresc:
                         _melhor_w_cresc=_w; _melhor_mes_cresc=_mes
                 if _melhor_mes_cresc is None: break
                 meses_crescimento.append(_melhor_mes_cresc)
@@ -3061,7 +3999,10 @@ def calcular_indice_sazonal_calendario(df, produto_col, data_col, metrica_col, m
             for mes in _meses_alvo_validos:
                 num_mes=_meses_nomes_idx.index(mes)+1
                 _valores_desse_mes=_mensal_prod[_mensal_prod.index.month==num_mes]
-                if len(_valores_desse_mes)>0 and _valores_desse_mes.mean()>0:
+                # Exige pelo menos 2 anos diferentes com dado nesse mês — um
+                # produto que só vendeu em Dezembro uma vez não prova
+                # sazonalidade real, só uma coincidência de 1 ano.
+                if len(_valores_desse_mes)>=2 and _valores_desse_mes.mean()>0:
                     _indices_por_produto_saz[mes].append(float(_valores_desse_mes.mean()/_media_prod))
         indices={}
         for mes,_lista in _indices_por_produto_saz.items():
@@ -3104,8 +4045,13 @@ def calcular_indice_promocao_calendario(df, produto_col, data_col, metrica_col, 
             for mes in _meses_alvo_validos_promo:
                 num_mes=_meses_nomes_idx.index(mes)+1
                 _valores_desse_mes=_mensal_prod[_mensal_prod.index.month==num_mes]
-                if len(_valores_desse_mes)>0 and _valores_desse_mes.max()>0:
-                    _indices_por_produto_promo[mes].append(float(_valores_desse_mes.max()/_media_prod))
+                # Exige 2+ anos com dado nesse mês (mesmo motivo da Sazonalidade)
+                # e usa a MÉDIA DOS 2 MAIORES em vez do máximo puro — um único
+                # mês fora da curva (erro de digitação, pedido grande isolado)
+                # não vira sozinho "o padrão de promoção" permanente.
+                if len(_valores_desse_mes)>=2 and _valores_desse_mes.max()>0:
+                    _top2_mes=sorted(_valores_desse_mes.tolist(),reverse=True)[:2]
+                    _indices_por_produto_promo[mes].append(float((sum(_top2_mes)/len(_top2_mes))/_media_prod))
         indices={}
         for mes,_lista in _indices_por_produto_promo.items():
             if _lista:
@@ -3235,7 +4181,7 @@ def treinar_prophet_exog(serie, meses_pico, meses_promo, n):
         m=Prophet(changepoint_prior_scale=0.01,yearly_seasonality=(_dias_hist_p>=548))
         if meses_pico: m.add_regressor("sazonal_pico")
         if meses_promo: m.add_regressor("promocao")
-        m.fit(df_p)
+        m.fit(df_p,seed=42)
         datas_fut=pd.date_range(idx[-1],periods=n+1,freq="MS")[1:]
         df_fut=pd.DataFrame({"ds":datas_fut})
         df_fut["sazonal_pico"]=[1 if _meses_nomes_p[d.month-1] in (meses_pico or []) else 0 for d in datas_fut]
@@ -3432,12 +4378,7 @@ def save_scorecard_forn(cid,df,filial=None):
 
 def load_scorecard_forn(cid,filial=None):
     p=path_scorecard_forn(cid,filial)
-    if not os.path.exists(p):
-        _p_antigo=os.path.join(PASTA,f"{gid(cid)}_scorecard_fornecedores.csv")
-        if (not filial or filial=="(Todas as filiais)") and os.path.exists(_p_antigo):
-            p=_p_antigo
-        else:
-            return None
+    if not os.path.exists(p): return None
     try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
     except: return None
 
@@ -3449,7 +4390,7 @@ def save_config_ml(cid):
     campos=["cfgml_meses_pico","cfgml_meses_promo","cfgml_outliers","cfgml_reajustes",
             "cfgml_fatores_mercado","cfgml_meses_prev","cfgml_min_hist","cfgml_configs_ativas",
             "cfgml_escopo_tipo","cfgml_agrupar_familia","cfgml_nome_cenario","cfgml_limite_erro",
-            "cfgml_data_corte","cfgml_n_valid"]
+            "cfgml_data_corte","cfgml_n_valid","cfgml_filial_sel_pag_backup","cfgml_curva_sel_backup"]
     dados={c:st.session_state.get(c) for c in campos if c in st.session_state}
     _escopo_ml_atual=st.session_state.get("cfgml_escopo_tipo")
     if _escopo_ml_atual and "Categoria" in _escopo_ml_atual:
@@ -3473,7 +4414,16 @@ def save_config_compras(cid):
     _escopo_atual=st.session_state.get("compras_escopo_tipo")
     dados={"compras_escopo_tipo":_escopo_atual,
            "compras_categoria_lead_sel":st.session_state.get("compras_categoria_lead_sel"),
-           "compras_curva_sel":st.session_state.get("compras_curva_sel")}
+           "compras_curva_sel":st.session_state.get("compras_curva_sel"),
+           "compras_econ_n_produtos":st.session_state.get("compras_econ_n_produtos"),
+           "compras_econ_meses_olhar":st.session_state.get("compras_econ_meses_olhar"),
+           "compras_fr_n_produtos":st.session_state.get("compras_fr_n_produtos"),
+           # ⚠️ Bug de persistência corrigido — essa chave nunca foi salva em
+           # lugar nenhum do sistema até agora. Tanto a Exceção manual de
+           # Mínimo/Máximo quanto o "Aplicar seleção" do Fator de Risco
+           # escrevem aqui, e os dois eram perdidos em qualquer F5 ou nova
+           # sessão, sem aviso nenhum.
+           "compras_minmax_produto":st.session_state.get("compras_minmax_produto",{})}
     if _escopo_atual and "Categoria" in _escopo_atual:
         dados["compras_categoria_sel"]=st.session_state.get("compras_categoria_sel")
     elif _escopo_atual and "Produto específico" in _escopo_atual:
@@ -3488,6 +4438,119 @@ def load_config_compras(cid):
         with open(p,"r",encoding="utf-8") as f:
             return json.load(f)
     except: return None    
+
+# save_cresc_por_produto/load_cresc_por_produto REMOVIDOS — "cfgml_crescimento_
+# por_produto" agora leva sufixo de Categoria (mesmo problema/correção do
+# financeiro), e já é pega automaticamente pelo mecanismo geral
+# (save_calibracoes_ml), que reconhece qualquer chave começando com
+# "cfgml_crescimento".
+
+# save_cresc_por_conta_mlf/load_cresc_por_conta_mlf REMOVIDOS — a chave
+# "mlf_crescimento_por_conta" agora leva o sufixo de Demonstração no nome
+# (mlf_crescimento_por_conta__DRE, __Indicadores, etc.), e já é pega
+# automaticamente pelo mecanismo geral (save_calibracoes_ml), que reconhece
+# qualquer chave começando com "mlf_crescimento" — sem isso, DRE e
+# Indicadores compartilhavam a MESMA gaveta, vazando exceção de um pro outro.
+
+def path_cache_previsao_conta_mlf(cid): return os.path.join(PASTA,f"{gid(cid)}_cache_previsao_conta_mlf.json")
+
+def save_cache_previsao_conta_mlf(cid):
+    """⭐ Cache por conta, com ASSINATURA — não é o congelamento cego de antes.
+    Cada conta guarda seu modelo/previsão junto com uma 'assinatura' de tudo
+    que poderia afetá-la (corte, outliers, sazonalidade, promoção, crescimento,
+    viés). Só reusa se a assinatura bater EXATAMENTE; qualquer mudança relevante
+    pra aquela conta específica força retreino, automaticamente."""
+    if not cid: return
+    with open(path_cache_previsao_conta_mlf(cid),"w",encoding="utf-8") as f:
+        json.dump(st.session_state.get("mlf_cache_previsao_conta",{}),f,ensure_ascii=False,default=str)
+
+def load_cache_previsao_conta_mlf(cid):
+    p=path_cache_previsao_conta_mlf(cid)
+    if not os.path.exists(p): return None
+    try:
+        with open(p,"r",encoding="utf-8") as f:
+            return json.load(f)
+    except: return None
+
+def path_resultado_econ_compras(cid): return os.path.join(PASTA,f"{gid(cid)}_resultado_econ_compras.json")
+
+def save_resultado_econ_compras(cid):
+    """Salva o resultado da Validação Econômica (Motor de Compras) — sempre
+    que a tela roda, incondicional, mesmo padrão já confirmado funcionando
+    nos sliders de configuração (não depende de on_change nem de nenhum
+    evento disparar certo)."""
+    if not cid: return
+    _df=st.session_state.get("compras_econ_resultado")
+    if _df is None: return
+    with open(path_resultado_econ_compras(cid),"w",encoding="utf-8") as f:
+        json.dump(_df.to_dict("records"),f,ensure_ascii=False,default=str)
+
+def load_resultado_econ_compras(cid):
+    p=path_resultado_econ_compras(cid)
+    if not os.path.exists(p): return None
+    try:
+        with open(p,"r",encoding="utf-8") as f:
+            _registros=json.load(f)
+        return pd.DataFrame(_registros) if _registros else None
+    except: return None
+
+def path_resultado_fr_compras(cid): return os.path.join(PASTA,f"{gid(cid)}_resultado_fr_compras.json")
+
+def save_resultado_fr_compras(cid):
+    """Salva o resultado do Fator de Risco por Produto — mesmo padrão acima.
+
+    ⭐ PADRÃO DE PERSISTÊNCIA COMPROVADO (confirmado funcionando em produção,
+    setembro/2026) — usar SEMPRE esse padrão pra qualquer widget/resultado
+    novo que precise persistir, nessa tela ou em qualquer outra:
+
+    1) SALVAR: chama save_X(cid) de forma INCONDICIONAL, toda vez que o dado
+       muda — nunca depender só de on_change (Streamlit pode não disparar
+       de forma confiável em todos os cenários).
+    2) RESTAURAR: chama load_X(cid) DIRETO NO TOPO DA PRÓPRIA PÁGINA que usa
+       o dado — nunca depender só do fluxo de login/pré-carregamento (se a
+       página for aberta por outro caminho, a restauração não roda).
+    3) Guarda de "já restaurei" (tipo "_pagina_restaurada_direto" no
+       session_state) pra não ficar lendo o disco em todo rerun — só 1x por
+       sessão/entrada na página.
+
+    Esse padrão resolveu, no mesmo dia, a falha de persistência em
+    compras_econ_n_produtos, compras_econ_meses_olhar, compras_fr_n_produtos,
+    compras_econ_resultado e compras_fr_resultado — todos com o mesmo
+    problema raiz (dependiam só de login ou só de on_change)."""
+    if not cid: return
+    _df=st.session_state.get("compras_fr_resultado")
+    if _df is None: return
+    with open(path_resultado_fr_compras(cid),"w",encoding="utf-8") as f:
+        json.dump(_df.to_dict("records"),f,ensure_ascii=False,default=str)
+
+def load_resultado_fr_compras(cid):
+    p=path_resultado_fr_compras(cid)
+    if not os.path.exists(p): return None
+    try:
+        with open(p,"r",encoding="utf-8") as f:
+            _registros=json.load(f)
+        return pd.DataFrame(_registros) if _registros else None
+    except: return None
+
+def path_resultado_sugestao_compras(cid): return os.path.join(PASTA,f"{gid(cid)}_resultado_sugestao_compras.json")
+
+def save_resultado_sugestao_compras(cid):
+    """Salva o resultado da Sugestão de Dias Mínimo/Máximo por Curva — mesmo
+    padrão comprovado (salva incondicional, restaura direto na página)."""
+    if not cid: return
+    _df=st.session_state.get("compras_sugestao_resultado")
+    if _df is None: return
+    with open(path_resultado_sugestao_compras(cid),"w",encoding="utf-8") as f:
+        json.dump(_df.to_dict("records"),f,ensure_ascii=False,default=str)
+
+def load_resultado_sugestao_compras(cid):
+    p=path_resultado_sugestao_compras(cid)
+    if not os.path.exists(p): return None
+    try:
+        with open(p,"r",encoding="utf-8") as f:
+            _registros=json.load(f)
+        return pd.DataFrame(_registros) if _registros else None
+    except: return None
 
 def path_leadtime_compras(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_leadtime_compras__{_sufixo_filial_compras(filial)}.json")
 
@@ -3504,12 +4567,7 @@ def save_leadtime_compras(cid,filial=None):
 
 def load_leadtime_compras(cid,filial=None):
     p=path_leadtime_compras(cid,filial)
-    if not os.path.exists(p):
-        _p_antigo=os.path.join(PASTA,f"{gid(cid)}_leadtime_compras.json")
-        if (not filial or filial=="(Todas as filiais)") and os.path.exists(_p_antigo):
-            p=_p_antigo
-        else:
-            return None
+    if not os.path.exists(p): return None
     try:
         with open(p,"r",encoding="utf-8") as f:
             dados=json.load(f)
@@ -3589,7 +4647,7 @@ def montar_assinatura_calibracao(meses_pico_usar, meses_promo_usar, reajustes_us
         "reajustes":sorted([(r.get("data"),r.get("pct")) for r in (reajustes_usar or [])]),
         "outliers":sorted(meses_excluir_usar or []),
         "corte":data_corte,
-        "vies":round(fator_vies,4) if fator_vies else None,
+        "vies":({k:round(v,4) for k,v in fator_vies.items() if v} if isinstance(fator_vies,dict) else (round(fator_vies,4) if fator_vies else None)),
         "crescimento":round(fator_crescimento,4) if fator_crescimento else None,
     }
     return json.dumps(dados,sort_keys=True,default=str)
@@ -3622,6 +4680,25 @@ def load_ml_produtos_validacao_ranks(cid,filial=None):
     try:
         with open(p,encoding="utf-8") as f: return json.load(f)
     except: return None
+
+def path_ordens_modelo(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_ordens_modelo__{_sufixo_filial(filial)}.json")
+
+def save_ordens_modelo(cid,ordens,filial=None):
+    """Guarda a ordem (p,d,q) descoberta do ARIMA/SARIMAX por produto — pra não
+    ter que buscar do zero toda vez que roda. Reaproveitado na próxima
+    execução: só refaz a busca completa se o modelo vencedor mudar pra esse
+    produto (sinal de que o comportamento dele mudou)."""
+    try:
+        with open(path_ordens_modelo(cid,filial),"w",encoding="utf-8") as f:
+            json.dump(ordens,f)
+    except: pass
+
+def load_ordens_modelo(cid,filial=None):
+    p=path_ordens_modelo(cid,filial)
+    if not os.path.exists(p): return {}
+    try:
+        with open(p,encoding="utf-8") as f: return json.load(f)
+    except: return {}
 
 def load_ml_produtos_resultado(cid,filial=None):
     p=path_ml_produtos_resultado(cid,filial)
@@ -3664,10 +4741,13 @@ def save_modelos_vencedores(cid, modelos, escopo):
     Validação'), junto com o escopo (Filial/Corte/Categoria/Curva) em que foi
     validado. Sem isso, o reaproveitamento de modelo em Config Avançado só
     durava enquanto a sessão do navegador ficasse aberta — fechar e reabrir o
-    app perdia o vínculo, sem aviso."""
+    app perdia o vínculo, sem aviso.
+    Salva também QUANDO foi salvo — sem isso, não dá pra diagnosticar se o
+    Cenário reaproveitou uma Validação antiga (rodada antes da mais recente)."""
     if not cid: return
     with open(path_modelos_vencedores(cid),"w",encoding="utf-8") as f:
-        json.dump({"modelos":modelos,"escopo":escopo},f,ensure_ascii=False,default=str)
+        json.dump({"modelos":modelos,"escopo":escopo,
+            "salvo_em":datetime.now().strftime("%Y-%m-%d %H:%M:%S")},f,ensure_ascii=False,default=str)
 
 def load_modelos_vencedores(cid):
     p=path_modelos_vencedores(cid)
@@ -3683,18 +4763,55 @@ def save_calibracoes_ml(cid):
     """Salva todas as calibrações (Sazonalidade/Promoção/Outliers/Reajuste de Preço),
     incluindo as variantes por categoria (chaves com sufixo tipo "__EPI") — usadas
     tanto pela Validação Estatística quanto pelo Config Avançado, que compartilham
-    as mesmas chaves."""
+    as mesmas chaves. Inclui também as chaves "mlf_..." da Validação Estatística
+    FINANCEIRA (mesmo mecanismo, mesmo arquivo — não precisa duplicar nada, só
+    ampliar os prefixos aceitos)."""
     if not cid: return
-    _prefixos_calib=("cfgml_meses_pico","cfgml_meses_promo","cfgml_outliers","cfgml_reajustes","cfgml_intensidade_pico","cfgml_intensidade_promo","cfgml_crescimento","cfgml_vies_pooled","cfgml_produtos_excluidos","cfgml_configs_ativas")
+    _prefixos_calib=("cfgml_meses_pico","cfgml_meses_promo","cfgml_outliers","cfgml_reajustes","cfgml_intensidade_pico","cfgml_intensidade_promo","cfgml_crescimento","cfgml_vies_pooled","cfgml_produtos_excluidos","cfgml_configs_ativas",
+        "mlf_meses_pico","mlf_meses_promo","mlf_outliers","mlf_reajustes","mlf_intensidade_pico","mlf_intensidade_promo","mlf_crescimento","mlf_vies",
+        "mlf_corte","mlf_n_valid","mlf_janelas_descoberta","mlf_vies_janelas_escolha","mlf_filial_sel_backup","mlf_demo_sel")
     dados={}
     for k in list(st.session_state.keys()):
-        if k.startswith(_prefixos_calib) and "_backup" not in k:
+        if k.startswith(_prefixos_calib) and "_backup" not in k and "_widget" not in k:
             dados[k]=st.session_state[k]
     with open(path_calibracoes_ml(cid),"w",encoding="utf-8") as f:
         json.dump(dados,f,ensure_ascii=False,default=str)
 
 def load_calibracoes_ml(cid):
     p=path_calibracoes_ml(cid)
+    if not os.path.exists(p): return None
+    try:
+        with open(p,"r",encoding="utf-8") as f:
+            return json.load(f)
+    except: return None
+
+def path_resultado_valfin(cid,chave_escopo): return os.path.join(PASTA,f"{gid(cid)}_valfin_resultado_{chave_escopo}.json")
+
+def save_resultado_valfin(cid,chave_escopo):
+    """Salva os resultados da Validação Estatística FINANCEIRA — Validação
+    principal, Auto-Calibração, Viés e Projeção Futura — juntos, sempre o
+    estado completo atual (não só o pedaço que acabou de mudar), pra nunca
+    ficar salvo pela metade. `chave_escopo` = f"{filial}__{demonstração}",
+    mesmo padrão do cache de ordem — cada combinação Filial+Demonstração tem
+    seu próprio resultado."""
+    if not cid: return
+    _df_val=st.session_state.get("mlf_validacao_resultado")
+    dados={
+        "validacao":_df_val.to_dict("records") if _df_val is not None else None,
+        "wf_resultados":st.session_state.get("mlf_wf_resultados"),
+        "wf_baseline":st.session_state.get("mlf_wf_baseline"),
+        "vies_resultados":st.session_state.get("mlf_vies_resultados"),
+        "vies_debug":st.session_state.get("mlf_vies_debug"),
+        # Novo — previsão pro FUTURO de verdade (a Validação em si só olha
+        # pra trás, pra medir confiança). "Projeções ML" lê isso em vez de
+        # reimplementar o treino.
+        "projecao_futura":st.session_state.get("mlf_projecao_futura"),
+    }
+    with open(path_resultado_valfin(cid,chave_escopo),"w",encoding="utf-8") as f:
+        json.dump(dados,f,ensure_ascii=False,default=str)
+
+def load_resultado_valfin(cid,chave_escopo):
+    p=path_resultado_valfin(cid,chave_escopo)
     if not os.path.exists(p): return None
     try:
         with open(p,"r",encoding="utf-8") as f:
@@ -3839,12 +4956,7 @@ def save_snap(cid,nome,dados,filial=None):
 
 def load_snap(cid,nome,filial=None):
     p=path_snap(cid,nome,filial)
-    if not os.path.exists(p):
-        _p_antigo=os.path.join(PASTA,f"{gid(cid)}_snap_{nome}.json")
-        if (not filial or filial=="(Todas as filiais)") and os.path.exists(_p_antigo):
-            p=_p_antigo
-        else:
-            return None
+    if not os.path.exists(p): return None
     try:
         with open(p,encoding="utf-8") as f: return json.load(f)
     except: return None
@@ -3856,12 +4968,7 @@ def save_pareto_snap(cid,df,filial=None):
 
 def load_pareto_snap(cid,filial=None):
     p=path_pareto_snap(cid,filial)
-    if not os.path.exists(p):
-        _p_antigo=os.path.join(PASTA,f"{gid(cid)}_snap_pareto.csv")
-        if (not filial or filial=="(Todas as filiais)") and os.path.exists(_p_antigo):
-            p=_p_antigo
-        else:
-            return None
+    if not os.path.exists(p): return None
     try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
     except: return None
 
@@ -3891,12 +4998,7 @@ def save_cfgml_resultado(cid,df,filial=None):
 
 def load_cfgml_resultado(cid,filial=None):
     p=path_cfgml_resultado(cid,filial)
-    if not os.path.exists(p):
-        _p_antigo=os.path.join(PASTA,f"{gid(cid)}_cfgml_resultado.csv")
-        if (not filial or filial=="(Todas as filiais)") and os.path.exists(_p_antigo):
-            p=_p_antigo
-        else:
-            return None
+    if not os.path.exists(p): return None
     try:
         df=pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
         for col in ["previsao","rank"]:
@@ -3904,6 +5006,37 @@ def load_cfgml_resultado(cid,filial=None):
                 df[col]=df[col].apply(lambda x: json.loads(x) if pd.notna(x) and x else None)
         return df
     except: return None
+
+def path_ajuste_consenso(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_ajuste_consenso__{_sufixo_filial(filial)}.csv")
+
+def save_ajuste_consenso(cid,df,filial=None):
+    if df is None or df.empty: return
+    df_save=df.copy()
+    # Upsert por _ProdutoUnico: preserva ajustes de OUTROS produtos já salvos
+    # antes, só substitui a linha do produto que acabou de ser editado agora —
+    # mesmo padrão já usado em save_cfgml_resultado.
+    p=path_ajuste_consenso(cid,filial)
+    if "_ProdutoUnico" in df_save.columns and os.path.exists(p):
+        try:
+            df_antigo=pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
+            df_antigo=df_antigo[~df_antigo["_ProdutoUnico"].isin(df_save["_ProdutoUnico"])]
+            df_save=pd.concat([df_antigo,df_save],ignore_index=True)
+        except: pass
+    df_save.to_csv(p,sep=";",decimal=",",encoding="utf-8-sig",index=False)
+
+def load_ajuste_consenso(cid,filial=None):
+    p=path_ajuste_consenso(cid,filial)
+    if not os.path.exists(p): return None
+    try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
+    except: return None
+
+def remover_ajuste_consenso(cid,produto_unico,filial=None):
+    df=load_ajuste_consenso(cid,filial)
+    if df is None or df.empty: return
+    df=df[df["_ProdutoUnico"]!=produto_unico]
+    p=path_ajuste_consenso(cid,filial)
+    if df.empty and os.path.exists(p): os.remove(p)
+    else: df.to_csv(p,sep=";",decimal=",",encoding="utf-8-sig",index=False)
 
 def path_cfgml_fora_previsao(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_cfgml_fora_previsao__{_sufixo_filial(filial)}.csv")
 
@@ -3913,12 +5046,7 @@ def save_cfgml_fora_previsao(cid,df,filial=None):
 
 def load_cfgml_fora_previsao(cid,filial=None):
     p=path_cfgml_fora_previsao(cid,filial)
-    if not os.path.exists(p):
-        _p_antigo=os.path.join(PASTA,f"{gid(cid)}_cfgml_fora_previsao.csv")
-        if (not filial or filial=="(Todas as filiais)") and os.path.exists(_p_antigo):
-            p=_p_antigo
-        else:
-            return None
+    if not os.path.exists(p): return None
     try:
         return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
     except: return None
@@ -3980,12 +5108,7 @@ def save_fluxo_financeiro(cid,filial=None):
 
 def load_fluxo_financeiro(cid,filial=None):
     p=path_fluxo_financeiro(cid,filial)
-    if not os.path.exists(p):
-        _p_antigo=os.path.join(PASTA,f"{gid(cid)}_fluxo_financeiro.json")
-        if (not filial or filial=="(Todas as filiais)") and os.path.exists(_p_antigo):
-            p=_p_antigo
-        else:
-            return None
+    if not os.path.exists(p): return None
     try:
         with open(p,"r",encoding="utf-8") as f:
             return json.load(f)
@@ -4279,6 +5402,7 @@ def limpar_sessao_cliente():
         "mlp_validacao_resultado","mlp_validacao_ranks",
         "mlp_categoria_sel","mlp_categoria_sel_backup",
         "mlp_curva_sel","mlp_curva_sel_backup",
+        "cfgml_curva_sel","cfgml_curva_sel_backup",
         "mlp_resultado_categoria_usada","mlp_resultado_curva_usada",
         "mlp_produto_col_atual","mlp_metrica_col_atual","mlp_data_col_atual",
         "vendas_raw_com_chave",
@@ -4295,9 +5419,34 @@ def limpar_sessao_cliente():
     for _k_dinamica in list(st.session_state.keys()):
         if _k_dinamica.startswith(_prefixos_calibracao):
             del st.session_state[_k_dinamica]
+def path_auditoria(cid): return os.path.join(PASTA,f"{gid(cid)}_auditoria.jsonl")
+
 def addlog(t,tp="ok"):
+    """Registra uma ação — tanto na sessão atual (feedback imediato na tela)
+    quanto em disco (trilha de auditoria PERMANENTE, por cliente). Cada linha
+    do arquivo é um registro JSON independente (.jsonl), com timestamp
+    completo — não é só hora:minuto como o log de sessão, é data e hora
+    exatas, pra rastreabilidade real."""
     i={"ok":"✅","w":"⚠️","e":"❌","i":"ℹ️"}.get(tp,"•")
     st.session_state.log.insert(0,f"{datetime.now().strftime('%H:%M')} {i} {t}")
+    try:
+        if st.session_state.get("cid"):
+            _entrada_audit={"timestamp":datetime.now().isoformat(),"tipo":tp,"acao":t}
+            with open(path_auditoria(st.session_state.cid),"a",encoding="utf-8") as f:
+                f.write(json.dumps(_entrada_audit,ensure_ascii=False)+"\n")
+    except Exception:
+        pass  # nunca deixa uma falha de log quebrar a ação principal
+
+def load_auditoria(cid,limite=200):
+    """Lê a trilha de auditoria persistida, mais recente primeiro."""
+    p=path_auditoria(cid)
+    if not os.path.exists(p): return []
+    try:
+        with open(p,encoding="utf-8") as f:
+            linhas=[json.loads(l) for l in f if l.strip()]
+        return list(reversed(linhas))[:limite]
+    except Exception:
+        return []
 
 def get_df():
     if st.session_state.df_raw is not None:
@@ -4459,9 +5608,15 @@ with st.sidebar:
             logo_b64 = base64.b64encode(f.read()).decode()
         st.markdown(f"""
         <div style="padding:10px 0 14px;text-align:center">
-          <img src="data:image/png;base64,{logo_b64}"
-            style="width:100%;max-width:190px;margin-bottom:4px;
-            border:1px solid #A9762F;border-radius:10px;padding:4px"/>
+          <div class="wc-logo" style="animation:wcLogoGlow 3s ease-in-out infinite;margin-bottom:4px">
+            <div class="wc-logo-in" style="background:#FBF6EB;padding:10px 14px">
+              <img src="data:image/png;base64,{logo_b64}"
+                style="width:100%;max-width:170px;max-height:none;display:block;margin:0 auto;
+                transform:perspective(600px) rotateY(-14deg) rotateX(6deg);
+                filter:drop-shadow(1px 1px 0 rgba(10,40,100,.55)) drop-shadow(1px 1px 0 rgba(10,40,100,.45))
+                       drop-shadow(1px 1px 0 rgba(10,40,100,.35)) drop-shadow(3px 6px 6px rgba(0,0,0,.30))"/>
+            </div>
+          </div>
           <div style="color:#484F58;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;margin-top:2px">
             Analytics BI
           </div>
@@ -4513,6 +5668,7 @@ with st.sidebar:
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">IMPORTAR</div>',unsafe_allow_html=True)
+    if st.button("🧭 Assistente de Conexão", key="sb_assistente", use_container_width=True): ir("assistente_conexao")
     if st.button("📊 Financeiro",  key="sb_importar",   use_container_width=True): ir("importar")
     if st.button("🔗 ERP",  key="sb_erp",         use_container_width=True): ir("erp")
     if st.button("📈 Vendas", key="sb_importar_vendas", use_container_width=True): ir("importar_vendas")
@@ -4524,7 +5680,7 @@ with st.sidebar:
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">VALIDAÇÃO</div>',unsafe_allow_html=True)
-    if st.button("🔬 Validação Estatística de Previsões", key="sb_ml_produtos", use_container_width=True): ir("ml_produtos")
+    if st.button("🔬 Validação Estatística de Previsões Comerciais", key="sb_ml_produtos", use_container_width=True): ir("ml_produtos")
 
     st.divider()
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
@@ -4535,6 +5691,12 @@ with st.sidebar:
     if st.button("💰 Fluxo de Caixa Comercial Projetado", key="sb_fluxo_compras", use_container_width=True): ir("fluxo_compras")
     if st.button("🧠 Motor de Previsão Estatística Avançada - ML", key="sb_config_ml", use_container_width=True): ir("config_ml")
     if st.button("📉 Curva de Pareto", key="sb_pareto", use_container_width=True): ir("pareto")
+
+    st.divider()
+    st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
+                'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
+                'display:inline-block;margin-bottom:4px">VALIDAÇÃO</div>',unsafe_allow_html=True)
+    if st.button("🔬 Validação Estatística de Previsões Financeiras", key="sb_ml_financeiro_val", use_container_width=True): ir("ml_financeiro_val")
 
     st.divider()
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
@@ -4619,11 +5781,9 @@ if pg=="boas_vindas":
     if os.path.exists(logo_path):
         with open(logo_path, "rb") as f:
             logo_b64 = base64.b64encode(f.read()).decode()
-        st.markdown(f'''<div style="text-align:center;margin-bottom:16px">
-          <img src="data:image/png;base64,{logo_b64}" style="max-height:110px;
-            border:2px solid #A9762F;border-radius:14px;padding:6px 10px;
-            box-shadow:0 2px 6px rgba(169,118,47,.25)"/>
-        </div>''',unsafe_allow_html=True)
+        st.markdown(f'''<div style="text-align:center;margin-bottom:16px;perspective:700px">
+<div class="wc-logo"><div class="wc-logo-in"><img src="data:image/png;base64,{logo_b64}"/></div></div>
+</div>''',unsafe_allow_html=True)
     if st.session_state.get("cid"):
         _cli_bv=load_cli(st.session_state.cid)
         _nome_bv=_cli_bv.get("nome","sua empresa") if _cli_bv else "sua empresa"
@@ -4635,9 +5795,14 @@ if pg=="boas_vindas":
         st.stop()
 
     st.markdown("""<div class="wc-hero">
-      <h1>Bem-vindo ao NetExame Analytics BI</h1>
-      <p>Inteligência comercial, financeira e preditiva, em uma só plataforma — testado e validado com rigor estatístico</p>
-    </div>""",unsafe_allow_html=True)
+<div class="wc-grid"></div>
+<div class="wc-ring"></div>
+<div class="wc-ring r2"></div>
+<div class="wc-cube c1"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="wc-cube c2"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<h1>Bem-vindo ao NetExame Analytics BI</h1>
+<p>Inteligência comercial, financeira e preditiva, em uma só plataforma — testado e validado com rigor estatístico</p>
+</div>""",unsafe_allow_html=True)
 
     st.markdown("""<div class="wc-steps">
         <div class="wc-step">
@@ -4659,11 +5824,13 @@ if pg=="boas_vindas":
 
     cf1,cf2,cf3=st.columns(3)
     cf1.markdown("""<details class="wc-card-exp">
-      <summary>📊 Módulo Financeiro</summary>
+      <div class="wc-card-exp-icon">📊</div>
+      <summary>Módulo Financeiro</summary>
       <div class="wc-card-exp-content">
         <ul>
           <li>Demonstrações completas — DRE, Balanço e Fluxo de Caixa, sempre atualizados</li>
           <li>Mais de 15 indicadores de saúde financeira, calculados automaticamente</li>
+          <li>Previsão de contas com Estacionariedade, Auto-Calibração e Viés testados por janela</li>
           <li>Alertas quando algo sai do esperado, sem precisar procurar o problema</li>
           <li>Simulação de cenários — o que acontece se as vendas caírem ou subirem</li>
         </ul>
@@ -4671,26 +5838,28 @@ if pg=="boas_vindas":
     </details>""",unsafe_allow_html=True)
 
     cf2.markdown("""<details class="wc-card-exp">
-      <summary>📈 Módulo Comercial</summary>
+      <div class="wc-card-exp-icon">📈</div>
+      <summary>Módulo Comercial</summary>
       <div class="wc-card-exp-content">
         <ul>
           <li>Previsão de vendas futuras, produto por produto, com base no histórico real</li>
+          <li>Validação Econômica — mede em R$ quanto o modelo economiza vs. um método simples</li>
+          <li>Fator de Risco por produto — margem de segurança calculada com Quantile Forecasting (P10/P90), não estimativa genérica</li>
           <li>Sugestão automática de quanto comprar e quando, sem depender de achismo</li>
-          <li>Aviso antecipado de produtos que podem faltar ou sobrar no estoque</li>
-          <li>Ranking dos produtos que mais pesam no faturamento</li>
-          <li>Avaliação de fornecedores por prazo, qualidade e entrega</li>
+          <li>Ranking dos produtos que mais pesam no faturamento, e avaliação de fornecedores</li>
         </ul>
       </div>
     </details>""",unsafe_allow_html=True)
 
     cf3.markdown("""<details class="wc-card-exp">
-      <summary>✨ Inteligência Artificial</summary>
+      <div class="wc-card-exp-icon">✨</div>
+      <summary>Inteligência Artificial</summary>
       <div class="wc-card-exp-content">
         <ul>
-          <li>O sistema testa várias formas de prever a demanda e escolhe a mais precisa pra cada produto</li>
-          <li>Toda previsão é testada contra o que realmente aconteceu, antes de confiar nela</li>
+          <li>Disputa entre 6 modelos (ARIMA, SARIMAX, Prophet, LightGBM e mais) — vence quem prevê melhor cada produto</li>
+          <li>Ensemble — combina os melhores modelos quando isso bate mais que qualquer um sozinho</li>
+          <li>Toda previsão testada contra o que realmente aconteceu, com Estabilidade de Modelo verificada</li>
           <li>Relatórios executivos escritos automaticamente, cruzando Comercial e Financeiro</li>
-          <li>Pronto pra imprimir ou apresentar, sem trabalho manual</li>
         </ul>
       </div>
     </details>""",unsafe_allow_html=True)    
@@ -4838,11 +6007,178 @@ elif pg=="novo":
             addlog(f"'{nome}' cadastrado"); st.success(f"✅ {nome} cadastrado!"); time.sleep(1); ir("config")
 
 # ── CONFIGURAÇÕES ───────────────────────────────────
+elif pg=="assistente_conexao":
+    hdr("🧭 Assistente de Conexão","Descubra o jeito mais simples de trazer seus dados pro NetExame")
+    if not st.session_state.cid:
+        st.markdown('<div class="al-w">⚠️ Selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
+
+    st.markdown('<div class="al-i">Você não precisa conhecer todas as formas de integração que existem — '
+        'responda 1 pergunta e mostramos exatamente o que fazer no seu caso.</div>',unsafe_allow_html=True)
+
+    st.markdown('<div class="al-s">⚡ <b>Atalho:</b> se o seu sistema é <b>Omie</b> ou <b>Conta Azul</b>, já '
+        'temos conector pronto — não precisa de e-mail, pasta ou script nenhum, é só cadastrar sua chave de '
+        'acesso. Se for <b>TOTVS/Protheus</b>, já reservamos o espaço de configuração — a integração completa '
+        'está em desenvolvimento; nesse caso, use um dos caminhos abaixo enquanto isso.</div>',unsafe_allow_html=True)
+    if st.button("🔗 Ir para ERP — Omie / Conta Azul / TOTVS",use_container_width=True): ir("erp")
+
+    st.markdown("---")
+    st.markdown("### 🔍 Antes de tudo — o primeiro envio é sempre manual")
+    st.markdown('<div class="al-w"><b>Importante:</b> antes de configurar qualquer automação, envie um primeiro '
+        'arquivo de exemplo de cada tipo de dado manualmente. Isso confirma que os dados estão sendo entendidos '
+        'corretamente <b>antes</b> de qualquer coisa rodar sozinha — automatizar um processo com dado errado é o '
+        'maior risco de qualquer integração.</div>',unsafe_allow_html=True)
+    st.caption("O NetExame tem 5 pontos de entrada de dado — clique no que você quer enviar primeiro:")
+    ca1,ca2,ca3=st.columns(3)
+    if ca1.button("📊 Financeiro\n(DRE/Balanço/Fluxo)",use_container_width=True): ir("importar")
+    if ca2.button("📈 Vendas",use_container_width=True): ir("importar_vendas")
+    if ca3.button("📦 Estoque",use_container_width=True): ir("compras")
+    ca4,ca5=st.columns(2)
+    if ca4.button("💰 Contas a Pagar",use_container_width=True): ir("fluxo_compras")
+    if ca5.button("💵 Contas a Receber",use_container_width=True): ir("fluxo_compras")
+
+    st.markdown("---")
+    st.markdown("### 🧭 Depois do primeiro envio — como automatizar pra sempre")
+    st.markdown("**Como o seu sistema consegue tirar os dados hoje?**")
+    resposta_assist=st.radio("",
+        ["📧 Meu sistema já envia relatório por e-mail automaticamente",
+         "📁 Meu sistema salva num arquivo — numa pasta, ou eu clico em Exportar",
+         "🔧 Uso Excel/VBA, ou preciso de um script/RPA feito sob medida",
+         "❓ Não sei / meu sistema é diferente de tudo isso"],
+        key="assist_resposta",label_visibility="collapsed")
+
+    st.markdown("---")
+
+    if "e-mail" in resposta_assist:
+        st.markdown("#### 📧 Caminho recomendado: encaminhamento automático")
+        st.markdown('<div class="al-i">Se o seu sistema já manda algum relatório (diário, semanal) por e-mail pra '
+            'alguém da empresa — mesmo que seja só pra uso interno — basta criar uma regra de encaminhamento '
+            'automático, direcionando esse e-mail pra nossa caixa dedicada. Depois de configurado uma vez, nunca '
+            'mais precisa mexer.</div>',unsafe_allow_html=True)
+        with st.expander("📋 Passo a passo — Gmail"):
+            st.markdown("""
+1. Abra o Gmail → ⚙️ engrenagem → "Ver todas as configurações"
+2. Aba "Encaminhamento e POP/IMAP" → "Adicionar um endereço de encaminhamento"
+3. Digite o e-mail que vamos fornecer (cadastre em **Configurações → Captação por e-mail**)
+4. Confirme o código de verificação que chegar
+5. Crie um filtro: busca → seta ao lado → defina o critério (remetente ou assunto) → "Criar filtro" → marque "Encaminhar para"
+            """)
+        with st.expander("📋 Passo a passo — Outlook"):
+            st.markdown("""
+1. Abra o Outlook → ⚙️ engrenagem → "Ver todas as configurações do Outlook"
+2. "E-mail" → "Regras" → "Adicionar uma nova regra"
+3. Defina a condição (remetente ou palavra no assunto) → ação "Encaminhar para"
+4. Digite o e-mail que vamos fornecer, salve
+            """)
+        st.markdown('<div class="al-s">✅ Se o sistema tiver função NATIVA de agendar envio de e-mail (menu '
+            'Relatórios → "Agendamento" ou "Exportação automática"), esse caminho é ainda mais direto — configure '
+            'lá o envio periódico direto pro nosso e-mail, sem precisar de regra de encaminhamento.</div>',unsafe_allow_html=True)
+        st.markdown('<div class="al-i">📬 <b>Depois de configurado:</b> todo arquivo que chegar vai aparecer na '
+            'fila <b>"Recebidos"</b> — é ali que você confirma cada um (nada entra automaticamente nos '
+            'dashboards sem essa conferência).</div>',unsafe_allow_html=True)
+        cb1,cb2=st.columns(2)
+        if cb1.button("⚙️ Ir para Configurações — cadastrar e-mail autorizado",use_container_width=True): ir("config")
+        if cb2.button("📬 Ir para Recebidos — ver fila de confirmação",use_container_width=True): ir("recebidos")
+
+    elif "salva num arquivo" in resposta_assist:
+        st.markdown("#### 📁 Caminho recomendado: pasta sincronizada")
+        st.markdown('<div class="al-i">Funciona se o sistema salva a exportação numa pasta fixa (sozinho, ou '
+            'quando você clica "Exportar" e escolhe onde salvar).</div>',unsafe_allow_html=True)
+        with st.expander("📋 Passo a passo"):
+            st.markdown("""
+1. Instale o Google Drive, OneDrive ou **SharePoint** (se sua empresa já usa ambiente Microsoft) no computador
+   onde o sistema roda
+2. Se o sistema salva sozinho: aponte a pasta sincronizada pra mesma pasta local onde ele já salva
+3. Se você precisa clicar "Exportar": na hora de salvar, escolha a pasta já sincronizada (em vez de "Downloads")
+4. Pronto — qualquer arquivo salvo ali sincroniza automaticamente, sem precisar de nenhum script
+            """)
+        st.markdown('<div class="al-i">💡 <b>SharePoint</b> costuma ser mais aceito que Google Drive em empresas '
+            'que já usam ambiente Microsoft (Outlook, Teams, Excel corporativo) — funciona pelo mesmo princípio: '
+            'uma biblioteca de documentos sincronizada onde o relatório é salvo. Se sua empresa já usa '
+            '<b>Power Automate</b>, ele também pode automatizar esse fluxo inteiro (ex.: identificar o anexo de '
+            'um e-mail e salvar automaticamente na pasta certa) — vale considerar se já fizer parte do seu '
+            'ambiente Microsoft.</div>',unsafe_allow_html=True)
+        st.markdown("**Prefere subir o arquivo manualmente, sem sincronizar pasta nenhuma?** Também funciona, "
+            "é só repetir o envio na periodicidade combinada — use os mesmos botões do topo desta página, "
+            "conforme o tipo de dado.")
+
+    elif "VBA" in resposta_assist:
+        st.markdown("#### 🔧 Caminho recomendado: automação sob medida")
+        st.markdown('<div class="al-i">Esse caminho serve pra quem já tem familiaridade técnica (Excel avançado, '
+            'VBA, scripts) ou cujo sistema exige navegar por várias telas pra juntar todos os relatórios '
+            'necessários.</div>',unsafe_allow_html=True)
+        with st.expander("📋 Opções dentro desse caminho"):
+            st.markdown("""
+**Se você mantém os dados numa planilha Excel própria**: uma macro VBA pode automatizar o processo — por
+exemplo, disparar o envio por e-mail automaticamente toda vez que a planilha for salva, ou rodar num horário
+agendado usando o Agendador de Tarefas do Windows junto com a macro. Fale com nossa equipe pra alinhar o script
+específico pro seu caso.
+
+**Se o sistema salva num local fixo, mas não pode sincronizar direto com nuvem**: um script de cópia (rodando
+como tarefa agendada do Windows) resolve — ele copia o arquivo pra uma pasta já sincronizada.
+
+**Se gerar todos os relatórios exige navegar por várias telas, uma por uma**: um script de automação (RPA) pode
+abrir o sistema, navegar e exportar tudo sozinho, numa rotina agendada. Esse caminho exige uma chamada de
+reconhecimento das telas do seu sistema com nossa equipe antes de ser desenvolvido.
+            """)
+        st.markdown('<div class="al-w">Esses caminhos exigem apoio da nossa equipe pra desenvolver o script — '
+            'entre em contato pra alinharmos os detalhes do seu caso específico.</div>',unsafe_allow_html=True)
+
+    else:
+        st.markdown("#### ❓ Diagnóstico assistido")
+        st.markdown('<div class="al-i">Sem problema — nem todo sistema se encaixa nos caminhos mais comuns. '
+            'Ainda existem alternativas:</div>',unsafe_allow_html=True)
+        with st.expander("📋 Outras formas de trazer o dado"):
+            st.markdown("""
+**Seu sistema já tem conector oficial na Pluga, Zapier ou Make** (comum em sistemas como Bling e outros ERPs
+populares no Brasil)**?** Nesse caso não precisa de nenhum desenvolvimento — a automação é montada visualmente,
+ligando um evento do seu sistema (ex.: "nova venda criada") direto ao envio pro nosso e-mail. Funciona bem pra
+Vendas e Contas a Pagar/Receber (dados que nascem como eventos); Estoque e relatórios financeiros geralmente
+não são cobertos por esse tipo de conector.
+
+**Seu sistema consegue IMPRIMIR o relatório, mesmo sem exportar arquivo?** Use a função "Imprimir" → escolha uma
+impressora virtual em PDF → envie o PDF por e-mail ou pasta sincronizada. Funciona bem pra DRE, Balanço e Fluxo
+de Caixa.
+
+**Seu sistema não exporta nada, mas você consegue copiar e colar o relatório da tela?** Pedimos uma planilha
+modelo já pronta pro seu formato — você só cola o conteúdo (Ctrl+C/Ctrl+V) na periodicidade combinada, sem
+digitar nada manualmente. Se preferir, uma variação automatiza até a colagem: um script monitora a caixa de
+e-mail e preenche a planilha sozinho, assim que o relatório chega como anexo.
+
+**Volume muito baixo (só Contas a Pagar/Receber, por exemplo) e nenhuma das opções acima se aplica?** Nesse caso
+específico, digitação manual direto na planilha modelo é aceitável — mas não recomendamos isso pra Vendas ou
+Estoque, que têm volume grande demais.
+
+**Nenhuma dessas se encaixa?** Fale diretamente com nossa equipe — fazemos uma chamada rápida pra entender seu
+caso específico e encontrar o caminho certo, mesmo que não esteja listado aqui.
+            """)
+
+    st.markdown("---")
+    st.caption("💡 Esse assistente simplifica a escolha, mas por trás dele o sistema aceita qualquer um dos "
+        "caminhos técnicos — e-mail, pasta, script, planilha, ou conector — sem limitação.")
+
 elif pg=="config":
     hdr("⚙️ Configurações","API Key, saldo inicial e preferências")
     p2=load_cli(st.session_state.cid) if st.session_state.cid else None
     if p2:
         st.markdown(f'<div class="al-i">👤 Cliente ativo: <b>{p2["nome"]}</b></div>',unsafe_allow_html=True)
+
+    with st.expander("🔒 Trilha de Auditoria — histórico permanente de ações"):
+        st.markdown('<div class="al-i">Toda ação sensível (importações, Validações, Projeções, exclusões) fica '
+            'registrada permanentemente em disco, por cliente — com data e hora exatas. Diferente do "Log" de '
+            'sessão (que se perde ao fechar), essa trilha persiste indefinidamente, permitindo reconstruir o '
+            'histórico completo de operações a qualquer momento.</div>',unsafe_allow_html=True)
+        if st.session_state.cid:
+            _trilha=load_auditoria(st.session_state.cid,limite=200)
+            if _trilha:
+                st.caption(f"{len(_trilha)} registro(s) mais recente(s):")
+                _df_trilha=pd.DataFrame(_trilha)
+                _df_trilha["timestamp"]=pd.to_datetime(_df_trilha["timestamp"]).dt.strftime("%d/%m/%Y %H:%M:%S")
+                _df_trilha.columns=["Data/Hora","Tipo","Ação"]
+                st.dataframe(_df_trilha,use_container_width=True,height=300,hide_index=True)
+            else:
+                st.caption("Nenhum registro ainda — a trilha começa a partir de agora.")
+        else:
+            st.caption("Selecione um cliente pra ver a trilha de auditoria dele.")
 
     with st.expander("🔑 API Key — OpenAI ou Claude"):
         st.markdown('<div class="al-i">Cole aqui sua chave da OpenAI (sk-proj-...) ou Claude (sk-ant-...). A IA usa essa chave para ler os arquivos e extrair dados automaticamente.</div>',unsafe_allow_html=True)
@@ -5018,6 +6354,19 @@ elif pg=="importar":
             st.session_state.df_raw=df_final
             save_df(st.session_state.cid,df_final)
             st.markdown(f'<div class="al-s">✅ Leitura direta: <b>{len(df_final)}</b> períodos × <b>{df_final.shape[1]}</b> campos</div>',unsafe_allow_html=True)
+            try:
+                _cm_dir=cm_(df_final); _ca_dir=ca_(df_final)
+                if _cm_dir and _ca_dir:
+                    _cols_valor_dir=[c for c in df_final.columns if c not in (_cm_dir,_ca_dir)]
+                    _meses_zerados_dir=[f"{r[_cm_dir]}/{r[_ca_dir]}" for _,r in df_final.iterrows()
+                        if not any(pd.notna(r.get(c)) and r.get(c)!=0 for c in _cols_valor_dir)]
+                    if _meses_zerados_dir:
+                        st.caption(f"🟡 Atenção: {len(_meses_zerados_dir)} período(s) vieram totalmente zerados — "
+                            f"{', '.join(_meses_zerados_dir[:5])} — vale conferir se é esperado.")
+                    else:
+                        st.caption("🟢 Nenhum período veio totalmente zerado.")
+            except Exception:
+                pass
             if campos_extras:
                 with st.expander(f"⚠️ {len(campos_extras)} coluna(s) extra(s) somadas em Entradas/Saídas (revisão recomendada)"):
                     st.markdown('<div class="al-w">Estas colunas não fazem parte do padrão do sistema, mas o valor foi preservado e somado ao total de Entradas ou Saídas do Fluxo de Caixa. Veja o detalhamento no drill-down da tela de Fluxo de Caixa.</div>',unsafe_allow_html=True)
@@ -5085,6 +6434,13 @@ elif pg=="importar":
                                f'{" + ".join(resumo_demos)}, banco atualizado com <b>{len(df_atual)}</b> períodos totais.</div>',
                                unsafe_allow_html=True)
                     addlog(f"{a.name}: balancete — {' + '.join(resumo_demos)}")
+                    try:
+                        _cm_bal=cm_(df_atual); _ca_bal=ca_(df_atual)
+                        if _cm_bal and _ca_bal:
+                            _ultimo_periodo_bal=f"{df_atual[_cm_bal].iloc[-1]}/{df_atual[_ca_bal].iloc[-1]}"
+                            st.caption(f"🟢 Último período no banco após esse processamento: {_ultimo_periodo_bal}")
+                    except Exception:
+                        pass
                     
                     continue
 
@@ -5174,6 +6530,13 @@ elif pg=="importar":
                            f'{len(cels)} células processadas, banco atualizado com <b>{len(df_merged)}</b> períodos totais.</div>',
                            unsafe_allow_html=True)
                 addlog(f"{a.name}: {demo_detectada} — {len(cels)} células")
+                try:
+                    _cm_mrg=cm_(df_merged); _ca_mrg=ca_(df_merged)
+                    if _cm_mrg and _ca_mrg:
+                        _ultimo_periodo_mrg=f"{df_merged[_cm_mrg].iloc[-1]}/{df_merged[_ca_mrg].iloc[-1]}"
+                        st.caption(f"🟢 Último período no banco após esse processamento: {_ultimo_periodo_mrg}")
+                except Exception:
+                    pass
 
                 # AUDITORIA NÃO-BLOQUEANTE: IA roda em paralelo só pra avisar discrepâncias
                 if st.session_state.api_key and tipo_det in ("DRE","BALANCO","FLUXO"):
@@ -5240,10 +6603,10 @@ elif pg=="importar":
 
 # ── ERP ─────────────────────────────────────────────
 elif pg=="erp":
-    hdr("🔗 ERP","Omie e Conta Azul")
+    hdr("🔗 ERP","Omie, Conta Azul e TOTVS/Protheus")
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
-    erp=st.radio("ERP:",["🟠 Omie","🔵 Conta Azul"],horizontal=True)
+    erp=st.radio("ERP:",["🟠 Omie","🔵 Conta Azul","🟣 TOTVS/Protheus"],horizontal=True)
     if "Omie" in erp:
         st.markdown('<div class="al-i">📌 Omie → Configurações → API → Criar Aplicação → copie App Key e App Secret</div>',unsafe_allow_html=True)
         c1,c2=st.columns(2)
@@ -5297,10 +6660,23 @@ elif pg=="erp":
                     save_df(st.session_state.cid,df_om)
                     st.markdown(f'<div class="al-s">✅ {len(df_om)} meses do Omie</div>',unsafe_allow_html=True)
                     addlog(f"Omie: {len(df_om)} meses")
+                    # Verificação de qualidade — informativa, roda DEPOIS de já
+                    # ter salvo (não altera nada do que foi salvo, só avisa).
+                    try:
+                        _meses_zerados_om=[f"{r['mês']}/{r['Ano']}" for _,r in df_om.iterrows()
+                            if not any(pd.notna(r.get(c)) and r.get(c)!=0 for c in df_om.columns if c not in ("Ano","mês"))]
+                        if _meses_zerados_om:
+                            st.caption(f"🟡 Atenção: {len(_meses_zerados_om)} mês(es) vieram totalmente zerados — "
+                                f"{', '.join(_meses_zerados_om[:5])} — vale conferir se o período realmente não teve "
+                                "movimento, ou se é falha na busca.")
+                        else:
+                            st.caption("🟢 Nenhum mês veio totalmente zerado.")
+                    except Exception:
+                        pass
                 elif dfs2:
                     st.markdown('<div class="al-w">⚠️ A busca não retornou nenhum dado financeiro (só Ano/mês) — nada foi salvo. Confira a App Key e App Secret.</div>',unsafe_allow_html=True)
                 if errs2: st.warning("; ".join(errs2[:3]))
-    else:
+    elif "Conta Azul" in erp:
         st.markdown('<div class="al-i">📌 Conta Azul → Integrações → API → Gerar Token</div>',unsafe_allow_html=True)
         tok=st.text_input("Access Token",type="password")
         c1,c2=st.columns(2)
@@ -5323,9 +6699,27 @@ elif pg=="erp":
                         df_ca=pd.DataFrame([linha_ca]); st.session_state.df_raw=df_ca
                         save_df(st.session_state.cid,df_ca)
                         st.markdown('<div class="al-s">✅ Conta Azul importado</div>',unsafe_allow_html=True)
+                        if linha_ca["receita bruta de vendas"]==0:
+                            st.caption("🟡 Atenção: o valor de Receita Bruta veio exatamente R$ 0 — "
+                                "vale conferir se o período realmente não teve vendas, ou se é falha na busca.")
+                        else:
+                            st.caption(f"🟢 Receita Bruta: {fmt(linha_ca['receita bruta de vendas'])}")
                     else:
                         st.markdown('<div class="al-w">⚠️ A busca não retornou nenhum dado financeiro — nada foi salvo. Confira o Access Token.</div>',unsafe_allow_html=True)
                 except Exception as e: st.error(f"Erro: {e}")
+
+    elif "TOTVS" in erp:
+        st.markdown('<div class="al-i">🏗️ <b>Base preparada para integração com TOTVS/Protheus</b> — voltado '
+            'a empresas de maior porte e estrutura, que operam com ERPs corporativos em vez de plataformas '
+            'de gestão simplificadas. A integração completa (autenticação via REST/TLPP, mapeamento de contas '
+            'contábeis do Protheus) está planejada como próximo passo; esta tela já reserva o espaço e o '
+            'padrão de configuração para quando isso for implementado.</div>',unsafe_allow_html=True)
+        st.text_input("URL do servidor REST Protheus",placeholder="https://servidor:porta/rest",
+            key="totvs_url",disabled=True)
+        c1_totvs,c2_totvs=st.columns(2)
+        c1_totvs.text_input("Usuário",key="totvs_user",disabled=True)
+        c2_totvs.text_input("Senha",type="password",key="totvs_pass",disabled=True)
+        st.caption("Campos desabilitados — integração ainda não implementada nesta versão.")
 
 # ── ARQUIVOS RECEBIDOS (fila de confirmação) ─────────
 elif pg=="recebidos":
@@ -5333,7 +6727,35 @@ elif pg=="recebidos":
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Cadastre e selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
 
-
+    # ═══════════════════════════════════════════════════════════
+    # 📊 STATUS DA INTEGRAÇÃO — seção NOVA, só leitura. Mostra quando os
+    # dados desse cliente foram atualizados pela última vez, sem mexer em
+    # nenhuma lógica de importação/confirmação já existente.
+    # ═══════════════════════════════════════════════════════════
+    sec("📊 Status da Integração")
+    _path_dados_status=os.path.join(PASTA,f"{gid(st.session_state.cid)}_dados.csv")
+    if os.path.exists(_path_dados_status):
+        _mtime_status=datetime.fromtimestamp(os.path.getmtime(_path_dados_status))
+        _dias_desde_status=(datetime.now()-_mtime_status).days
+        _cor_status="g" if _dias_desde_status<=2 else ("y" if _dias_desde_status<=7 else "r")
+        _icone_status="🟢" if _cor_status=="g" else ("🟡" if _cor_status=="y" else "🔴")
+        try:
+            _df_status_check=pd.read_csv(_path_dados_status,sep=";",decimal=",",encoding="utf-8-sig")
+            _n_registros_status=len(_df_status_check)
+            _cm_status,_ca_status=cm_(_df_status_check),ca_(_df_status_check)
+            _periodo_txt=""
+            if _cm_status and _ca_status and len(_df_status_check)>0:
+                _periodo_txt=f" | Período: {_df_status_check[_cm_status].iloc[0]}/{_df_status_check[_ca_status].iloc[0]} → {_df_status_check[_cm_status].iloc[-1]}/{_df_status_check[_ca_status].iloc[-1]}"
+        except Exception:
+            _n_registros_status="?"; _periodo_txt=""
+        st.markdown(f'<div class="al-i">{_icone_status} <b>Dados financeiros/comerciais</b> — '
+            f'última atualização: {_mtime_status.strftime("%d/%m/%Y %H:%M")} ({_dias_desde_status} dia(s) atrás) | '
+            f'{_n_registros_status} registro(s){_periodo_txt}</div>',unsafe_allow_html=True)
+        if _cor_status=="r":
+            st.caption("⚠️ Mais de 7 dias sem atualização — vale confirmar se o processo de envio automático ainda está ativo.")
+    else:
+        st.markdown('<div class="al-w">🔴 Nenhum dado importado ainda para esse cliente.</div>',unsafe_allow_html=True)
+    st.divider()
 
     with st.expander("📧 Captação automática por e-mail"):
         st.markdown('<div class="al-i">Configure a caixa dedicada em ⚙️ Configurações. Aqui você só cadastra quais remetentes têm autorização de enviar dados <b>para este cliente</b> — a plataforma ignora e-mails de qualquer outro remetente.</div>',unsafe_allow_html=True)
@@ -5403,6 +6825,46 @@ elif pg=="recebidos":
                 if isinstance(df_item,pd.DataFrame):
                     st.caption(f"Prévia — {msg_item}")
                     st.dataframe(df_item.head(8),use_container_width=True)
+
+                    # ═══════════════════════════════════════════════════
+                    # 🔍 ALERTAS DE QUALIDADE — só informativo, não bloqueia
+                    # nem altera a confirmação. Procura uma coluna de data
+                    # (nomes comuns) e confere duplicidade exata, datas
+                    # futuras e continuidade do período.
+                    # ═══════════════════════════════════════════════════
+                    try:
+                        _col_data_qual=next((c for c in df_item.columns
+                            if str(c).strip().lower() in ("data","emissão","emissao","data emissão",
+                                "data emissao","vencimento","dtemissao")),None)
+                        _alertas_qual=[]
+                        if _col_data_qual:
+                            _datas_qual=pd.to_datetime(df_item[_col_data_qual],errors="coerce",dayfirst=True).dropna()
+                            if len(_datas_qual)>0:
+                                _n_futuras=(_datas_qual>pd.Timestamp.now()).sum()
+                                if _n_futuras>0:
+                                    _alertas_qual.append(f"🔴 {_n_futuras} registro(s) com data futura — pode ser erro de digitação na origem")
+                                else:
+                                    _alertas_qual.append("🟢 Sem datas futuras")
+                                _dias_unicos_qual=_datas_qual.dt.date.nunique()
+                                _span_dias_qual=(_datas_qual.max()-_datas_qual.min()).days+1
+                                if _span_dias_qual>1 and _dias_unicos_qual<_span_dias_qual*0.5:
+                                    _alertas_qual.append(f"🟡 Período com {_span_dias_qual-_dias_unicos_qual} dia(s) sem "
+                                        f"nenhum registro, dentro do intervalo {_datas_qual.min().strftime('%d/%m')} → "
+                                        f"{_datas_qual.max().strftime('%d/%m')} — pode ser normal (fim de semana) ou "
+                                        "arquivo incompleto")
+                                else:
+                                    _alertas_qual.append("🟢 Período contínuo, sem lacunas relevantes")
+                        _n_dup_qual=df_item.duplicated().sum()
+                        if _n_dup_qual>0:
+                            _alertas_qual.append(f"🟡 {_n_dup_qual} linha(s) exatamente duplicada(s)")
+                        else:
+                            _alertas_qual.append("🟢 Sem duplicidade exata")
+                        if _alertas_qual:
+                            st.caption("**Verificação de qualidade** (informativo — não impede a confirmação):")
+                            for _a_qual in _alertas_qual:
+                                st.caption(_a_qual)
+                    except Exception:
+                        pass  # verificação de qualidade nunca impede a confirmação normal
                 else:
                     st.markdown(f'<div class="al-w">⚠️ Sem prévia automática ({msg_item}) — confira o arquivo original antes de confirmar.</div>',unsafe_allow_html=True)
 
@@ -6844,26 +8306,6 @@ elif pg=="indicadores":
                 f'<div class="mc-val {_cls_ind}">{fmt(v,t)}</div>'
                 f'<div class="mc-sub">Max: {fmt(mx_v,t)} | Min: {fmt(mn_v,t)}</div></div>',unsafe_allow_html=True)
         except: pass
-    if mes_i=="Todos" and len(df_i)>=6:
-        sec("🔮 Projeção — Próximo Mês")
-        _mds_prox=[m for m,ok in MODELOS_ML.items() if ok]
-        _cols_proj_i=st.columns(3)
-        for _cp_i,_campo_p_i,_lbl_p_i in zip(_cols_proj_i,["receita bruta de vendas","lucro líquido","EBITDA"],["Receita Bruta","Lucro Líquido","EBITDA"]):
-            if _campo_p_i not in df_i.columns: continue
-            try:
-                _melhor_i,_=melhor_modelo(df_i[_campo_p_i],_mds_prox[:3])
-                _proj_i=treinar(df_i[_campo_p_i],_melhor_i,1)
-                if _proj_i is not None:
-                    _v_at_i=float(df_i[_campo_p_i].iloc[-1]); _v_pr_i=float(_proj_i.iloc[0])
-                    _var_i=safe(_v_pr_i-_v_at_i,abs(_v_at_i))*100
-                    _mds_testados_i=", ".join([m for m,ok in MODELOS_ML.items() if ok])
-                    _cp_i.markdown(f'<div class="mc"><div class="mc-lbl">📮 {_lbl_p_i}</div>'
-                                f'<div class="mc-val {cor(_var_i)}">{fmt(_v_pr_i)}</div>'
-                                f'<div class="mc-sub">{_var_i:+.1f}% vs último mês<br>'
-                                f'<span style="font-size:.65rem;color:#9CA3AF">'
-                                f'Escolhido por menor MSE: <b>{_melhor_i}</b><br>'
-                                f'Modelos testados: {_mds_testados_i}</span></div></div>',unsafe_allow_html=True)
-            except: pass
     sec("📈 Evolução")
     _x_evol_i=df_i[cm].astype(str) if cm else pd.Series(range(len(df_i))).astype(str)
     if ca and cm:
@@ -6894,7 +8336,8 @@ elif pg=="indicadores":
           ("receita bruta de vendas","#0EA5E9","Receita Bruta","y","solid"),
           ("receita líquida","#16A34A","Receita Líquida","y","dash"),
           ("lucro bruto","#A9762F","Lucro Bruto","y2","solid"),
-          ("lucro líquido","#DC2626","Lucro Líquido","y2","solid")]:
+          ("lucro líquido","#DC2626","Lucro Líquido","y2","solid"),
+          ("EBITDA","#7C3AED","EBITDA","y2","dash")]:
             if c not in df_i.columns: continue
             y=pd.to_numeric(df_i[c],errors="coerce")
             _fig_rf_i.add_trace(go.Scatter(x=_x_evol_i,y=y,name=nm,mode="lines+markers",
@@ -6924,7 +8367,7 @@ elif pg=="indicadores":
         _fig_mg_i.update_layout(**_layout_graf_i("📊 Margens (%)","% sobre Receita Líquida"))
         st.plotly_chart(_fig_mg_i,use_container_width=True)
 
-    t3,t4=st.tabs(["Prazos","ROE / ICD"])
+    t3,t4,t5,t6=st.tabs(["Prazos","ROE / ICD","Liquidez","Giro & Ticket"])
     TH_IND=dict(plot_bgcolor="white",paper_bgcolor="white",
         font=dict(color="#6B7280",size=10,family="Inter"),
         xaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=False,tickangle=-35),
@@ -6963,6 +8406,8 @@ elif pg=="indicadores":
 
     with t3: st.plotly_chart(gl_light(df_i,["PMR","PMP","PME","ciclo de caixa"],"Prazos (dias)",cm),use_container_width=True)
     with t4: st.plotly_chart(gl_light(df_i,["ROE","ICD"],"ROE e ICD %",cm),use_container_width=True)
+    with t5: st.plotly_chart(gl_light(df_i,["liquidez corrente","liquidez imediata"],"Liquidez (x)",cm),use_container_width=True)
+    with t6: st.plotly_chart(gl_light(df_i,["giro estoque","ticket médio"],"Giro de Estoque e Ticket Médio",cm),use_container_width=True)
 
 # ── ALERTAS ─────────────────────────────────────────
 elif pg=="alertas":
@@ -7080,33 +8525,46 @@ elif pg=="alertas":
                     f'{"<br><span style=\'font-size:.8rem;opacity:.85\'>"+detalhe+"</span>" if detalhe else ""}'
                     f'</div>',unsafe_allow_html=True)
 
-    # Anomalias com gráfico
-    sec("🔍 Detecção de Anomalias")
-    st.markdown('<div class="al-i">Pontos fora do padrão histórico — variação acima de 1,3x o desvio padrão móvel.</div>',unsafe_allow_html=True)
-    campos_anom=[
-        ("receita bruta de vendas","#2563EB","Receita Bruta"),
-        ("CMV (custo da mercadoria vendida)","#DC2626","CMV"),
-        ("despesas administrativas","#D97706","Desp. Administrativas"),
-        ("lucro líquido","#059669","Lucro Líquido"),
-        ("EBITDA","#7C3AED","EBITDA")]
-    achou_anom=False
-    for campo_a2,cor_a,nm_a in campos_anom:
-        if campo_a2 not in df_a.columns: continue
-        anom=detectar_anomalias(df_a[campo_a2]); n_anom=int(anom.sum())
+    # Pré-calcula anomalia de cada campo financeiro, uma vez, pra usar na
+    # tabela de resumo abaixo — junto com os outros indicadores, em vez de
+    # numa lista técnica separada.
+    _colunas_excluir_anom={c for c in (cm,ca) if c}
+    _campos_numericos_anom=[c for c in df_a.columns
+        if c not in _colunas_excluir_anom and not str(c).startswith("_")
+        and pd.api.types.is_numeric_dtype(df_a[c])]
+    _anom_por_campo={campo:detectar_anomalias(df_a[campo],meses=df_a[cm] if cm else None) for campo in _campos_numericos_anom}
+
+    # Lista detalhada — volta a existir, além da tabela, com explicação
+    # didática de como o cálculo funciona.
+    sec("🔍 Meses e Contas Fora do Padrão")
+    st.markdown('<div class="al-i"><b>Como funciona, em palavras simples:</b> pra cada conta (Receita, Lucro, '
+        'Estoque, etc.), o sistema olha o histórico de meses e calcula "qual é o comportamento normal dela". '
+        'Um mês é marcado quando o valor daquela conta, NAQUELE mês, ficou muito mais longe do normal do que a '
+        'própria conta costuma variar — não é comparação com outra empresa nem com meta, é a conta contra o '
+        'próprio histórico dela. Contas com dado insuficiente (menos de 6 meses) não são avaliadas.</div>',
+        unsafe_allow_html=True)
+    _linhas_lista_anom=[]
+    for campo_a2,anom_serie in _anom_por_campo.items():
+        n_anom=int(anom_serie.sum())
         if n_anom>0:
-            achou_anom=True
-            ma=df_a[cm][anom].tolist() if cm else list(df_a.index[anom])
-            st.markdown(f'<div class="al-w">⚠️ <b>{nm_a}</b>: {n_anom} ponto(s) atípico(s) — '
-                       f'períodos: {", ".join(str(m) for m in ma[:6])}</div>',unsafe_allow_html=True)
-    if not achou_anom:
-        st.markdown('<div class="al-s">✅ Nenhuma anomalia detectada nos campos analisados.</div>',unsafe_allow_html=True)
+            _periodos_anom=[f"{df_a.loc[i,cm]}/{df_a.loc[i,ca]}" for i in df_a.index[anom_serie] if cm and ca]
+            _linhas_lista_anom.append((campo_a2,n_anom,_periodos_anom))
+    if _linhas_lista_anom:
+        for campo_a2,n_anom,_periodos_anom in sorted(_linhas_lista_anom,key=lambda x:-x[1]):
+            st.markdown(f'<div class="al-w">⚠️ <b>{campo_a2}</b>: {n_anom} mês(es) fora do padrão — '
+                       f'{", ".join(_periodos_anom[:8])}</div>',unsafe_allow_html=True)
+    else:
+        st.markdown(f'<div class="al-s">✅ Nenhuma conta com mês fora do padrão, entre as '
+            f'{len(_campos_numericos_anom)} analisadas.</div>',unsafe_allow_html=True)
 
     # Tabela resumo por período
     sec("📊 Resumo de Saúde por Período")
-    st.markdown('<div class="al-i">✅ = indicador positivo/saudável | ⚠️ = atenção | 🔴 = crítico</div>',unsafe_allow_html=True)
+    st.markdown('<div class="al-i">✅ = dentro do esperado | ⚠️ = merece atenção | 🔴 = crítico. A coluna '
+        '"Fora do padrão" avisa quando algum número desse mês (em qualquer conta) ficou bem diferente do que a '
+        'empresa normalmente apresenta nos outros meses — vale abrir e conferir.</div>',unsafe_allow_html=True)
     if ca and cm:
         res=[]
-        for _,row in df_a.iterrows():
+        for idx_row,row in df_a.iterrows():
             def status(campo,inv=False,limites=None):
                 try:
                     v=float(row.get(campo,0) or 0)
@@ -7119,15 +8577,24 @@ elif pg=="alertas":
                 except: return "—"
             sc_r=float(row.get("score_risco",0))
             sc_lbl="🟢" if sc_r>=80 else ("🟡" if sc_r>=60 else ("🟠" if sc_r>=40 else "🔴"))
+
+            _campos_fora_padrao=[c for c,serie_anom in _anom_por_campo.items() if serie_anom.get(idx_row,False)]
+            if _campos_fora_padrao:
+                _texto_fora_padrao=f"⚠️ {len(_campos_fora_padrao)} conta(s): "+", ".join(_campos_fora_padrao[:3])
+                if len(_campos_fora_padrao)>3: _texto_fora_padrao+="..."
+            else:
+                _texto_fora_padrao="✅"
+
             res.append({
-                "Ano":row.get(ca,""),"Mês":row.get(cm,""),
+                "Período":f"{row.get(cm,'')}/{row.get(ca,'')}",
                 "Score":f"{sc_lbl} {sc_r:.0f}",
                 "Receita":status("receita bruta de vendas"),
                 "Lucro":status("lucro líquido"),
                 "Mg Líquida":status("margem líquida %",limites=(0,5)),
                 "Liquidez":status("liquidez corrente",limites=(1,1.5)),
                 "Kanitz":status("kanitz",limites=(0,0)),
-                "Ciclo Cx":status("ciclo de caixa",inv=True)})
+                "Ciclo Cx":status("ciclo de caixa",inv=True),
+                "Fora do padrão":_texto_fora_padrao})
         st.dataframe(pd.DataFrame(res),use_container_width=True,hide_index=True)
 
 # ── ML ───────────────────────────────────────────────
@@ -7142,17 +8609,24 @@ elif pg=="ml":
         _filiais_disp_mlp2=sorted(v for v in _df_raw_mlp2[_col_fil_mlp2].dropna().astype(str).unique().tolist() if v!="(Todas as filiais)")
         _opcoes_filial_mlp2=["(Todas as filiais)"]+_filiais_disp_mlp2
 
+        # Sincroniza com a MESMA Filial da Validação Financeira (mlf_filial_
+        # sel_backup) — sem isso, os dois seletores viviam vidas separadas, e
+        # bastava eles ficarem em Filiais diferentes pra Projeções ML procurar
+        # o resultado salvo da Filial ERRADA, achando "nada" mesmo existindo.
+        _filial_validacao_atual=st.session_state.get("mlf_filial_sel_backup")
+
         def _on_change_filial_mlp2():
             st.session_state["mlp2_filial_sel_backup"]=st.session_state["mlp2_filial_sel"]
 
-        if "mlp2_filial_sel_backup" not in st.session_state:
-            st.session_state["mlp2_filial_sel_backup"]=_opcoes_filial_mlp2[0]
-        if st.session_state["mlp2_filial_sel_backup"] not in _opcoes_filial_mlp2:
+        if _filial_validacao_atual in _opcoes_filial_mlp2:
+            st.session_state["mlp2_filial_sel_backup"]=_filial_validacao_atual
+        elif "mlp2_filial_sel_backup" not in st.session_state or st.session_state["mlp2_filial_sel_backup"] not in _opcoes_filial_mlp2:
             st.session_state["mlp2_filial_sel_backup"]=_opcoes_filial_mlp2[0]
         st.session_state["mlp2_filial_sel"]=st.session_state["mlp2_filial_sel_backup"]
 
         filial_sel_mlp2=st.selectbox("🏬 Filial",_opcoes_filial_mlp2,
-          key="mlp2_filial_sel",on_change=_on_change_filial_mlp2)
+          key="mlp2_filial_sel",on_change=_on_change_filial_mlp2,
+          help="Sincronizado com a Filial usada na Validação Financeira.")
 
     df=get_df_filial(filial_sel_mlp2)
     if df is None: no_data(); st.stop()
@@ -7174,8 +8648,14 @@ elif pg=="ml":
     anos_ml=["Todos"]+[str(a) for a in sorted(df[ca].dropna().unique().tolist())] if ca else ["Todos"]
     ano_ml=col1.selectbox("Ano base",anos_ml,key="ml_ano")
     df_ml=df[df[ca].astype(str)==ano_ml].reset_index(drop=True) if ano_ml!="Todos" else df.reset_index(drop=True)
-    n_m=col2.slider("Meses a projetar",1,24,6)
-    var_pct=col3.slider("Variação cenários (%)",5,30,15,step=5)
+    n_m=12  # Não é mais um controle — o horizonte real vem pronto da
+    # Validação Financeira (hoje, 12 meses fixos lá). Aqui só informamos,
+    # não decidimos mais quantos meses vêm.
+    col2.markdown("**Meses de projeção**")
+    col2.caption("Definido na Validação Financeira (atualmente 12 meses) — não é mais escolhido aqui.")
+    var_pct=15  # Fixo, só como reserva — usado nos raros casos em que uma
+    # conta não tem erro histórico suficiente (<3 pontos) pra rodar Monte
+    # Carlo. Não é mais o método principal, por isso saiu da tela.
 
     if len(df_ml)<6:
         st.markdown('<div class="al-w">⚠️ Mínimo 6 períodos de dados para projetar.</div>',unsafe_allow_html=True)
@@ -7192,7 +8672,7 @@ elif pg=="ml":
         ("lucro líquido","Lucro Líquido","#059669"),
         ("EBITDA","EBITDA","#D97706"),
         ("margem bruta %","Margem Bruta %","#7C3AED"),
-        ("margem contrib %","Margem Contribuição %","#7C3AED"),
+        ("margem contrib %","Margem de Contribuição %","#7C3AED"),
         ("margem líquida %","Margem Líquida %","#DC2626"),
         ("EBITDA %","EBITDA %","#D97706"),
         ("despesas comerciais","Desp. Comerciais","#DC2626"),
@@ -7216,24 +8696,94 @@ elif pg=="ml":
         ("Disponibilidades entradas","Entradas Caixa","#059669"),
         ("Disponibilidades Saida","Saídas Caixa","#DC2626"),
     ]
-    campos_proj=[(c,l,cor_c) for c,l,cor_c in campos_fixos if c in df_ml.columns]
+    # ⚠️ Essa página NÃO disputa modelo mais — a decisão de qual modelo vence
+    # pra cada conta já é feita, com rigor (multi-janela, backtest, cache de
+    # ordem), em "Validação Estatística de Previsões Financeiras". Aqui só
+    # REAPROVEITA esse resultado. Busca o resultado validado das 4
+    # Demonstrações (DRE, Balanço, Indicadores, Fluxo de Caixa) — sempre do
+    # disco, nunca de memória (elimina inconsistência de navegação).
+    _modelo_validado_por_conta={}
+    _projecao_futura_por_conta={}
+    _rotulo_original_por_conta={}   # grafia bonita, pra exibição
+    _raw_por_rotulo_ml={}           # nome interno, pra achar a coluna certa em df_ml
+    _demos_com_validacao=[]
+    _demos_com_projecao_futura=[]
+    _demos_sem_validacao=[]
+    for _demo_check in DEMONSTRACOES_CAMPOS.keys():
+        _escopo_check=f"{filial_sel_mlp2}__{_demo_check}"
+        _disco_check=load_resultado_valfin(st.session_state.cid,_escopo_check) if st.session_state.cid else None
+        if _disco_check and _disco_check.get("validacao"):
+            _df_demo_check=pd.DataFrame(_disco_check["validacao"])
+            if "Conta" in _df_demo_check.columns and "Modelo" in _df_demo_check.columns:
+                _tem_raw="ContaRaw" in _df_demo_check.columns
+                for _idx_c,_row_c in _df_demo_check.iterrows():
+                    _chave_c=str(_row_c["Conta"]).strip().lower()
+                    _modelo_validado_por_conta[_chave_c]=_row_c["Modelo"]
+                    _rotulo_original_por_conta[_chave_c]=str(_row_c["Conta"]).strip()
+                    if _tem_raw and pd.notna(_row_c.get("ContaRaw")):
+                        _raw_por_rotulo_ml[_chave_c]=_row_c["ContaRaw"]
+                _demos_com_validacao.append(_demo_check)
+                if _disco_check.get("projecao_futura"):
+                    for c,v in _disco_check["projecao_futura"].items():
+                        _projecao_futura_por_conta[str(c).strip().lower()]=v
+                    _demos_com_projecao_futura.append(_demo_check)
+                continue
+        _demos_sem_validacao.append(_demo_check)
+
+    _tem_validacao_mlf=len(_modelo_validado_por_conta)>0
+    if not _tem_validacao_mlf:
+        st.markdown('<div class="al-d">❌ Nenhum resultado de "Validação Estatística de Previsões Financeiras" '
+            'encontrado para essa Filial, em nenhuma Demonstração. Rode a Validação Financeira primeiro — essa '
+            'página não gera projeção própria, só reaproveita o modelo já validado lá.</div>',unsafe_allow_html=True)
+        st.stop()
+    if _demos_sem_validacao:
+        st.markdown('<div class="al-i">ℹ️ Demonstrações sem Validação rodada pra essa Filial: '
+            f'{", ".join(_demos_sem_validacao)} — contas dessas Demonstrações não vão conectar. Já conectadas: '
+            f'{", ".join(_demos_com_validacao)}.</div>',unsafe_allow_html=True)
+
+    # Lista de contas — DINÂMICA, pega TODA conta validada em QUALQUER
+    # Demonstração, sem depender de lista fixa manual.
+    _paleta_cores_ml=["#2563EB","#059669","#D97706","#7C3AED","#DC2626","#0891B2"]
+    campos_proj=[]
+    for _i_cor,(_chave_c,_rotulo_c) in enumerate(_rotulo_original_por_conta.items()):
+        _cor_c=_paleta_cores_ml[_i_cor%len(_paleta_cores_ml)]
+        # "campo" usado nos gráficos/histórico = nome INTERNO real (bate com
+        # df_ml.columns), se disponível; senão, usa o rótulo mesmo (fallback
+        # pra contas validadas ANTES dessa correção, sem ContaRaw salvo).
+        _campo_real=_raw_por_rotulo_ml.get(_chave_c,_rotulo_c)
+        campos_proj.append((_campo_real,_rotulo_c,_cor_c))
+
+    if _demos_sem_projecao_futura:=[d for d in _demos_com_validacao if d not in _demos_com_projecao_futura]:
+        st.markdown('<div class="al-i">ℹ️ Demonstrações validadas mas sem previsão futura calculada ainda: '
+            f'{", ".join(_demos_sem_projecao_futura)} — rode a Validação Financeira de novo pra essas '
+            '(a previsão futura só passou a ser calculada a partir de agora).</div>',unsafe_allow_html=True)
 
     senha_gerar_projecoes=st.text_input("Senha master para gerar",type="password",key="senha_gerar_projecoes")
     if st.button("🚀 Gerar Projeções",use_container_width=True):
         if senha_gerar_projecoes!=SENHA_MASTER:
             st.markdown('<div class="al-d">❌ Senha master incorreta — nada foi executado.</div>',unsafe_allow_html=True)
             st.stop()
-        projs={}; pb=st.progress(0)
-        with st.spinner("🤖 Testando modelos e gerando projeções..."):
-            for i,(campo,lbl,cor_c) in enumerate(campos_proj):
-                try:
-                    melhor,rank=melhor_modelo(df_ml[campo],mds_disp)
-                    proj=treinar(df_ml[campo],melhor,n_m)
-                    if proj is not None:
-                        projs[campo]={"modelo":melhor,"valores":proj.tolist(),"rank":rank,"lbl":lbl,"cor":cor_c}
-                except: pass
-                pb.progress((i+1)/len(campos_proj))
-        pb.empty()
+
+        # Zero treino aqui — só LÊ a previsão futura que a própria Validação
+        # Financeira já calculou e guardou (mesmo modelo, mesma ordem, sem
+        # reimplementação divergente).
+        projs={}; _nao_conectados=[]
+        for campo,lbl,cor_c in campos_proj:
+            _melhor_validado=_modelo_validado_por_conta.get(lbl.strip().lower()) or _modelo_validado_por_conta.get(campo.strip().lower())
+            if not _melhor_validado:
+                _nao_conectados.append(f"{lbl} (sem modelo validado)")
+                continue
+            _proj_pronta=_projecao_futura_por_conta.get(lbl.strip().lower()) or _projecao_futura_por_conta.get(campo.strip().lower())
+            if not _proj_pronta:
+                _nao_conectados.append(f"{lbl} (modelo validado, mas sem previsão futura calculada — rode a "
+                    f"Validação Financeira de novo)")
+                continue
+            projs[campo]={"modelo":_melhor_validado,"valores":list(_proj_pronta),"rank":{},"lbl":lbl,"cor":cor_c,
+                "reaproveitado":True}
+
+        if _nao_conectados:
+            st.markdown('<div class="al-w">⚠️ <b>'+str(len(_nao_conectados))+' conta(s) não geraram projeção nessa '
+                'rodada:</b><br>'+"<br>".join(_nao_conectados)+'</div>',unsafe_allow_html=True)
         st.session_state.projecoes=projs
         st.session_state["projecoes_filial_atual"]=filial_sel_mlp2
         if st.session_state.cid:
@@ -7250,7 +8800,12 @@ elif pg=="ml":
             yaxis=dict(gridcolor="#F3F4F6",linecolor="#E8ECF0",showgrid=True),
             margin=dict(l=8,r=8,t=44,b=40),
             legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.3,font=dict(size=9)),
-            hovermode="x unified",
+            # "closest" em vez de "x unified" — Histórico não tem ponto nos
+            # meses futuros (projeção), então "x unified" mostrava o ÚLTIMO
+            # mês histórico disponível junto com o mês projetado, parecendo
+            # (erradamente) que eram o mesmo período. "closest" mostra só o
+            # ponto exato que o mouse está sobre, sem misturar os dois.
+            hovermode="closest",
             hoverlabel=dict(bgcolor="white",bordercolor="#E8ECF0",font=dict(color="#111827",size=11)))
 
         x_h=df_ml[cm].astype(str) if cm else pd.Series(range(len(df_ml))).astype(str)
@@ -7307,13 +8862,6 @@ elif pg=="ml":
                   mode="lines+markers",line=dict(color=cor_c,width=2,dash="dash"),
                   marker=dict(size=6,color=cor_c,symbol="diamond",line=dict(color="white",width=1.5)),
                   hovertemplate=f"<b>Projeção</b><br>%{{x}}<br>%{{y:,.1f}}<extra></extra>"))
-                # Banda incerteza
-                y_up=[v*(1+var_pct/100) for v in v_proj]
-                y_dn=[v*(1-var_pct/100) for v in v_proj]
-                fig.add_trace(go.Scatter(x=x_p+x_p[::-1],y=y_up+y_dn[::-1],
-                  fill="toself",fillcolor="rgba(107,114,128,.08)",
-                  line=dict(color="rgba(0,0,0,0)"),name=f"±{var_pct}%",showlegend=True))
-
                 fig.update_layout(
                   title=dict(text=f"{lbl} — {var:+.1f}% em {n_m} meses ({melhor_nm})",
                     font=dict(size=11,color="#111827")),**TH_ML)
@@ -7329,42 +8877,97 @@ elif pg=="ml":
             var=safe(v_pr-v_at,abs(v_at))*100
             rank_s=sorted(p.get("rank",{}).items(),key=lambda x:x[1])
 
+            # Listas ÚNICAS, uma vez só — antes existiam 4 cópias iguais
+            # espalhadas (fmt_titulo, fmt_c, aqui, e fmt_campo mais abaixo),
+            # e "PME" tinha ficado de fora de todas (só nunca apareceu antes
+            # porque não estava na lista fixa antiga — a lista dinâmica
+            # revelou o esquecimento). Definir uma vez só evita repetir esse
+            # tipo de lacuna no futuro.
+            _pct_campos_ml=["margem bruta %","margem contrib %","margem líquida %",
+                "EBITDA %","ROE","ROE %"]
+            _dias_campos_ml=["PMR","PMP","PME","ciclo de caixa"]
+            _x_campos_ml=["liquidez corrente","liquidez imediata","giro estoque","giro de estoque"]
             def fmt_titulo(campo,v):
-                pct_c=["margem bruta %","margem contrib %","margem líquida %",
-                        "EBITDA %","liquidez corrente","liquidez imediata","ROE"]
-                dias_c=["PMR","PMP","ciclo de caixa"]
-                if campo in pct_c: return fmt(v,"pct")
-                if campo in dias_c: return fmt(v,"d")
+                if campo in _pct_campos_ml: return fmt(v,"pct")
+                if campo in _dias_campos_ml: return fmt(v,"d")
+                if campo in _x_campos_ml: return fmt(v,"x")
                 if campo=="kanitz": return f"{v:.2f}"
                 return fmt(v)
             with st.expander(f"{lbl} — Melhor modelo: {p['modelo']} | Projeção: {fmt_titulo(campo,v_pr)} ({var:+.1f}%)"):
-                # Cenários
+                # Cenários — Monte Carlo, usando erro real da Validação pra
+                # essa conta específica, em vez de um ±% fixo igual pra
+                # todas. Cai pro ±% antigo só se não tiver erro histórico
+                # suficiente (menos de 3 pontos) — nesse caso, avisa.
                 c1,c2,c3=st.columns(3)
                 def fmt_c(v):
-                    pct_c=["margem bruta %","margem contrib %","margem líquida %",
-                            "EBITDA %","liquidez corrente","liquidez imediata","ROE"]
-                    dias_c=["PMR","PMP","ciclo de caixa"]
-                    if campo in pct_c: return fmt(v,"pct")
-                    if campo in dias_c: return fmt(v,"d")
-                    if campo=="kanitz": return f"{v:.2f}"
-                    return fmt(v)
+                    return fmt_titulo(campo,v)
 
-                mc(c1,f"🐻 Pessimista (-{var_pct}%)",fmt_c(v_pr*(1-var_pct/100)),"r",f"vs atual: {fmt_c(v_at)}")
-                mc(c2,"📊 Base (projeção)",fmt_c(v_pr),"y",f"{var:+.1f}% vs atual")
-                mc(c3,f"🐂 Otimista (+{var_pct}%)",fmt_c(v_pr*(1+var_pct/100)),"g",f"vs atual: {fmt_c(v_at)}")
+                _erros_hist_pml=[]
+                for _demo_pml in DEMONSTRACOES_CAMPOS.keys():
+                    _escopo_pml=f"{filial_sel_mlp2}__{_demo_pml}"
+                    _disco_pml=load_resultado_valfin(st.session_state.cid,_escopo_pml) if st.session_state.cid else None
+                    if _disco_pml and _disco_pml.get("validacao"):
+                        _df_pml=pd.DataFrame(_disco_pml["validacao"])
+                        # Usa "ErroSinal %" (com direção) — "Erro %" é sempre
+                        # positivo (absoluto), o que empurrava toda simulação
+                        # só pra cima. Fallback pro "Erro %" só se a conta
+                        # ainda não tiver sido revalidada com o campo novo.
+                        _col_erro_pml="ErroSinal %" if "ErroSinal %" in _df_pml.columns else "Erro %"
+                        if "Conta" in _df_pml.columns and _col_erro_pml in _df_pml.columns:
+                            _linhas_pml=_df_pml[_df_pml["Conta"].astype(str).str.strip().str.lower()==str(lbl).strip().lower()]
+                            _erros_hist_pml.extend([e for e in _linhas_pml[_col_erro_pml].tolist() if pd.notna(e)])
+
+                if len(_erros_hist_pml)>=3:
+                    _rng_pml=np.random.default_rng(42)
+                    _erros_arr_pml=np.array(_erros_hist_pml)/100.0
+                    _sim_pml=v_pr*(1+_rng_pml.choice(_erros_arr_pml,size=2000,replace=True))
+                    _p10_bruto_pml=float(np.percentile(_sim_pml,10))
+                    _p90_bruto_pml=float(np.percentile(_sim_pml,90))
+                    # Simetriza a faixa em torno da Base — com poucos pontos
+                    # de erro (< ~8-10), não dá pra confiar na ASSIMETRIA da
+                    # distribuição simulada (pode inverter por acaso da
+                    # amostra pequena). O TAMANHO da variação observada
+                    # continua vindo do erro real medido — só a FORMA (pra
+                    # cima = pra baixo) é imposta como salvaguarda, prática
+                    # comum quando a amostra é pequena demais pra confiar no
+                    # formato exato, mas suficiente pra estimar a magnitude.
+                    _amplitude_pml=abs(_p90_bruto_pml-v_pr)
+                    _p10_pml=v_pr-_amplitude_pml
+                    _p90_pml=v_pr+_amplitude_pml
+                    # Rótulo NEUTRO (não "Pessimista/Otimista") — se o modelo
+                    # historicamente SUBESTIMOU essa conta (erros positivos
+                    # na maioria), até o P10 pode ficar ACIMA da Base. Chamar
+                    # isso de "Pessimista" seria enganoso; "Limite Inferior/
+                    # Superior da simulação" é sempre correto, independente
+                    # da direção do viés.
+                    mc(c1,"📉 Limite Inferior (P10)",fmt_c(_p10_pml),"r",f"vs atual: {fmt_c(v_at)}")
+                    mc(c2,"📊 Base (projeção)",fmt_c(v_pr),"y",f"{var:+.1f}% vs atual")
+                    mc(c3,"📈 Limite Superior (P90)",fmt_c(_p90_pml),"g",f"vs atual: {fmt_c(v_at)}")
+                    st.caption(f"🎲 Monte Carlo rodou {len(_erros_hist_pml)} pontos de erro real medidos na "
+                        "Validação, gerando 2.000 cenários simulados. A distância entre a Base e o Limite "
+                        "Superior (P90) simulado foi medida, e essa MESMA distância foi espelhada pra baixo, "
+                        "definindo o Limite Inferior — em vez de usar o P10 simulado diretamente (que, com "
+                        "poucos pontos de erro, podia ficar em posição pouco confiável). Isso mantém a "
+                        "magnitude vinda do erro real, só padroniza a direção.")
+                else:
+                    mc(c1,f"🐻 Pessimista (-{var_pct}%)",fmt_c(v_pr*(1-var_pct/100)),"r",f"vs atual: {fmt_c(v_at)}")
+                    mc(c2,"📊 Base (projeção)",fmt_c(v_pr),"y",f"{var:+.1f}% vs atual")
+                    mc(c3,f"🐂 Otimista (+{var_pct}%)",fmt_c(v_pr*(1+var_pct/100)),"g",f"vs atual: {fmt_c(v_at)}")
+                    st.caption(f"⚠️ Erro histórico insuficiente ({len(_erros_hist_pml)} ponto(s)) pra Monte Carlo "
+                        "nessa conta — usando faixa fixa ±% como reserva.")
                 # Ranking modelos
                 v_hist=pd.to_numeric(df_ml[campo],errors="coerce").dropna()
                 media_serie=float(v_hist.mean()) if len(v_hist)>0 else 1
                 # Formata média histórica corretamente por tipo de campo
-                pct_campos=["margem bruta %","margem contrib %","margem líquida %",
-                            "EBITDA %","liquidez corrente","liquidez imediata","ROE"]
-                dias_campos=["PMR","PMP","ciclo de caixa"]
-                if campo in pct_campos:
+                if campo in _pct_campos_ml:
                     media_fmt=fmt(media_serie,"pct")
                     unidade="pontos percentuais"
-                elif campo in dias_campos:
+                elif campo in _dias_campos_ml:
                     media_fmt=fmt(media_serie,"d")
                     unidade="dias"
+                elif campo in _x_campos_ml:
+                    media_fmt=fmt(media_serie,"x")
+                    unidade="vezes (giro/liquidez)"
                 elif campo=="kanitz":
                     media_fmt=f"{media_serie:.2f}"
                     unidade="pontos no termômetro de Kanitz"
@@ -7372,48 +8975,24 @@ elif pg=="ml":
                     media_fmt=fmt(media_serie)
                     unidade="reais"
 
-                st.markdown(f"""**Como chegamos a essa projeção:**
+                st.markdown(f"""**De onde vem essa projeção:**
 
-O sistema usou os últimos **{len(v_hist)}** períodos históricos para treinar cada modelo.
-Depois testou a precisão de cada um nos últimos **6 meses reais** — comparando o que o modelo teria previsto com o que realmente aconteceu.
-O vencedor foi **{p['modelo']}** com menor erro relativo.
-O erro % abaixo mostra o desvio médio da previsão em relação à média histórica de **{media_fmt}** ({unidade}).
-Quanto menor o %, mais preciso o modelo foi nos dados reais.
+O modelo usado aqui — **{p['modelo']}** — não foi escolhido nesta tela. Ele já foi validado, com rigor estatístico
+(múltiplas janelas de teste, comparação contra o histórico real, walk-forward), na página
+**"Validação Estatística de Previsões Financeiras"**. Essa página de Projeções não testa nem escolhe modelo — só
+aplica, sobre os **{len(v_hist)}** períodos históricos mais recentes, o modelo que já venceu essa conta na
+Validação, gerando a previsão pra frente.
 
-**Ranking de modelos — erro relativo (% sobre a média histórica):**""")
-                cols_r=st.columns(max(min(len(rank_s),5),1))
-                for i,(mod,mse) in enumerate(rank_s[:5]):
-                    ico=["🥇","🥈","🥉","4️⃣","5️⃣"][i]
-                    desc={"ARIMA":"Captura tendências e autocorrelações",
-                          "ExponentialSmoothing":"Pesa mais os dados recentes",
-                          "SARIMAX":"Captura sazonalidade anual",
-                          "Holt":"Tendência com amortecimento",
-                          "Prophet":"IA do Meta para séries temporais"}.get(mod,"")
-                    # Converte MSE para RMSE% (erro relativo à média da série)
-                    media_serie=float(v_hist.mean()) if len(v_hist)>0 else 1
-                    if mse>=float("inf"):
-                        erro_pct=None
-                    else:
-                        rmse=float(mse**0.5)
-                        erro_pct=safe(rmse,abs(media_serie))*100
-                    if erro_pct is None:
-                        cols_r[i].markdown(f'<div class="mc"><div class="mc-lbl">{ico} {mod}</div>'
-                          f'<div class="mc-val r" style="font-size:1rem">Falhou</div>'
-                          f'<div class="mc-sub">Não conseguiu treinar com esses dados</div></div>',unsafe_allow_html=True)
-                    else:
-                        cls_err="g" if erro_pct<5 else ("y" if erro_pct<15 else "r")
-                        cols_r[i].markdown(f'<div class="mc"><div class="mc-lbl">{ico} {mod}</div>'
-                          f'<div class="mc-val {cls_err}" style="font-size:1rem">{erro_pct:.1f}% erro</div>'
-                          f'<div class="mc-sub">{desc}</div></div>',unsafe_allow_html=True)
+Isso garante que a mesma conta usa **sempre o mesmo modelo** nas duas telas — sem risco de uma tela "confiar" num
+modelo e a outra escolher outro, para a mesma conta, ao mesmo tempo. Se quiser conferir ou refazer a validação
+desse modelo, isso é feito na própria tela de Validação, não aqui.""")
 
         # Tabela resumo
         sec("📋 Resumo de Todas as Projeções")
         def fmt_campo(campo_f, v):
-            pct_campos=["margem bruta %","margem contrib %","margem líquida %",
-                        "EBITDA %","liquidez corrente","liquidez imediata","ROE"]
-            dias_campos=["PMR","PMP","ciclo de caixa"]
-            if campo_f in pct_campos: return fmt(v,"pct")
-            if campo_f in dias_campos: return fmt(v,"d")
+            if campo_f in _pct_campos_ml: return fmt(v,"pct")
+            if campo_f in _dias_campos_ml: return fmt(v,"d")
+            if campo_f in _x_campos_ml: return fmt(v,"x")
             if campo_f=="kanitz": return f"{v:.2f}"
             return fmt(v)
         res=[]
@@ -7435,7 +9014,7 @@ Quanto menor o %, mais preciso o modelo foi nos dados reais.
 
 # ── CENÁRIOS FP&A ───────────────────────────────────
 elif pg=="cenarios":
-    hdr("📊 Cenários FP&A","DRE, Balanço e Fluxo de Caixa projetados com ML")
+    hdr("📊 Cenários FP&A","DRE, Balanço, Indicadores e Fluxo de Caixa projetados com ML")
     _df_raw_cen=get_df_raw_bruto()
     _col_fil_cen=col_filial(_df_raw_cen) if _df_raw_cen is not None else None
     filial_sel_cen=None
@@ -7443,17 +9022,23 @@ elif pg=="cenarios":
         _filiais_disp_cen=sorted(v for v in _df_raw_cen[_col_fil_cen].dropna().astype(str).unique().tolist() if v!="(Todas as filiais)")
         _opcoes_filial_cen=["(Todas as filiais)"]+_filiais_disp_cen
 
+        # Sincroniza com a MESMA Filial já usada em Validação Financeira /
+        # Projeções ML — sem isso, "Cenários" tinha seletor próprio,
+        # podendo ficar numa Filial diferente e não achar nada salvo.
+        _filial_referencia_cen=st.session_state.get("mlf_filial_sel_backup") or st.session_state.get("mlp2_filial_sel_backup")
+
         def _on_change_filial_cen():
             st.session_state["cen_filial_sel_backup"]=st.session_state["cen_filial_sel"]
 
-        if "cen_filial_sel_backup" not in st.session_state:
-            st.session_state["cen_filial_sel_backup"]=_opcoes_filial_cen[0]
-        if st.session_state["cen_filial_sel_backup"] not in _opcoes_filial_cen:
+        if _filial_referencia_cen in _opcoes_filial_cen:
+            st.session_state["cen_filial_sel_backup"]=_filial_referencia_cen
+        elif "cen_filial_sel_backup" not in st.session_state or st.session_state["cen_filial_sel_backup"] not in _opcoes_filial_cen:
             st.session_state["cen_filial_sel_backup"]=_opcoes_filial_cen[0]
         st.session_state["cen_filial_sel"]=st.session_state["cen_filial_sel_backup"]
 
         filial_sel_cen=st.selectbox("🏬 Filial",_opcoes_filial_cen,
-          key="cen_filial_sel",on_change=_on_change_filial_cen)
+          key="cen_filial_sel",on_change=_on_change_filial_cen,
+          help="Sincronizado com a Filial usada em Validação Financeira / Projeções ML.")
 
     df=get_df_filial(filial_sel_cen)
     if df is None: no_data(); st.stop()
@@ -7472,22 +9057,64 @@ elif pg=="cenarios":
         st.stop()
 
     projs=st.session_state.projecoes
-    n_m=len(list(projs.values())[0]["valores"]) if projs else 6
+    # Usa o MAIOR horizonte entre todas as contas, não a primeira do
+    # dicionário — se uma conta específica tivesse ficado menor (ex.: não
+    # revalidada ainda com o horizonte atual), a tabela inteira era cortada
+    # no tamanho dela, mesmo as outras tendo o horizonte completo. Contas
+    # mais curtas continuam preenchidas corretamente pelo get_proj (que já
+    # repete o último valor até completar).
+    n_m=max((len(p["valores"]) for p in projs.values()),default=6) if projs else 6
     cm=cm_(df); ca=ca_(df)
 
     sec("⚙️ Configurações")
     c1,c2=st.columns(2)
     cenario=c1.radio("Cenário",["Base","Pessimista","Otimista"],horizontal=True)
-    demo=c2.radio("Demonstração",["DRE","Balanço","Fluxo de Caixa"],horizontal=True)
+    demo=c2.radio("Demonstração",["DRE","Balanço","Indicadores","Fluxo de Caixa"],horizontal=True)
     var_pct=st.session_state.get("var_pct_ml",15)
-
-    # Fator do cenário
-    fator=1.0
-    if "Pessimista" in cenario: fator=1-var_pct/100
-    elif "Otimista" in cenario: fator=1+var_pct/100
 
     # Último valor real de cada campo
     ul_real=df.iloc[-1]
+
+    # ═══════════════════════════════════════════════════════════
+    # Fator do cenário — agora POR CONTA, via Monte Carlo (mesma
+    # metodologia já validada no card individual: erro real com sinal,
+    # simetrizado em torno da Base usando a distância do P90). Substitui
+    # o ±% fixo único que era aplicado igual pra toda conta. Calculado
+    # UMA VEZ, em cache (por Filial), pra não rodar 2.000 simulações ×
+    # dezenas de contas toda vez que a página atualiza.
+    # ═══════════════════════════════════════════════════════════
+    _cache_key_mc_cen=f"cen_mc_fatores__{filial_sel_cen}"
+    if _cache_key_mc_cen not in st.session_state:
+        _fatores_mc_calc={}
+        for _campo_mc_calc in projs.keys():
+            _lbl_mc_calc=projs[_campo_mc_calc].get("lbl",_campo_mc_calc)
+            _erros_mc_calc=[]
+            for _demo_mc_calc in DEMONSTRACOES_CAMPOS.keys():
+                _escopo_mc_calc=f"{filial_sel_cen}__{_demo_mc_calc}"
+                _disco_mc_calc=load_resultado_valfin(st.session_state.cid,_escopo_mc_calc) if st.session_state.cid else None
+                if _disco_mc_calc and _disco_mc_calc.get("validacao"):
+                    _df_mc_calc=pd.DataFrame(_disco_mc_calc["validacao"])
+                    _col_erro_mc_calc="ErroSinal %" if "ErroSinal %" in _df_mc_calc.columns else "Erro %"
+                    if "Conta" in _df_mc_calc.columns and _col_erro_mc_calc in _df_mc_calc.columns:
+                        _linhas_mc_calc=_df_mc_calc[_df_mc_calc["Conta"].astype(str).str.strip().str.lower()==str(_lbl_mc_calc).strip().lower()]
+                        _erros_mc_calc.extend([e for e in _linhas_mc_calc[_col_erro_mc_calc].tolist() if pd.notna(e)])
+
+            _v_pr_mc_calc=projs[_campo_mc_calc]["valores"][-1] if projs[_campo_mc_calc]["valores"] else 0
+            if len(_erros_mc_calc)>=3 and _v_pr_mc_calc!=0:
+                _rng_mc_calc=np.random.default_rng(42)
+                _erros_arr_mc_calc=np.array(_erros_mc_calc)/100.0
+                _sim_mc_calc=_v_pr_mc_calc*(1+_rng_mc_calc.choice(_erros_arr_mc_calc,size=2000,replace=True))
+                _p90_bruto_mc_calc=float(np.percentile(_sim_mc_calc,90))
+                _amplitude_mc_calc=abs(_p90_bruto_mc_calc-_v_pr_mc_calc)
+                _fatores_mc_calc[_campo_mc_calc]={
+                    "pess":(_v_pr_mc_calc-_amplitude_mc_calc)/_v_pr_mc_calc,
+                    "otim":(_v_pr_mc_calc+_amplitude_mc_calc)/_v_pr_mc_calc,
+                    "n_erros":len(_erros_mc_calc)}
+            else:
+                _fatores_mc_calc[_campo_mc_calc]={"pess":1-var_pct/100,"otim":1+var_pct/100,"n_erros":len(_erros_mc_calc)}
+        st.session_state[_cache_key_mc_cen]=_fatores_mc_calc
+
+    _fatores_mc_cen=st.session_state[_cache_key_mc_cen]
 
     # Session state para edições
     if "fp_edicoes" not in st.session_state: st.session_state.fp_edicoes={}
@@ -7495,13 +9122,228 @@ elif pg=="cenarios":
     if chave_cen not in st.session_state.fp_edicoes:
         st.session_state.fp_edicoes[chave_cen]={}
 
+    # ═══════════════════════════════════════════════════════════
+    # 🎲 SIMULAÇÃO DE MONTE CARLO — seção NOVA, opcional, isolada. Só roda
+    # quando o usuário abre e clica — não interfere em nada do resto da
+    # página (DRE/Balanço/Fluxo/Indicadores continuam funcionando 100%
+    # igual, independente dessa seção existir ou não).
+    # ═══════════════════════════════════════════════════════════
+    with st.expander("🎲 Simulação de Monte Carlo — Metodologia por trás de TODA a página"):
+        st.caption("Os cenários Pessimista e Otimista, em TODAS as Demonstrações desta página (DRE, Balanço, "
+            "Fluxo de Caixa, Indicadores), não usam mais um ±% fixo. Cada conta tem sua PRÓPRIA faixa, "
+            "calculada por Monte Carlo a partir do ERRO REAL medido na Validação (mesma base do Conformal "
+            "Prediction) — não uma estimativa arbitrária igual pra todo mundo.")
+
+        with st.expander("📖 O que é Simulação de Monte Carlo — metodologia"):
+            st.markdown("""
+**O método**: Monte Carlo (Metropolis & Ulam, 1949) é uma técnica estatística que estima o comportamento de
+um sistema incerto através de **repetição aleatória massiva**, em vez de uma fórmula fechada. Ao invés de
+calcular um único valor "mais provável", o método gera milhares de trajetórias possíveis — cada uma
+igualmente válida — e extrai uma distribuição de probabilidade a partir do conjunto.
+
+**Aplicação aqui**: para cada conta, o sistema sorteia aleatoriamente um erro percentual do **erro real, com
+sinal, histórico e já medido** dessa conta específica (o mesmo erro observado no backtest da Validação
+Estatística — a mesma base usada pelo Conformal Prediction no Fator de Risco). O erro é medido com sinal
+(positivo quando o modelo subestimou, negativo quando superestimou) — não apenas a magnitude — permitindo que
+a simulação capture a direção real do viés de cada conta, não só o tamanho do erro. Esse erro sorteado é
+aplicado sobre o valor-base projetado pelo modelo vencedor, repetindo o sorteio 2.000 vezes por conta, gerando
+uma distribuição completa de resultados possíveis.
+
+**Ajuste de simetria**: a distância entre a Base e o Limite Superior (P90) simulado é medida, e essa MESMA
+distância é espelhada para baixo, definindo o Limite Inferior — em vez de usar o P10 simulado diretamente.
+Isso evita que uma amostra pequena de erro histórico (poucos ciclos de Validação) produza uma faixa
+assimétrica pouco intuitiva ou estatisticamente instável só por efeito do tamanho da amostra. A magnitude da
+incerteza continua vindo do erro real medido; apenas a direção (para cima = para baixo) é padronizada como
+salvaguarda.
+
+**Escopo — aplicado a TODA a página, não só a uma conta por vez**: cada uma das dezenas de contas do DRE,
+Balanço, Fluxo de Caixa e Indicadores tem seu próprio fator de cenário, calculado individualmente por essa
+simulação. Ao trocar o filtro "Cenário" para Pessimista ou Otimista, cada linha da tabela reflete a incerteza
+real e específica daquela conta — não um percentual genérico replicado em todas.
+
+**Por que ter UMA metodologia única aplicada a Pessimista/Otimista importa**: um cenário "pessimista" definido
+por um número escolhido à mão (seja ±10%, ±15% ou ±20%) é, por definição, arbitrário — dois analistas
+poderiam escolher números diferentes, igualmente "razoáveis", sem nenhum critério objetivo pra decidir entre
+eles. Isso é conhecido na literatura estatística como um grau de liberdade do pesquisador (*researcher
+degrees of freedom*) — um espaço onde escolhas subjetivas podem, sem má intenção, influenciar o resultado
+final. Substituir esse número por uma metodologia única, reprodutível e auditável (qualquer pessoa, com os
+mesmos dados de erro histórico, chega ao mesmo resultado) remove essa subjetividade do processo — o cenário
+Pessimista de uma conta estável fica estreito porque ela É estável, não porque alguém decidiu que deveria ser
+assim.
+
+**Por que isso é metodologicamente mais rigoroso que uma banda fixa (ex.: ±15%)**: uma banda fixa aplica o
+mesmo percentual de incerteza a qualquer conta, independentemente do quão previsível ou volátil ela realmente
+é. A simulação de Monte Carlo, por usar o erro **empírico e específico** de cada conta, produz uma faixa de
+confiança proporcional ao comportamento real observado — contas historicamente estáveis geram faixas
+estreitas; contas historicamente voláteis geram faixas largas. Isso é conceitualmente equivalente a uma
+distribuição empírica de erro, sem impor suposições paramétricas (como normalidade) que podem não se sustentar
+em séries financeiras reais.
+
+**Limitação reconhecida**: a qualidade da simulação depende diretamente da quantidade de pontos de erro
+histórico disponíveis. Com poucos pontos (ex.: 3-4 meses de backtest), a distribuição amostrada é uma
+aproximação inicial, não uma distribuição estatisticamente robusta — esse número tende a melhorar à medida
+que mais ciclos de Validação são acumulados ao longo do tempo. Contas sem erro histórico suficiente (menos de
+3 pontos) usam automaticamente uma faixa fixa de reserva (±15%), com aviso explícito de que é o método
+alternativo, não o principal.
+            """)
+        if not projs:
+            st.markdown('<div class="al-w">⚠️ Gere as projeções em "🔮 Projeções ML" primeiro.</div>',unsafe_allow_html=True)
+        else:
+            _conta_mc=st.selectbox("Conta pra simular",sorted(projs.keys()),
+                format_func=lambda c: projs[c].get("lbl",c),key="mc_conta_sel")
+            if st.button("🎲 Rodar Simulação",key="mc_rodar_btn"):
+                # Busca o erro real (%) dessa conta, nas 4 Demonstrações
+                # salvas — mesmo mecanismo de busca já usado em Projeções ML.
+                _erros_hist_mc=[]
+                for _demo_mc in DEMONSTRACOES_CAMPOS.keys():
+                    _escopo_mc=f"{filial_sel_cen}__{_demo_mc}"
+                    _disco_mc=load_resultado_valfin(st.session_state.cid,_escopo_mc) if st.session_state.cid else None
+                    if _disco_mc and _disco_mc.get("validacao"):
+                        _df_mc=pd.DataFrame(_disco_mc["validacao"])
+                        if "Conta" in _df_mc.columns and "Erro %" in _df_mc.columns:
+                            _lbl_mc=projs[_conta_mc].get("lbl",_conta_mc)
+                            _linhas_conta_mc=_df_mc[_df_mc["Conta"].astype(str).str.strip().str.lower()==str(_lbl_mc).strip().lower()]
+                            _erros_hist_mc.extend([e for e in _linhas_conta_mc["Erro %"].tolist() if pd.notna(e)])
+
+                if len(_erros_hist_mc)<3:
+                    st.markdown('<div class="al-w">⚠️ Erro histórico insuficiente pra essa conta (menos de 3 '
+                        'pontos) — a simulação precisa de mais dados de Validação pra ser confiável.</div>',unsafe_allow_html=True)
+                else:
+                    _valores_base_mc=projs[_conta_mc]["valores"]
+                    _n_sim_mc=2000
+                    _erros_arr_mc=np.array(_erros_hist_mc)/100.0  # de % pra fração
+                    _rng_mc=np.random.default_rng(42)
+                    _simulacoes_mc=np.zeros((_n_sim_mc,len(_valores_base_mc)))
+                    for _s_mc in range(_n_sim_mc):
+                        _erros_sorteados_mc=_rng_mc.choice(_erros_arr_mc,size=len(_valores_base_mc),replace=True)
+                        _simulacoes_mc[_s_mc]=[v*(1+e) for v,e in zip(_valores_base_mc,_erros_sorteados_mc)]
+
+                    _p10_mc=np.percentile(_simulacoes_mc,10,axis=0)
+                    _p50_mc=np.percentile(_simulacoes_mc,50,axis=0)
+                    _p90_mc=np.percentile(_simulacoes_mc,90,axis=0)
+
+                    st.markdown(f"**{_n_sim_mc} simulações rodadas**, usando {len(_erros_hist_mc)} pontos de erro "
+                        f"real medidos na Validação dessa conta.")
+
+                    # Meses reais, a partir do último período disponível — não
+                    # "M+1, M+2..." genérico.
+                    _cm_mc,_ca_mc=cm_(df),ca_(df)
+                    if _cm_mc and _ca_mc and len(df)>0:
+                        _ultimo_mes_mc=MESES.index(str(df[_cm_mc].iloc[-1]).lower())
+                        _ultimo_ano_mc=int(df[_ca_mc].iloc[-1])
+                        _x_mc=[]
+                        for i in range(len(_valores_base_mc)):
+                            _mi=(_ultimo_mes_mc+i+1)%12
+                            _ai=_ultimo_ano_mc+(_ultimo_mes_mc+i+1)//12
+                            _x_mc.append(f"{MESES[_mi]}/{str(_ai)[-2:]}")
+                    else:
+                        _x_mc=[f"M+{i+1}" for i in range(len(_valores_base_mc))]
+
+                    _fig_mc=go.Figure()
+                    _fig_mc.add_trace(go.Scatter(x=_x_mc,y=_p90_mc,name="P90 (otimista)",
+                        line=dict(color="#3FB950",dash="dot"),
+                        hovertemplate="%{x}<br>P90: %{text}<extra></extra>",
+                        text=[fmt(v) for v in _p90_mc]))
+                    _fig_mc.add_trace(go.Scatter(x=_x_mc,y=_p50_mc,name="P50 (mediana)",
+                        line=dict(color="#D9BD82",width=3),mode="lines+markers+text",
+                        text=[fmt(v) for v in _p50_mc],textposition="top center",
+                        textfont=dict(size=9,color="#D9BD82"),
+                        hovertemplate="%{x}<br>Mediana: %{text}<extra></extra>"))
+                    _fig_mc.add_trace(go.Scatter(x=_x_mc,y=_p10_mc,name="P10 (pessimista)",
+                        line=dict(color="#DC2626",dash="dot"),fill="tonexty",
+                        hovertemplate="%{x}<br>P10: %{text}<extra></extra>",
+                        text=[fmt(v) for v in _p10_mc]))
+                    _fig_mc.update_layout(height=380,margin=dict(l=8,r=8,t=30,b=30),
+                        plot_bgcolor="white",paper_bgcolor="white",
+                        legend=dict(orientation="h",y=-0.2))
+                    st.plotly_chart(_fig_mc,use_container_width=True)
+
+                    # Tabela explícita — valores exatos de cada mês, sem
+                    # precisar passar o mouse em cima do gráfico.
+                    st.dataframe(pd.DataFrame({
+                        "Mês":_x_mc,
+                        "P10 (pessimista)":[fmt(v) for v in _p10_mc],
+                        "P50 (mediana)":[fmt(v) for v in _p50_mc],
+                        "P90 (otimista)":[fmt(v) for v in _p90_mc],
+                    }),use_container_width=True,hide_index=True)
+
+                    st.caption("A faixa entre P10 e P90 representa onde o valor real tem boa chance de cair, "
+                        "com base no comportamento histórico real do erro dessa conta — não uma suposição de "
+                        "±15%.")
+
+                    # ═══════════════════════════════════════════════════
+                    # Análise de risco de caixa — só ativa quando a conta
+                    # simulada for "Saldo Acumulado". Reaproveita as MESMAS
+                    # 2.000 simulações já rodadas acima, sem gerar nada novo
+                    # — só conta em quantas delas o caixa ficou negativo em
+                    # algum mês.
+                    # ═══════════════════════════════════════════════════
+                    if "saldo acumulado" in str(_conta_mc).strip().lower():
+                        st.divider()
+                        st.markdown("### ⚠️ Análise de Risco de Caixa Negativo")
+                        # Uma simulação "ficou negativa" se, em QUALQUER mês
+                        # da trajetória, o valor caiu abaixo de zero — não só
+                        # no último mês.
+                        _ficou_negativo_mc=np.any(_simulacoes_mc<0,axis=1)
+                        _pct_risco_mc=100*_ficou_negativo_mc.sum()/_n_sim_mc
+
+                        # Primeiro mês em que CADA simulação negativa cruzou
+                        # zero, pra achar qual mês concentra mais risco.
+                        _meses_risco_mc=[]
+                        for _s_risco in range(_n_sim_mc):
+                            _idx_neg=np.where(_simulacoes_mc[_s_risco]<0)[0]
+                            if len(_idx_neg)>0:
+                                _meses_risco_mc.append(_idx_neg[0])
+                        _mes_mais_critico_mc=(pd.Series(_meses_risco_mc).mode().iloc[0]
+                            if _meses_risco_mc else None)
+
+                        _cor_risco_mc="r" if _pct_risco_mc>=30 else ("y" if _pct_risco_mc>=10 else "g")
+                        c_risco1,c_risco2,c_risco3=st.columns(3)
+                        mc(c_risco1,"Probabilidade de caixa negativo",f"{_pct_risco_mc:.0f}%",_cor_risco_mc,
+                            f"em {_n_sim_mc} simulações")
+                        if _mes_mais_critico_mc is not None:
+                            mc(c_risco2,"Mês de maior risco",_x_mc[_mes_mais_critico_mc],"y",
+                                "onde mais simulações cruzaram zero primeiro")
+                        mc(c_risco3,"Pior cenário simulado (P10, último mês)",fmt(_p10_mc[-1]),
+                            "r" if _p10_mc[-1]<0 else "g","cenário pessimista")
+
+                        if _pct_risco_mc>=30:
+                            st.markdown('<div class="al-d">🔴 <b>Risco relevante</b> — mais de 30% das simulações '
+                                'apontam caixa negativo em algum momento. Vale revisar Contas a Pagar, antecipar '
+                                'recebíveis ou rever o Crescimento configurado antes do mês crítico.</div>',
+                                unsafe_allow_html=True)
+                        elif _pct_risco_mc>=10:
+                            st.markdown('<div class="al-w">🟡 <b>Risco moderado</b> — entre 10% e 30% das '
+                                'simulações indicam caixa negativo. Vale acompanhar de perto, sem necessariamente '
+                                'agir agora.</div>',unsafe_allow_html=True)
+                        else:
+                            st.markdown('<div class="al-s">🟢 <b>Risco baixo</b> — menos de 10% das simulações '
+                                'indicam caixa negativo em algum momento do horizonte projetado.</div>',
+                                unsafe_allow_html=True)
+
     def get_proj(campo):
         base=[]
         if campo in projs:
-            base=[v*fator for v in projs[campo]["valores"]]
+            if "Pessimista" in cenario:
+                _f_campo=_fatores_mc_cen.get(campo,{}).get("pess",1-var_pct/100)
+            elif "Otimista" in cenario:
+                _f_campo=_fatores_mc_cen.get(campo,{}).get("otim",1+var_pct/100)
+            else:
+                _f_campo=1.0
+            base=[v*_f_campo for v in projs[campo]["valores"]]
         else:
             v=float(ul_real.get(campo,0) or 0)
             base=[v]*n_m
+        # Garante SEMPRE o mesmo tamanho (n_m) — não importa se a conta foi
+        # validada com um horizonte diferente das outras (uma ficou menor
+        # ou maior). Se faltar mês, repete o último valor disponível; se
+        # sobrar, corta. Isso resolve na raiz qualquer lugar do código (DRE
+        # Projetado, Balanço, Fluxo, Indicadores) que espera arrays do
+        # mesmo tamanho — sem precisar corrigir cada bloco individualmente.
+        if len(base)<n_m and len(base)>0:
+            base=base+[base[-1]]*(n_m-len(base))
+        elif len(base)>n_m:
+            base=base[:n_m]
         edicoes=st.session_state.fp_edicoes[chave_cen].get(campo,{})
         for i,v_edit in edicoes.items():
             if 0<=int(i)<len(base): base[int(i)]=v_edit
@@ -7518,7 +9360,13 @@ elif pg=="cenarios":
                     st.session_state.fp_edicoes[chave_cen]={}; st.rerun()
             for campo,lbl in campos_editaveis:
                 if campo in projs:
-                    base_orig=[v*fator for v in projs[campo]["valores"]]
+                    if "Pessimista" in cenario:
+                        _f_campo_edit=_fatores_mc_cen.get(campo,{}).get("pess",1-var_pct/100)
+                    elif "Otimista" in cenario:
+                        _f_campo_edit=_fatores_mc_cen.get(campo,{}).get("otim",1+var_pct/100)
+                    else:
+                        _f_campo_edit=1.0
+                    base_orig=[v*_f_campo_edit for v in projs[campo]["valores"]]
                 else:
                     v0=float(ul_real.get(campo,0) or 0)
                     base_orig=[v0]*n_m
@@ -7580,23 +9428,91 @@ elif pg=="cenarios":
                         st.session_state.fp_edicoes[chave_cen].pop(campo,None); st.rerun()
                 st.divider()
 
-    # Colunas dos meses — calcula meses reais após o último período
+    # Colunas dos meses — ANCORADAS no 1º mês da projeção (gravado junto com
+    # ela na 1ª abertura desta página). Assim, quando a DRE/Balanço/Fluxo é
+    # atualizada, os meses projetados não "andam" e a coluna Realizado é
+    # preenchida com o valor real do mesmo mês.
     MESES_NOMES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"]
     ul_real=df.iloc[-1]
-    try:
-        ult_mes=str(ul_real.get(cm,"jan")).lower()[:3]
-        ult_ano=int(ul_real.get(ca,2024))
-        idx_mes=MESES_NOMES.index(ult_mes) if ult_mes in MESES_NOMES else 11
-        meses_proj=[]
-        for i in range(n_m):
-            idx=(idx_mes+1+i)%12
-            ano=ult_ano+((idx_mes+1+i)//12)
-            meses_proj.append(f"{MESES_NOMES[idx]}/{ano}")
-    except:
+    def _per_linha(r):
+        try: return pd.Period(f"{int(r[ca])}-{MESES_NOMES.index(str(r[cm]).strip().lower()[:3])+1:02d}",freq="M")
+        except Exception: return None
+    _ini_cen=next((_p.get("inicio") for _p in projs.values() if _p.get("inicio")),None)
+    if _ini_cen is None and _per_linha(ul_real) is not None:
+        _ini_cen=str(_per_linha(ul_real)+1)
+        for _p in projs.values(): _p["inicio"]=_ini_cen
+        if st.session_state.cid: save_projecoes_ml(st.session_state.cid,projs,filial_sel_cen)
+    if _ini_cen:
+        _pers_proj=[pd.Period(_ini_cen,freq="M")+i for i in range(n_m)]
+        meses_proj=[f"{MESES_NOMES[_p.month-1]}/{_p.year}" for _p in _pers_proj]
+    else:
+        _pers_proj=[None]*n_m
         meses_proj=[f"M+{i+1}" for i in range(n_m)]
 
+    # REALIZADO — valor real da base no mesmo mês projetado (em branco até chegar)
+    _base_real={_per_linha(_r):_r for _,_r in df.iterrows()}
+    def get_real(campo):
+        out=[]
+        for _p in _pers_proj:
+            _r=_base_real.get(_p)
+            _v=pd.to_numeric(_r.get(campo),errors="coerce") if (_r is not None and campo) else np.nan
+            out.append(None if (_v is None or pd.isna(_v) or np.isinf(_v)) else float(_v))
+        return out
+    TH_REAL="<th>Realizado</th><th>Var R$</th><th>Var %</th>"
+    def td_real(v_proj,v_real,inv=False,t="brl"):
+        """Realizado | Var R$ (Realizado − Cenário) | Var % — vazio até o mês chegar."""
+        if v_real is None or v_proj is None: return "<td></td><td></td><td></td>"
+        _f=(lambda x: fmt(x,t)) if t else (lambda x: f"{x:.2f}")
+        _d=v_real-v_proj; _pc=_d/abs(v_proj)*100 if v_proj else 0
+        _c=cls_pct(_pc,inv)
+        return f'<td>{_f(v_real)}</td><td class="{_c}">{"+" if _d>0 else ""}{_f(_d)}</td><td class="{_c}">{_pc:+.1f}%</td>'
+
+    # ── EXCEL: por mês, 4 colunas — Cenário | Realizado | Var R$ | Var %.
+    # Var R$ e Var % são FÓRMULAS (se digitar o Realizado na planilha, calcula sozinho).
+    def xl_cab(ws,rotulo,nome_cen):
+        from openpyxl.styles import Font, PatternFill, Alignment
+        _az=PatternFill("solid",start_color="2563EB",end_color="2563EB"); _fb=Font(bold=True,color="FFFFFF",size=11)
+        ws.cell(row=2,column=1,value=rotulo).font=_fb; ws.cell(row=2,column=1).fill=_az; ws.cell(row=3,column=1).fill=_az
+        col=2
+        for m in meses_proj:
+            ws.merge_cells(start_row=2,start_column=col,end_row=2,end_column=col+3)
+            c=ws.cell(row=2,column=col,value=m); c.font=_fb; c.fill=_az; c.alignment=Alignment(horizontal="center")
+            for j,t in enumerate([nome_cen,"Realizado","Var R$","Var %"]):
+                c=ws.cell(row=3,column=col+j,value=t); c.font=_fb; c.fill=_az; c.alignment=Alignment(horizontal="center")
+            col+=4
+        return col
+    def xl_cel(ws,lin,col,v_proj,v_real,nf,font=None):
+        from openpyxl.utils import get_column_letter as _gl
+        c=ws.cell(row=lin,column=col,value=v_proj); c.number_format=nf
+        if font is not None: c.font=font
+        ws.cell(row=lin,column=col+1,value=v_real).number_format=nf
+        _P,_R=_gl(col),_gl(col+1)
+        ws.cell(row=lin,column=col+2,value=f'=IF({_R}{lin}="","",{_R}{lin}-{_P}{lin})').number_format=nf
+        ws.cell(row=lin,column=col+3,value=f'=IF(OR({_R}{lin}="",{_P}{lin}=0),"",({_R}{lin}-{_P}{lin})/ABS({_P}{lin}))').number_format='0.0%'
+        return col+4
+    def real_xl(desc):
+        """Realizado de uma linha do Excel, pelo nome da linha (mesmos mapas da tela)."""
+        d=desc.strip()
+        if d=="(-) IR/CSLL":
+            _a,_b=get_real("provisão para imposto de renda"),get_real("provisão para contribuição social")
+            return [None if x is None or y is None else x+y for x,y in zip(_a,_b)]
+        _g=globals()
+        for _mp in (_g.get("_col_real_dre"),_g.get("_col_real_bal")):
+            if _mp:
+                for _k in (d,"= "+d):
+                    if _k in _mp: return get_real(_mp[_k])
+        _fc=_g.get("_real_fc") or {}
+        for _k in (d,"= "+d):
+            if _k in _fc: return _fc[_k]
+        return [None]*n_m
+
     col_info,col_rst=st.columns([4,1])
-    col_info.markdown(f'<div class="al-i">📌 Cenário: <b>{cenario}</b> | {n_m} meses projetados | Fator: {"×"+str(round(fator,2)) if fator!=1 else "Base"}</div>',unsafe_allow_html=True)
+    if cenario=="Base":
+        _fator_txt=" | Base"
+    else:
+        _fatores_validos=[v["pess" if cenario=="Pessimista" else "otim"] for v in _fatores_mc_cen.values() if v.get("n_erros",0)>=3]
+        _fator_txt=f" | Fator médio (Monte Carlo, por conta): ×{np.mean(_fatores_validos):.2f}" if _fatores_validos else " | Fator: ×0.85-1.15 (reserva)"
+    col_info.markdown(f'<div class="al-i">📌 Cenário: <b>{cenario}</b> | {n_m} meses projetados{_fator_txt}</div>',unsafe_allow_html=True)
     if col_rst.button("🔄 Resetar tudo",key="rst_all",use_container_width=True):
         st.session_state.fp_edicoes[chave_cen]={}
         st.rerun()
@@ -7612,21 +9528,26 @@ elif pg=="cenarios":
         rb  = get_proj("receita bruta de vendas")
         imp = get_proj("impostos sobre vendas")
         dev = get_proj("devoluções de vendas")
-        imp = get_proj("impostos sobre vendas")
-        dev = get_proj("devoluções de vendas")
-        rl  = [rb[i]-imp[i]-dev[i] for i in range(n_m)]
         cmv = get_proj("CMV (custo da mercadoria vendida)")
-        lb  = [rl[i]-cmv[i] for i in range(n_m)]
         dc  = get_proj("despesas comerciais")
-        mc_ = [lb[i]-dc[i] for i in range(n_m)]
         da  = get_proj("despesas administrativas")
         df_ = get_proj("despesas financeiras líquidas")
         dep = get_proj("despesas com depreciações e amortizações")
-        lo  = [lb[i]-dc[i]-da[i]-df_[i]-dep[i] for i in range(n_m)]
         rno = get_proj("receitas não operacionais")
         dno = get_proj("despesas não operacionais")
         ir  = get_proj("provisão para imposto de renda")
         cs  = get_proj("provisão para contribuição social")
+
+        # NÃO recalcula mais n_m aqui — get_proj já garante que TODA conta
+        # devolve exatamente o n_m definido lá em cima (nível de página),
+        # preenchendo o que faltar. Recalcular aqui como "o menor entre
+        # todas" desfazia esse trabalho, encolhendo tudo de volta pro
+        # tamanho da conta mais curta.
+
+        rl  = [rb[i]-imp[i]-dev[i] for i in range(n_m)]
+        lb  = [rl[i]-cmv[i] for i in range(n_m)]
+        mc_ = [lb[i]-dc[i] for i in range(n_m)]
+        lo  = [lb[i]-dc[i]-da[i]-df_[i]-dep[i] for i in range(n_m)]
         ll  = [lo[i]+rno[i]-dno[i]-ir[i]-cs[i] for i in range(n_m)]
         ebt = [ll[i]+ir[i]+cs[i]+df_[i]+dep[i] for i in range(n_m)]
 
@@ -7658,9 +9579,24 @@ elif pg=="cenarios":
             ("pct_rb","  EBITDA %",ebt,False),
         ]
 
-        header_d="<tr><th>Descrição</th>"+"".join(f"<th>{m}</th><th>AV%</th><th>AH%</th>" for m in meses_proj)+"</tr>"
+        # Realizado de cada linha = coluna real da base (já calculada no calcular)
+        _col_real_dre={"(+) RECEITA BRUTA":"receita bruta de vendas","(-) Impostos":"impostos sobre vendas",
+            "(-) Devoluções":"devoluções de vendas","= RECEITA LÍQUIDA":"receita líquida",
+            "(-) CMV":"CMV (custo da mercadoria vendida)","= LUCRO BRUTO":"lucro bruto","Margem Bruta %":"lucro bruto",
+            "(-) Desp. Comerciais":"despesas comerciais","= MARGEM CONTRIB.":"margem contrib","Margem Contrib. %":"margem contrib",
+            "(-) Desp. Adm.":"despesas administrativas","(-) Desp. Fin.":"despesas financeiras líquidas",
+            "(-) Depreciação":"despesas com depreciações e amortizações","= LUCRO OPERACIONAL":"lucro operacional",
+            "Margem Op. %":"lucro operacional","(+/-) Não Operac.":"receitas não operacionais",
+            "= LUCRO LÍQUIDO":"lucro líquido","Margem Líquida %":"lucro líquido","EBITDA":"EBITDA","EBITDA %":"EBITDA"}
+        rb_real=get_real("receita bruta de vendas")
+        header_d="<tr><th>Descrição</th>"+"".join(f"<th>{m}</th><th>AV%</th><th>AH%</th>"+TH_REAL for m in meses_proj)+"</tr>"
         rows_d=""
         for tipo,desc,serie,inv in linhas_dre:
+            if desc.strip()=="(-) IR/CSLL":
+                _ir_r,_cs_r=get_real("provisão para imposto de renda"),get_real("provisão para contribuição social")
+                serie_r=[None if a is None or b is None else a+b for a,b in zip(_ir_r,_cs_r)]
+            else:
+                serie_r=get_real(_col_real_dre.get(desc.strip()))
             cls_tr={"cat":"cat","tot":"tot","pct_rb":"pct","sub":"sub"}.get(tipo,"")
             row=f'<tr class="{cls_tr}"><td>{desc}</td>'
             for i in range(n_m):
@@ -7670,6 +9606,9 @@ elif pg=="cenarios":
                     row+=f'<td class="pct">{fmt(v,"pct")}</td>'
                     row+=f'<td class="{"pos" if dlt>0 else "neg" if dlt<0 else "neu"}">{dlt:+.1f}pp</td>'
                     row+=f'<td></td>'
+                    v_r=safe(serie_r[i],rb_real[i])*100 if (serie_r[i] is not None and rb_real[i]) else None
+                    row+=("<td></td><td></td><td></td>" if v_r is None else
+                        f'<td>{fmt(v_r,"pct")}</td><td class="{cor(v_r-v)}">{v_r-v:+.1f}pp</td><td></td>')
                 else:
                     v=float(serie[i])
                     a_v=safe(v,rb[i])*100
@@ -7678,6 +9617,7 @@ elif pg=="cenarios":
                     row+=f'<td class="{cls_v}">{fmt(v)}</td>'
                     row+=f'<td class="{cls_pct(a_v,inv)}">{fmt(a_v,"pct")}</td>'
                     row+=f'<td class="{cls_pct(a_h,inv)}">{fmt(a_h,"pct")}</td>'
+                    row+=td_real(v,serie_r[i],inv)
             rows_d+=row+"</tr>"
         st.markdown(f'<div class="dre-wrap" style="overflow-x:auto"><table class="dre" style="min-width:900px">{header_d}{rows_d}</table></div>',unsafe_allow_html=True)
         def gerar_excel_dre_3_cenarios():
@@ -7702,14 +9642,28 @@ elif pg=="cenarios":
                 "receitas não operacionais","despesas não operacionais",
                 "provisão para imposto de renda","provisão para contribuição social"]
 
-            for nome_cenario,fator_c in [("Pessimista",1-var_pct/100),("Base",1.0),("Otimista",1+var_pct/100)]:
+            # Fator por conta (Monte Carlo) — mesmo usado na tela via get_proj,
+            # não mais o ±% fixo antigo. "Base" usa fator=1.0.
+            for nome_cenario in ["Pessimista","Base","Otimista"]:
+                def _fator_dre(campo):
+                    if nome_cenario=="Pessimista":
+                        return _fatores_mc_cen.get(campo,{}).get("pess",1-var_pct/100)
+                    elif nome_cenario=="Otimista":
+                        return _fatores_mc_cen.get(campo,{}).get("otim",1+var_pct/100)
+                    return 1.0
+
                 vals={}
                 for campo in campos_dre_proj:
                     if campo in projs:
-                        vals[campo]=[v*fator_c for v in projs[campo]["valores"]]
+                        _base_c=[v*_fator_dre(campo) for v in projs[campo]["valores"]]
                     else:
                         v=float(ul_real.get(campo,0) or 0)
-                        vals[campo]=[v]*n_m
+                        _base_c=[v]*n_m
+                    if len(_base_c)<n_m and len(_base_c)>0:
+                        _base_c=_base_c+[_base_c[-1]]*(n_m-len(_base_c))
+                    elif len(_base_c)>n_m:
+                        _base_c=_base_c[:n_m]
+                    vals[campo]=_base_c
 
                 rb_c=vals["receita bruta de vendas"]; imp_c=vals["impostos sobre vendas"]; dev_c=vals["devoluções de vendas"]
                 rl_c=[rb_c[i]-imp_c[i]-dev_c[i] for i in range(n_m)]
@@ -7736,17 +9690,12 @@ elif pg=="cenarios":
                 ]
 
                 ws=wb.create_sheet(nome_cenario)
-                ws.cell(row=1,column=1,value=f"Cenário: {nome_cenario} | Variação aplicada: {var_pct}%").font=Font(italic=True,color="6B7280",size=9)
+                ws.cell(row=1,column=1,value=f"Cenário: {nome_cenario} — fator por conta via Monte Carlo (erro "
+                    "real medido na Validação)").font=Font(italic=True,color="6B7280",size=9)
                 ws.merge_cells(start_row=1,start_column=1,end_row=1,end_column=4)
-                ws.cell(row=2,column=1,value="Descrição").font=cor_branco_bold
-                ws.cell(row=2,column=1).fill=cor_azul
-                col=2
-                for m in meses_proj:
-                    c=ws.cell(row=2,column=col,value=m)
-                    c.font=cor_branco_bold; c.fill=cor_azul; c.alignment=Alignment(horizontal="center")
-                    col+=1
+                col=xl_cab(ws,"Descrição",nome_cenario)
 
-                linha_excel=3
+                linha_excel=4
                 for tipo,desc,serie,inv in linhas_c:
                     ws.cell(row=linha_excel,column=1,value=desc.strip())
                     if tipo=="tot":
@@ -7755,13 +9704,11 @@ elif pg=="cenarios":
                     else:
                         ws.cell(row=linha_excel,column=1).font=cor_preto
                     col=2
+                    _r_xl=real_xl(desc)
                     for i in range(n_m):
                         v=float(serie[i])
-                        c1=ws.cell(row=linha_excel,column=col,value=v)
-                        c1.number_format='R$ #,##0;[RED](R$ #,##0)'
-                        c1.font=cor_vermelho if (inv and v!=0) else (cor_verde if v>0 else cor_preto)
-                        ws.cell(row=linha_excel,column=col).border=borda_fina
-                        col+=1
+                        col=xl_cel(ws,linha_excel,col,v,_r_xl[i],'R$ #,##0;[RED](R$ #,##0)',
+                            cor_vermelho if (inv and v!=0) else (cor_verde if v>0 else cor_preto))
                     linha_excel+=1
 
                 ws.column_dimensions["A"].width=26
@@ -7826,13 +9773,20 @@ elif pg=="cenarios":
             ("tot","= PATRIMÔNIO LÍQUIDO",pl,False),
         ]
 
-        header_b="<tr><th>Descrição</th>"+"".join(f"<th>{m}</th><th>AV%</th><th>AH%</th>" for m in meses_proj)+"</tr>"
+        _col_real_bal={"Disponibilidades":"disponibilidades saldo","Contas a Receber":"contas a receber saldo",
+            "Estoques":"estoque final do mês de mercadorias para revenda saldo","Outros AC":"Outros AC",
+            "= ATIVO CIRCULANTE":"ativo circ","Ativo NC":"Ativo NC","= ATIVO TOTAL":"ativo total",
+            "Fornecedores":"contas a pagar de fornecedores saldo","Pass. Financeiros":"Passivos Financeiros",
+            "Outros PC":"Outros PC","= PASSIVO CIRCULANTE":"pass circ","Passivo NC":"Passivo NC",
+            "= PASSIVO TOTAL":"pass total","= PATRIMÔNIO LÍQUIDO":"PL"}
+        header_b="<tr><th>Descrição</th>"+"".join(f"<th>{m}</th><th>AV%</th><th>AH%</th>"+TH_REAL for m in meses_proj)+"</tr>"
         rows_b=""
         for item in linhas_bal:
             if item[2] is None:
-                rows_b+=f'<tr class="cat"><td>{item[1]}</td>'+"".join("<td></td><td></td><td></td>" for _ in meses_proj)+"</tr>"
+                rows_b+=f'<tr class="cat"><td>{item[1]}</td>'+"".join("<td></td>"*6 for _ in meses_proj)+"</tr>"
                 continue
             tipo,desc,serie,inv=item
+            serie_r=get_real(_col_real_bal.get(desc.strip()))
             cls_tr={"tot":"tot","sub":"sub"}.get(tipo,"")
             row=f'<tr class="{cls_tr}"><td>{desc}</td>'
             for i in range(n_m):
@@ -7844,6 +9798,7 @@ elif pg=="cenarios":
                 row+=f'<td class="{cls_v}">{fmt(v)}</td>'
                 row+=f'<td class="{cls_pct(a_v,inv)}">{fmt(a_v,"pct")}</td>'
                 row+=f'<td class="{cls_pct(a_h,inv)}">{fmt(a_h,"pct")}</td>'
+                row+=td_real(v,serie_r[i],inv)
             rows_b+=row+"</tr>"
         st.markdown(f'<div class="dre-wrap" style="overflow-x:auto"><table class="dre" style="min-width:900px">{header_b}{rows_b}</table></div>',unsafe_allow_html=True)
         def gerar_excel_balanco_3_cenarios():
@@ -7866,14 +9821,31 @@ elif pg=="cenarios":
                 "estoque final do mês de mercadorias para revenda saldo","Outros AC","Ativo NC",
                 "contas a pagar de fornecedores saldo","Passivos Financeiros","Outros PC","Passivo NC"]
 
-            for nome_cenario,fator_c in [("Pessimista",1-var_pct/100),("Base",1.0),("Otimista",1+var_pct/100)]:
+            # Fator por conta (Monte Carlo) — mesmo usado na tela via get_proj,
+            # não mais o ±% fixo antigo. "Base" usa fator=1.0.
+            for nome_cenario in ["Pessimista","Base","Otimista"]:
+                def _fator_bal(campo):
+                    if nome_cenario=="Pessimista":
+                        return _fatores_mc_cen.get(campo,{}).get("pess",1-var_pct/100)
+                    elif nome_cenario=="Otimista":
+                        return _fatores_mc_cen.get(campo,{}).get("otim",1+var_pct/100)
+                    return 1.0
+
                 vals={}
                 for campo in campos_bal_proj:
                     if campo in projs:
-                        vals[campo]=[v*fator_c for v in projs[campo]["valores"]]
+                        _base_c=[v*_fator_bal(campo) for v in projs[campo]["valores"]]
                     else:
                         v=float(ul_real.get(campo,0) or 0)
-                        vals[campo]=[v]*n_m
+                        _base_c=[v]*n_m
+                    # Mesma correção do get_proj — garante SEMPRE n_m
+                    # elementos, mesmo se essa conta tiver ficado com
+                    # horizonte diferente das outras.
+                    if len(_base_c)<n_m and len(_base_c)>0:
+                        _base_c=_base_c+[_base_c[-1]]*(n_m-len(_base_c))
+                    elif len(_base_c)>n_m:
+                        _base_c=_base_c[:n_m]
+                    vals[campo]=_base_c
 
                 disp_c=vals["disponibilidades saldo"]; cr_c=vals["contas a receber saldo"]
                 est_c=vals["estoque final do mês de mercadorias para revenda saldo"]; oac_c=vals["Outros AC"]
@@ -7906,7 +9878,8 @@ elif pg=="cenarios":
                 ]
 
                 ws=wb.create_sheet(nome_cenario)
-                ws.cell(row=1,column=1,value=f"Cenário: {nome_cenario} | Variação aplicada: {var_pct}%").font=Font(italic=True,color="6B7280",size=9)
+                ws.cell(row=1,column=1,value=f"Cenário: {nome_cenario} — fator por conta via Monte Carlo (erro "
+                    "real medido na Validação)").font=Font(italic=True,color="6B7280",size=9)
                 ws.merge_cells(start_row=1,start_column=1,end_row=1,end_column=4)
                 ws.cell(row=2,column=1,value="Descrição").font=cor_branco_bold
                 ws.cell(row=2,column=1).fill=cor_azul
@@ -7967,6 +9940,113 @@ elif pg=="cenarios":
             ("Passivo NC","🏛️ Passivo NC"),
         ])
 
+    elif "Indicadores" in demo:
+        sec("📐 Indicadores Projetados")
+        st.caption("Cada indicador usa sua própria previsão, já validada individualmente — mesmo modelo e mesmos "
+            "meses de 'Projeções ML', sem recálculo. Sem AV% (não se aplica a indicadores, que já são razões/"
+            "percentuais, não parte de uma receita) — AH% mostra a variação mês a mês. Cenário Pessimista/"
+            "Otimista usa o mesmo fator por conta (Monte Carlo) já aplicado nas outras Demonstrações.")
+        _indicadores_cen=[
+            ("liquidez corrente","Liquidez Corrente","x"),
+            ("liquidez imediata","Liquidez Imediata","x"),
+            ("giro estoque","Giro de Estoque","x"),
+            ("kanitz","Kanitz",None),
+            ("ROE","ROE","pct"),
+            ("PMR","PMR","d"),
+            ("PMP","PMP","d"),
+            ("PME","PME","d"),
+            ("ciclo de caixa","Ciclo de Caixa","d"),
+        ]
+        def _fmt_ind(v,t):
+            if v is None: return "—"
+            if t=="pct": return fmt(v,"pct")
+            if t=="x": return fmt(v,"x")
+            if t=="d": return fmt(v,"d")
+            return f"{v:.2f}"
+        def _ah_ind(serie,i):
+            return safe(serie[i]-serie[i-1],abs(serie[i-1]))*100 if i>0 and serie[i-1] else 0
+
+        _linhas_validas_ind=[(c,l,t,get_proj(c)) for c,l,t in _indicadores_cen if c in projs and get_proj(c)]
+        if _linhas_validas_ind:
+            _modelos_ind_txt=", ".join(f"{l} ({projs[c].get('modelo','—')})" for c,l,t,_ in _linhas_validas_ind)
+            with st.expander("ℹ️ Modelo usado em cada indicador"):
+                st.caption(_modelos_ind_txt)
+
+            header_ind="<tr><th>Indicador</th>"+"".join(f"<th>{m}</th><th>AH%</th>"+TH_REAL.replace("Var R$","Var") for m in meses_proj)+"</tr>"
+            rows_ind=""
+            for _campo_ind,_lbl_ind,_tipo_ind,_vals_ind in _linhas_validas_ind:
+                _real_ind=get_real(_campo_ind)
+                _inv_ind=_campo_ind in ("PMR","PME","ciclo de caixa")   # subir é ruim
+                row=f'<tr><td>{_lbl_ind}</td>'
+                for i in range(n_m):
+                    v=float(_vals_ind[i]) if i<len(_vals_ind) else None
+                    a_h=_ah_ind(_vals_ind,i) if v is not None else 0
+                    row+=f'<td>{_fmt_ind(v,_tipo_ind)}</td>'
+                    row+=f'<td class="{cls_pct(a_h,False)}">{fmt(a_h,"pct")}</td>' if v is not None else '<td>—</td>'
+                    row+=td_real(v,_real_ind[i],_inv_ind,_tipo_ind)
+                rows_ind+=row+"</tr>"
+            st.markdown(f'<div class="dre-wrap" style="overflow-x:auto"><table class="dre" style="min-width:900px">{header_ind}{rows_ind}</table></div>',unsafe_allow_html=True)
+
+            def gerar_excel_indicadores_3_cenarios():
+                from openpyxl import Workbook
+                from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+                from openpyxl.utils import get_column_letter
+
+                wb=Workbook()
+                wb.remove(wb.active)
+
+                cor_azul=PatternFill("solid",start_color="2563EB",end_color="2563EB")
+                cor_branco_bold=Font(bold=True,color="FFFFFF",size=11)
+                cor_preto=Font(color="111827",size=10)
+                borda_fina=Border(bottom=Side(style="thin",color="E8ECF0"))
+
+                for nome_cenario in ["Pessimista","Base","Otimista"]:
+                    ws=wb.create_sheet(nome_cenario)
+                    ws.cell(row=1,column=1,value=f"Cenário: {nome_cenario} — fator por conta via Monte Carlo "
+                        "(erro real medido na Validação)").font=Font(italic=True,color="6B7280",size=9)
+                    ws.merge_cells(start_row=1,start_column=1,end_row=1,end_column=4)
+                    col=xl_cab(ws,"Indicador",nome_cenario)
+
+                    linha_excel=4
+                    for _campo_ind,_lbl_ind,_tipo_ind in _indicadores_cen:
+                        if _campo_ind not in projs: continue
+                        if nome_cenario=="Pessimista":
+                            _f_ind=_fatores_mc_cen.get(_campo_ind,{}).get("pess",1-var_pct/100)
+                        elif nome_cenario=="Otimista":
+                            _f_ind=_fatores_mc_cen.get(_campo_ind,{}).get("otim",1+var_pct/100)
+                        else:
+                            _f_ind=1.0
+                        _base_ind=[v*_f_ind for v in projs[_campo_ind]["valores"]]
+                        if len(_base_ind)<n_m and len(_base_ind)>0:
+                            _base_ind=_base_ind+[_base_ind[-1]]*(n_m-len(_base_ind))
+                        elif len(_base_ind)>n_m:
+                            _base_ind=_base_ind[:n_m]
+                        ws.cell(row=linha_excel,column=1,value=_lbl_ind).font=cor_preto
+                        col=2
+                        _r_ind=get_real(_campo_ind)
+                        _esc=0.01 if _tipo_ind=="pct" else 1.0
+                        _nf={"pct":'0.0%',"x":'0.00"x"',"d":'0"d"'}.get(_tipo_ind,'0.00')
+                        for i in range(n_m):
+                            v=float(_base_ind[i])*_esc
+                            col=xl_cel(ws,linha_excel,col,v,None if _r_ind[i] is None else _r_ind[i]*_esc,_nf,cor_preto)
+                        linha_excel+=1
+
+                    ws.column_dimensions["A"].width=22
+                    for cc in range(2,col):
+                        ws.column_dimensions[get_column_letter(cc)].width=13
+                    ws.freeze_panes="B3"
+
+                buf=BytesIO(); wb.save(buf); buf.seek(0)
+                return buf.getvalue()
+
+            st.download_button("📥 Exportar Indicadores — Todos os 3 Cenários (Excel)",gerar_excel_indicadores_3_cenarios(),
+              file_name="Indicadores_Projetados_3_Cenarios.xlsx",
+              mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              use_container_width=True,key="dl_indicadores_3cen")
+        else:
+            st.markdown('<div class="al-w">⚠️ Nenhum Indicador com previsão disponível — gere as projeções em '
+                '"🔮 Projeções ML" primeiro.</div>',unsafe_allow_html=True)
+
     # ── FLUXO PROJETADO
     elif "Fluxo" in demo:
         sec("💰 Fluxo de Caixa Projetado")
@@ -7991,9 +10071,19 @@ elif pg=="cenarios":
             ("tot","= Saldo Acumulado",sa,False),
         ]
 
-        header_f="<tr><th>Descrição</th>"+"".join(f"<th>{m}</th><th>AH%</th>" for m in meses_proj)+"</tr>"
+        # Realizado: entradas/saídas reais do mês; Saldo Acumulado real parte do
+        # mesmo Saldo Inicial e só segue enquanto os meses anteriores tiverem realizado.
+        _ent_r=get_real("Disponibilidades entradas"); _sai_r=get_real("Disponibilidades Saida")
+        _sp_r=[None if a is None or b is None else a-b for a,b in zip(_ent_r,_sai_r)]
+        _sa_r=[]; _acum=si
+        for _x in _sp_r:
+            _acum=None if (_x is None or _acum is None) else _acum+_x
+            _sa_r.append(_acum)
+        _real_fc={"Total Entradas":_ent_r,"(-) Total Saídas":_sai_r,"= Saldo do Período":_sp_r,"= Saldo Acumulado":_sa_r}
+        header_f="<tr><th>Descrição</th>"+"".join(f"<th>{m}</th><th>AH%</th>"+TH_REAL for m in meses_proj)+"</tr>"
         rows_f=""
         for tipo,desc,serie,inv in linhas_fc:
+            serie_r=_real_fc.get(desc.strip(),[None]*n_m)
             cls_tr={"tot":"tot","sub":"sub"}.get(tipo,"")
             row=f'<tr class="{cls_tr}"><td>{desc}</td>'
             for i in range(n_m):
@@ -8002,6 +10092,7 @@ elif pg=="cenarios":
                 cls_v="neg" if (inv and v!=0) else cor(v)
                 row+=f'<td class="{cls_v}">{fmt(v)}</td>'
                 row+=f'<td class="{cls_pct(a_h,inv)}">{fmt(a_h,"pct")}</td>'
+                row+=td_real(v,serie_r[i],inv)
             rows_f+=row+"</tr>"
         st.markdown(f'<div class="dre-wrap" style="overflow-x:auto"><table class="dre" style="min-width:700px">{header_f}{rows_f}</table></div>',unsafe_allow_html=True)
         def gerar_excel_fluxo_3_cenarios():
@@ -8025,19 +10116,32 @@ elif pg=="cenarios":
             ev_m_fc=ev_fc*22 if freq_fc=="Diário" else ev_fc
             si_fc=float(st.session_state.get("saldo_ini",0))
 
-            for nome_cenario,fator_c in [("Pessimista",1-var_pct/100),("Base",1.0),("Otimista",1+var_pct/100)]:
+            # Fator por conta (Monte Carlo) — mesmo usado na tela via get_proj,
+            # não mais o ±% fixo antigo. "Base" usa fator=1.0.
+            for nome_cenario in ["Pessimista","Base","Otimista"]:
+                def _fator_fc(campo):
+                    if nome_cenario=="Pessimista":
+                        return _fatores_mc_cen.get(campo,{}).get("pess",1-var_pct/100)
+                    elif nome_cenario=="Otimista":
+                        return _fatores_mc_cen.get(campo,{}).get("otim",1+var_pct/100)
+                    return 1.0
+
                 if "Disponibilidades entradas" in projs:
-                    ent_c=[v*fator_c for v in projs["Disponibilidades entradas"]["valores"]]
+                    ent_c=[v*_fator_fc("Disponibilidades entradas") for v in projs["Disponibilidades entradas"]["valores"]]
                 else:
                     v=float(ul_real.get("Disponibilidades entradas",0) or 0)
                     ent_c=[v]*n_m
+                if len(ent_c)<n_m and len(ent_c)>0: ent_c=ent_c+[ent_c[-1]]*(n_m-len(ent_c))
+                elif len(ent_c)>n_m: ent_c=ent_c[:n_m]
                 ent_c=[ent_c[i]+ev_m_fc for i in range(n_m)]
 
                 if "Disponibilidades Saida" in projs:
-                    sai_c=[v*fator_c for v in projs["Disponibilidades Saida"]["valores"]]
+                    sai_c=[v*_fator_fc("Disponibilidades Saida") for v in projs["Disponibilidades Saida"]["valores"]]
                 else:
                     v=float(ul_real.get("Disponibilidades Saida",0) or 0)
                     sai_c=[v]*n_m
+                if len(sai_c)<n_m and len(sai_c)>0: sai_c=sai_c+[sai_c[-1]]*(n_m-len(sai_c))
+                elif len(sai_c)>n_m: sai_c=sai_c[:n_m]
 
                 sp_c=[ent_c[i]-sai_c[i] for i in range(n_m)]
                 sa_c=[]
@@ -8052,7 +10156,8 @@ elif pg=="cenarios":
                 ]
 
                 ws=wb.create_sheet(nome_cenario)
-                ws.cell(row=1,column=1,value=f"Cenário: {nome_cenario} | Variação aplicada: {var_pct}%").font=Font(italic=True,color="6B7280",size=9)
+                ws.cell(row=1,column=1,value=f"Cenário: {nome_cenario} — fator por conta via Monte Carlo (erro "
+                    "real medido na Validação)").font=Font(italic=True,color="6B7280",size=9)
                 ws.merge_cells(start_row=1,start_column=1,end_row=1,end_column=4)
                 ws.cell(row=2,column=1,value="Descrição").font=cor_branco_bold
                 ws.cell(row=2,column=1).fill=cor_azul
@@ -8087,6 +10192,11 @@ elif pg=="cenarios":
 
             buf=BytesIO(); wb.save(buf); buf.seek(0)
             return buf.getvalue()
+
+        st.download_button("📥 Exportar Fluxo de Caixa — Todos os 3 Cenários (Excel)",gerar_excel_fluxo_3_cenarios(),
+          file_name="Fluxo_Caixa_Projetado_3_Cenarios.xlsx",
+          mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          use_container_width=True,key="dl_fluxo_3cen")
 
         painel_edicao([
             ("Disponibilidades entradas","💵 Entradas"),
@@ -8260,6 +10370,1684 @@ elif pg=="pareto":
         csv_pareto=resultado.to_csv(sep=";",decimal=",",index=False).encode("utf-8-sig")
         st.download_button("📥 Exportar tabela completa (CSV)",csv_pareto,file_name=f"pareto_{gid(dim_atual)}.csv",use_container_width=True)
 
+elif pg=="ml_financeiro_val":
+    hdr("🔬 Validação Estatística de Previsões Financeiras","Testa a confiabilidade da previsão das contas da DRE contra o que realmente aconteceu, antes de confiar nela")
+    if not STATS_OK:
+        st.markdown('<div class="al-d">❌ pip install statsmodels scikit-learn</div>',unsafe_allow_html=True)
+        st.stop()
+
+    _df_raw_mlf=get_df_raw_bruto()
+    if _df_raw_mlf is None:
+        no_data(); st.stop()
+
+    # Restaura do disco ANTES dos widgets de Filial/Demonstração serem desenhados
+    # — sem isso, Filial/Demonstração voltavam pro default a cada F5 (nunca eram
+    # persistidas), e o clamp do "mlf_n_valid" mais abaixo recalculava o teto em
+    # cima do escopo ERRADO (o default, não o que o usuário tinha escolhido),
+    # derrubando silenciosamente o valor do slider já restaurado do disco.
+    if "mlf_calib_restaurada_disco" not in st.session_state and st.session_state.cid:
+        _disco_calib_mlf=load_calibracoes_ml(st.session_state.cid)
+        if _disco_calib_mlf:
+            for _k_disco_mlf,_v_disco_mlf in _disco_calib_mlf.items():
+                if _k_disco_mlf.startswith("mlf_") and _k_disco_mlf not in st.session_state:
+                    st.session_state[_k_disco_mlf]=_v_disco_mlf
+        st.session_state["mlf_calib_restaurada_disco"]=True
+
+    def _salvar_config_mlf_oncambio():
+        if st.session_state.cid:
+            save_calibracoes_ml(st.session_state.cid)
+
+    _col_fil_mlf=col_filial(_df_raw_mlf)
+    filial_sel_mlf=None
+    if _col_fil_mlf:
+        _filiais_disp_mlf=sorted(v for v in _df_raw_mlf[_col_fil_mlf].dropna().astype(str).unique().tolist() if v!="(Todas as filiais)")
+        _opcoes_filial_mlf=["(Todas as filiais)"]+_filiais_disp_mlf
+
+        def _on_change_filial_mlf():
+            st.session_state["mlf_filial_sel_backup"]=st.session_state["mlf_filial_sel"]
+            _salvar_config_mlf_oncambio()
+
+        if "mlf_filial_sel_backup" not in st.session_state:
+            st.session_state["mlf_filial_sel_backup"]=_opcoes_filial_mlf[0]
+        if st.session_state["mlf_filial_sel_backup"] not in _opcoes_filial_mlf:
+            st.session_state["mlf_filial_sel_backup"]=_opcoes_filial_mlf[0]
+        st.session_state["mlf_filial_sel"]=st.session_state["mlf_filial_sel_backup"]
+
+        filial_sel_mlf=st.selectbox("🏬 Filial",_opcoes_filial_mlf,
+          key="mlf_filial_sel",on_change=_on_change_filial_mlf)
+
+    # Demonstração — igual ao filtro de Categoria do comercial: qual conjunto de
+    # contas-folha usar (DRE, Balanço ou Fluxo). Cada uma tem sua própria lista
+    # em DEMONSTRACOES_CAMPOS, já existente no sistema.
+    # Mesmo padrão de backup que "Filial" já usa — sem isso, um F5 sempre
+    # voltava pra primeira opção da lista (DRE), mesmo o valor real (ex.:
+    # Fluxo de Caixa) já estando salvo em disco corretamente.
+    _opcoes_demo_mlf=list(DEMONSTRACOES_CAMPOS.keys())
+
+    def _on_change_demo_mlf():
+        st.session_state["mlf_demo_sel_backup"]=st.session_state["mlf_demo_sel"]
+        _salvar_config_mlf_oncambio()
+
+    if "mlf_demo_sel_backup" not in st.session_state:
+        st.session_state["mlf_demo_sel_backup"]=_opcoes_demo_mlf[0]
+    if st.session_state["mlf_demo_sel_backup"] not in _opcoes_demo_mlf:
+        st.session_state["mlf_demo_sel_backup"]=_opcoes_demo_mlf[0]
+    st.session_state["mlf_demo_sel"]=st.session_state["mlf_demo_sel_backup"]
+
+    _demo_sel_mlf=st.selectbox("📄 Demonstração",_opcoes_demo_mlf,key="mlf_demo_sel",
+        on_change=_on_change_demo_mlf)
+    _campos_demo_mlf=[c for c in DEMONSTRACOES_CAMPOS[_demo_sel_mlf]
+        if c!="numero de vendas"]  # métrica de apoio (usada em "ticket médio"),
+        # não é conta de resultado — não faz sentido validar/prever como se fosse
+        # uma linha da DRE. "Contas de origem" = as que você lança direto (Receita,
+        # CMV, Despesas...); "Subtotais" = as calculadas por fórmula (Lucro, EBITDA).
+
+    # Chaves de calibração — definidas AQUI (não só na seção de Auto-Calibração
+    # mais abaixo) porque o loop de Validação precisa delas pra aplicar de
+    # verdade o que foi salvo, não só a Auto-Calibração exibir depois.
+    _sufixo_calib_mlf=f"__{_demo_sel_mlf}"
+    _chave_pico_mlf=f"mlf_meses_pico{_sufixo_calib_mlf}"
+    _chave_promo_mlf=f"mlf_meses_promo{_sufixo_calib_mlf}"
+    _chave_reaj_mlf=f"mlf_reajustes{_sufixo_calib_mlf}"
+    _chave_out_mlf=f"mlf_outliers{_sufixo_calib_mlf}"
+    _chave_cresc_mlf=f"mlf_crescimento{_sufixo_calib_mlf}"
+    _chave_cresc_meses_mlf=f"mlf_crescimento_meses{_sufixo_calib_mlf}"
+    _chave_vies_mlf=f"mlf_vies{_sufixo_calib_mlf}"
+    _chave_intens_pico_mlf=f"mlf_intensidade_pico{_sufixo_calib_mlf}"
+    _chave_intens_promo_mlf=f"mlf_intensidade_promo{_sufixo_calib_mlf}"
+
+    # (Restauração de calibrações do disco já foi feita lá em cima, antes dos
+    # widgets de Filial/Demonstração — não repetir aqui.)
+
+    # Restaura os RESULTADOS (Validação/Auto-Calibração/Viés) do disco também
+    # — específico dessa combinação Filial+Demonstração, então recarrega toda
+    # vez que ela mudar (não só uma vez por sessão como a calibração acima).
+    _chave_escopo_resultado_mlf=f"{filial_sel_mlf}__{_demo_sel_mlf}"
+    # Rastreia qual escopo está CARREGADO agora — não "se já restaurei uma vez".
+    # Sem isso: DRE → Indicadores → voltar pra DRE não recarregava, porque a
+    # flag antiga de "já restaurei DRE" continuava True, mesmo o valor tendo
+    # sido sobrescrito pela visita a Indicadores no meio do caminho.
+    if st.session_state.get("mlf_escopo_resultado_carregado")!=_chave_escopo_resultado_mlf and st.session_state.cid:
+        _disco_resultado_mlf=load_resultado_valfin(st.session_state.cid,_chave_escopo_resultado_mlf)
+        if _disco_resultado_mlf:
+            st.session_state["mlf_validacao_resultado"]=pd.DataFrame(_disco_resultado_mlf["validacao"]) if _disco_resultado_mlf.get("validacao") is not None else None
+            st.session_state["mlf_wf_resultados"]=_disco_resultado_mlf.get("wf_resultados")
+            st.session_state["mlf_wf_baseline"]=_disco_resultado_mlf.get("wf_baseline")
+            st.session_state["mlf_vies_resultados"]=_disco_resultado_mlf.get("vies_resultados")
+            st.session_state["mlf_vies_debug"]=_disco_resultado_mlf.get("vies_debug")
+            # Faltava isso — sem restaurar, a Previsão Futura ficava "grudada"
+            # na última Demonstração vista, não a atual, causando mistura de
+            # dados entre Demonstrações diferentes.
+            st.session_state["mlf_projecao_futura"]=_disco_resultado_mlf.get("projecao_futura")
+        else:
+            st.session_state["mlf_validacao_resultado"]=None
+            st.session_state["mlf_wf_resultados"]=None
+            st.session_state["mlf_wf_baseline"]=None
+            st.session_state["mlf_vies_resultados"]=None
+            st.session_state["mlf_vies_debug"]=None
+            st.session_state["mlf_projecao_futura"]=None
+        st.session_state["mlf_escopo_resultado_carregado"]=_chave_escopo_resultado_mlf
+
+    if "mlf_calib_versao" not in st.session_state:
+        st.session_state["mlf_calib_versao"]=0
+    _versao_calib_mlf=st.session_state["mlf_calib_versao"]
+
+    df_mlf=get_df_filial(filial_sel_mlf)
+    if df_mlf is None or len(df_mlf)==0:
+        no_data(); st.stop()
+
+    cm_mlf=cm_(df_mlf); ca_mlf=ca_(df_mlf)
+    if not cm_mlf or not ca_mlf:
+        st.markdown('<div class="al-d">❌ Não encontrei colunas de Mês/Ano na base — confira a importação.</div>',unsafe_allow_html=True)
+        st.stop()
+
+    # Monta período (Ano-Mês) por linha, igual ao resto das telas financeiras.
+    df_mlf=df_mlf.copy()
+    df_mlf["_mes_num_mlf"]=df_mlf[cm_mlf].astype(str).str.strip().str.lower().str[:3].map(MES_NUM)
+    df_mlf=df_mlf.dropna(subset=["_mes_num_mlf"])
+    df_mlf["_periodo_mlf"]=pd.PeriodIndex(
+        df_mlf[ca_mlf].astype(str)+"-"+df_mlf["_mes_num_mlf"],freq="M")
+    df_mlf=df_mlf.sort_values("_periodo_mlf").drop_duplicates(subset=["_periodo_mlf"],keep="last").reset_index(drop=True)
+
+    # Checagem de continuidade — diferente do comercial, DRE não pode ter "mês
+    # faltando": toda demonstração fecha todo período, mesmo que zerado. Um mês
+    # sem linha nenhuma é sinal de erro de importação, não de "sem movimento" —
+    # e se passar batido, o corte/janela de validação conta meses errado
+    # (pega N linhas que podem cobrir mais calendário do que N meses reais).
+    if len(df_mlf)>0:
+        _periodo_completo_mlf=pd.period_range(df_mlf["_periodo_mlf"].min(),df_mlf["_periodo_mlf"].max(),freq="M")
+        _meses_faltando_mlf=[str(p) for p in _periodo_completo_mlf if p not in df_mlf["_periodo_mlf"].values]
+        if _meses_faltando_mlf:
+            st.markdown(f'<div class="al-d">❌ A base tem {len(_meses_faltando_mlf)} mês(es) SEM linha nenhuma na DRE '
+                f'(deveria ter 0,00, não faltar): {", ".join(_meses_faltando_mlf)}. Corrija a importação antes de '
+                f'validar — com buraco no meio, o corte e a janela de validação contam mês errado.</div>',unsafe_allow_html=True)
+            st.stop()
+
+    _contas_disp_mlf=[c for c in _campos_demo_mlf if c in df_mlf.columns]
+    _contas_faltando_mlf=[c for c in _campos_demo_mlf if c not in df_mlf.columns]
+    if not _contas_disp_mlf:
+        st.markdown(f'<div class="al-d">❌ Nenhuma conta de {_demo_sel_mlf} encontrada nessa base/filial.</div>',unsafe_allow_html=True)
+        st.stop()
+
+    # Subtotais — previstos DIRETAMENTE (mesmo modelo/validação/WAPE que as
+    # Contas de Origem), não mais por fórmula em cima da previsão das folhas.
+    # Racional: a soma de vários erros independentes (um por conta) tende a
+    # amplificar mais do que um único modelo ajustado na própria curva do
+    # subtotal — princípio geral de agregação de erros, não específico deste
+    # sistema.
+    # ⚠️ NOTA METODOLÓGICA: uma comparação pontual, feita manualmente em dado
+    # real durante o desenvolvimento, favoreceu a previsão direta (por vezes
+    # com folga grande de WAPE). Esse teste NÃO ficou salvo como experimento
+    # reproduzível dentro do sistema — não citar como "venceu em N de N
+    # janelas testadas" em documento acadêmico sem antes reconstruir e
+    # persistir esse experimento formalmente (rodar a comparação direta vs.
+    # soma-de-folhas, em múltiplas janelas, salvando o resultado).
+    # Custo consciente dessa troca: a DRE prevista deixa de "fechar" matemati-
+    # camente (EBITDA previsto não é mais exatamente Receita−Despesas previstas).
+    _campos_por_demo_mlf={
+        "DRE":[("receita líquida","Receita Líquida"),("lucro bruto","Lucro Bruto"),
+            ("lucro operacional","Lucro Operacional"),("lucro líquido","Lucro Líquido"),("EBITDA","EBITDA")],
+        "Balanço":[("ativo circ","Ativo Circulante"),("ativo total","Ativo Total"),
+            ("pass circ","Passivo Circulante"),("pass total","Passivo Total"),("PL","Patrimônio Líquido")],
+        "Fluxo":[("saldo período","Saldo do Período"),("saldo acumulado","Saldo Acumulado")],
+        # Lista real, tirada direto da página "📈 Indicadores" já existente no
+        # app (pg=="indicadores") — mesmos campos que ela já calcula e exibe,
+        # não uma lista inventada à parte.
+        "Indicadores":[("margem bruta %","Margem Bruta %"),("margem líquida %","Margem Líquida %"),
+            ("margem contrib %","Margem de Contribuição %"),("EBITDA %","EBITDA %"),
+            ("PMR","PMR"),("PMP","PMP"),("PME","PME"),("ciclo de caixa","Ciclo de Caixa"),
+            ("giro estoque","Giro de Estoque"),("liquidez corrente","Liquidez Corrente"),
+            ("liquidez imediata","Liquidez Imediata"),("kanitz","Kanitz"),("ROE","ROE"),("ICD","ICD")],
+    }
+    _subtotais_lista_mlf=_campos_por_demo_mlf.get(_demo_sel_mlf,[])
+    _df_calc_full_mlf=calcular(df_mlf)
+    _subtotais_ok_mlf=[(campo,rotulo) for campo,rotulo in _subtotais_lista_mlf if campo in _df_calc_full_mlf.columns]
+    for _campo_sub,_rotulo_sub in _subtotais_ok_mlf:
+        df_mlf[_campo_sub]=_df_calc_full_mlf[_campo_sub]
+
+    # "Indicadores" não tem Conta de Origem própria — as 24 contas de DRE+
+    # Balanço só existem aqui pra ALIMENTAR o cálculo dos indicadores (via
+    # calcular() acima), não fazem sentido testadas/exibidas como "Conta de
+    # Origem" separada quando essa Demonstração é a escolhida. Nas outras 3
+    # (DRE/Balanço/Fluxo), as contas de origem continuam testadas normalmente.
+    _testar_contas_origem_mlf=(_demo_sel_mlf!="Indicadores")
+    _contas_origem_teste_mlf=_contas_disp_mlf if _testar_contas_origem_mlf else []
+
+    # Lista combinada — Contas de Origem + Subtotais, testados no MESMO loop,
+    # mesma função, mesmo rigor. _rotulo_item_mlf traduz nome interno pra nome
+    # bonito na hora de exibir (Conta de Origem usa o próprio nome, Subtotal
+    # usa o rótulo).
+    _itens_disp_mlf=_contas_origem_teste_mlf+[campo for campo,_ in _subtotais_ok_mlf]
+    # Mesmo mapa de nome bonito usado na tela de Fluxo de Caixa (drill-down) —
+    # "Centro de Custos Entradas 1" etc. são nomes internos genéricos; o resto
+    # do app já traduz pra "Receita Serviços" etc. na hora de exibir. Aplicando
+    # aqui também, sem mudar o dado testado, só o rótulo mostrado.
+    _nomes_legiveis_fluxo_mlf={
+        "Centro de Custos Entradas 1":"Receita Serviços","Centro de Custos Entradas 2":"Receita Produtos",
+        "Centro de Custos Entradas 3":"Recebimento Clientes","Centro de Custos Entradas 4":"Receita Financeira/Outras",
+        "Centro de Custos Saidas 1":"Folha","Centro de Custos Saidas 2":"Fornecedores",
+        "Centro de Custos Saidas 3":"Impostos/Operacionais","Centro de Custos Saidas 4":"Investimentos",
+    }
+    _rotulo_item_mlf={c:_nomes_legiveis_fluxo_mlf.get(c,c) for c in _contas_origem_teste_mlf}
+    _rotulo_item_mlf.update({campo:rotulo for campo,rotulo in _subtotais_ok_mlf})
+    _eh_subtotal_mlf={c:False for c in _contas_origem_teste_mlf}
+    _eh_subtotal_mlf.update({campo:True for campo,_ in _subtotais_ok_mlf})
+
+    # Formato LONGO ("_ProdutoUnico" = item) — a partir daqui, toda a mecânica
+    # pesada (LightGBM pooled, Auto-Calibração, Viés) é literalmente a MESMA
+    # função usada do lado comercial, sem duplicar nada. Inclui Subtotais no
+    # pool também — LightGBM não distingue semanticamente, só agrupa séries.
+    df_long_mlf=df_mlf[["_periodo_mlf"]+_itens_disp_mlf].melt(
+        id_vars="_periodo_mlf",var_name="_ProdutoUnico",value_name="_valor_mlf")
+    df_long_mlf["_data_mlf"]=df_long_mlf["_periodo_mlf"].dt.to_timestamp()
+    df_long_mlf["_valor_mlf"]=pd.to_numeric(df_long_mlf["_valor_mlf"],errors="coerce").fillna(0.)
+    _data_col_mlf="_data_mlf"; _metrica_col_mlf="_valor_mlf"
+    _meses_disp_mlf=[str(p) for p in df_mlf["_periodo_mlf"].tolist()]
+
+    sec(f"⚙️ Configurar calibração — {_demo_sel_mlf}")
+    tab_saz_mlf,tab_promo_mlf,tab_out_mlf,tab_reaj_mlf,tab_cresc_mlf=st.tabs(
+        ["📅 Sazonalidade","🏷️ Promoção","🚫 Excluir Outliers","💰 Reajuste de Preço","📈 Crescimento de Patamar"])
+
+    with tab_saz_mlf:
+        st.markdown('<div class="al-i">Marque os meses de pico, se essa Demonstração tiver um padrão sazonal conhecido. Deixe em branco se não houver sazonalidade conhecida.</div>',unsafe_allow_html=True)
+        _valor_atual_pico_mlf=st.session_state.get(_chave_pico_mlf,[])
+        meses_pico_mlf=st.multiselect("Meses de pico",
+            ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+            default=_valor_atual_pico_mlf,key=f"{_chave_pico_mlf}_widget_v{_versao_calib_mlf}",
+            placeholder="Selecione os meses (opcional)")
+        st.session_state[_chave_pico_mlf]=meses_pico_mlf
+        _valor_atual_intens_pico_mlf=st.session_state.get(_chave_intens_pico_mlf,100)
+        intensidade_pico_mlf=st.slider("Intensidade da calibração (%)",0,200,
+            value=_valor_atual_intens_pico_mlf,step=10,key=f"{_chave_intens_pico_mlf}_widget_v{_versao_calib_mlf}",
+            help="100% = usa o índice cheio, calculado do histórico. Menos que 100% segura o efeito; mais que 100% amplifica.")
+        st.session_state[_chave_intens_pico_mlf]=intensidade_pico_mlf
+
+    with tab_promo_mlf:
+        st.markdown('<div class="al-i">Meses historicamente promocionais/investimento pontual — pode capturar tanto Receita (campanha) quanto Despesa (investimento que justifica o mês).</div>',unsafe_allow_html=True)
+        _valor_atual_promo_mlf=st.session_state.get(_chave_promo_mlf,[])
+        meses_promo_mlf=st.multiselect("Meses com evento recorrente",
+            ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+            default=_valor_atual_promo_mlf,key=f"{_chave_promo_mlf}_widget_v{_versao_calib_mlf}",
+            placeholder="Selecione os meses (opcional)")
+        st.session_state[_chave_promo_mlf]=meses_promo_mlf
+        _valor_atual_intens_promo_mlf=st.session_state.get(_chave_intens_promo_mlf,100)
+        intensidade_promo_mlf=st.slider("Intensidade da calibração (%)",0,200,
+            value=_valor_atual_intens_promo_mlf,step=10,key=f"{_chave_intens_promo_mlf}_widget_v{_versao_calib_mlf}",
+            help="100% = usa o índice cheio, calculado do histórico. Menos que 100% segura o efeito; mais que 100% amplifica.")
+        st.session_state[_chave_intens_promo_mlf]=intensidade_promo_mlf
+
+    with tab_out_mlf:
+        st.markdown('<div class="al-i">Marque meses que tiveram evento contábil atípico (baixa de estoque grande, processo judicial pontual) e não devem entrar no treino.</div>',unsafe_allow_html=True)
+        if _meses_disp_mlf:
+            _valor_atual_out_mlf=[m for m in st.session_state.get(_chave_out_mlf,[]) if m in _meses_disp_mlf]
+            meses_excluir_mlf_tab=st.multiselect("Meses a excluir do treino",_meses_disp_mlf,
+                default=_valor_atual_out_mlf,key=f"{_chave_out_mlf}_widget_v{_versao_calib_mlf}",
+                placeholder="Selecione os meses a excluir (opcional)")
+            st.session_state[_chave_out_mlf]=meses_excluir_mlf_tab
+        else:
+            st.markdown('<div class="al-w">⚠️ Não encontrei mês válido nesta base.</div>',unsafe_allow_html=True)
+
+    with tab_reaj_mlf:
+        st.markdown('<div class="al-i">Cadastre datas de reajuste de contrato/preço/custo pra trazer o histórico pra régua atual, sem distorcer a tendência real.</div>',unsafe_allow_html=True)
+        if _chave_reaj_mlf not in st.session_state: st.session_state[_chave_reaj_mlf]=[]
+        c_rj1_mlf,c_rj2_mlf,c_rj3_mlf=st.columns([2,1,1])
+        if _meses_disp_mlf:
+            data_reajuste_mlf=c_rj1_mlf.selectbox("Mês do reajuste",_meses_disp_mlf,key="mlf_data_reajuste")
+        else:
+            data_reajuste_mlf=None
+            c_rj1_mlf.markdown('<div class="al-w">Sem datas disponíveis.</div>',unsafe_allow_html=True)
+        pct_reajuste_mlf=c_rj2_mlf.number_input("% Aplicado",value=0.0,step=0.5,format="%.1f",key="mlf_pct_reajuste")
+        if c_rj3_mlf.button("➕ Adicionar",key="mlf_add_reajuste",use_container_width=True):
+            if data_reajuste_mlf and pct_reajuste_mlf!=0:
+                st.session_state[_chave_reaj_mlf].append({"data":data_reajuste_mlf,"pct":pct_reajuste_mlf})
+                st.rerun()
+        if st.session_state[_chave_reaj_mlf]:
+            for idx_rj_mlf,rj_mlf in enumerate(st.session_state[_chave_reaj_mlf]):
+                c_show1_mlf,c_show2_mlf=st.columns([5,1])
+                c_show1_mlf.markdown(f"📅 **{rj_mlf['data']}** — {rj_mlf['pct']:+.1f}%")
+                if c_show2_mlf.button("🗑",key=f"mlf_rm_reajuste_{idx_rj_mlf}"):
+                    st.session_state[_chave_reaj_mlf].pop(idx_rj_mlf)
+                    st.rerun()
+        else:
+            st.caption("Nenhum reajuste cadastrado ainda.")
+
+    with tab_cresc_mlf:
+        st.markdown('<div class="al-i">Mudança de PATAMAR sustentada (abriu filial, mudou de porte) — diferente de Sazonalidade (repete todo ano) e Reajuste (é sobre preço). Detectada pela Auto-Calibração; aqui você confere e ajusta manualmente.</div>',unsafe_allow_html=True)
+        _cresc_dict_atual_mlf=st.session_state.get(_chave_cresc_mlf)
+        _valor_atual_cresc_mlf=(next((v for v in _cresc_dict_atual_mlf.values() if v),None)
+            if isinstance(_cresc_dict_atual_mlf,dict) else _cresc_dict_atual_mlf)
+        if _valor_atual_cresc_mlf:
+            _faixas_ativas_cresc_mlf=([k for k,v in _cresc_dict_atual_mlf.items() if v]
+                if isinstance(_cresc_dict_atual_mlf,dict) else ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"])
+            st.markdown(f"**Fator atual: {(_valor_atual_cresc_mlf-1)*100:+.1f}%** (multiplicador {_valor_atual_cresc_mlf:.3f}) "
+                f"— faixas: {', '.join(_faixas_ativas_cresc_mlf)}")
+        else:
+            st.caption("Nenhum crescimento de patamar detectado/aplicado ainda pra essa Demonstração.")
+        _pct_cresc_manual_mlf=st.number_input("Ajuste manual (%) — deixe 0 pra desligar",
+            value=round((_valor_atual_cresc_mlf-1)*100,1) if _valor_atual_cresc_mlf else 0.0,
+            step=1.0,key=f"{_chave_cresc_mlf}_widget_v{_versao_calib_mlf}",
+            help="Positivo = patamar mais alto que o histórico mais antigo. Negativo = patamar mais baixo. "
+                 "Ajuste manual vale igual pras 3 faixas (sem seletividade) — pra aplicar só numa faixa, use a Auto-Calibração/Viés.")
+        if _pct_cresc_manual_mlf!=0:
+            _fator_manual_cresc_mlf=1.0+(_pct_cresc_manual_mlf/100)
+            st.session_state[_chave_cresc_mlf]={"🟢 Confiável":_fator_manual_cresc_mlf,"🟡 Moderado":_fator_manual_cresc_mlf,"🔴 Baixa previsibilidade":_fator_manual_cresc_mlf}
+        else:
+            st.session_state[_chave_cresc_mlf]=None
+
+        _valor_atual_cresc_meses_mlf=st.session_state.get(_chave_cresc_meses_mlf,[])
+        meses_cresc_mlf_tab=st.multiselect("Aplicar o crescimento só nestes meses (vazio = todos)",
+            ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+            default=_valor_atual_cresc_meses_mlf,key=f"{_chave_cresc_meses_mlf}_widget_v{_versao_calib_mlf}",
+            placeholder="Vazio = aplica em todos os meses")
+        st.session_state[_chave_cresc_meses_mlf]=meses_cresc_mlf_tab
+
+    sec(f"🔬 Validação Out-of-Sample (Previsto x Real) — Contas de Origem de {_demo_sel_mlf}")
+    _periodos_disp_mlf=df_mlf["_periodo_mlf"].tolist()
+    if len(_periodos_disp_mlf)<8:
+        st.markdown('<div class="al-w">⚠️ Histórico curto demais pra validar com rigor (mínimo recomendado: 8+ meses).</div>',unsafe_allow_html=True)
+
+    # Exclui o ÚLTIMO mês disponível das opções de corte — precisa sobrar
+    # pelo menos 1 mês real depois do corte pra ter o que validar (mesma
+    # proteção que o comercial já tem, _meses_disp_mlp[:-1]).
+    _periodos_disp_str_mlf=[str(p) for p in _periodos_disp_mlf[:-1]]
+    _corte_default_idx_mlf=max(0,len(_periodos_disp_str_mlf)-4)
+
+    # (_salvar_config_mlf_oncambio já foi definida lá em cima, antes do
+    # selectbox de Filial — não redefinir aqui pra não sombrear/confundir.)
+
+    # "mlf_corte" (persistida/restaurada do disco) NUNCA é key= de widget —
+    # mesma arquitetura do slider acima: widget com chave própria
+    # ("mlf_corte_widget"), index= calculado a partir da persistida a cada
+    # execução, e sync de volta pra "mlf_corte" logo depois.
+    def _salvar_corte_mlf_oncambio():
+        st.session_state["mlf_corte"]=st.session_state["mlf_corte_widget"]
+        if st.session_state.cid:
+            save_calibracoes_ml(st.session_state.cid)
+
+    _valor_atual_corte_mlf=st.session_state.get("mlf_corte")
+    if _valor_atual_corte_mlf in _periodos_disp_str_mlf:
+        _idx_atual_corte_mlf=_periodos_disp_str_mlf.index(_valor_atual_corte_mlf)
+    else:
+        _idx_atual_corte_mlf=_corte_default_idx_mlf
+
+    data_corte_mlf=st.selectbox("Treinar até (data de corte)",
+        _periodos_disp_str_mlf,index=_idx_atual_corte_mlf,key="mlf_corte_widget",
+        on_change=_salvar_corte_mlf_oncambio)
+    st.session_state["mlf_corte"]=data_corte_mlf
+
+    _max_valid_mlf=max(1,min(24,len(_periodos_disp_mlf)-8))
+    _valor_atual_n_valid_mlf=st.session_state.get("mlf_n_valid",min(12,_max_valid_mlf))
+    if _valor_atual_n_valid_mlf>_max_valid_mlf:
+        _valor_atual_n_valid_mlf=min(12,_max_valid_mlf)
+
+    def _salvar_n_valid_mlf_oncambio():
+        # "mlf_n_valid" (persistida/restaurada do disco) NUNCA é key= de widget —
+        # só é escrita aqui (ou pela restauração do disco). O widget usa uma chave
+        # PRÓPRIA ("mlf_n_valid_widget"), então não existe nenhuma chance do
+        # Streamlit "vencer" a restauração com valor órfão de sessão anterior.
+        st.session_state["mlf_n_valid"]=st.session_state["mlf_n_valid_widget"]
+        if st.session_state.cid:
+            save_calibracoes_ml(st.session_state.cid)
+
+    n_meses_valid_mlf=st.slider("Quantos meses validar depois do corte",1,_max_valid_mlf,
+        value=_valor_atual_n_valid_mlf,key="mlf_n_valid_widget",on_change=_salvar_n_valid_mlf_oncambio)
+    st.session_state["mlf_n_valid"]=n_meses_valid_mlf
+
+    # Horizonte da Previsão Futura — separado do "quantos meses validar"
+    # acima (aquele é pra TESTE, contra o Real; esse é pra quantos meses
+    # projetar de verdade pro futuro, usado em "Projeções ML"). Mesmo
+    # padrão de persistência (backup + salva sempre) já comprovado hoje.
+    def _salvar_horizonte_futuro_mlf_oncambio():
+        st.session_state["mlf_horizonte_futuro_backup"]=st.session_state["mlf_horizonte_futuro_widget"]
+        if st.session_state.cid: save_calibracoes_ml(st.session_state.cid)
+    if "mlf_horizonte_futuro_backup" not in st.session_state:
+        st.session_state["mlf_horizonte_futuro_backup"]=12
+    horizonte_futuro_mlf=st.slider("Horizonte da Previsão Futura (meses) — usado em 'Projeções ML'",1,24,
+        value=st.session_state["mlf_horizonte_futuro_backup"],key="mlf_horizonte_futuro_widget",
+        on_change=_salvar_horizonte_futuro_mlf_oncambio)
+    st.session_state["mlf_horizonte_futuro_backup"]=horizonte_futuro_mlf
+
+    senha_validar_mlf=st.text_input("Senha master para rodar",type="password",key="mlf_senha_validar")
+    modelos_disp_mlf=[m for m,ok in MODELOS_ML.items() if ok and m not in ("Croston","TSB")]
+
+    # Verificação direta — mostra, sem precisar lembrar, se tem Crescimento OU
+    # Viés ativo em alguma faixa agora, antes mesmo de rodar. Resolve a dúvida
+    # "não tenho certeza se apliquei" de uma vez, sem depender de memória.
+    _chave_vies_check_mlf=f"mlf_vies{_sufixo_calib_mlf}"
+    _cresc_ativo_check=st.session_state.get(_chave_cresc_mlf)
+    _vies_ativo_check=st.session_state.get(_chave_vies_check_mlf)
+    _cresc_ligado=isinstance(_cresc_ativo_check,dict) and any(v for v in _cresc_ativo_check.values())
+    _vies_ligado=isinstance(_vies_ativo_check,dict) and any(v for v in _vies_ativo_check.values())
+
+
+    if st.button("🔬 Rodar Validação Financeira",key="mlf_rodar_validacao",use_container_width=True):
+        if senha_validar_mlf!=SENHA_MASTER:
+            st.markdown('<div class="al-d">❌ Senha master incorreta.</div>',unsafe_allow_html=True)
+            st.stop()
+
+        _corte_ts_mlf=pd.Period(data_corte_mlf,freq="M")
+        _mask_treino_mlf=df_mlf["_periodo_mlf"]<=_corte_ts_mlf
+        _df_treino_mlf=df_mlf[_mask_treino_mlf]
+        _df_real_pos_mlf=df_mlf[~_mask_treino_mlf].head(n_meses_valid_mlf)
+
+        if len(_df_treino_mlf)<8:
+            st.markdown('<div class="al-d">❌ Poucos meses de treino antes do corte — escolha um corte mais tarde.</div>',unsafe_allow_html=True)
+            st.stop()
+        if len(_df_real_pos_mlf)==0:
+            st.markdown('<div class="al-d">❌ Não sobrou nenhum mês real depois do corte — escolha um corte mais cedo.</div>',unsafe_allow_html=True)
+            st.stop()
+
+        linhas_mlf=[]
+        if "mlf_previsto_base" not in st.session_state:
+            st.session_state["mlf_previsto_base"]={}
+
+        # Calibração salva — lida de verdade agora, não só exibida na
+        # Auto-Calibração. Outliers exclui MESES do treino (linhas inteiras,
+        # todas as contas); Reajuste corrige o histórico de preço; Sazonalidade
+        # e Promoção calculam índice em cima do treino já sem os outliers.
+        _meses_pico_mlf=st.session_state.get(_chave_pico_mlf,[])
+        _meses_promo_mlf=st.session_state.get(_chave_promo_mlf,[])
+        _reajustes_mlf=st.session_state.get(_chave_reaj_mlf,[])
+        _outliers_mlf=st.session_state.get(_chave_out_mlf,[])
+
+        _df_treino_mlf_cal=_df_treino_mlf.copy()
+        if _outliers_mlf:
+            _df_treino_mlf_cal=_df_treino_mlf_cal[~_df_treino_mlf_cal["_periodo_mlf"].astype(str).isin(_outliers_mlf)].copy()
+            st.markdown(f'<div class="al-i">🚫 {len(_outliers_mlf)} mês(es) excluído(s) do treino: {", ".join(_outliers_mlf)}</div>',unsafe_allow_html=True)
+
+        _df_long_treino_cal_mlf=df_long_mlf[df_long_mlf["_periodo_mlf"].isin(_df_treino_mlf_cal["_periodo_mlf"])]
+        _indices_pico_mlf=calcular_indice_sazonal_calendario(_df_long_treino_cal_mlf,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,_meses_pico_mlf) if _meses_pico_mlf else {}
+        _indices_promo_mlf=calcular_indice_promocao_calendario(_df_long_treino_cal_mlf,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,_meses_promo_mlf) if _meses_promo_mlf else {}
+
+        _corte_treino_ts_mlf=_df_treino_mlf_cal["_periodo_mlf"].max().to_timestamp()
+        _df_long_treino_mlf=df_long_mlf[df_long_mlf["_data_mlf"]<=_corte_treino_ts_mlf]
+
+        # LightGBM pooled — mesma correção aplicada do lado comercial: antes
+        # testava só 1 janela escondida (parceiro deste comentário, "MESMO
+        # esquema cego usado do lado comercial", documentava o mesmo problema
+        # nos dois lados). Agora usa de 1 a 3 janelas, conforme o histórico
+        # disponível — mesma regra adaptativa que os modelos clássicos já
+        # usam (ver "_n_janelas_mlf" mais abaixo, no loop por conta), pra
+        # sustentar de verdade a afirmação de "mesmo protocolo multi-janela
+        # pra todos os modelos".
+        prev_lgbm_final_mlf={}
+        prev_lgbm_bt_janelas_mlf=[]; reais_lgbm_bt_janelas_mlf=[]
+        try:
+            _janela_lgbm_mlf=min(6,max(2,n_meses_valid_mlf))
+            try:
+                _periodos_disp_lgbm_mlf=_df_long_treino_mlf["_data_mlf"].dt.to_period("M")
+                _meses_disp_lgbm_mlf=(_periodos_disp_lgbm_mlf.max()-_periodos_disp_lgbm_mlf.min()).n+1 if len(_periodos_disp_lgbm_mlf.dropna())>0 else 0
+            except Exception:
+                _meses_disp_lgbm_mlf=0
+            if _meses_disp_lgbm_mlf>=24: _n_janelas_lgbm_mlf=3
+            elif _meses_disp_lgbm_mlf>=16: _n_janelas_lgbm_mlf=2
+            else: _n_janelas_lgbm_mlf=1
+
+            for _janela_idx_lgbm_mlf in range(_n_janelas_lgbm_mlf):
+                _offset_lgbm_mlf=_janela_idx_lgbm_mlf*_janela_lgbm_mlf
+                _corte_cego_mlf=_corte_treino_ts_mlf-pd.DateOffset(months=_janela_lgbm_mlf+_offset_lgbm_mlf)
+                _df_long_cego_mlf=_df_long_treino_mlf[_df_long_treino_mlf["_data_mlf"]<=_corte_cego_mlf]
+                if len(_df_long_cego_mlf)==0: continue
+                _reais_cego_mlf={}
+                for conta_c in _itens_disp_mlf:
+                    _serie_c_cego=_df_long_treino_mlf[(_df_long_treino_mlf["_ProdutoUnico"]==conta_c)
+                        &(_df_long_treino_mlf["_data_mlf"]>_corte_cego_mlf)]
+                    _reais_cego_mlf[conta_c]=_serie_c_cego.sort_values("_data_mlf")[_metrica_col_mlf].tolist()
+                _prev_cego_mlf=treinar_lightgbm_pooled(_df_long_cego_mlf,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,
+                    _itens_disp_mlf,_janela_lgbm_mlf)
+                prev_lgbm_bt_janelas_mlf.append(_prev_cego_mlf)
+                reais_lgbm_bt_janelas_mlf.append(_reais_cego_mlf)
+            prev_lgbm_final_mlf=treinar_lightgbm_pooled(_df_long_treino_mlf,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,
+                _itens_disp_mlf,n_meses_valid_mlf)
+        except Exception:
+            prev_lgbm_final_mlf={}; prev_lgbm_bt_janelas_mlf=[]; reais_lgbm_bt_janelas_mlf=[]
+
+        # Cache de ordem ARIMA/SARIMAX entre execuções — mesma função do
+        # comercial, sem alterar nada nela. Chave inclui a Demonstração (não só
+        # Filial), pra DRE/Balanço/Fluxo nunca compartilharem cache entre si.
+        _filial_cache_ordens_mlf=f"{filial_sel_mlf}__{_demo_sel_mlf}"
+        _ordens_cache_mlf=load_ordens_modelo(st.session_state.cid,_filial_cache_ordens_mlf) if st.session_state.cid else {}
+
+        pb_mlf=st.progress(0)
+        _debug_falhas_mlf=[]
+        _total_itens_mlf=len(_itens_disp_mlf)
+        if "mlf_cache_previsao_conta" not in st.session_state:
+            st.session_state["mlf_cache_previsao_conta"]={}
+        _cache_prev_conta_mlf=st.session_state["mlf_cache_previsao_conta"]
+        _reajuste_assinatura_mlf=json.dumps(_reajustes_mlf,sort_keys=True,default=str) if _reajustes_mlf else ""
+
+        for i_mlf,conta in enumerate(_itens_disp_mlf):
+            serie_treino_conta=pd.to_numeric(_df_treino_mlf_cal[conta],errors="coerce").fillna(0.).reset_index(drop=True)
+            serie_treino_conta.index=pd.PeriodIndex(_df_treino_mlf_cal["_periodo_mlf"].values,freq="M")
+            _reajuste_afeta_conta=_reajustes_mlf and not _eh_subtotal_mlf.get(conta,False)
+            if _reajuste_afeta_conta:
+                serie_treino_conta=aplicar_correcao_precos(serie_treino_conta,_reajustes_mlf)
+
+            # Assinatura — tudo que poderia mudar o resultado do TREINO dessa
+            # conta especificamente (não inclui Crescimento/Viés, que são
+            # aplicados DEPOIS, sem custo de retreino). Se nada aqui mudou
+            # desde a última vez, reusa o resultado exato — sem retreinar.
+            _assinatura_conta_mlf=(str(data_corte_mlf),n_meses_valid_mlf,
+                tuple(sorted(_outliers_mlf)),tuple(sorted(_meses_pico_mlf)),tuple(sorted(_meses_promo_mlf)),
+                _reajuste_assinatura_mlf if _reajuste_afeta_conta else "")
+
+            _cache_hit_mlf=_cache_prev_conta_mlf.get(_rotulo_item_mlf.get(conta,conta))
+            if _cache_hit_mlf and _cache_hit_mlf.get("assinatura")==list(_assinatura_conta_mlf):
+                melhor_c=_cache_hit_mlf["melhor"]
+                proj_c=_cache_hit_mlf["proj"]
+                rank_c={melhor_c:_cache_hit_mlf.get("wape_vencedor")}
+            else:
+                try:
+                    _meses_treino_disp_mlf=len(serie_treino_conta)
+                    if _meses_treino_disp_mlf>=24: _n_janelas_mlf,_tam_janela_mlf=3,6
+                    elif _meses_treino_disp_mlf>=16: _n_janelas_mlf,_tam_janela_mlf=2,4
+                    elif _meses_treino_disp_mlf>=10: _n_janelas_mlf,_tam_janela_mlf=1,3
+                    else: _n_janelas_mlf,_tam_janela_mlf=1,2
+                    melhor_c,proj_c,rank_c=escolher_modelo_e_prever(
+                        serie_treino_conta,modelos_disp_mlf,n_meses_valid_mlf,conta,
+                        prev_lgbm_final_mlf,prev_lgbm_bt_janelas_mlf,reais_lgbm_bt_janelas_mlf,
+                        n_janelas_disputa=_n_janelas_mlf,tamanho_janela_disputa=_tam_janela_mlf,
+                        ordens_cache=_ordens_cache_mlf,normalizar_arima=True)
+                    _cache_prev_conta_mlf[_rotulo_item_mlf.get(conta,conta)]={
+                        "assinatura":list(_assinatura_conta_mlf),"melhor":melhor_c,
+                        "proj":list(proj_c) if proj_c is not None else None,
+                        "wape_vencedor":rank_c.get(melhor_c) if rank_c else None}
+                except Exception as _e_mlf:
+                    _debug_falhas_mlf.append(f'"{_rotulo_item_mlf.get(conta,conta)}": ERRO — {type(_e_mlf).__name__}: {_e_mlf}')
+                    pb_mlf.progress((i_mlf+1)/_total_itens_mlf,text=f"{i_mlf+1} de {_total_itens_mlf}")
+                    continue
+
+            if proj_c is None:
+                _erro_real_capturado=st.session_state.get("_ultimo_erro_treinar",{}).get(melhor_c,"nenhum erro capturado")
+                _debug_falhas_mlf.append(f'"{_rotulo_item_mlf.get(conta,conta)}": modelo "{melhor_c}" retornou vazio (proj_c=None) — '
+                    f'erro real capturado: {_erro_real_capturado} — '
+                    f'histórico de treino tinha {len(serie_treino_conta)} meses, min={serie_treino_conta.min():.0f}, max={serie_treino_conta.max():.0f}')
+                pb_mlf.progress((i_mlf+1)/_total_itens_mlf,text=f"{i_mlf+1} de {_total_itens_mlf}")
+                continue
+
+            proj_lista_c=list(proj_c)[:len(_df_real_pos_mlf)]
+            reais_c=pd.to_numeric(_df_real_pos_mlf[conta],errors="coerce").fillna(0.).tolist()
+
+            # Sazonalidade/Promoção — igual ao comercial: pula se LightGBM venceu
+            # (ele já recebeu isso como feature de entrada; aplicar de novo por
+            # fora contaria o efeito duas vezes).
+            _datas_fut_c=_df_real_pos_mlf["_periodo_mlf"].dt.to_timestamp().tolist()[:len(proj_lista_c)]
+            if (_indices_pico_mlf or _indices_promo_mlf) and melhor_c!="LightGBM (pooled)":
+                proj_lista_c=aplicar_indice_sazonal(proj_lista_c,_datas_fut_c,_indices_pico_mlf,_indices_promo_mlf,
+                    intensidade_pico=intensidade_pico_mlf/100,intensidade_promo=intensidade_promo_mlf/100)
+
+            _wape_vencedor_c=rank_c.get(melhor_c)
+            if _wape_vencedor_c is not None:
+                if _wape_vencedor_c<=0.20: _confiab_c="🟢 Confiável"
+                elif _wape_vencedor_c<=0.30: _confiab_c="🟡 Moderado"
+                else: _confiab_c="🔴 Baixa previsibilidade"
+            else:
+                _confiab_c="—"
+
+            # Crescimento e Viés — POR FAIXA, mesmo esquema do comercial. Cada
+            # um guarda um dict {"🟢 Confiável":fator,...} em vez de um fator
+            # único — só aplica na faixa dessa conta, e só se marcado.
+            _cresc_por_tier_mlf=st.session_state.get(_chave_cresc_mlf)
+            _fator_cresc_c=_cresc_por_tier_mlf.get(_confiab_c) if isinstance(_cresc_por_tier_mlf,dict) else None
+            # Exceção POR CONTA (mesma arquitetura do comercial) — sempre
+            # vence a faixa, se existir.
+            _rotulo_c=_rotulo_item_mlf.get(conta,conta)
+            _cresc_excecao_conta_mlf=st.session_state.get("mlf_crescimento_por_conta",{})
+            _tem_excecao_c=_rotulo_c in _cresc_excecao_conta_mlf
+            if _tem_excecao_c:
+                _fator_cresc_c=_cresc_excecao_conta_mlf[_rotulo_c]
+
+            if _fator_cresc_c:
+                proj_lista_c=[max(0.0,v*_fator_cresc_c) for v in proj_lista_c]
+
+            _vies_por_tier_mlf=st.session_state.get(_chave_vies_mlf)
+            _vies_info_c=_vies_por_tier_mlf.get(_confiab_c) if isinstance(_vies_por_tier_mlf,dict) else None
+            _fator_vies_c=None
+            if isinstance(_vies_info_c,dict) and _rotulo_c in _vies_info_c.get("contas",[]):
+                _fator_vies_c=_vies_info_c.get("fator")
+            if _fator_vies_c:
+                proj_lista_c=[max(0.0,v*_fator_vies_c) for v in proj_lista_c]
+
+            # Teste de Estacionariedade (ADF) — só INFORMATIVO, mesma lógica
+            # do comercial. Calculado 1x por conta (propriedade da série
+            # inteira), nunca muda qual modelo foi escolhido.
+            _adf_pvalor_c=None; _adf_estacionaria_c=None
+            if STATS_OK and len(serie_treino_conta)>=8:
+                try:
+                    _adf_res_c=adfuller(serie_treino_conta.dropna())
+                    _adf_pvalor_c=round(float(_adf_res_c[1]),3)
+                    _adf_estacionaria_c=_adf_pvalor_c<0.05
+                except Exception:
+                    pass
+
+            for j_mlf in range(min(len(proj_lista_c),len(reais_c))):
+                real_v=reais_c[j_mlf]; prev_v=proj_lista_c[j_mlf]
+                erro_pct=abs(prev_v-real_v)/abs(real_v)*100 if real_v!=0 else None
+                # Erro COM SINAL — positivo quando o modelo SUBESTIMOU (Real
+                # veio maior que Previsto), negativo quando SUPERESTIMOU.
+                # "Erro %" acima continua absoluto (correto pro WAPE e
+                # Confiabilidade); esse novo campo é só pro Monte Carlo, que
+                # precisa da direção do erro, não só o tamanho.
+                erro_sinal_pct=(real_v-prev_v)/abs(real_v)*100 if real_v!=0 else None
+                linhas_mlf.append({"Conta":_rotulo_item_mlf.get(conta,conta),"ContaRaw":conta,
+                    "Mes":str(_df_real_pos_mlf["_periodo_mlf"].iloc[j_mlf]),
+                    "Modelo":melhor_c,"Previsto":round(prev_v,2),"Real":round(real_v,2),
+                    "Erro %":round(erro_pct,1) if erro_pct is not None else None,
+                    "ErroSinal %":round(erro_sinal_pct,1) if erro_sinal_pct is not None else None,
+                    "Confiabilidade":_confiab_c,
+                    "Horizonte":j_mlf+1,"ADF_pvalor":_adf_pvalor_c,"Estacionaria":_adf_estacionaria_c})
+            pb_mlf.progress((i_mlf+1)/_total_itens_mlf,text=f"{i_mlf+1} de {_total_itens_mlf} — {_rotulo_item_mlf.get(conta,conta)}")
+        pb_mlf.empty()
+
+        if st.session_state.cid:
+            save_ordens_modelo(st.session_state.cid,_ordens_cache_mlf,_filial_cache_ordens_mlf)
+            save_calibracoes_ml(st.session_state.cid)
+            save_cache_previsao_conta_mlf(st.session_state.cid)
+
+        if _debug_falhas_mlf:
+            with st.expander(f"🔧 DEBUG — {len(_debug_falhas_mlf)} conta(s) que não geraram previsão",expanded=True):
+                for _f_mlf in _debug_falhas_mlf:
+                    st.caption(f"❌ {_f_mlf}")
+
+        df_val_mlf=pd.DataFrame(linhas_mlf)
+        st.session_state["mlf_validacao_resultado"]=df_val_mlf
+        if st.session_state.cid:
+            save_resultado_valfin(st.session_state.cid,_chave_escopo_resultado_mlf)
+        st.success(f"✅ Validação concluída — {len(_itens_disp_mlf)} itens testados (Contas de Origem + Subtotais).")
+
+        # ═══════════════════════════════════════════════════════════
+        # PASSO ADICIONAL — Previsão FUTURA (não é o teste acima, que olha
+        # pra trás pra medir confiança). Reaproveita o modelo e a ordem já
+        # descobertos linha acima (sem retreinar do zero, sem re-buscar
+        # ordem) — só estende a mesma decisão pro futuro de verdade. Salva
+        # numa chave SEPARADA; nada do que já rodou acima é alterado.
+        # "Projeções ML" lê essa chave em vez de reimplementar o treino.
+        # ═══════════════════════════════════════════════════════════
+        _rotulo_para_raw_mlf={v:k for k,v in _rotulo_item_mlf.items()}
+        _modelo_por_conta_mlf=df_val_mlf.groupby("Conta")["Modelo"].first().to_dict()
+        _projecao_futura_mlf={}
+        for _conta_rotulo_fut,_modelo_fut in _modelo_por_conta_mlf.items():
+            _conta_raw_fut=_rotulo_para_raw_mlf.get(_conta_rotulo_fut,_conta_rotulo_fut)
+            try:
+                if _modelo_fut=="LightGBM (pooled)":
+                    if _conta_raw_fut in prev_lgbm_final_mlf:
+                        _projecao_futura_mlf[_conta_rotulo_fut]=list(prev_lgbm_final_mlf[_conta_raw_fut])
+                    continue
+                if _conta_raw_fut not in df_mlf.columns: continue
+                # Financeiro é formato LARGO (cada conta = 1 coluna) — mesmo
+                # acesso que o loop principal já usa pra montar
+                # serie_treino_conta, só que aqui sem cortar pelo corte de
+                # teste (queremos TODO o histórico disponível, pra previsão
+                # de verdade pro futuro).
+                _serie_completa_fut=pd.to_numeric(df_mlf[_conta_raw_fut],errors="coerce").fillna(0.).reset_index(drop=True)
+                _serie_completa_fut.index=pd.PeriodIndex(df_mlf["_periodo_mlf"].values,freq="M")
+                if len(_serie_completa_fut)<6: continue
+                _entrada_cache_fut=_ordens_cache_mlf.get(_conta_raw_fut)
+                _ordem_fut=_entrada_cache_fut.get("ordem") if (_entrada_cache_fut and _entrada_cache_fut.get("modelo")==_modelo_fut) else None
+                _proj_fut,_=treinar_com_ordem(_serie_completa_fut,_modelo_fut,horizonte_futuro_mlf,
+                    buscar_ordem=True,ordem_sugerida=_ordem_fut,normalizar_arima=True)
+                if _proj_fut is not None:
+                    _projecao_futura_mlf[_conta_rotulo_fut]=list(_proj_fut)
+            except Exception:
+                continue
+        st.session_state["mlf_projecao_futura"]=_projecao_futura_mlf
+        if st.session_state.cid:
+            save_resultado_valfin(st.session_state.cid,_chave_escopo_resultado_mlf)
+
+    # ===== Exibição =====
+    df_val_mlf=st.session_state.get("mlf_validacao_resultado")
+    if df_val_mlf is not None and len(df_val_mlf)>0:
+
+        def _wape_conta_mlf(g):
+            sr=g["Real"].abs().sum()
+            return (g["Previsto"]-g["Real"]).abs().sum()/sr*100 if sr>0 else None
+        _wape_por_conta_mlf=df_val_mlf.groupby("Conta").apply(_wape_conta_mlf)
+        _modelo_por_conta_mlf=df_val_mlf.groupby("Conta")["Modelo"].first()
+        # Soma bruta (erro absoluto, real absoluto) por conta — usada pra
+        # calcular WAPE PONDERADO de cada faixa/card, nunca média simples.
+        _erro_abs_por_conta_mlf=df_val_mlf.groupby("Conta").apply(lambda g:(g["Previsto"]-g["Real"]).abs().sum())
+        _real_abs_por_conta_mlf=df_val_mlf.groupby("Conta")["Real"].apply(lambda s:s.abs().sum())
+
+        def _classificar_mlf(w):
+            if pd.isna(w): return "—"
+            if w<=20: return "🟢 Confiável"
+            elif w<=30: return "🟡 Moderado"
+            else: return "🔴 Baixa previsibilidade"
+
+        _tab_contas_mlf=pd.DataFrame({"Conta":_wape_por_conta_mlf.index,"WAPE":_wape_por_conta_mlf.values})
+        _tab_contas_mlf["Modelo"]=_tab_contas_mlf["Conta"].map(_modelo_por_conta_mlf)
+        _tab_contas_mlf["Confiabilidade"]=_tab_contas_mlf["WAPE"].apply(_classificar_mlf)
+        # A Confiabilidade salva em df_val_mlf (linha ~9499, calculada ANTES de ver o
+        # período real) é só a estimativa da disputa interna — sem sincronizar aqui,
+        # Auto-Calibração e Viés (que leem df_val_mlf["Confiabilidade"] direto)
+        # classificam por uma régua diferente da que os cards do topo mostram,
+        # podendo divergir pra qualquer conta onde a disputa "errou" a estimativa.
+        _confiab_real_map_mlf=_tab_contas_mlf.set_index("Conta")["Confiabilidade"]
+        df_val_mlf["Confiabilidade"]=df_val_mlf["Conta"].map(_confiab_real_map_mlf)
+        st.session_state["mlf_validacao_resultado"]=df_val_mlf
+        if st.session_state.cid:
+            save_resultado_valfin(st.session_state.cid,_chave_escopo_resultado_mlf)
+        _tab_contas_mlf["ErroAbs"]=_tab_contas_mlf["Conta"].map(_erro_abs_por_conta_mlf)
+        _tab_contas_mlf["RealAbs"]=_tab_contas_mlf["Conta"].map(_real_abs_por_conta_mlf)
+        _peso_total_mlf=_tab_contas_mlf["RealAbs"].sum()
+        _tab_contas_mlf["Peso %"]=(_tab_contas_mlf["RealAbs"]/_peso_total_mlf*100).round(1) if _peso_total_mlf>0 else 0
+        _peso_total_mlf=_tab_contas_mlf["RealAbs"].sum()
+        _tab_contas_mlf["Peso no WAPE geral (%)"]=(_tab_contas_mlf["RealAbs"]/_peso_total_mlf*100).round(1) if _peso_total_mlf>0 else 0
+
+        # Contas de Origem E Subtotais já vêm juntos em _tab_contas_mlf — o
+        # loop principal testou os dois com a MESMA função/rigor (decisão de
+        # hoje: Subtotal previsto direto, nunca mais por fórmula). Sem
+        # composição, sem tabela separada, sem dois blocos de card.
+        # Só soma itens com WAPE calculável — sem isso, uma conta sempre-zero
+        # (ex: "Aporte") onde o modelo previu algo diferente de zero por engano
+        # entra no erro sem entrar no real, distorcendo o geral sem aparecer
+        # em nenhuma faixa visível.
+        _tab_contas_com_wape_mlf=_tab_contas_mlf[_tab_contas_mlf["WAPE"].notna()]
+        _soma_erro_geral_mlf=_tab_contas_com_wape_mlf["ErroAbs"].sum()
+        _soma_real_geral_mlf=_tab_contas_com_wape_mlf["RealAbs"].sum()
+        _wape_geral_mlf=_soma_erro_geral_mlf/_soma_real_geral_mlf*100 if _soma_real_geral_mlf>0 else None
+
+        _cores_grupo_mlf={"🟢 Confiável":"#0F6E56","🟡 Moderado":"#8A6D1F","🔴 Baixa previsibilidade":"#7A2A2A"}
+
+        def _renderiza_cards_mlf(tabela,titulo_unidade):
+            _colf1,_colf2,_colf3=st.columns(3)
+            for _colf,_grupo_f in zip((_colf1,_colf2,_colf3),("🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade")):
+                _sub_f=tabela[tabela["Confiabilidade"]==_grupo_f]
+                _n_f=len(_sub_f)
+                _real_total_f=_sub_f["RealAbs"].sum() if "RealAbs" in _sub_f.columns else 0
+                _wape_ponderado_f=(_sub_f["ErroAbs"].sum()/_real_total_f*100) if _real_total_f>0 else None
+                _wape_txt_f=f"{_wape_ponderado_f:.1f}%" if pd.notna(_wape_ponderado_f) else "—"
+                _colf.markdown(
+                    f'<div style="background:{_cores_grupo_mlf[_grupo_f]};border-radius:10px;'
+                    f'padding:14px 12px;margin-bottom:6px;text-align:center;border:1px solid #A9762F">'
+                    f'<div style="font-size:.75rem;letter-spacing:1px;color:#EAF6F1;text-transform:uppercase">{_grupo_f}</div>'
+                    f'<div style="font-size:1.6rem;font-weight:700;color:#fff;margin:4px 0">{_n_f} <span style="font-size:.9rem;font-weight:400">{titulo_unidade}</span></div>'
+                    f'<div style="border:2px solid #fff;border-radius:6px;padding:6px 8px;margin:8px 0;'
+                    f'font-size:1.05rem;font-weight:700;color:#fff">WAPE médio: {_wape_txt_f}</div>'
+                    f'</div>',unsafe_allow_html=True)
+
+        sec("🟢🟡🔴 Confiabilidade")
+        if _wape_geral_mlf is not None:
+            st.markdown(f"**WAPE ponderado geral: {_wape_geral_mlf:.1f}%**")
+        _n_sem_wape_mlf=_tab_contas_mlf["WAPE"].isna().sum()
+        if _n_sem_wape_mlf>0:
+            _contas_sem_wape_mlf=_tab_contas_mlf[_tab_contas_mlf["WAPE"].isna()]["Conta"].tolist()
+            st.caption(f"⚠️ {_n_sem_wape_mlf} sem WAPE calculável: {', '.join(_contas_sem_wape_mlf)}. Não entram em nenhuma das 3 faixas abaixo.")
+        _renderiza_cards_mlf(_tab_contas_mlf,"item(ns)")
+
+        # Curva de Degradação por Horizonte — mesma peça do comercial,
+        # reaproveitando a coluna "Horizonte" já gravada linha a linha.
+        if "Horizonte" in df_val_mlf.columns:
+            sec("📉 Curva de Degradação por Horizonte")
+            st.markdown('<div class="al-i">Até quantos meses no futuro a previsão continua confiável, medido '
+                'com erro real do backtest — não é estimativa teórica.</div>',unsafe_allow_html=True)
+
+            def _wape_por_horizonte_mlf(g):
+                _sr=g["Real"].abs().sum()
+                return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+            _wape_horizonte_mlf=df_val_mlf.groupby("Horizonte").apply(_wape_por_horizonte_mlf).dropna()
+            _n_horizonte_mlf=df_val_mlf.groupby("Horizonte").size()
+
+            if len(_wape_horizonte_mlf)>=2:
+                _x_h_mlf=list(_wape_horizonte_mlf.index)
+                _y_h_mlf=list(_wape_horizonte_mlf.values)
+                _fig_h_mlf=go.Figure()
+                _fig_h_mlf.add_trace(go.Scatter(
+                    x=_x_h_mlf,y=_y_h_mlf,mode="lines+markers",
+                    line=dict(color="#0F6E56",width=3,shape="spline",smoothing=0.3),
+                    marker=dict(size=9,color="#0F6E56",line=dict(color="#9FE1CB",width=2)),
+                    fill="tozeroy",fillcolor="rgba(15,110,86,0.15)",
+                    hovertemplate="Mês %{x}: <b>%{y:.1f}%</b><extra></extra>",name="WAPE"))
+                _fig_h_mlf.update_layout(
+                    plot_bgcolor="#FFE4C4",paper_bgcolor="#FFE4C4",
+                    font=dict(color="#4A2E1A",size=12,family="Segoe UI, Arial"),
+                    margin=dict(l=10,r=30,t=20,b=10),height=320,
+                    xaxis=dict(title="Horizonte (meses à frente)",tickmode="linear",dtick=1,
+                        gridcolor="#E8B888",showline=True,linecolor="#A9762F",
+                        range=[min(_x_h_mlf)-0.3,max(_x_h_mlf)+0.3]),
+                    yaxis=dict(title="WAPE (%)",gridcolor="#E8B888",showline=False,zeroline=False,ticksuffix="%"),
+                    showlegend=False,hovermode="x unified")
+                st.plotly_chart(_fig_h_mlf,use_container_width=True)
+                with st.expander("📋 Ver números — WAPE por horizonte"):
+                    _df_h_tab_mlf=pd.DataFrame({"Horizonte (meses à frente)":_wape_horizonte_mlf.index,
+                        "WAPE":[f"{v:.1f}%" for v in _wape_horizonte_mlf.values],
+                        "Pontos testados":[_n_horizonte_mlf.get(h,0) for h in _wape_horizonte_mlf.index]})
+                    st.dataframe(_df_h_tab_mlf,use_container_width=True,hide_index=True)
+            else:
+                st.caption("Histórico testado curto demais pra montar a curva (precisa de pelo menos 2 horizontes diferentes).")
+
+        # Estacionariedade (ADF) + Crescimento de Patamar por Conta — mesma
+        # peça do comercial, adaptada pra "Conta" em vez de "Produto".
+        if "Estacionaria" in df_val_mlf.columns:
+            with st.expander("📐 Estacionariedade (Teste ADF) — diagnóstico + ajuste opcional por conta"):
+                st.markdown('<div class="al-i">Testa uma forma ESPECÍFICA de não-estacionariedade — presença de '
+                    'raiz unitária (Augmented Dickey-Fuller) — não uma verificação completa de estacionariedade. '
+                    'O ADF não captura, por exemplo, quebras estruturais isoladas ou heterocedasticidade (variância '
+                    'mudando de forma que não seja tendência linear). É um diagnóstico específico e útil, mas não '
+                    'substitui uma análise completa de estacionariedade (que tipicamente combinaria ADF com KPSS '
+                    '— teste de hipótese nula OPOSTA — e inspeção visual de ACF/PACF). O teste em si NÃO muda '
+                    'qual modelo vence — isso continua sendo decidido pelo resultado real do backtest.<br><br>'
+                    '<b>Mas o Crescimento aplicado aqui embaixo AFETA o resultado final</b>, sim — ele entra na '
+                    'previsão dessa conta específica, e essa correção é automaticamente considerada como "estado '
+                    'atual" por qualquer outra calibração que você rodar depois (Auto-Calibração, Viés), em '
+                    'qualquer ordem. Ou seja: aplicar aqui muda o WAPE de verdade, em cadeia com o resto do '
+                    'sistema — não é só um diagnóstico "de olhar e não mexer".</div>',unsafe_allow_html=True)
+                st.markdown('<div class="al-i"><b>Por que isso é mais uma análise, além da Auto-Calibração:</b> '
+                    'a Auto-Calibração testa tendência de forma empírica, por faixa inteira. O ADF identifica ANTES, '
+                    'estatisticamente, se aquela conta específica tem tendência real — mesmo quando isso não aparece '
+                    'forte o bastante na média da faixa pra Auto-Calibração pegar sozinha.</div>',unsafe_allow_html=True)
+                _df_adf_resumo_mlf=df_val_mlf.groupby("Conta").agg(
+                    Estacionaria=("Estacionaria","first"),ADF_pvalor=("ADF_pvalor","first")).reset_index()
+                _n_est_mlf=(_df_adf_resumo_mlf["Estacionaria"]==True).sum()
+                _n_nest_mlf=(_df_adf_resumo_mlf["Estacionaria"]==False).sum()
+                _n_semdado_mlf=_df_adf_resumo_mlf["Estacionaria"].isna().sum()
+                c_adfm1,c_adfm2,c_adfm3=st.columns(3)
+                mc(c_adfm1,"✅ Estacionária",str(_n_est_mlf),"g")
+                mc(c_adfm2,"⚠️ Não estacionária",str(_n_nest_mlf),"y")
+                mc(c_adfm3,"— Sem dado suficiente",str(_n_semdado_mlf),"b")
+                _df_adf_disp_mlf=_df_adf_resumo_mlf.copy()
+                _df_adf_disp_mlf["Estacionaria"]=_df_adf_disp_mlf["Estacionaria"].map({True:"✅ Sim",False:"⚠️ Não"}).fillna("—")
+                st.dataframe(_df_adf_disp_mlf.rename(columns={"ADF_pvalor":"p-valor"}),
+                    use_container_width=True,height=min(400,80+35*len(_df_adf_disp_mlf)),hide_index=True)
+
+                st.markdown("---")
+                st.markdown("**📈 Crescimento de Patamar por Conta — candidatos (não-estacionários)**")
+                _contas_nao_estac_mlf=_df_adf_resumo_mlf[_df_adf_resumo_mlf["Estacionaria"]==False]["Conta"].tolist()
+                if not _contas_nao_estac_mlf:
+                    st.caption("Nenhuma conta não-estacionária nessa rodada.")
+                else:
+                    _linhas_cresc_mlf=[]
+                    for _conta_c in _contas_nao_estac_mlf:
+                        _linhas_conta_c=df_val_mlf[df_val_mlf["Conta"]==_conta_c]
+                        if len(_linhas_conta_c)==0: continue
+                        _real_sum_c=_linhas_conta_c["Real"].abs().sum()
+                        if _real_sum_c<=0: continue
+                        _wape_sem_c=(_linhas_conta_c["Previsto"]-_linhas_conta_c["Real"]).abs().sum()/_real_sum_c*100
+                        # Sugestão: metade recente vs metade antiga do PREVISTO
+                        # (proxy simples — não temos a série de treino aqui, só
+                        # o resultado; suficiente pra uma sugestão de partida).
+                        _serie_ordenada_c=_linhas_conta_c.sort_values("Mes")["Real"].reset_index(drop=True)
+                        if len(_serie_ordenada_c)>=2:
+                            _meio_c=len(_serie_ordenada_c)//2
+                            _ant_c=_serie_ordenada_c.iloc[:max(1,_meio_c)].mean()
+                            _rec_c=_serie_ordenada_c.iloc[_meio_c:].mean()
+                            _fator_sug_c=round(1.0+(_rec_c/_ant_c-1),2) if _ant_c>0 else 1.0
+                        else:
+                            _fator_sug_c=1.0
+                        _previsto_com_c=_linhas_conta_c["Previsto"]*_fator_sug_c
+                        _wape_com_c=(_previsto_com_c-_linhas_conta_c["Real"]).abs().sum()/_real_sum_c*100
+                        _linhas_cresc_mlf.append({"Conta":_conta_c,"Fator":_fator_sug_c,
+                            "WAPE sem":_wape_sem_c,"WAPE com":_wape_com_c,"Melhora":_wape_com_c<_wape_sem_c})
+
+                    if not _linhas_cresc_mlf:
+                        st.caption("Nenhum candidato com dado suficiente pra calcular sugestão.")
+                    else:
+                        _df_cresc_mlf=pd.DataFrame(_linhas_cresc_mlf)
+                        _n_melhora_mlf=_df_cresc_mlf["Melhora"].sum()
+                        st.caption(f"{_n_melhora_mlf} de {len(_df_cresc_mlf)} contas melhorariam com a sugestão calculada.")
+                        _selecoes_cresc_mlf={}
+                        _excecoes_ja_aplicadas_mlf=st.session_state.get(f"mlf_crescimento_por_conta{_sufixo_calib_mlf}",{})
+                        for _,_linha_cm in _df_cresc_mlf.sort_values("Melhora",ascending=False).iterrows():
+                            _delta_m=_linha_cm["WAPE sem"]-_linha_cm["WAPE com"]
+                            _sinal_m="✅ melhora" if _linha_cm["Melhora"] else "⚠️ piora"
+                            # Se essa conta já tem exceção aplicada, o WAPE "sem" acima já
+                            # reflete o Previsto JÁ corrigido — aplicar de novo compõe em cima
+                            # do que já foi corrigido, não corrige nada novo. Avisa e nasce
+                            # desmarcado, em vez de marcado por padrão.
+                            _ja_tem_excecao_m=_linha_cm["Conta"] in _excecoes_ja_aplicadas_mlf
+                            if _ja_tem_excecao_m:
+                                st.caption(f"⚠️ {_linha_cm['Conta']} já tem uma exceção aplicada "
+                                    f"(fator {_excecoes_ja_aplicadas_mlf[_linha_cm['Conta']]:.2f}×). Aplicar de novo "
+                                    f"COMPÕE em cima do que já foi corrigido — se quiser recalcular do zero, "
+                                    f"remova a exceção no expander abaixo e rode a Validação de novo antes de aplicar aqui.")
+                            _marcado_m=st.checkbox(
+                                f"{_linha_cm['Conta']} — fator {_linha_cm['Fator']:.2f}× — "
+                                f"WAPE {_linha_cm['WAPE sem']:.1f}% → {_linha_cm['WAPE com']:.1f}% ({_sinal_m}, {abs(_delta_m):.1f} pts)",
+                                value=bool(_linha_cm["Melhora"]) and not _ja_tem_excecao_m,
+                                key=f"mlf_cresc_check_{_linha_cm['Conta']}")
+                            _selecoes_cresc_mlf[_linha_cm["Conta"]]={"marcado":_marcado_m,"fator":_linha_cm["Fator"]}
+
+                        if st.button("💾 Aplicar seleção",key="mlf_cresc_aplicar_lote",use_container_width=True):
+                            _chave_cresc_conta_atual=f"mlf_crescimento_por_conta{_sufixo_calib_mlf}"
+                            _chave_previsto_base_atual=f"mlf_previsto_base{_sufixo_calib_mlf}"
+                            if _chave_cresc_conta_atual not in st.session_state:
+                                st.session_state[_chave_cresc_conta_atual]={}
+                            if _chave_previsto_base_atual not in st.session_state:
+                                st.session_state[_chave_previsto_base_atual]={}
+                            _n_aplic_mlf=0
+                            for _conta_sel,_info_sel in _selecoes_cresc_mlf.items():
+                                if _info_sel["marcado"]:
+                                    _fator_sel=_info_sel["fator"]
+                                    st.session_state[_chave_cresc_conta_atual][_conta_sel]=_fator_sel
+                                    _mask_sel=df_val_mlf["Conta"]==_conta_sel
+                                    # Congela o Previsto ATUAL (o mesmo que gerou o
+                                    # preview) e aplica o fator DIRETO na tabela, sem
+                                    # depender de rodar a Validação de novo.
+                                    st.session_state[_chave_previsto_base_atual][_conta_sel]=df_val_mlf.loc[_mask_sel,"Previsto"].tolist()
+                                    df_val_mlf.loc[_mask_sel,"Previsto"]=(df_val_mlf.loc[_mask_sel,"Previsto"]*_fator_sel).round(2)
+                                    df_val_mlf.loc[_mask_sel,"Erro %"]=[
+                                        round(abs(p-r)/abs(r)*100,1) if r!=0 else None
+                                        for p,r in zip(df_val_mlf.loc[_mask_sel,"Previsto"],df_val_mlf.loc[_mask_sel,"Real"])]
+                                    _n_aplic_mlf+=1
+                            st.session_state["mlf_validacao_resultado"]=df_val_mlf
+                            if st.session_state.cid:
+                                save_calibracoes_ml(st.session_state.cid)
+                                save_resultado_valfin(st.session_state.cid,_chave_escopo_resultado_mlf)
+                            st.success(f"✅ Aplicado em {_n_aplic_mlf} conta(s) — já atualizado na tabela abaixo.")
+                            st.rerun()
+
+                _chave_cresc_conta_exibir=f"mlf_crescimento_por_conta{_sufixo_calib_mlf}"
+                if st.session_state.get(_chave_cresc_conta_exibir):
+                    with st.expander(f"✅ {len(st.session_state[_chave_cresc_conta_exibir])} conta(s) com exceção aplicada — remover aqui"):
+                        for _conta_rm,_fator_rm in list(st.session_state[_chave_cresc_conta_exibir].items()):
+                            _col_rmm1,_col_rmm2=st.columns([4,1])
+                            _col_rmm1.caption(f"{_conta_rm} — fator {_fator_rm:.2f}×")
+                            if _col_rmm2.button("🗑",key=f"mlf_cresc_rm_{_conta_rm}"):
+                                del st.session_state[_chave_cresc_conta_exibir][_conta_rm]
+                                st.session_state.get(f"mlf_previsto_base{_sufixo_calib_mlf}",{}).pop(_conta_rm,None)
+                                if st.session_state.cid:
+                                    save_calibracoes_ml(st.session_state.cid)
+                                st.rerun()
+
+# ===== Convergência entre métricas de erro (WAPE x MAPE) =====
+        # Calculado em cima do que JÁ existe (Previsto x Real, mês a mês, em
+        # df_val_mlf) — nenhum retreino, só outra fórmula aplicada nos mesmos
+        # números. Não é "qual métrica está certa" (WAPE continua sendo o
+        # único critério de decisão do sistema) — é "essas duas réguas
+        # concordam sobre esse item, ou ele é frágil o suficiente pra
+        # discordarem?", mesmo espírito da Convergência entre janelas e da
+        # Composição já usadas em outros pontos da Validação.
+        def _mape_conta_mlf(g):
+            _g_valido=g[g["Real"]!=0]
+            if len(_g_valido)==0: return None
+            return ((_g_valido["Previsto"]-_g_valido["Real"]).abs()/_g_valido["Real"].abs()).mean()*100
+        def _rmse_pct_conta_mlf(g):
+            _media_real=g["Real"].abs().mean()
+            if _media_real<=0: return None
+            _rmse=np.sqrt(((g["Previsto"]-g["Real"])**2).mean())
+            return _rmse/_media_real*100
+        _mape_por_conta_mlf=df_val_mlf.groupby("Conta").apply(_mape_conta_mlf)
+        _rmse_pct_por_conta_mlf=df_val_mlf.groupby("Conta").apply(_rmse_pct_conta_mlf)
+
+        _tab_converg_mlf=_tab_contas_mlf[["Conta","WAPE"]].copy()
+        _tab_converg_mlf["MAPE"]=_tab_converg_mlf["Conta"].map(_mape_por_conta_mlf)
+        _tab_converg_mlf["RMSE%"]=_tab_converg_mlf["Conta"].map(_rmse_pct_por_conta_mlf)
+
+        _tab_converg_mlf["Desvio"]=_tab_converg_mlf[["WAPE","MAPE","RMSE%"]].apply(
+            lambda r: r.max()-r.min() if r.notna().all() else None,axis=1)
+
+        def _classificar_converg_mlf(d):
+            if pd.isna(d): return "—"
+            if d<=15: return "🟢 Compatível"
+            elif d<=30: return "🟡 Moderado"
+            else: return "🔴 Não compatível"
+        _tab_converg_mlf["Convergência"]=_tab_converg_mlf["Desvio"].apply(_classificar_converg_mlf)
+
+        sec("🔀 Convergência entre Métricas de Erro")
+        st.markdown('<div class="al-i">Uma camada a mais de validação, visando compatibilidade de aferição com '
+            'outras métricas de erro (MAPE, RMSE). WAPE continua sendo o único critério de decisão do sistema.</div>',
+            unsafe_allow_html=True)
+
+        _n_sem_converg_mlf=_tab_converg_mlf["Desvio"].isna().sum()
+        _n_verde_c=(_tab_converg_mlf["Convergência"]=="🟢 Compatível").sum()
+        _n_amarelo_c=(_tab_converg_mlf["Convergência"]=="🟡 Moderado").sum()
+        _n_vermelho_c=(_tab_converg_mlf["Convergência"]=="🔴 Não compatível").sum()
+
+        st.markdown(
+            '<div style="background:#1a1a1a;border-radius:10px;padding:16px;border:1px solid #A9762F">'
+            '<div style="font-size:.75rem;letter-spacing:1px;color:#EAF6F1;text-transform:uppercase;margin-bottom:10px">'
+            'Compatibilidade entre WAPE / MAPE / RMSE%</div>'
+            '<div style="display:flex;gap:24px;flex-wrap:wrap">'
+            f'<div><span style="color:#3ED9A8;font-weight:700;font-size:1.3rem">{_n_verde_c}</span> '
+            f'<span style="color:#EAF6F1">🟢 Compatível (≤15 pts)</span></div>'
+            f'<div><span style="color:#D9B23E;font-weight:700;font-size:1.3rem">{_n_amarelo_c}</span> '
+            f'<span style="color:#EAF6F1">🟡 Moderado (15-30 pts)</span></div>'
+            f'<div><span style="color:#D96E3E;font-weight:700;font-size:1.3rem">{_n_vermelho_c}</span> '
+            f'<span style="color:#EAF6F1">🔴 Não compatível (>30 pts)</span></div>'
+            '</div></div>',unsafe_allow_html=True)
+        if _n_sem_converg_mlf>0:
+            st.caption(f"⚠️ {_n_sem_converg_mlf} item(ns) sem comparação calculável (mês com Real=0 no período testado).")
+
+        with st.expander(f"📋 Detalhe WAPE × MAPE × RMSE% ({len(_tab_converg_mlf)} itens)"):
+            _tab_converg_disp_mlf=_tab_converg_mlf.copy()
+            for _col_pct in ["WAPE","MAPE","RMSE%","Desvio"]:
+                _tab_converg_disp_mlf[_col_pct]=_tab_converg_disp_mlf[_col_pct].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+            st.dataframe(_tab_converg_disp_mlf,use_container_width=True,height=min(400,80+35*len(_tab_converg_disp_mlf)))
+
+        with st.expander(f"📊 WAPE por modelo ({_tab_contas_mlf['Modelo'].nunique()} modelos usados)"):
+            # Mesma fórmula ponderada dos cards (soma erro ÷ soma real) — nunca
+            # média simples, pra não repetir a inconsistência que já resolvemos
+            # nos cards de Confiabilidade.
+            _por_modelo_mlf=_tab_contas_mlf.groupby("Modelo").agg(
+                Contas=("Conta","count"),ErroAbs=("ErroAbs","sum"),RealAbs=("RealAbs","sum")).reset_index()
+            _por_modelo_mlf["WAPE_medio"]=_por_modelo_mlf.apply(
+                lambda r: r["ErroAbs"]/r["RealAbs"]*100 if r["RealAbs"]>0 else None,axis=1)
+            _por_modelo_mlf["WAPE_medio"]=_por_modelo_mlf["WAPE_medio"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+            st.dataframe(_por_modelo_mlf[["Modelo","Contas","WAPE_medio"]].rename(columns={"WAPE_medio":"WAPE médio"}),
+                use_container_width=True,hide_index=True)
+
+        with st.expander(f"📋 Contas e Subtotais testados ({len(_tab_contas_mlf)})"):
+            _tab_disp_mlf=_tab_contas_mlf.copy()
+            _tab_disp_mlf["WAPE"]=_tab_disp_mlf["WAPE"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+            _tab_disp_mlf["Peso %"]=_tab_disp_mlf["Peso %"].apply(lambda v: f"{v:.1f}%")
+            _tab_disp_mlf=_tab_disp_mlf[["Conta","Peso %","Modelo","WAPE","Confiabilidade"]]
+            st.dataframe(_tab_disp_mlf,use_container_width=True,height=min(400,80+35*len(_tab_disp_mlf)))
+            st.download_button("⬇️ Exportar CSV",
+                data=_tab_disp_mlf.to_csv(index=False,sep=";",decimal=",").encode("utf-8-sig"),
+                file_name=f"validacao_financeira_{data_corte_mlf}.csv",mime="text/csv",
+                key="mlf_download_contas")
+
+# ===== AUTO-CALIBRAÇÃO — Sazonalidade/Promoção/Reajuste/Outliers/Crescimento =====
+        # Reaproveita as MESMAS funções do comercial (descobrir_calibracao_uma_janela,
+        # construir_cache_real_para_combinacao, etc.) — "_ProdutoUnico" aqui é a
+        # Conta, "_data_mlf"/"_valor_mlf" são as colunas do formato longo que já
+        # montamos pro LightGBM. Nenhuma dessas funções muda — só troca o dado
+        # de entrada, exatamente como fizemos com o LightGBM antes.
+        with st.expander(f"🔍 Auto-Calibração — {_demo_sel_mlf} (Sazonalidade, Promoção, Reajuste, Outliers, Crescimento)"):
+
+            janelas_descoberta_mlf=st.multiselect("Janelas de descoberta (meses antes do corte, testadas às cegas)",
+                [2,3,4,6,9,12,18,24],default=[12,18,24],key="mlf_janelas_descoberta")
+
+            # _modelo_por_conta_mlf é indexado pelo nome BONITO (Conta já
+            # traduzida). construir_cache_real_para_combinacao busca por nome
+            # INTERNO (o mesmo de _itens_disp_mlf) — sem traduzir aqui, qualquer
+            # Subtotal ou conta renomeada (Fluxo inteiro) não reaproveita o modelo
+            # já validado, cai num processo de decisão mais antigo e diferente,
+            # e gera WAPE ligeiramente diferente do relatado na Validação principal.
+            modelos_fixos_auto_mlf={raw:_modelo_por_conta_mlf.get(_rotulo_item_mlf.get(raw,raw)) for raw in _itens_disp_mlf}
+
+            # Confiabilidade por conta (calculada na última "Rodar Validação
+            # Financeira") — usada só pra CRUZAR e mostrar o efeito por faixa,
+            # sem mudar a busca de Sazonalidade/Promoção/Reajuste/Outliers (que
+            # continua uniforme — mesma decisão já tomada no comercial).
+            _df_val_confiab_auto_mlf=st.session_state.get("mlf_validacao_resultado")
+            _confiab_lookup_auto_mlf={}
+            if _df_val_confiab_auto_mlf is not None and "Confiabilidade" in _df_val_confiab_auto_mlf.columns:
+                _confiab_lookup_auto_mlf=_df_val_confiab_auto_mlf.groupby("Conta")["Confiabilidade"].first().to_dict()
+
+            def _aplicar_excecao_cresc_mlf(cache_lista):
+                """Aplica TODO Crescimento ATIVO agora (exceção por CONTA, que sempre
+                vence; senão, Crescimento por FAIXA) em cima de um cache já construído
+                aqui na Auto-Calibração — sem isso, o baseline ignorava qualquer
+                correção já aplicada, não importa se foi por conta ou por faixa.
+                Sempre usa o "proj" FRESCO do próprio cache (já calculado corretamente
+                por construir_cache_real_para_combinacao) — não reusa nenhum valor
+                congelado de execuções passadas."""
+                _cresc_excecao_mlf=st.session_state.get(f"mlf_crescimento_por_conta{_sufixo_calib_mlf}",{})
+                _cresc_por_tier_mlf_apf=st.session_state.get(_chave_cresc_mlf)
+                if not _cresc_excecao_mlf and not isinstance(_cresc_por_tier_mlf_apf,dict):
+                    return cache_lista
+                _confiab_por_conta_apf=df_val_mlf.groupby("Conta")["Confiabilidade"].first().to_dict() if df_val_mlf is not None else {}
+                for _item_cache in cache_lista:
+                    _prod_item=_item_cache.get("produto")
+                    _rotulo_item=_rotulo_item_mlf.get(_prod_item,_prod_item)
+                    _fator_item=None
+                    if _rotulo_item in _cresc_excecao_mlf:
+                        _fator_item=_cresc_excecao_mlf[_rotulo_item]
+                    elif isinstance(_cresc_por_tier_mlf_apf,dict):
+                        _tier_item=_confiab_por_conta_apf.get(_rotulo_item)
+                        _fator_item=_cresc_por_tier_mlf_apf.get(_tier_item) if _tier_item else None
+                    if _fator_item:
+                        _item_cache["proj"]=[max(0.0,v*_fator_item) for v in _item_cache["proj"]]
+                return cache_lista
+
+            if st.button("🔍 Auto-Calibração",key="mlf_rodar_autocalib",use_container_width=True):
+                if not janelas_descoberta_mlf:
+                    st.markdown('<div class="al-w">⚠️ Selecione ao menos uma janela de descoberta antes de rodar.</div>',unsafe_allow_html=True)
+                    st.stop()
+
+                st.markdown(f'<div class="al-s">✅ Reaproveitando os {len(modelos_fixos_auto_mlf)} modelos já escolhidos '
+                    f'em "Rodar Validação" — direto pra busca de calibração.</div>',unsafe_allow_html=True)
+
+                # Baseline = ESTADO ATUAL REAL, com tudo que já está aplicado
+                # (Viés por faixa, Crescimento por faixa/conta) — não mais um
+                # "zero absoluto" artificial. A Auto-Calibração testa novos
+                # candidatos EM CIMA do que já existe, não do zero. Decisão
+                # corrigida — antes excluía Viés de propósito, o que fazia o
+                # baseline não bater com a Validação real quando havia Viés ativo.
+                _filial_cache_ordens_auto_mlf=f"{filial_sel_mlf}__{_demo_sel_mlf}"
+                _ordens_cache_auto_mlf=load_ordens_modelo(st.session_state.cid,_filial_cache_ordens_auto_mlf) if st.session_state.cid else {}
+
+                # Resolve o Viés por faixa ATIVO pra um dict por conta (mesmo
+                # formato que modelos_fixos já usa) — usando a Confiabilidade
+                # de cada conta na ÚLTIMA Validação rodada.
+                _vies_por_tier_ativo_mlf=st.session_state.get(_chave_vies_mlf)
+                _confiab_por_conta_mlf=df_val_mlf.groupby("Conta")["Confiabilidade"].first().to_dict() if df_val_mlf is not None else {}
+                _vieses_fixos_auto_mlf={}
+                if isinstance(_vies_por_tier_ativo_mlf,dict):
+                    for _raw_item in _itens_disp_mlf:
+                        _rotulo_raw=_rotulo_item_mlf.get(_raw_item,_raw_item)
+                        _tier_dessa_conta=_confiab_por_conta_mlf.get(_rotulo_raw)
+                        _fator_vies_dessa_conta=_vies_por_tier_ativo_mlf.get(_tier_dessa_conta) if _tier_dessa_conta else None
+                        if _fator_vies_dessa_conta:
+                            _vieses_fixos_auto_mlf[_raw_item]=_fator_vies_dessa_conta
+
+                _cache_baseline_auto_mlf,_=construir_cache_real_para_combinacao(
+                    df_long_mlf,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,_itens_disp_mlf,
+                    data_corte_mlf,n_meses_valid_mlf,[],[],modelos_disp_mlf,
+                    modelos_fixos=modelos_fixos_auto_mlf,vieses_fixos=_vieses_fixos_auto_mlf,ordens_cache=_ordens_cache_auto_mlf,
+                    normalizar_arima=True)
+                _cache_baseline_auto_mlf=_aplicar_excecao_cresc_mlf(_cache_baseline_auto_mlf)
+                wape_sem_calib_auto_mlf=_wape_cache_calendario(_cache_baseline_auto_mlf,{},{},pesar_por_periodo_teste=True)
+
+                # DIAGNÓSTICO — Previsto, Modelo E a ordem ARIMA/SARIMAX salva no
+                # cache, item a item. Se "Modelo bate" mas o Previsto diverge
+                # muito, a pergunta certa é: a ORDEM (p,d,q) salva no cache está
+                # sendo encontrada e usada, ou o cache não tem entrada pra esse
+                # item específico (caindo numa busca nova, que pode divergir)?
+                with st.expander("🔍 Comparação — Previsto, Modelo e Ordem por conta: Auto-Calibração vs Validação"):
+                    _linhas_debug_wape=[]
+                    for _c_debug in _cache_baseline_auto_mlf:
+                        _prod_debug=_c_debug.get("produto")
+                        _prev_baseline_soma=sum(_c_debug["proj"])
+                        _modelo_baseline_debug=modelos_fixos_auto_mlf.get(_prod_debug,"(nenhum — competiu do zero)")
+                        _entrada_cache_debug=_ordens_cache_auto_mlf.get(_prod_debug)
+                        _ordem_cache_debug=_entrada_cache_debug.get("ordem") if _entrada_cache_debug else None
+                        _modelo_no_cache_debug=_entrada_cache_debug.get("modelo") if _entrada_cache_debug else None
+                        # Cache só é relevante pro modelo que está vencendo AGORA — uma
+                        # entrada de ARIMA/SARIMAX salva de quando esse modelo vencia no
+                        # passado, mas que já perdeu pra Prophet/LightGBM, nunca é lida
+                        # (ver escolher_modelo_e_prever) e só confundia aparecendo aqui.
+                        _cache_valido_debug=_entrada_cache_debug is not None and _modelo_no_cache_debug==_modelo_baseline_debug
+                        _linha_val_debug=df_val_mlf[df_val_mlf["Conta"]==_rotulo_item_mlf.get(_prod_debug,_prod_debug)]
+                        _prev_validacao_soma=_linha_val_debug["Previsto"].sum() if len(_linha_val_debug)>0 else None
+                        _modelo_validacao_debug=_linha_val_debug["Modelo"].iloc[0] if len(_linha_val_debug)>0 else None
+                        if _prev_validacao_soma is not None:
+                            _dif_pct=abs(_prev_baseline_soma-_prev_validacao_soma)/abs(_prev_validacao_soma)*100 if _prev_validacao_soma!=0 else None
+                            _linhas_debug_wape.append({"Conta":_rotulo_item_mlf.get(_prod_debug,_prod_debug),
+                                "Modelo (Auto-Calib)":_modelo_baseline_debug,
+                                "Modelo (Validação)":_modelo_validacao_debug,
+                                "Tem ordem no cache?":"✅" if _cache_valido_debug else ("⚠️ obsoleto (era outro modelo)" if _entrada_cache_debug else "❌ SEM CACHE"),
+                                "Modelo salvo no cache":_modelo_no_cache_debug if _cache_valido_debug else "—",
+                                "Ordem salva":str(_ordem_cache_debug) if _cache_valido_debug else "—",
+                                "Previsto (Auto-Calib)":round(_prev_baseline_soma,2),
+                                "Previsto (Validação)":round(_prev_validacao_soma,2),
+                                "Diferença %":round(_dif_pct,2) if _dif_pct is not None else None})
+                    if _linhas_debug_wape:
+                        _df_debug_wape=pd.DataFrame(_linhas_debug_wape).sort_values("Diferença %",ascending=False)
+                        st.dataframe(_df_debug_wape,use_container_width=True,hide_index=True)
+                    else:
+                        st.caption("Não achei correspondência entre as contas dos dois lados.")
+
+                pb_wf_mlf2=st.progress(0); texto_wf_mlf2=st.empty()
+                resultados_wf_mlf=[]
+                _janelas_ordenadas_mlf=sorted(janelas_descoberta_mlf)
+                _cache_real_por_combo_mlf={}
+
+                for idx_j,janela in enumerate(_janelas_ordenadas_mlf):
+                    texto_wf_mlf2.caption(f"Testando janela de {janela} mês(es) antes do corte...")
+                    pb_wf_mlf2.progress((idx_j+1)/len(_janelas_ordenadas_mlf))
+                    corte_descoberta_wf_mlf=str(pd.Period(data_corte_mlf)-janela)
+                    calib_wf_mlf=descobrir_calibracao_uma_janela(
+                        df_long_mlf,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,_itens_disp_mlf,
+                        corte_descoberta_wf_mlf,janela,modelos_disp_mlf,modelos_fixos=modelos_fixos_auto_mlf,
+                        ordens_cache=_ordens_cache_auto_mlf,normalizar_arima=True)
+
+                    _chave_combo_mlf=(tuple(sorted((r["data"],r["pct"]) for r in calib_wf_mlf["reajustes"])),
+                                       tuple(sorted(calib_wf_mlf["outliers"])))
+                    if _chave_combo_mlf not in _cache_real_por_combo_mlf:
+                        _cache_combo_bruto_mlf,_df_treino_combo_mlf=construir_cache_real_para_combinacao(
+                            df_long_mlf,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,_itens_disp_mlf,
+                            data_corte_mlf,n_meses_valid_mlf,calib_wf_mlf["reajustes"],calib_wf_mlf["outliers"],
+                            modelos_disp_mlf,modelos_fixos=modelos_fixos_auto_mlf,ordens_cache=_ordens_cache_auto_mlf,
+                            normalizar_arima=True)
+                        _cache_real_por_combo_mlf[_chave_combo_mlf]=(_aplicar_excecao_cresc_mlf(_cache_combo_bruto_mlf),_df_treino_combo_mlf)
+                    _cache_atual_mlf,_df_treino_atual_mlf=_cache_real_por_combo_mlf[_chave_combo_mlf]
+
+                    _indices_pico_mlf=calcular_indice_sazonal_calendario(_df_treino_atual_mlf,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,calib_wf_mlf["meses_pico"]) if calib_wf_mlf["meses_pico"] else {}
+                    _indices_promo_mlf=calcular_indice_promocao_calendario(_df_treino_atual_mlf,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,calib_wf_mlf["meses_promo"]) if calib_wf_mlf["meses_promo"] else {}
+                    wape_real_wf_mlf,_detalhe_com_wf_mlf=_wape_cache_calendario(_cache_atual_mlf,_indices_pico_mlf,_indices_promo_mlf,
+                        fator_crescimento=calib_wf_mlf.get("fator_crescimento"),pesar_por_periodo_teste=True,retornar_detalhe=True)
+                    _,_detalhe_sem_wf_mlf=_wape_cache_calendario(_cache_baseline_auto_mlf,{},{},pesar_por_periodo_teste=True,retornar_detalhe=True)
+                    # "Sem crescimento, mas com o resto" — mesma calibração (sazon./promo/
+                    # reajuste/outliers), só tirando o crescimento. Usado abaixo pra montar
+                    # o WAPE real SELETIVO por faixa (o que de fato roda quando o usuário
+                    # marca só algumas faixas em "Aplicar essa combinação").
+                    _,_detalhe_semcresc_wf_mlf=_wape_cache_calendario(_cache_atual_mlf,_indices_pico_mlf,_indices_promo_mlf,
+                        fator_crescimento=None,pesar_por_periodo_teste=True,retornar_detalhe=True)
+
+                    # Cruza o detalhe por conta (sem calibração vs com essa janela) com
+                    # a faixa de Confiabilidade — mesmo esquema do comercial, só pra
+                    # MOSTRAR o efeito por faixa (a busca em si continua uniforme).
+                    _por_tier_wf_mlf={}
+                    for _tier_wf_mlf in ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"]:
+                        _sem_tier_mlf=[(w,p) for c_nome,w,p in _detalhe_sem_wf_mlf if _confiab_lookup_auto_mlf.get(_rotulo_item_mlf.get(c_nome,c_nome))==_tier_wf_mlf]
+                        _com_tier_mlf=[(w,p) for c_nome,w,p in _detalhe_com_wf_mlf if _confiab_lookup_auto_mlf.get(_rotulo_item_mlf.get(c_nome,c_nome))==_tier_wf_mlf]
+                        _peso_sem_mlf=sum(p for _,p in _sem_tier_mlf); _peso_com_mlf=sum(p for _,p in _com_tier_mlf)
+                        _wape_sem_t_mlf=(sum(w*p for w,p in _sem_tier_mlf)/_peso_sem_mlf) if _peso_sem_mlf>0 else None
+                        _wape_com_t_mlf=(sum(w*p for w,p in _com_tier_mlf)/_peso_com_mlf) if _peso_com_mlf>0 else None
+                        _por_tier_wf_mlf[_tier_wf_mlf]={"n":len(_com_tier_mlf),"wape_sem":_wape_sem_t_mlf,"wape_com":_wape_com_t_mlf}
+
+                    # WAPE real SELETIVO — o número mostrado como "WAPE real" precisa bater
+                    # com o que "Aplicar essa combinação" de fato aplica (crescimento só nas
+                    # faixas marcadas, que por padrão são só as que melhoram). Sem isso, o
+                    # headline promete um número que assume crescimento em 100% das contas,
+                    # mas o botão de aplicar é seletivo por faixa — os dois nunca batiam.
+                    if calib_wf_mlf.get("fator_crescimento"):
+                        _semcresc_dict_wf_mlf={c_nome:(w,p) for c_nome,w,p in _detalhe_semcresc_wf_mlf}
+                        _com_dict_wf_mlf={c_nome:(w,p) for c_nome,w,p in _detalhe_com_wf_mlf}
+                        _num_seletivo_mlf=0.0; _den_seletivo_mlf=0.0
+                        for c_nome,(w_semcresc,p_semcresc) in _semcresc_dict_wf_mlf.items():
+                            _tier_c_nome=_confiab_lookup_auto_mlf.get(_rotulo_item_mlf.get(c_nome,c_nome))
+                            _dados_tier_c_nome=_por_tier_wf_mlf.get(_tier_c_nome,{})
+                            _melhora_tier_c_nome=(_dados_tier_c_nome.get("wape_com") is not None and _dados_tier_c_nome.get("wape_sem") is not None
+                                and _dados_tier_c_nome["wape_com"]<_dados_tier_c_nome["wape_sem"])
+                            if _melhora_tier_c_nome and c_nome in _com_dict_wf_mlf:
+                                _w_usar_mlf,_p_usar_mlf=_com_dict_wf_mlf[c_nome]
+                            else:
+                                _w_usar_mlf,_p_usar_mlf=w_semcresc,p_semcresc
+                            _num_seletivo_mlf+=_w_usar_mlf*_p_usar_mlf
+                            _den_seletivo_mlf+=_p_usar_mlf
+                        wape_real_wf_mlf=(_num_seletivo_mlf/_den_seletivo_mlf) if _den_seletivo_mlf>0 else wape_real_wf_mlf
+
+                    resultados_wf_mlf.append({"janela":janela,"corte_descoberta":corte_descoberta_wf_mlf,
+                        "calibracao":calib_wf_mlf,"wape_real":wape_real_wf_mlf,"por_tier":_por_tier_wf_mlf})
+                pb_wf_mlf2.empty(); texto_wf_mlf2.empty()
+
+                st.session_state["mlf_wf_resultados"]=resultados_wf_mlf
+                st.session_state["mlf_wf_baseline"]=wape_sem_calib_auto_mlf
+                if st.session_state.cid:
+                    save_resultado_valfin(st.session_state.cid,_chave_escopo_resultado_mlf)
+
+            # ===== Exibição do resultado =====
+            resultados_wf_mlf=st.session_state.get("mlf_wf_resultados")
+            if resultados_wf_mlf:
+                wape_sem_calib_auto_mlf=st.session_state.get("mlf_wf_baseline")
+                wape_sem_txt_mlf=f"{wape_sem_calib_auto_mlf:.1f}%" if wape_sem_calib_auto_mlf is not None else "—"
+                st.markdown(f"**WAPE sem nenhuma calibração (corte real): {wape_sem_txt_mlf}**")
+                st.markdown("Resultado por janela de descoberta — testado às cegas contra o período real:")
+
+                for r in resultados_wf_mlf:
+                    c=r["calibracao"]
+                    partes=[]
+                    if c["meses_pico"]: partes.append(f"Sazon.: {', '.join(c['meses_pico'])}")
+                    if c["meses_promo"]: partes.append(f"Promo: {', '.join(c['meses_promo'])}")
+                    if c["reajustes"]: partes.append(f"Reaj.: {len(c['reajustes'])} evento(s)")
+                    if c["outliers"]: partes.append(f"Outl.: {len(c['outliers'])} mês(es)")
+                    if c.get("fator_crescimento"): partes.append(f"Cresc.: {(c['fator_crescimento']-1)*100:+.0f}%")
+                    resumo_calib=" | ".join(partes) if partes else "nenhuma calibração encontrada"
+                    wape_str=f"{r['wape_real']:.1f}%" if r["wape_real"] is not None else "—"
+                    st.markdown(f"- **Janela {r['janela']} meses** (descoberta até {r['corte_descoberta']}): {resumo_calib} → WAPE real: **{wape_str}**")
+                    for _tier_disp_wf_mlf,_dados_wf_mlf in r.get("por_tier",{}).items():
+                        if _dados_wf_mlf["n"]==0:
+                            st.caption(f"　{_tier_disp_wf_mlf}: nenhuma conta elegível nessa janela")
+                            continue
+                        _ws_wf_mlf=_dados_wf_mlf["wape_sem"]; _wc_wf_mlf=_dados_wf_mlf["wape_com"]
+                        _ws_txt_wf_mlf=f"{_ws_wf_mlf:.1f}%" if _ws_wf_mlf is not None else "—"
+                        _wc_txt_wf_mlf=f"{_wc_wf_mlf:.1f}%" if _wc_wf_mlf is not None else "—"
+                        _seta_wf_mlf="↓ melhora" if (_ws_wf_mlf is not None and _wc_wf_mlf is not None and _wc_wf_mlf<_ws_wf_mlf) else ("↑ piora" if (_ws_wf_mlf is not None and _wc_wf_mlf is not None and _wc_wf_mlf>_ws_wf_mlf) else "")
+                        st.caption(f"　{_tier_disp_wf_mlf} ({_dados_wf_mlf['n']} contas): {_ws_txt_wf_mlf} → {_wc_txt_wf_mlf}  {_seta_wf_mlf}")
+
+                # Convergência entre janelas — mesmo mês achado em buscas independentes
+                # é sinal real; janela isolada pode ser ruído (mesmo princípio do
+                # comercial, mesma trava de "2+ anos" já embutida na função de
+                # detecção — não precisa repetir aqui).
+                #
+                # TESTE ESTATÍSTICO (não só contagem) — mesmo critério do lado
+                # comercial: teste binomial (p=1/12 por janela, sob hipótese nula de
+                # escolha aleatória), significativo quando p<0,05.
+                _contagem_pico_mlf={}; _contagem_promo_mlf={}
+                for r in resultados_wf_mlf:
+                    for m in r["calibracao"]["meses_pico"]:
+                        _contagem_pico_mlf[m]=_contagem_pico_mlf.get(m,0)+1
+                    for m in r["calibracao"]["meses_promo"]:
+                        _contagem_promo_mlf[m]=_contagem_promo_mlf.get(m,0)+1
+
+                def _testar_convergencia_binomial_mlf(contagem_dict,n_janelas):
+                    resultado=[]
+                    for m,n in contagem_dict.items():
+                        if n<2: continue
+                        try:
+                            _p_valor=binomtest(n,n_janelas,1/12,alternative="greater").pvalue
+                        except Exception:
+                            _p_valor=None
+                        resultado.append((m,n,_p_valor))
+                    return sorted(resultado,key=lambda x:-x[1])
+
+                _convergentes_pico_mlf=_testar_convergencia_binomial_mlf(_contagem_pico_mlf,len(resultados_wf_mlf))
+                _convergentes_promo_mlf=_testar_convergencia_binomial_mlf(_contagem_promo_mlf,len(resultados_wf_mlf))
+                st.markdown("**🔁 Convergência entre janelas — teste binomial (mesmo mês em buscas independentes):**")
+                if _convergentes_pico_mlf or _convergentes_promo_mlf:
+                    for m,n,p in _convergentes_pico_mlf:
+                        _sig_txt_mlf=f"p={p:.3f} {'✅ significativo' if p is not None and p<0.05 else '⚠️ não significativo'}" if p is not None else "p não calculável"
+                        st.markdown(f"- Sazonalidade: **{m}** apareceu em {n} de {len(resultados_wf_mlf)} janelas testadas — {_sig_txt_mlf}")
+                    for m,n,p in _convergentes_promo_mlf:
+                        _sig_txt_mlf=f"p={p:.3f} {'✅ significativo' if p is not None and p<0.05 else '⚠️ não significativo'}" if p is not None else "p não calculável"
+                        st.markdown(f"- Promoção: **{m}** apareceu em {n} de {len(resultados_wf_mlf)} janelas testadas — {_sig_txt_mlf}")
+                    st.caption("p<0,05 = a chance dessa repetição ter sido só coincidência é baixa (menos de 5%) — "
+                        "evidência estatística de padrão real, não só contagem.")
+                else:
+                    st.caption("Nenhum mês se repetiu em 2 ou mais janelas — ainda não há padrão confirmado por buscas independentes.")
+
+                _validas_wf_mlf=[r for r in resultados_wf_mlf if r["wape_real"] is not None]
+                if _validas_wf_mlf and wape_sem_calib_auto_mlf is not None:
+                    _melhor_wf_mlf=min(_validas_wf_mlf,key=lambda r:r["wape_real"])
+                    if _melhor_wf_mlf["wape_real"]<=wape_sem_calib_auto_mlf-0.3:
+                        st.markdown(f"**✅ A janela de {_melhor_wf_mlf['janela']} meses foi a melhor, testada às cegas: "
+                            f"{_melhor_wf_mlf['wape_real']:.1f}% (contra {wape_sem_calib_auto_mlf:.1f}% sem calibração nenhuma).**")
+
+                        _opcoes_aplicar_mlf=[f"Janela {r['janela']} meses" for r in _validas_wf_mlf]
+                        _escolha_mlf=st.selectbox("Qual janela aplicar?",_opcoes_aplicar_mlf,key="mlf_escolha_janela")
+                        _janela_escolhida_mlf=int(_escolha_mlf.split(" ")[1])
+                        _r_escolhido_mlf=next(r for r in _validas_wf_mlf if r["janela"]==_janela_escolhida_mlf)
+
+                        # Crescimento de Patamar é o único item dessa combinação que fica
+                        # seletivo por faixa — Sazonalidade/Promoção/Reajuste/Outliers
+                        # continuam uniformes (mesma decisão já tomada no comercial).
+                        # Usa o efeito da combinação inteira por faixa (já calculado acima)
+                        # como guia de qual faixa marcar por padrão.
+                        _tiers_marcados_cresc_mlf={}
+                        if _r_escolhido_mlf["calibracao"].get("fator_crescimento"):
+                            st.markdown("**Em quais faixas aplicar o Crescimento de Patamar dessa combinação?** "
+                                "(Sazonalidade/Promoção/Reajuste/Outliers aplicam igual pra todo mundo, como sempre)")
+                            for _tier_cresc_apl_mlf in ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"]:
+                                _dados_tier_cresc_mlf=_r_escolhido_mlf["por_tier"].get(_tier_cresc_apl_mlf,{})
+                                if _dados_tier_cresc_mlf.get("n",0)==0: continue
+                                _melhora_tier_cresc_mlf=(_dados_tier_cresc_mlf["wape_com"] is not None and _dados_tier_cresc_mlf["wape_sem"] is not None
+                                    and _dados_tier_cresc_mlf["wape_com"]<_dados_tier_cresc_mlf["wape_sem"])
+                                _marcado_cresc_mlf=st.checkbox(
+                                    f"{_tier_cresc_apl_mlf}" + (" ✅ combinação melhora esse grupo" if _melhora_tier_cresc_mlf else " ⚠️ combinação não melhorou esse grupo"),
+                                    value=_melhora_tier_cresc_mlf,key=f"mlf_cresc_marcar_{_tier_cresc_apl_mlf}")
+                                if _marcado_cresc_mlf:
+                                    _tiers_marcados_cresc_mlf[_tier_cresc_apl_mlf]=_r_escolhido_mlf["calibracao"]["fator_crescimento"]
+
+                        if st.button("📥 Aplicar essa combinação",key="mlf_aplicar_combo_auto"):
+                            c=_r_escolhido_mlf["calibracao"]
+                            st.session_state[_chave_reaj_mlf]=c["reajustes"]
+                            st.session_state[_chave_out_mlf]=c["outliers"]
+                            st.session_state[_chave_pico_mlf]=c["meses_pico"]
+                            st.session_state[_chave_promo_mlf]=c["meses_promo"]
+                            if c.get("fator_crescimento"):
+                                _cresc_dict_novo_mlf={"🟢 Confiável":None,"🟡 Moderado":None,"🔴 Baixa previsibilidade":None}
+                                _cresc_dict_novo_mlf.update(_tiers_marcados_cresc_mlf)
+                                st.session_state[_chave_cresc_mlf]=_cresc_dict_novo_mlf
+                            else:
+                                st.session_state[_chave_cresc_mlf]=None
+                            st.session_state["mlf_calib_versao"]=st.session_state.get("mlf_calib_versao",0)+1
+                            del st.session_state["mlf_wf_resultados"]
+                            st.success("✅ Aplicado! Confira as 5 abas de calibração, e rode a Validação de novo pra confirmar.")
+                            st.rerun()
+                    else:
+                        st.markdown('<div class="al-i">Nenhuma janela testada, validada às cegas, superou "sem calibração" '
+                            'de forma real — o teto honesto desse recorte parece ser mesmo o que os modelos já alcançam sozinhos.</div>',unsafe_allow_html=True)
+
+            _vies_atual_mlf=st.session_state.get(_chave_vies_mlf)
+            _cresc_atual_mlf=st.session_state.get(_chave_cresc_mlf)
+            if _cresc_atual_mlf:
+                st.caption(f"📈 Crescimento de Patamar aplicado: {(_cresc_atual_mlf-1)*100:+.1f}%")
+
+    # ===== VIÉS — testar janelas, por faixa =====
+        with st.expander("🔁 Estabilidade de Modelo — reotimização muda o resultado?"):
+            st.markdown('<div class="al-i">Reaproveita o WAPE já calculado como 1ª medição, e retreina o mesmo '
+                'modelo (mesmo histórico, mesmo corte) mais 2 vezes — mede se o resultado muda mesmo sem nada '
+                'ter mudado de verdade.</div>',unsafe_allow_html=True)
+            if st.button("🔁 Testar Estabilidade (amostra por modelo)",key="estab_modelo_btn_mlf"):
+                _modelos_presentes_estab_mlf=df_val_mlf["Modelo"].unique().tolist()
+                _linhas_estab_mlf=[]
+                pb_estab_mlf=st.progress(0)
+                for _i_estab_mlf,_modelo_estab_mlf in enumerate(_modelos_presentes_estab_mlf):
+                    pb_estab_mlf.progress((_i_estab_mlf+1)/len(_modelos_presentes_estab_mlf),text=f"Testando {_modelo_estab_mlf}")
+                    _contas_desse_modelo=df_val_mlf[df_val_mlf["Modelo"]==_modelo_estab_mlf]["Conta"].unique().tolist()[:3]
+                    for _conta_estab in _contas_desse_modelo:
+                        _linha_existente=df_val_mlf[df_val_mlf["Conta"]==_conta_estab]
+                        _real_abs_existente=_linha_existente["Real"].abs().sum()
+                        if _real_abs_existente<=0: continue
+                        _wape_existente=(_linha_existente["Previsto"]-_linha_existente["Real"]).abs().sum()/_real_abs_existente*100
+                        _wapes_estab_mlf=[_wape_existente]
+
+                        _conta_raw_estab=next((k for k,v in _rotulo_item_mlf.items() if v==_conta_estab),_conta_estab)
+                        _serie_estab_mlf=serie_mensal_produto(df_long_mlf,"_ProdutoUnico",_conta_raw_estab,_data_col_mlf,_metrica_col_mlf)
+                        _corte_ts_estab_mlf=pd.Period(data_corte_mlf,freq="M").to_timestamp(how="end").normalize()
+                        _serie_treino_estab_mlf=_serie_estab_mlf[_serie_estab_mlf.index<=_corte_ts_estab_mlf]
+                        _real_pos_estab_mlf=_serie_estab_mlf[_serie_estab_mlf.index>_corte_ts_estab_mlf].head(n_meses_valid_mlf)
+                        if len(_serie_treino_estab_mlf)<8 or len(_real_pos_estab_mlf)==0: continue
+
+                        for _rep_mlf in range(2):
+                            try:
+                                _proj_estab_mlf=treinar(_serie_treino_estab_mlf,_modelo_estab_mlf,n_meses_valid_mlf,normalizar_arima=True)
+                            except Exception:
+                                _proj_estab_mlf=None
+                            if _proj_estab_mlf is None: continue
+                            _real_l_mlf=_real_pos_estab_mlf.tolist()
+                            _proj_l_mlf=list(_proj_estab_mlf)[:len(_real_l_mlf)]
+                            _real_abs_sum_mlf=sum(abs(r) for r in _real_l_mlf)
+                            if _real_abs_sum_mlf>0:
+                                _wape_rep_mlf=sum(abs(p-r) for p,r in zip(_proj_l_mlf,_real_l_mlf))/_real_abs_sum_mlf*100
+                                _wapes_estab_mlf.append(_wape_rep_mlf)
+                        if len(_wapes_estab_mlf)>=2:
+                            _linhas_estab_mlf.append({"Modelo":_modelo_estab_mlf,"Conta":_conta_estab,
+                                "WAPE min":round(min(_wapes_estab_mlf),2),"WAPE max":round(max(_wapes_estab_mlf),2),
+                                "Variação (pontos)":round(max(_wapes_estab_mlf)-min(_wapes_estab_mlf),2)})
+                pb_estab_mlf.empty()
+                if _linhas_estab_mlf:
+                    st.session_state["estab_modelo_resultado_mlf"]=pd.DataFrame(_linhas_estab_mlf)
+                else:
+                    st.caption("Não consegui testar nenhuma conta (histórico insuficiente).")
+
+            _df_estab_mlf=st.session_state.get("estab_modelo_resultado_mlf")
+            if _df_estab_mlf is not None and len(_df_estab_mlf)>0:
+                _resumo_estab_mlf=_df_estab_mlf.groupby("Modelo")["Variação (pontos)"].agg(["mean","max","count"]).reset_index()
+                _resumo_estab_mlf.columns=["Modelo","Variação média","Variação máxima","Contas testadas"]
+                st.dataframe(_resumo_estab_mlf.round(2),use_container_width=True,hide_index=True)
+                with st.expander("📋 Ver detalhe por conta"):
+                    st.dataframe(_df_estab_mlf,use_container_width=True,hide_index=True)
+
+        with st.expander(f"🔎 Viés — {_demo_sel_mlf} (testar janelas)"):
+            _janelas_vies_mlf=st.multiselect("Quantos meses antes do corte testar (uma ou mais)",
+                [2,3,4,6,9,12,18,24],default=[12,18,24],key="mlf_vies_janelas_escolha")
+
+            if st.button("Calcular Viés pra essas janelas",key="mlf_calcular_vies_janelas"):
+                # _tab_contas_mlf["Conta"] guarda o nome BONITO (já traduzido, ex:
+                # "Receita Serviços"), mas o loop abaixo itera _itens_disp_mlf, que
+                # tem o nome INTERNO (ex: "Centro de Custos Entradas 1"). Sem
+                # traduzir aqui, a busca por modelo/confiabilidade falha pra
+                # qualquer item renomeado (Fluxo inteiro, por exemplo) e cai em
+                # "sem modelo salvo" mesmo tendo modelo escolhido normalmente.
+                _modelo_por_conta_bonito_mlf=_modelo_por_conta_mlf.to_dict()
+                _confiab_por_conta_bonito_mlf=_tab_contas_mlf.set_index("Conta")["Confiabilidade"].to_dict()
+                _modelos_para_vies_mlf={raw:_modelo_por_conta_bonito_mlf.get(_rotulo_item_mlf.get(raw,raw)) for raw in _itens_disp_mlf}
+                _confiab_por_conta_vies_mlf={raw:_confiab_por_conta_bonito_mlf.get(_rotulo_item_mlf.get(raw,raw)) for raw in _itens_disp_mlf}
+                _resultados_vies_mlf=[]
+                _debug_motivos_vies_mlf={}  # chave agora é (janela,conta) — ver troca abaixo
+
+                for janela in sorted(_janelas_vies_mlf):
+                    corte_desc_v=str(pd.Period(data_corte_mlf)-janela)
+                    _corte_desc_periodo_v=pd.Period(corte_desc_v)
+                    corte_desc_ts_v=_corte_desc_periodo_v.to_timestamp()
+                    _fatores_por_conta_v=[]
+
+                    # LightGBM (pooled) — treinado UMA VEZ por janela (é pooled, não
+                    # por conta individual), só pras contas que venceram com ele na
+                    # Validação. Mesma função reaproveitada, mesmo esquema cego.
+                    _contas_lgbm_vies=[c for c in _itens_disp_mlf if _modelos_para_vies_mlf.get(c)=="LightGBM (pooled)"]
+                    _prev_lgbm_desc_v={}
+                    if _contas_lgbm_vies:
+                        _df_long_treino_desc_v=df_long_mlf[df_long_mlf["_data_mlf"]<=corte_desc_ts_v]
+                        if not _df_long_treino_desc_v.empty:
+                            try:
+                                _prev_lgbm_desc_v=treinar_lightgbm_pooled(
+                                    _df_long_treino_desc_v,"_ProdutoUnico",_data_col_mlf,_metrica_col_mlf,
+                                    _contas_lgbm_vies,janela)
+                            except Exception:
+                                _prev_lgbm_desc_v={}
+
+                    for conta in _itens_disp_mlf:
+                        modelo_v=_modelos_para_vies_mlf.get(conta)
+                        if not modelo_v:
+                            _debug_motivos_vies_mlf[str((janela,conta))]="pulado: sem modelo salvo"
+                            continue
+                        serie_completa_v=pd.to_numeric(df_mlf[conta],errors="coerce").fillna(0.).reset_index(drop=True)
+                        serie_completa_v.index=pd.PeriodIndex(df_mlf["_periodo_mlf"].values,freq="M")
+                        serie_treino_v=serie_completa_v[serie_completa_v.index<=_corte_desc_periodo_v]
+                        if len(serie_treino_v)<8:
+                            _debug_motivos_vies_mlf[str((janela,conta))]=f"pulado: só {len(serie_treino_v)} meses antes do corte de descoberta"
+                            continue
+
+                        if modelo_v=="LightGBM (pooled)":
+                            if conta not in _prev_lgbm_desc_v:
+                                _debug_motivos_vies_mlf[str((janela,conta))]="pulado: LightGBM não conseguiu prever essa conta nesse corte"
+                                continue
+                            proj_v=_prev_lgbm_desc_v[conta]
+                        else:
+                            proj_v=treinar(serie_treino_v,modelo_v,janela,normalizar_arima=True)
+                            if proj_v is None:
+                                _debug_motivos_vies_mlf[str((janela,conta))]=f"pulado: {modelo_v} não conseguiu treinar nesse recorte"
+                                continue
+
+                        # Aplica o Crescimento ATIVO (por faixa OU por conta) ANTES
+                        # de medir o Viés — o Viés testa em cima do ESTADO ATUAL
+                        # real, não de um zero artificial. Mesmo princípio já
+                        # corrigido na Auto-Calibração: cada etapa parte do que já
+                        # está de pé, não reseta as decisões anteriores.
+                        proj_v=list(proj_v)
+                        _rotulo_conta_vies=_rotulo_item_mlf.get(conta,conta)
+                        _fator_cresc_aplicar_vies=None
+
+                        _cresc_excecao_vies=st.session_state.get(f"mlf_crescimento_por_conta{_sufixo_calib_mlf}",{})
+                        if _rotulo_conta_vies in _cresc_excecao_vies:
+                            _fator_cresc_aplicar_vies=_cresc_excecao_vies[_rotulo_conta_vies]
+                        else:
+                            _cresc_por_tier_vies=st.session_state.get(_chave_cresc_mlf)
+                            if isinstance(_cresc_por_tier_vies,dict) and df_val_mlf is not None:
+                                _linha_conta_vies_ref=df_val_mlf[df_val_mlf["Conta"]==_rotulo_conta_vies]
+                                if len(_linha_conta_vies_ref)>0:
+                                    _tier_conta_vies=_linha_conta_vies_ref["Confiabilidade"].iloc[0]
+                                    _fator_cresc_aplicar_vies=_cresc_por_tier_vies.get(_tier_conta_vies)
+
+                        if _fator_cresc_aplicar_vies:
+                            proj_v=[max(0.0,v*_fator_cresc_aplicar_vies) for v in proj_v]
+
+                        serie_real_pos_v=serie_completa_v[serie_completa_v.index>_corte_desc_periodo_v].head(janela)
+                        real_vals_v=serie_real_pos_v.tolist()
+                        proj_vals_v=list(proj_v)[:len(real_vals_v)]
+                        if len(real_vals_v)==0:
+                            _debug_motivos_vies_mlf[str((janela,conta))]="pulado: não sobrou mês real depois do corte de descoberta"
+                            continue
+                        soma_prev_v=sum(proj_vals_v); soma_real_v=sum(real_vals_v)
+                        if soma_prev_v>0:
+                            fator_v=soma_real_v/soma_prev_v
+                            peso_v=max(0.0,float(serie_treino_v.mean()))
+                            _fatores_por_conta_v.append((conta,fator_v,peso_v))
+                            _debug_motivos_vies_mlf[str((janela,conta))]=f"OK — fator {fator_v:.2f}"
+                        else:
+                            _debug_motivos_vies_mlf[str((janela,conta))]="pulado: soma da previsão ficou zero ou negativa"
+
+                    _peso_total_v=sum(p for _,_,p in _fatores_por_conta_v)
+                    if _peso_total_v<=0:
+                        # ANTES sumia sem avisar. Agora entra igual, com fator=None
+                        # e n_testadas=0 — a exibição abaixo mostra explicitamente
+                        # "0 de X contas puderam ser testadas", em vez da janela
+                        # simplesmente desaparecer da lista sem explicação.
+                        _resultados_vies_mlf.append({"janela":janela,"fator":None,
+                            "por_tier":{t:{"n":0,"fator":None,"wape_sem":None,"wape_com":None}
+                                for t in ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"]},
+                            "n_total_testadas":0})
+                        continue
+                    _fator_jan_v=sum(f*p for _,f,p in _fatores_por_conta_v)/_peso_total_v
+
+                    # WAPE sem/com esse fator, cruzado por faixa de confiabilidade.
+                    # IMPORTANTE: o "com" precisa usar o fator DA PRÓPRIA FAIXA
+                    # (_fator_tier) — não o fator agregado da janela inteira
+                    # (_fator_jan_v). Usar o agregado aqui fazia o preview mentir:
+                    # mostrava melhora com um fator pequeno (ex: +2.8% agregado),
+                    # mas o que de fato fica salvo/aplicado ao marcar o checkbox
+                    # é o fator da faixa (que pode ser +46%, +136%...) — um número
+                    # bem diferente. Por isso o WAPE real, depois de aplicado,
+                    # vinha pior do que o preview prometia.
+                    _wape_sem_por_conta=df_val_mlf.groupby("Conta").apply(
+                        lambda g:(g["Previsto"]-g["Real"]).abs().sum()/g["Real"].abs().sum()*100 if g["Real"].abs().sum()>0 else None)
+
+                    _por_tier_v={}
+                    for _tier_v in ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"]:
+                        _contas_tier=[c for c in _itens_disp_mlf if _confiab_por_conta_vies_mlf.get(c)==_tier_v]
+                        _fatores_tier=[(f,p) for c,f,p in _fatores_por_conta_v if c in _contas_tier]
+                        # Só as contas que de fato tiveram fator medido nessa janela —
+                        # sem isso, o "com" media o efeito do fator (derivado de só
+                        # ALGUMAS contas da faixa) em cima de TODAS as contas da faixa,
+                        # incluindo as que nunca tiveram viés medido — por isso o
+                        # preview podia prometer melhora e a faixa inteira piorar.
+                        _contas_com_fator_tier=[c for c,f,p in _fatores_por_conta_v if c in _contas_tier]
+                        if not _fatores_tier:
+                            _por_tier_v[_tier_v]={"n":0,"fator":None,"wape_sem":None,"wape_com":None,"contas":[]}
+                            continue
+                        _peso_tier=sum(p for _,p in _fatores_tier)
+                        _fator_tier=sum(f*p for f,p in _fatores_tier)/_peso_tier if _peso_tier>0 else None
+
+                        _df_teste_tier=df_val_mlf[df_val_mlf["Conta"].isin(_contas_com_fator_tier)].copy()
+                        _df_teste_tier["Previsto"]=_df_teste_tier["Previsto"]*_fator_tier
+                        _wape_com_por_conta_tier=_df_teste_tier.groupby("Conta").apply(
+                            lambda g:(g["Previsto"]-g["Real"]).abs().sum()/g["Real"].abs().sum()*100 if g["Real"].abs().sum()>0 else None)
+
+                        _sem_tier=[_wape_sem_por_conta.get(c) for c in _contas_com_fator_tier if _wape_sem_por_conta.get(c) is not None]
+                        _com_tier=[_wape_com_por_conta_tier.get(c) for c in _contas_com_fator_tier if _wape_com_por_conta_tier.get(c) is not None]
+                        _real_abs_tier=df_val_mlf[df_val_mlf["Conta"].isin(_contas_com_fator_tier)].groupby("Conta")["Real"].apply(lambda s: s.abs().sum())
+                        _erro_abs_sem_tier=df_val_mlf[df_val_mlf["Conta"].isin(_contas_com_fator_tier)].groupby("Conta").apply(
+                            lambda g:(g["Previsto"]-g["Real"]).abs().sum())
+                        _erro_abs_com_tier=_df_teste_tier.groupby("Conta").apply(lambda g:(g["Previsto"]-g["Real"]).abs().sum())
+                        _real_total_tier=_real_abs_tier.sum()
+                        _wape_sem_ponderado=_erro_abs_sem_tier.sum()/_real_total_tier*100 if _real_total_tier>0 else None
+                        _wape_com_ponderado=_erro_abs_com_tier.sum()/_real_total_tier*100 if _real_total_tier>0 else None
+                        _por_tier_v[_tier_v]={"n":len(_fatores_tier),"fator":_fator_tier,
+                            "wape_sem":_wape_sem_ponderado,"wape_com":_wape_com_ponderado,
+                            "contas":_contas_com_fator_tier}
+
+                    _resultados_vies_mlf.append({"janela":janela,"fator":_fator_jan_v,"por_tier":_por_tier_v,
+                        "n_total_testadas":len(_fatores_por_conta_v)})
+
+                st.session_state["mlf_vies_resultados"]=_resultados_vies_mlf
+                st.session_state["mlf_vies_debug"]=_debug_motivos_vies_mlf
+                if st.session_state.cid:
+                    save_resultado_valfin(st.session_state.cid,_chave_escopo_resultado_mlf)
+                if not _resultados_vies_mlf:
+                    st.markdown('<div class="al-w">⚠️ Nenhuma janela conseguiu calcular Viés — veja o motivo por conta abaixo.</div>',unsafe_allow_html=True)
+                with st.expander(f"🔧 Motivo por conta ({len(_itens_disp_mlf)} testados no total)"):
+                    for _janela_dbg in sorted(_janelas_vies_mlf):
+                        st.markdown(f"**Janela {_janela_dbg} meses:**")
+                        for c in _itens_disp_mlf:
+                            _m=_debug_motivos_vies_mlf.get(str((_janela_dbg,c)))
+                            if _m:
+                                st.caption(f"{_rotulo_item_mlf.get(c,c)}: {_m}")
+
+            _resultados_vies_mlf=st.session_state.get("mlf_vies_resultados")
+            if _resultados_vies_mlf:
+                for _rv in _resultados_vies_mlf:
+                    if _rv["fator"] is None:
+                        st.markdown(f"**Janela {_rv['janela']} meses** — ⚠️ 0 de {len(_itens_disp_mlf)} contas puderam ser "
+                            f"testadas (histórico insuficiente antes do corte de descoberta dessa janela).")
+                        continue
+                    st.markdown(f"**Janela {_rv['janela']} meses** — agregado: Viés {(_rv['fator']-1)*100:+.1f}% "
+                        f"({_rv.get('n_total_testadas','?')} de {len(_itens_disp_mlf)} contas testadas)")
+                    for _tier_disp,_dados_tier in _rv["por_tier"].items():
+                        if _dados_tier["n"]==0:
+                            st.caption(f"　{_tier_disp}: nenhuma conta elegível nessa janela")
+                            continue
+                        _ws=_dados_tier["wape_sem"]; _wc=_dados_tier["wape_com"]
+                        _ws_txt=f"{_ws:.1f}%" if _ws is not None else "—"
+                        _wc_txt=f"{_wc:.1f}%" if _wc is not None else "—"
+                        _seta="↓ melhora" if (_ws is not None and _wc is not None and _wc<_ws) else ("↑ piora" if (_ws is not None and _wc is not None and _wc>_ws) else "")
+                        st.caption(f"　{_tier_disp} ({_dados_tier['n']} contas): {_ws_txt} → {_wc_txt}  {_seta}")
+
+                _opcoes_aplicar_vies_mlf=[f"Janela {r['janela']} meses" for r in _resultados_vies_mlf]
+                _escolha_vies_mlf=st.selectbox("De qual janela usar o fator de Viés?",_opcoes_aplicar_vies_mlf,key="mlf_escolha_vies_janela")
+                _jan_escolhida_vies_mlf=int(_escolha_vies_mlf.split(" ")[1])
+                _r_escolhido_vies_mlf=next(r for r in _resultados_vies_mlf if r["janela"]==_jan_escolhida_vies_mlf)
+
+                st.markdown("**Em quais faixas aplicar o Viés dessa janela?**")
+                _tiers_marcados_vies_mlf={}
+                for _tier_apl in ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"]:
+                    _dados_tier_apl=_r_escolhido_vies_mlf["por_tier"].get(_tier_apl,{})
+                    if _dados_tier_apl.get("n",0)==0: continue
+                    _melhora_tier=(_dados_tier_apl["wape_com"] is not None and _dados_tier_apl["wape_sem"] is not None
+                        and _dados_tier_apl["wape_com"]<_dados_tier_apl["wape_sem"])
+                    _marcado=st.checkbox(
+                        f"{_tier_apl} — fator {_dados_tier_apl['fator']:.4f} ({(_dados_tier_apl['fator']-1)*100:+.1f}%)"
+                        + (" ✅ melhora" if _melhora_tier else " ⚠️ não melhorou nessa janela"),
+                        value=_melhora_tier,key=f"mlf_vies_marcar_{_tier_apl}")
+                    st.caption("　Medido e aplicado só em: "
+                        + ", ".join(_rotulo_item_mlf.get(c,c) for c in _dados_tier_apl.get("contas",[])))
+                    if _marcado:
+                        _tiers_marcados_vies_mlf[_tier_apl]={"fator":_dados_tier_apl["fator"],
+                            "contas":[_rotulo_item_mlf.get(c,c) for c in _dados_tier_apl.get("contas",[])]}
+
+                if st.button("📥 Aplicar Viés nas faixas marcadas",key="mlf_aplicar_vies_botao"):
+                    _vies_dict_novo_mlf={"🟢 Confiável":None,"🟡 Moderado":None,"🔴 Baixa previsibilidade":None}
+                    _vies_dict_novo_mlf.update(_tiers_marcados_vies_mlf)
+                    st.session_state[_chave_vies_mlf]=_vies_dict_novo_mlf
+                    del st.session_state["mlf_vies_resultados"]
+                    st.success("Viés salvo — clique em 'Rodar Validação Financeira' de novo pra ver com ele aplicado.")
+                    st.rerun()
+
+            _vies_atual_mlf=st.session_state.get(_chave_vies_mlf)
+            if isinstance(_vies_atual_mlf,dict) and any(v for v in _vies_atual_mlf.values()):
+                _linhas_vies_ativo_mlf=[f"{k}: {v['fator']:.4f} ({(v['fator']-1)*100:+.1f}%, {len(v.get('contas',[]))} conta(s))"
+                    for k,v in _vies_atual_mlf.items() if v]
+                st.markdown(f'<div class="al-w">⚠️ Viés atualmente APLICADO por faixa: {" | ".join(_linhas_vies_ativo_mlf)}</div>',unsafe_allow_html=True)
+                if st.button("🗑 Remover Viés aplicado",key="mlf_remover_vies_botao"):
+                    st.session_state[_chave_vies_mlf]=None
+                    st.success("✅ Viés removido — rode a Validação de novo pra confirmar.")
+                    st.rerun()
+
+            with st.expander("📋 Ver detalhe (Previsto x Real, por conta e mês)"):
+                st.dataframe(df_val_mlf,use_container_width=True,height=min(500,80+30*len(df_val_mlf)))
+
+        # Diagnóstico — última coisa da página, de propósito (é informação técnica
+        # de apoio, não algo pra ver toda hora). Acha divergência de nome (acento,
+        # espaço, maiúscula) entre o que o sistema espera e o que existe de verdade
+        # na base bruta importada, e sinaliza conta que existe mas nunca tem valor.
+        with st.expander(f"🔧 Diagnóstico — {len(_contas_disp_mlf)} de {len(_campos_demo_mlf)} contas de {_demo_sel_mlf} encontradas",expanded=False):
+            if _contas_faltando_mlf:
+                st.markdown("**Contas esperadas, NÃO encontradas com esse nome exato:**")
+                for _cf in _contas_faltando_mlf:
+                    st.caption(f"　❌ \"{_cf}\"")
+                st.caption("Colunas que existem de verdade na base bruta, pra comparar nome a nome: "
+                    +", ".join(f'"{c}"' for c in _df_raw_mlf.columns.tolist()))
+            _zeradas_mlf=[_cc for _cc in _contas_disp_mlf
+                if (pd.to_numeric(df_mlf[_cc],errors="coerce").fillna(0)!=0).mean()==0]
+            if _zeradas_mlf:
+                st.markdown("**Contas encontradas, mas sempre zeradas (não entram no WAPE):**")
+                for _cc in _zeradas_mlf:
+                    st.caption(f"　⚠️ \"{_cc}\"")    
+
 elif pg=="ml_produtos":
     hdr("🔬 Validação Estatística de Previsões","Testa a confiabilidade da previsão contra o que realmente aconteceu, antes de confiar nela")
     if not STATS_OK:
@@ -8270,7 +12058,7 @@ elif pg=="ml_produtos":
 
     _col_fil_mlp=col_filial(df_v)
     _filiais_disp_mlp=sorted(df_v[_col_fil_mlp].dropna().astype(str).unique().tolist()) if _col_fil_mlp else []
-    _opcoes_filial_mlp=["(Todas as filiais)"]+_filiais_disp_mlp if _col_fil_mlp else ["(Sem filial na base)"]
+    _opcoes_filial_mlp=["(Todas as filiais)"]+_filiais_disp_mlp if _col_fil_mlp else ["(Todas as filiais)"]
 
     def _on_change_filial_mlp():
         st.session_state["mlp_filial_sel_backup"]=st.session_state["mlp_filial_sel"]
@@ -8538,16 +12326,27 @@ elif pg=="ml_produtos":
 
     with tab_cresc_mlp:
         st.markdown('<div class="al-i">Mudança de PATAMAR sustentada no faturamento — diferente de Sazonalidade (repete todo ano) e Reajuste (é sobre preço). Detectada automaticamente pela Auto-Calibração; aqui você pode conferir e ajustar manualmente.</div>',unsafe_allow_html=True)
-        _valor_atual_cresc_mlp=st.session_state.get(_chave_cresc_mlp)
+        _cresc_dict_atual_mlp=st.session_state.get(_chave_cresc_mlp)
+        _valor_atual_cresc_mlp=(next((v for v in _cresc_dict_atual_mlp.values() if v),None)
+            if isinstance(_cresc_dict_atual_mlp,dict) else _cresc_dict_atual_mlp)
         if _valor_atual_cresc_mlp:
-            st.markdown(f"**Fator atual: {(_valor_atual_cresc_mlp-1)*100:+.1f}%** (multiplicador {_valor_atual_cresc_mlp:.3f})")
+            _faixas_ativas_cresc_mlp=([k for k,v in _cresc_dict_atual_mlp.items() if v]
+                if isinstance(_cresc_dict_atual_mlp,dict) else ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"])
+            st.markdown(f"**Fator atual: {(_valor_atual_cresc_mlp-1)*100:+.1f}%** (multiplicador {_valor_atual_cresc_mlp:.3f}) "
+                f"— faixas: {', '.join(_faixas_ativas_cresc_mlp)}")
         else:
             st.caption("Nenhum crescimento de patamar detectado/aplicado ainda pra essa categoria.")
         _pct_cresc_manual=st.number_input("Ajuste manual (%) — deixe 0 pra desligar",
             value=round((_valor_atual_cresc_mlp-1)*100,1) if _valor_atual_cresc_mlp else 0.0,
             step=1.0,key=f"{_chave_cresc_mlp}_widget_v{_versao_calib_mlp}",
-            help="Positivo = negócio num patamar mais alto que o histórico mais antigo. Negativo = patamar mais baixo.")
-        st.session_state[_chave_cresc_mlp]=1.0+(_pct_cresc_manual/100) if _pct_cresc_manual!=0 else None
+            help="Positivo = negócio num patamar mais alto que o histórico mais antigo. Negativo = patamar mais baixo. "
+                 "Ajuste manual vale igual pras 3 faixas de confiabilidade (sem seletividade) — pra aplicar só numa "
+                 "faixa específica, use a Auto-Calibração.")
+        if _pct_cresc_manual!=0:
+            _fator_manual_cresc_mlp=1.0+(_pct_cresc_manual/100)
+            st.session_state[_chave_cresc_mlp]={"🟢 Confiável":_fator_manual_cresc_mlp,"🟡 Moderado":_fator_manual_cresc_mlp,"🔴 Baixa previsibilidade":_fator_manual_cresc_mlp}
+        else:
+            st.session_state[_chave_cresc_mlp]=None
 
         _valor_atual_cresc_meses_mlp=st.session_state.get(_chave_cresc_meses_mlp,[])
         meses_cresc_mlp=st.multiselect("Aplicar o crescimento só nestes meses (deixe vazio = todos os meses da previsão)",
@@ -8642,7 +12441,16 @@ elif pg=="ml_produtos":
             n_periodos_auto_mlp=df_base_auto_mlp.dropna(subset=["_data_ml_auto_mlp"]).groupby("_ProdutoUnico")["_periodo_ml_auto_mlp"].nunique()
             produtos_hist_auto_mlp=n_periodos_auto_mlp[n_periodos_auto_mlp>=min_periodos].index
             ranking_elegivel_auto_mlp=ranking_auto_mlp[ranking_auto_mlp["_ProdutoUnico"].isin(produtos_hist_auto_mlp)]
-            top_produtos_auto_mlp=ranking_elegivel_auto_mlp.head(n_selecionar_auto_mlp)["_ProdutoUnico"].tolist()
+            # Testa os produtos VALIDADOS de verdade (mesma fonte que o Viés já
+            # usa) — não mais um "Top %" recortado à parte. Descobrir a
+            # calibração numa amostra enviesada (só os maiores) e aplicar na
+            # faixa inteira (que inclui produtos nunca testados) não era
+            # metodologicamente correto — corrigido aqui.
+            _df_val_mlp_fonte_auto=st.session_state.get("mlp_validacao_resultado")
+            if _df_val_mlp_fonte_auto is not None:
+                top_produtos_auto_mlp=_df_val_mlp_fonte_auto["Produto"].unique().tolist()
+            else:
+                top_produtos_auto_mlp=ranking_elegivel_auto_mlp["_ProdutoUnico"].tolist()
             modelos_auto_mlp=[m for m,ok in MODELOS_ML.items() if ok]
 
             st.markdown(f'<div class="al-i">🔍 Walk-forward em {len(top_produtos_auto_mlp)} produtos elegíveis — testando '
@@ -8662,129 +12470,287 @@ elif pg=="ml_produtos":
             # escopo (corte/categoria/curva), e reaproveita esse resultado —
             # processo invertido, do jeito combinado: primeiro grava o resultado
             # em Validação, depois testa calibração em cima dele.
-            _escopo_atual_auto_mlp={"filial":st.session_state.get("mlp_filial_sel"),"corte":data_corte_mlp,"categoria":categoria_sel_mlp,"curva":curva_sel_mlp}
+            _escopo_atual_auto_mlp={"filial":st.session_state.get("mlp_filial_sel"),"corte":data_corte_mlp,"categoria":categoria_sel_mlp,"curva":curva_sel_mlp,"min_periodos":min_periodos,"pct_top":pct_top}
             _escopo_salvo_auto_mlp=st.session_state.get("mlp_modelos_vencedores_escopo")
-            if _escopo_salvo_auto_mlp==_escopo_atual_auto_mlp and st.session_state.get("mlp_modelos_vencedores"):
+            _pode_rodar_auto_calib=(_escopo_salvo_auto_mlp==_escopo_atual_auto_mlp and bool(st.session_state.get("mlp_modelos_vencedores")))
+            if _pode_rodar_auto_calib:
                 modelos_fixos_auto_mlp=st.session_state["mlp_modelos_vencedores"]
                 vieses_fixos_auto_mlp=None
                 st.markdown(f'<div class="al-s">✅ Reaproveitando os {len(modelos_fixos_auto_mlp)} modelos já escolhidos em "Rodar Validação" (mesmo corte/categoria/curva) — sem Fase 0, direto pra busca de calibração.</div>',unsafe_allow_html=True)
             else:
-                st.markdown('<div class="al-d">❌ Rode "🔬 Rodar Validação" primeiro, com esse mesmo corte/categoria/curva — a Auto-Calibração agora reaproveita o modelo já escolhido lá, em vez de escolher de novo sozinha.</div>',unsafe_allow_html=True)
-                st.stop()
+                # SEM st.stop() aqui — antes, isso interrompia a página inteira e
+                # apagava até resultado antigo já salvo na sessão (bastava tocar
+                # em Categoria/Curva/Top%/Mínimo de meses pra tudo sumir). Agora só
+                # avisa e pula o recálculo — o resultado da última Auto-Calibração
+                # bem-sucedida continua aparecendo normalmente mais abaixo.
+                st.markdown('<div class="al-d">❌ Escopo mudou desde a última "Rodar Validação" (Filial/Categoria/Curva/Top%/Mínimo de meses) — '
+                    'rode "🔬 Rodar Validação" de novo com o escopo atual antes de gerar uma Auto-Calibração nova. '
+                    'O resultado da última Auto-Calibração válida continua abaixo, se existir.</div>',unsafe_allow_html=True)
 
-            # Baseline honesto: sem calibração nenhuma, direto no corte real —
-            # mesma referência que todas as janelas serão comparadas contra.
-            # Já usa o modelo fixo da Fase 0, pra ser justo com o resto da
-            # comparação (todas as combinações usam o mesmo modelo por produto).
-            _fator_vies_baseline_auto=st.session_state.get(_chave_vies_pooled_mlp)
-            _cache_baseline_auto_mlp,_=construir_cache_real_para_combinacao(
-                df_v,"_ProdutoUnico",data_col,metrica_col,top_produtos_auto_mlp,
-                data_corte_mlp,n_meses_valid_mlp,[],[],modelos_auto_mlp,
-                modelos_fixos=modelos_fixos_auto_mlp,vieses_fixos=vieses_fixos_auto_mlp)
-            wape_sem_calib_auto=_wape_cache_calendario(_cache_baseline_auto_mlp,{},{},fator_vies=_fator_vies_baseline_auto)
-            if wape_sem_calib_auto is None:
-                st.markdown('<div class="al-w">⚠️ Não foi possível calcular a linha de base — confira o corte e os produtos elegíveis.</div>',unsafe_allow_html=True)
+            if _pode_rodar_auto_calib:
+                # Baseline = ESTADO ATUAL REAL, com Viés e Crescimento já ativos
+                # (por faixa ou por produto) — mesmo princípio já corrigido na
+                # Validação Financeira. Cada etapa parte do que já está de pé,
+                # não reseta decisões anteriores, em qualquer ordem que forem
+                # aplicadas.
+                _df_val_mlp_ref_auto=st.session_state.get("mlp_validacao_resultado")
+                _confiab_por_produto_auto=_df_val_mlp_ref_auto.groupby("Produto")["Confiabilidade"].first().to_dict() if _df_val_mlp_ref_auto is not None else {}
+                _vies_por_tier_ativo_auto=st.session_state.get(_chave_vies_pooled_mlp)
+                _cresc_por_tier_ativo_auto=st.session_state.get(_chave_cresc_mlp)
+                _cresc_excecao_produto_auto=st.session_state.get("cfgml_crescimento_por_produto",{})
 
-            # Isola o efeito do viés residual sozinho — mesmo cálculo, mas SEM
-            # aplicar o viés — pra você ver o efeito isolado, não escondido dentro
-            # de "sem calibração nenhuma".
-            if vieses_fixos_auto_mlp:
-                _cache_sem_vies_auto_mlp,_=construir_cache_real_para_combinacao(
+                vieses_fixos_auto_mlp={}
+                _cresc_fixos_auto_mlp={}
+                if isinstance(_vies_por_tier_ativo_auto,dict) or isinstance(_cresc_por_tier_ativo_auto,dict) or _cresc_excecao_produto_auto:
+                    for _prod_ref_auto in top_produtos_auto_mlp:
+                        _tier_ref_auto=_confiab_por_produto_auto.get(_prod_ref_auto)
+                        if isinstance(_vies_por_tier_ativo_auto,dict) and _tier_ref_auto:
+                            _fv=_vies_por_tier_ativo_auto.get(_tier_ref_auto)
+                            if _fv: vieses_fixos_auto_mlp[_prod_ref_auto]=_fv
+                        if _prod_ref_auto in _cresc_excecao_produto_auto:
+                            _cresc_fixos_auto_mlp[_prod_ref_auto]=_cresc_excecao_produto_auto[_prod_ref_auto]
+                        elif isinstance(_cresc_por_tier_ativo_auto,dict) and _tier_ref_auto:
+                            _fc=_cresc_por_tier_ativo_auto.get(_tier_ref_auto)
+                            if _fc: _cresc_fixos_auto_mlp[_prod_ref_auto]=_fc
+
+                _cache_baseline_auto_mlp,_=construir_cache_real_para_combinacao(
                     df_v,"_ProdutoUnico",data_col,metrica_col,top_produtos_auto_mlp,
                     data_corte_mlp,n_meses_valid_mlp,[],[],modelos_auto_mlp,
-                    modelos_fixos=modelos_fixos_auto_mlp,vieses_fixos=None)
-                _wape_sem_vies_auto=_wape_cache_calendario(_cache_sem_vies_auto_mlp,{},{})
-                if _wape_sem_vies_auto is not None and wape_sem_calib_auto is not None:
-                    _diferenca_vies=_wape_sem_vies_auto-wape_sem_calib_auto
-                    st.caption(f"↳ Efeito isolado do viés residual: sem correção {_wape_sem_vies_auto:.1f}% → "
-                        f"com correção {wape_sem_calib_auto:.1f}% ({_diferenca_vies:+.1f} ponto(s))")
+                    modelos_fixos=modelos_fixos_auto_mlp,vieses_fixos=vieses_fixos_auto_mlp)
+                # Crescimento aplicado depois (mesmo padrão do financeiro) — usa
+                # o "proj" fresco do cache, sem depender de valor congelado.
+                for _item_cache_auto in _cache_baseline_auto_mlp:
+                    _prod_item_auto=_item_cache_auto.get("produto")
+                    _fator_cresc_item_auto=_cresc_fixos_auto_mlp.get(_prod_item_auto)
+                    if _fator_cresc_item_auto:
+                        _item_cache_auto["proj"]=[max(0.0,v*_fator_cresc_item_auto) for v in _item_cache_auto["proj"]]
+                wape_sem_calib_auto=_wape_cache_calendario(_cache_baseline_auto_mlp,{},{})
+                if wape_sem_calib_auto is None:
+                    st.markdown('<div class="al-w">⚠️ Não foi possível calcular a linha de base — confira o corte e os produtos elegíveis.</div>',unsafe_allow_html=True)
 
-            pb_wf_mlp=st.progress(0)
-            texto_wf_mlp=st.empty()
-            resultados_wf=[]
-            _janelas_ordenadas=sorted(janelas_descoberta_mlp)
-            _cache_real_por_combo={}
-            for idx_janela,janela in enumerate(_janelas_ordenadas):
-                texto_wf_mlp.caption(f"Testando janela de {janela} mês(es) antes do corte...")
-                pb_wf_mlp.progress((idx_janela+1)/len(_janelas_ordenadas))
-                corte_descoberta_wf=str(pd.Period(data_corte_mlp)-janela)
-                calib_wf=descobrir_calibracao_uma_janela(
-                    df_v,"_ProdutoUnico",data_col,metrica_col,top_produtos_auto_mlp,
-                    corte_descoberta_wf,janela,modelos_auto_mlp,modelos_fixos=modelos_fixos_auto_mlp,vieses_fixos=vieses_fixos_auto_mlp)
-
-                _chave_combo=(tuple(sorted((r["data"],r["pct"]) for r in calib_wf["reajustes"])),
-                              tuple(sorted(calib_wf["outliers"])))
-                if _chave_combo not in _cache_real_por_combo:
-                    texto_wf_mlp.caption(f"Treinando modelos pro corte real (combinação Reajuste/Outliers nova)...")
-                    _status_paralelo={}
-                    _cache_real_por_combo[_chave_combo]=construir_cache_real_para_combinacao(
+                # Isola o efeito do viés residual sozinho — mesmo cálculo, mas SEM
+                # aplicar o viés — pra você ver o efeito isolado, não escondido dentro
+                # de "sem calibração nenhuma".
+                if vieses_fixos_auto_mlp:
+                    _cache_sem_vies_auto_mlp,_=construir_cache_real_para_combinacao(
                         df_v,"_ProdutoUnico",data_col,metrica_col,top_produtos_auto_mlp,
-                        data_corte_mlp,n_meses_valid_mlp,calib_wf["reajustes"],calib_wf["outliers"],
-                        modelos_auto_mlp,status_out=_status_paralelo,modelos_fixos=modelos_fixos_auto_mlp,vieses_fixos=vieses_fixos_auto_mlp)
-                    st.caption(f"⚙️ Modo de processamento usado: {_status_paralelo.get('modo','desconhecido')}")
-                _cache_atual,_df_treino_atual=_cache_real_por_combo[_chave_combo]
+                        data_corte_mlp,n_meses_valid_mlp,[],[],modelos_auto_mlp,
+                        modelos_fixos=modelos_fixos_auto_mlp,vieses_fixos=None)
+                    _wape_sem_vies_auto=_wape_cache_calendario(_cache_sem_vies_auto_mlp,{},{})
+                    if _wape_sem_vies_auto is not None and wape_sem_calib_auto is not None:
+                        _diferenca_vies=_wape_sem_vies_auto-wape_sem_calib_auto
+                        st.caption(f"↳ Efeito isolado do viés residual: sem correção {_wape_sem_vies_auto:.1f}% → "
+                            f"com correção {wape_sem_calib_auto:.1f}% ({_diferenca_vies:+.1f} ponto(s))")
 
-                _indices_pico_real=calcular_indice_sazonal_calendario(_df_treino_atual,"_ProdutoUnico",data_col,metrica_col,calib_wf["meses_pico"]) if calib_wf["meses_pico"] else {}
-                _indices_promo_real=calcular_indice_promocao_calendario(_df_treino_atual,"_ProdutoUnico",data_col,metrica_col,calib_wf["meses_promo"]) if calib_wf["meses_promo"] else {}
-                wape_real_wf=_wape_cache_calendario(_cache_atual,_indices_pico_real,_indices_promo_real,
-                    fator_crescimento=calib_wf.get("fator_crescimento"),fator_vies=_fator_vies_baseline_auto)
+                pb_wf_mlp=st.progress(0)
+                texto_wf_mlp=st.empty()
+                resultados_wf=[]
+                _janelas_ordenadas=sorted(janelas_descoberta_mlp)
+                _cache_real_por_combo={}
+                # Confiabilidade por produto (calculada na última "Rodar Validação")
+                # — usada aqui só pra CRUZAR e mostrar o efeito por faixa, sem mudar em
+                # nada a busca/aplicação em si (que continua uniforme, por decisão já
+                # tomada: Sazonalidade/Promoção/Reajuste/Outliers ficam iguais pra todo
+                # mundo). Lida direto do session_state, não da variável local df_val_mlp
+                # (que só é montada mais abaixo no código, depois desse bloco).
+                _df_val_confiab_auto=st.session_state.get("mlp_validacao_resultado")
+                _confiab_lookup_auto={}
+                if _df_val_confiab_auto is not None and "Confiabilidade" in _df_val_confiab_auto.columns:
+                    _confiab_lookup_auto=_df_val_confiab_auto.groupby("Produto")["Confiabilidade"].first().to_dict()
 
-                resultados_wf.append({"janela":janela,"corte_descoberta":corte_descoberta_wf,
-                    "calibracao":calib_wf,"wape_real":wape_real_wf})
-            pb_wf_mlp.empty(); texto_wf_mlp.empty()
+                for idx_janela,janela in enumerate(_janelas_ordenadas):
+                    texto_wf_mlp.caption(f"Testando janela de {janela} mês(es) antes do corte...")
+                    pb_wf_mlp.progress((idx_janela+1)/len(_janelas_ordenadas))
+                    corte_descoberta_wf=str(pd.Period(data_corte_mlp)-janela)
+                    calib_wf=descobrir_calibracao_uma_janela(
+                        df_v,"_ProdutoUnico",data_col,metrica_col,top_produtos_auto_mlp,
+                        corte_descoberta_wf,janela,modelos_auto_mlp,modelos_fixos=modelos_fixos_auto_mlp,vieses_fixos=vieses_fixos_auto_mlp)
 
-            # Guarda em session_state (não só em variável local) — senão, quando o
-            # botão "Aplicar" (mais abaixo) for clicado, a atualização de tela que
-            # ele dispara faz esse resultado inteiro sumir antes de aparecer,
-            # porque o botão "Auto-Calibração" não foi clicado de novo naquele
-            # instante. Guardando aqui, a exibição sobrevive a qualquer clique.
-            st.session_state["mlp_wf_resultados"]=resultados_wf
-            st.session_state["mlp_wf_baseline"]=wape_sem_calib_auto
+                    _chave_combo=(tuple(sorted((r["data"],r["pct"]) for r in calib_wf["reajustes"])),
+                                  tuple(sorted(calib_wf["outliers"])))
+                    if _chave_combo not in _cache_real_por_combo:
+                        texto_wf_mlp.caption(f"Treinando modelos pro corte real (combinação Reajuste/Outliers nova)...")
+                        _status_paralelo={}
+                        _cache_real_por_combo[_chave_combo]=construir_cache_real_para_combinacao(
+                            df_v,"_ProdutoUnico",data_col,metrica_col,top_produtos_auto_mlp,
+                            data_corte_mlp,n_meses_valid_mlp,calib_wf["reajustes"],calib_wf["outliers"],
+                            modelos_auto_mlp,status_out=_status_paralelo,modelos_fixos=modelos_fixos_auto_mlp,vieses_fixos=vieses_fixos_auto_mlp)
+                        st.caption(f"⚙️ Modo de processamento usado: {_status_paralelo.get('modo','desconhecido')}")
+                    _cache_atual,_df_treino_atual=_cache_real_por_combo[_chave_combo]
+
+                    # Mesma correção do baseline — exceção de Crescimento por
+                    # Produto (Estacionariedade) precisa valer aqui também, senão
+                    # cada janela testada fica "atrasada" em relação ao baseline,
+                    # gerando comparação inconsistente (janela parecendo igual ou
+                    # pior do que deveria).
+                    for _item_cache_janela in _cache_atual:
+                        _prod_item_janela=_item_cache_janela.get("produto")
+                        _fator_cresc_item_janela=_cresc_fixos_auto_mlp.get(_prod_item_janela)
+                        if _fator_cresc_item_janela:
+                            _item_cache_janela["proj"]=[max(0.0,v*_fator_cresc_item_janela) for v in _item_cache_janela["proj"]]
+
+                    _indices_pico_real=calcular_indice_sazonal_calendario(_df_treino_atual,"_ProdutoUnico",data_col,metrica_col,calib_wf["meses_pico"]) if calib_wf["meses_pico"] else {}
+                    _indices_promo_real=calcular_indice_promocao_calendario(_df_treino_atual,"_ProdutoUnico",data_col,metrica_col,calib_wf["meses_promo"]) if calib_wf["meses_promo"] else {}
+                    wape_real_wf,_detalhe_com_wf=_wape_cache_calendario(_cache_atual,_indices_pico_real,_indices_promo_real,
+                        fator_crescimento=calib_wf.get("fator_crescimento"),retornar_detalhe=True)
+                    _,_detalhe_sem_wf=_wape_cache_calendario(_cache_baseline_auto_mlp,{},{},retornar_detalhe=True)
+
+                    # Cruza o detalhe por produto (sem calibração vs com essa janela) com
+                    # a faixa de confiabilidade — pra você ver se a calibração descoberta
+                    # ajuda mais numa faixa do que na outra, antes de decidir confiar nela.
+                    _por_tier_wf={}
+                    for _tier_wf in ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"]:
+                        _sem_tier=[(w,p) for pr,w,p in _detalhe_sem_wf if _confiab_lookup_auto.get(pr)==_tier_wf]
+                        _com_tier=[(w,p) for pr,w,p in _detalhe_com_wf if _confiab_lookup_auto.get(pr)==_tier_wf]
+                        _peso_sem=sum(p for _,p in _sem_tier); _peso_com=sum(p for _,p in _com_tier)
+                        _wape_sem_t=(sum(w*p for w,p in _sem_tier)/_peso_sem) if _peso_sem>0 else None
+                        _wape_com_t=(sum(w*p for w,p in _com_tier)/_peso_com) if _peso_com>0 else None
+                        _por_tier_wf[_tier_wf]={"n":len(_com_tier),"wape_sem":_wape_sem_t,"wape_com":_wape_com_t}
+
+                    resultados_wf.append({"janela":janela,"corte_descoberta":corte_descoberta_wf,
+                        "calibracao":calib_wf,"wape_real":wape_real_wf,"por_tier":_por_tier_wf})
+                pb_wf_mlp.empty(); texto_wf_mlp.empty()
+
+                # Guarda em session_state (não só em variável local) — senão, quando o
+                # botão "Aplicar" (mais abaixo) for clicado, a atualização de tela que
+                # ele dispara faz esse resultado inteiro sumir antes de aparecer,
+                # porque o botão "Auto-Calibração" não foi clicado de novo naquele
+                # instante. Guardando aqui, a exibição sobrevive a qualquer clique.
+                st.session_state["mlp_wf_resultados"]=resultados_wf
+                st.session_state["mlp_wf_baseline"]=wape_sem_calib_auto
 
         if st.session_state.get("mlp_wf_resultados"):
             resultados_wf=st.session_state["mlp_wf_resultados"]
             wape_sem_calib_auto=st.session_state.get("mlp_wf_baseline")
-            if wape_sem_calib_auto is not None:
-                st.markdown(f"**WAPE sem nenhuma calibração (corte real): {wape_sem_calib_auto:.1f}%**")
+            with st.expander("🔍 Ver resultado da Auto-Calibração (janelas testadas)",expanded=False):
+                if wape_sem_calib_auto is not None:
+                    st.markdown(f"**WAPE sem nenhuma calibração (corte real): {wape_sem_calib_auto:.1f}%**")
 
-            st.markdown("**Resultado por janela de descoberta — testado às cegas contra o período real, nenhuma escondida:**")
-            for r in resultados_wf:
-                c=r["calibracao"]
-                partes=[]
-                if c["meses_pico"]: partes.append(f"Sazon.: {', '.join(c['meses_pico'])}")
-                if c["meses_promo"]: partes.append(f"Promo: {', '.join(c['meses_promo'])}")
-                if c["reajustes"]: partes.append(f"Reaj.: {len(c['reajustes'])} evento(s)")
-                if c["outliers"]: partes.append(f"Outl.: {len(c['outliers'])} mês(es)")
-                if c.get("fator_crescimento"): partes.append(f"Cresc.: {(c['fator_crescimento']-1)*100:+.0f}%")
-                resumo_calib=" | ".join(partes) if partes else "nenhuma calibração encontrada"
-                wape_str=f"{r['wape_real']:.1f}%" if r["wape_real"] is not None else "—"
-                st.markdown(f"- **Janela {r['janela']} meses** (descoberta até {r['corte_descoberta']}): {resumo_calib} → WAPE real: **{wape_str}**")
+                st.markdown("**Resultado por janela de descoberta — testado às cegas contra o período real, nenhuma escondida:**")
+                for r in resultados_wf:
+                    c=r["calibracao"]
+                    partes=[]
+                    if c["meses_pico"]: partes.append(f"Sazon.: {', '.join(c['meses_pico'])}")
+                    if c["meses_promo"]: partes.append(f"Promo: {', '.join(c['meses_promo'])}")
+                    if c["reajustes"]: partes.append(f"Reaj.: {len(c['reajustes'])} evento(s)")
+                    if c["outliers"]: partes.append(f"Outl.: {len(c['outliers'])} mês(es)")
+                    if c.get("fator_crescimento"): partes.append(f"Cresc.: {(c['fator_crescimento']-1)*100:+.0f}%")
+                    resumo_calib=" | ".join(partes) if partes else "nenhuma calibração encontrada"
+                    wape_str=f"{r['wape_real']:.1f}%" if r["wape_real"] is not None else "—"
+                    st.markdown(f"- **Janela {r['janela']} meses** (descoberta até {r['corte_descoberta']}): {resumo_calib} → WAPE real: **{wape_str}**")
+                    for _tier_disp_wf,_dados_wf in r.get("por_tier",{}).items():
+                        if _dados_wf["n"]==0:
+                            st.caption(f"　{_tier_disp_wf}: nenhum produto elegível nessa janela")
+                            continue
+                        _ws_wf=_dados_wf["wape_sem"]; _wc_wf=_dados_wf["wape_com"]
+                        _ws_txt_wf=f"{_ws_wf:.1f}%" if _ws_wf is not None else "—"
+                        _wc_txt_wf=f"{_wc_wf:.1f}%" if _wc_wf is not None else "—"
+                        _seta_wf="↓ melhora" if (_ws_wf is not None and _wc_wf is not None and _wc_wf<_ws_wf) else ("↑ piora" if (_ws_wf is not None and _wc_wf is not None and _wc_wf>_ws_wf) else "")
+                        st.caption(f"　{_tier_disp_wf} ({_dados_wf['n']} produtos): {_ws_txt_wf} → {_wc_txt_wf}  {_seta_wf}")
 
-            st.markdown("---")
-            _validas_wf=[r for r in resultados_wf if r["wape_real"] is not None]
-            if _validas_wf and wape_sem_calib_auto is not None:
-                _melhor_wf=min(_validas_wf,key=lambda r:r["wape_real"])
-                if _melhor_wf["wape_real"]<=wape_sem_calib_auto-0.3:
-                    st.markdown(f'<div class="al-s">✅ A janela de {_melhor_wf["janela"]} meses foi a melhor, testada às cegas: '
-                        f'<b>{_melhor_wf["wape_real"]:.1f}%</b> (contra {wape_sem_calib_auto:.1f}% sem calibração nenhuma).</div>',unsafe_allow_html=True)
-                    _opcoes_aplicar=[f"Janela {r['janela']} meses ({r['wape_real']:.1f}%)" for r in _validas_wf]
-                    _idx_default=_opcoes_aplicar.index(f"Janela {_melhor_wf['janela']} meses ({_melhor_wf['wape_real']:.1f}%)")
-                    _escolha_aplicar=st.selectbox("Qual janela aplicar?",_opcoes_aplicar,index=_idx_default,key="mlp_escolha_janela_aplicar")
-                    _janela_escolhida_num=int(_escolha_aplicar.split(" ")[1])
-                    _r_escolhido=next(r for r in _validas_wf if r["janela"]==_janela_escolhida_num)
-                    if st.button("📥 Aplicar essa combinação",key="mlp_aplicar_combo_auto"):
-                        c=_r_escolhido["calibracao"]
-                        st.session_state[_chave_reaj_mlp]=c["reajustes"]
-                        st.session_state[_chave_out_mlp]=c["outliers"]
-                        st.session_state[_chave_pico_mlp]=c["meses_pico"]
-                        st.session_state[_chave_promo_mlp]=c["meses_promo"]
-                        st.session_state[_chave_cresc_mlp]=c.get("fator_crescimento")
-                        st.session_state["mlp_calib_versao"]=st.session_state.get("mlp_calib_versao",0)+1
-                        if st.session_state.cid:
-                            save_calibracoes_ml(st.session_state.cid)
-                        del st.session_state["mlp_wf_resultados"]
-                        st.success("✅ Aplicado! Confira as 4 abas de calibração, e rode a Validação normal pra confirmar.")
-                        st.rerun()
+                # Convergência entre janelas: o mesmo mês aparecendo em VÁRIAS buscas
+                # independentes (cada uma com corte de descoberta diferente, nunca
+                # vendo o mesmo período) é evidência bem mais forte de padrão real
+                # do que uma única busca sozinha.
+                #
+                # TESTE ESTATÍSTICO (não só contagem): sob a hipótese nula de que o
+                # mês "achado" em cada janela fosse puramente aleatório (1 chance em
+                # 12, sem nenhum padrão real por trás), qual a probabilidade de um
+                # mês específico se repetir em k das n janelas só por acaso? Isso é
+                # testado com teste binomial (scipy.stats.binomtest, p=1/12 por
+                # tentativa) — convergência é reportada como estatisticamente
+                # significativa quando p<0,05 (mesmo limiar convencional usado no
+                # teste ADF de estacionariedade, em outro painel deste sistema).
+                _n_janelas_total=len(resultados_wf)
+                if _n_janelas_total>=2:
+                    _contagem_pico={}; _contagem_promo={}
+                    for r in resultados_wf:
+                        for m in r["calibracao"].get("meses_pico") or []:
+                            _contagem_pico[m]=_contagem_pico.get(m,0)+1
+                        for m in r["calibracao"].get("meses_promo") or []:
+                            _contagem_promo[m]=_contagem_promo.get(m,0)+1
+
+                    def _testar_convergencia_binomial(contagem_dict,n_janelas):
+                        resultado=[]
+                        for m,n in contagem_dict.items():
+                            if n<2: continue
+                            try:
+                                _p_valor=binomtest(n,n_janelas,1/12,alternative="greater").pvalue
+                            except Exception:
+                                _p_valor=None
+                            resultado.append((m,n,_p_valor))
+                        return sorted(resultado,key=lambda x:-x[1])
+
+                    _convergentes_pico=_testar_convergencia_binomial(_contagem_pico,_n_janelas_total)
+                    _convergentes_promo=_testar_convergencia_binomial(_contagem_promo,_n_janelas_total)
+                    st.markdown("**🔁 Convergência entre janelas — teste binomial (mesmo mês em buscas independentes):**")
+                    if _convergentes_pico or _convergentes_promo:
+                        for m,n,p in _convergentes_pico:
+                            _sig_txt=f"p={p:.3f} {'✅ significativo' if p is not None and p<0.05 else '⚠️ não significativo'}" if p is not None else "p não calculável"
+                            st.markdown(f"- Sazonalidade: **{m}** apareceu em {n} de {_n_janelas_total} janelas testadas — {_sig_txt}")
+                        for m,n,p in _convergentes_promo:
+                            _sig_txt=f"p={p:.3f} {'✅ significativo' if p is not None and p<0.05 else '⚠️ não significativo'}" if p is not None else "p não calculável"
+                            st.markdown(f"- Promoção: **{m}** apareceu em {n} de {_n_janelas_total} janelas testadas — {_sig_txt}")
+                        st.caption("p<0,05 = a chance dessa repetição ter sido só coincidência é baixa (menos de 5%) — "
+                            "evidência estatística de padrão real, não só contagem.")
+                    else:
+                        st.markdown("Nenhum mês se repetiu em 2 ou mais janelas — ainda não há padrão confirmado por buscas independentes, mesmo que alguma janela isolada tenha achado algo.")
+
+                st.markdown("---")
+                _validas_wf=[r for r in resultados_wf if r["wape_real"] is not None]
+                if _validas_wf and wape_sem_calib_auto is not None:
+                    _melhor_wf=min(_validas_wf,key=lambda r:r["wape_real"])
+                    if _melhor_wf["wape_real"]<=wape_sem_calib_auto-0.3:
+                        st.markdown(f'<div class="al-s">✅ A janela de {_melhor_wf["janela"]} meses foi a melhor, testada às cegas: '
+                            f'<b>{_melhor_wf["wape_real"]:.1f}%</b> (contra {wape_sem_calib_auto:.1f}% sem calibração nenhuma).</div>',unsafe_allow_html=True)
+                        _opcoes_aplicar=[f"Janela {r['janela']} meses ({r['wape_real']:.1f}%)" for r in _validas_wf]
+                        _idx_default=_opcoes_aplicar.index(f"Janela {_melhor_wf['janela']} meses ({_melhor_wf['wape_real']:.1f}%)")
+                        _escolha_aplicar=st.selectbox("Qual janela aplicar?",_opcoes_aplicar,index=_idx_default,key="mlp_escolha_janela_aplicar")
+                        _janela_escolhida_num=int(_escolha_aplicar.split(" ")[1])
+                        _r_escolhido=next(r for r in _validas_wf if r["janela"]==_janela_escolhida_num)
+
+                        # Crescimento de Patamar é o único item dessa combinação que fica
+                        # seletivo por faixa — Sazonalidade/Promoção/Reajuste/Outliers
+                        # continuam uniformes (decisão já tomada: são fatos ou já são
+                        # seletivos por natureza, ver conversa anterior). Usa o efeito da
+                        # combinação inteira por faixa (já calculado acima) como guia de
+                        # qual faixa marcar por padrão — não isola só o Crescimento, mas é
+                        # a melhor pista disponível sem re-treinar tudo de novo por faixa.
+                        _tiers_marcados_cresc={}
+                        if _r_escolhido["calibracao"].get("fator_crescimento"):
+                            st.markdown("**Em quais faixas aplicar o Crescimento de Patamar dessa combinação?** "
+                                "(Sazonalidade/Promoção/Reajuste/Outliers aplicam igual pra todo mundo, como sempre)")
+                            for _tier_cresc_apl in ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"]:
+                                _dados_tier_cresc=_r_escolhido["por_tier"].get(_tier_cresc_apl,{})
+                                if _dados_tier_cresc.get("n",0)==0: continue
+                                _melhora_tier_cresc=(_dados_tier_cresc["wape_com"] is not None and _dados_tier_cresc["wape_sem"] is not None
+                                    and _dados_tier_cresc["wape_com"]<_dados_tier_cresc["wape_sem"])
+                                _marcado_cresc=st.checkbox(
+                                    f"{_tier_cresc_apl}" + (" ✅ combinação melhora esse grupo" if _melhora_tier_cresc else " ⚠️ combinação não melhorou esse grupo"),
+                                    value=_melhora_tier_cresc,key=f"mlp_cresc_marcar_{_tier_cresc_apl}")
+                                if _marcado_cresc:
+                                    _tiers_marcados_cresc[_tier_cresc_apl]=_r_escolhido["calibracao"]["fator_crescimento"]
+
+                        if st.button("📥 Aplicar essa combinação",key="mlp_aplicar_combo_auto"):
+                            c=_r_escolhido["calibracao"]
+                            st.session_state[_chave_reaj_mlp]=c["reajustes"]
+                            st.session_state[_chave_out_mlp]=c["outliers"]
+                            st.session_state[_chave_pico_mlp]=c["meses_pico"]
+                            st.session_state[_chave_promo_mlp]=c["meses_promo"]
+                            if c.get("fator_crescimento"):
+                                _cresc_dict_novo={"🟢 Confiável":None,"🟡 Moderado":None,"🔴 Baixa previsibilidade":None}
+                                _cresc_dict_novo.update(_tiers_marcados_cresc)
+                                st.session_state[_chave_cresc_mlp]=_cresc_dict_novo
+                            else:
+                                st.session_state[_chave_cresc_mlp]=None
+                            st.session_state["mlp_calib_versao"]=st.session_state.get("mlp_calib_versao",0)+1
+                            if st.session_state.cid:
+                                save_calibracoes_ml(st.session_state.cid)
+                            del st.session_state["mlp_wf_resultados"]
+                            st.success("✅ Aplicado! Confira as 4 abas de calibração, e rode a Validação normal pra confirmar.")
+                            st.rerun()
+                    else:
+                        st.markdown('<div class="al-i">Nenhuma janela testada, validada às cegas, superou "sem calibração" de forma real — o teto honesto desse recorte parece ser mesmo o que os modelos já alcançam sozinhos.</div>',unsafe_allow_html=True)
                 else:
                     st.markdown('<div class="al-i">Nenhuma janela testada, validada às cegas, superou "sem calibração" de forma real — o teto honesto desse recorte parece ser mesmo o que os modelos já alcançam sozinhos.</div>',unsafe_allow_html=True)
 
@@ -8850,12 +12816,59 @@ elif pg=="ml_produtos":
                 meses_pico=meses_pico_mlp,meses_promo=meses_promo_mlp,
                 reajustes=st.session_state.get(_chave_reaj_mlp,[]))
 
+            # Versão CEGA do LightGBM, testada em VÁRIAS janelas (mesmo esquema
+            # multi-janela que os modelos clássicos já usam) — decide se ele
+            # vence o clássico, sempre escondendo período que nunca vira o
+            # resultado reportado.
+            #
+            # CORREÇÃO: antes disso ficava fixo em 1 janela, enquanto os modelos
+            # clássicos (mais abaixo, por produto) usam a regra adaptativa de
+            # até 3 janelas conforme o histórico disponível — quebrando a
+            # premissa de "mesmo protocolo multi-janela pra todos os modelos".
+            # Como o LightGBM pooled roda ANTES do loop por produto (usa todo
+            # df_treino_mlp de uma vez, não uma série individual), a "extensão
+            # de histórico disponível" aqui é medida pelo intervalo de datas do
+            # próprio conjunto de treino — mesma régua, adaptada ao formato
+            # pooled, para manter a paridade real com os modelos clássicos.
+            _corte_periodo_val_mlp=pd.Period(data_corte_mlp)
+            try:
+                _periodos_disp_lgbm_val_mlp=pd.to_datetime(df_treino_mlp[data_col],errors="coerce",dayfirst=True).dt.to_period("M")
+                _meses_disp_lgbm_val_mlp=(_periodos_disp_lgbm_val_mlp.max()-_periodos_disp_lgbm_val_mlp.min()).n+1 if len(_periodos_disp_lgbm_val_mlp.dropna())>0 else 0
+            except Exception:
+                _meses_disp_lgbm_val_mlp=0
+            if _meses_disp_lgbm_val_mlp>=24: _n_janelas_lgbm_val_mlp,_tamanho_janela_lgbm_val_mlp=3,6
+            elif _meses_disp_lgbm_val_mlp>=16: _n_janelas_lgbm_val_mlp,_tamanho_janela_lgbm_val_mlp=2,4
+            elif _meses_disp_lgbm_val_mlp>=10: _n_janelas_lgbm_val_mlp,_tamanho_janela_lgbm_val_mlp=1,3
+            else: _n_janelas_lgbm_val_mlp,_tamanho_janela_lgbm_val_mlp=1,2
+            _previsoes_lgbm_bt_val_mlp_janelas=[]
+            _reais_lgbm_bt_val_mlp_janelas=[]
+            for _janela_idx_lgbm_val_mlp in range(_n_janelas_lgbm_val_mlp):
+                _offset_lgbm_val_mlp=_janela_idx_lgbm_val_mlp*_tamanho_janela_lgbm_val_mlp
+                _corte_bt_lgbm_val_mlp_j=_corte_periodo_val_mlp-6-_offset_lgbm_val_mlp
+                _df_treino_bt_lgbm_val_mlp_j=df_treino_mlp[df_treino_mlp["_periodo_ml_val_mlp"]<=_corte_bt_lgbm_val_mlp_j]
+                _prev_lgbm_bt_j={}; _reais_lgbm_bt_j={}
+                if not _df_treino_bt_lgbm_val_mlp_j.empty:
+                    _prev_lgbm_bt_j=treinar_lightgbm_pooled(
+                        _df_treino_bt_lgbm_val_mlp_j,"_ProdutoUnico",data_col,metrica_col,
+                        top_produtos_val_mlp,6,
+                        meses_pico=meses_pico_mlp,meses_promo=meses_promo_mlp,
+                        reajustes=st.session_state.get(_chave_reaj_mlp,[]))
+                    _corte_ts_bt_lgbm_val_mlp_j=_corte_bt_lgbm_val_mlp_j.to_timestamp()
+                    for _p_bt_val_mlp in top_produtos_val_mlp:
+                        _serie_real_bt_p_val_mlp=serie_mensal_produto(df_treino_mlp,"_ProdutoUnico",_p_bt_val_mlp,data_col,metrica_col)
+                        _reais_lgbm_bt_j[_p_bt_val_mlp]=_serie_real_bt_p_val_mlp[_serie_real_bt_p_val_mlp.index>_corte_ts_bt_lgbm_val_mlp_j].head(6).tolist()
+                _previsoes_lgbm_bt_val_mlp_janelas.append(_prev_lgbm_bt_j)
+                _reais_lgbm_bt_val_mlp_janelas.append(_reais_lgbm_bt_j)
+
             pb_val_mlp=st.progress(0)
             texto_pb_val_mlp=st.empty()
             linhas_val_mlp=[]
             ranks_todos_val_mlp={}
             modelos_vencedores_val_mlp={}
             modelos_val_mlp=[m for m,ok in MODELOS_ML.items() if ok]
+            # Ordem do ARIMA/SARIMAX descoberta em execuções anteriores — reaproveitada
+            # aqui pra não buscar do zero toda vez (ver escolher_modelo_e_prever).
+            _ordens_cache_val_mlp=load_ordens_modelo(st.session_state.cid,st.session_state.get("mlp_filial_sel")) if st.session_state.cid else {}
             # Só compete os 8 modelos do zero na PRIMEIRA rodada limpa (sem
             # calibração nenhuma salva ainda pra esse escopo). Depois disso,
             # reaproveita os mesmos modelos — igual a Auto-Calibração já faz —
@@ -8876,52 +12889,106 @@ elif pg=="ml_produtos":
                     modelos_val_mlp_p=[m for m in modelos_val_mlp if m not in ("Croston","TSB")]
                 else:
                     modelos_val_mlp_p=modelos_val_mlp
-                if prod_val_mlp in _modelos_ja_escolhidos_val_mlp:
-                    melhor_val_mlp=_modelos_ja_escolhidos_val_mlp[prod_val_mlp]
-                    rank_val_mlp={}
-                else:
-                    melhor_val_mlp,rank_val_mlp=melhor_modelo_multi_janela(serie_val_mlp,modelos_val_mlp_p)
+
+                # Disputa ADAPTATIVA conforme histórico disponível — mesmo
+                # critério já usado na Validação Financeira. Sem isso, com
+                # histórico curto, a disputa fixa (3×6) podia "perder" janelas
+                # silenciosamente (sem dado suficiente pra rodar), comparando
+                # modelos de forma desigual entre si sem nenhum aviso disso.
+                _meses_treino_disp_val_mlp=len(serie_val_mlp)
+                if _meses_treino_disp_val_mlp>=24: _n_janelas_val_mlp,_tam_janela_val_mlp=3,6
+                elif _meses_treino_disp_val_mlp>=16: _n_janelas_val_mlp,_tam_janela_val_mlp=2,4
+                elif _meses_treino_disp_val_mlp>=10: _n_janelas_val_mlp,_tam_janela_val_mlp=1,3
+                else: _n_janelas_val_mlp,_tam_janela_val_mlp=1,2
+
+                _modelo_reaproveitado_val_mlp=_modelos_ja_escolhidos_val_mlp.get(prod_val_mlp)
+                melhor_val_mlp,proj_val_mlp,rank_val_mlp=escolher_modelo_e_prever(
+                    serie_val_mlp,modelos_val_mlp_p,n_meses_valid_mlp,prod_val_mlp,
+                    _previsoes_lgbm_pool_mlp,_previsoes_lgbm_bt_val_mlp_janelas,_reais_lgbm_bt_val_mlp_janelas,
+                    n_janelas_disputa=_n_janelas_val_mlp,tamanho_janela_disputa=_tam_janela_val_mlp,
+                    modelo_reaproveitado=_modelo_reaproveitado_val_mlp,ordens_cache=_ordens_cache_val_mlp)
                 ranks_todos_val_mlp[prod_val_mlp]=rank_val_mlp
                 modelos_vencedores_val_mlp[prod_val_mlp]=melhor_val_mlp
-                proj_val_mlp=treinar(serie_val_mlp,melhor_val_mlp,n_meses_valid_mlp)
 
                 if proj_val_mlp is not None:
                     serie_completa_val_mlp=serie_mensal_produto(df_v,"_ProdutoUnico",prod_val_mlp,data_col,metrica_col)
                     corte_ts_mlp=pd.Period(data_corte_mlp).to_timestamp()
                     serie_real_pos_mlp=serie_completa_val_mlp[serie_completa_val_mlp.index>corte_ts_mlp].head(n_meses_valid_mlp)
                     _media_hist_val_mlp=float(serie_val_mlp.mean()) if len(serie_val_mlp)>0 else 0.0
-                    proj_lista_val_mlp=proj_val_mlp.tolist()
+                    proj_lista_val_mlp=proj_val_mlp.tolist() if hasattr(proj_val_mlp,"tolist") else list(proj_val_mlp)
 
-                    # LightGBM entra na disputa aqui: se tiver previsão pra esse
-                    # produto (pooled, treinado antes do loop), compara o erro dele
-                    # contra o vencedor clássico, nos MESMOS meses reais — fica com
-                    # quem realmente errar menos.
-                    _real_vals_mlp=[float(v) for v in serie_real_pos_mlp.tolist()]
-                    if prod_val_mlp in _previsoes_lgbm_pool_mlp and len(_real_vals_mlp)>0:
-                        _prev_lgbm_mlp=_previsoes_lgbm_pool_mlp[prod_val_mlp][:len(_real_vals_mlp)]
-                        _erro_classico_mlp=sum((p-r)**2 for p,r in zip(proj_lista_val_mlp[:len(_real_vals_mlp)],_real_vals_mlp))
-                        _erro_lgbm_mlp=sum((p-r)**2 for p,r in zip(_prev_lgbm_mlp,_real_vals_mlp))
-                        if _erro_lgbm_mlp<_erro_classico_mlp:
-                            melhor_val_mlp="LightGBM (pooled)"
-                            proj_lista_val_mlp=list(_prev_lgbm_mlp)
+                    # Teste de Estacionariedade (ADF) — só INFORMATIVO, nunca muda
+                    # qual modelo é escolhido (isso já é decidido pelo backtest
+                    # empírico). Calculado 1x por produto, é propriedade da série
+                    # inteira, não de cada mês. p-valor < 0.05 = estacionária.
+                    _adf_pvalor_val_mlp=None
+                    _adf_estacionaria_val_mlp=None
+                    if STATS_OK and len(serie_val_mlp)>=8:
+                        try:
+                            _adf_resultado=adfuller(serie_val_mlp.dropna())
+                            _adf_pvalor_val_mlp=round(float(_adf_resultado[1]),3)
+                            _adf_estacionaria_val_mlp=_adf_pvalor_val_mlp<0.05
+                        except Exception:
+                            pass
 
-                    # Sazonalidade/Promoção aplicadas aqui — em cima de QUALQUER modelo
-                    # que já venceu a disputa (clássico ou LightGBM), não só quando um
-                    # modelo específico "soubesse" usar essa informação sozinho. Sempre
-                    # conta, quando marcada.
+                    # Sazonalidade/Promoção aplicadas aqui — em cima do modelo que
+                    # venceu a disputa. EXCETO se foi o LightGBM: ele já recebe
+                    # sazonalidade/promoção como feature de entrada no treino (veja
+                    # treinar_lightgbm_pooled) e já aprende esse efeito sozinho —
+                    # aplicar de novo por fora seria contar o mesmo efeito duas vezes,
+                    # exagerando a previsão.
                     _datas_fut_val_mlp=serie_real_pos_mlp.index[:len(proj_lista_val_mlp)]
-                    if _indices_pico_val_mlp or _indices_promo_val_mlp:
+                    if (_indices_pico_val_mlp or _indices_promo_val_mlp) and melhor_val_mlp!="LightGBM (pooled)":
                         proj_lista_val_mlp=aplicar_indice_sazonal(proj_lista_val_mlp,_datas_fut_val_mlp,
                             _indices_pico_val_mlp,_indices_promo_val_mlp,
                             intensidade_pico=intensidade_pico_mlp/100,intensidade_promo=intensidade_promo_mlp/100)
-                    _fator_cresc_val_mlp=st.session_state.get(_chave_cresc_mlp)
+                    # Confiabilidade POR PRODUTO, calculada ANTES do Crescimento e do Viés
+                    # de propósito — os dois agora são por FAIXA (não um fator único pra
+                    # todo mundo), então precisa saber a faixa do produto antes de decidir
+                    # qual fator aplicar (ou se aplica). Usa o WAPE do modelo vencedor no
+                    # backtest (mesma conta que decidiu quem venceu) quando disponível, e
+                    # cai pro CV do histórico quando o modelo foi reaproveitado e não tem
+                    # WAPE fresco. Limiares calibrados pelos quartis reais de WAPE por
+                    # produto medidos numa base real (25º/75º percentil), não chutados.
+                    _wape_vencedor_val_mlp=rank_val_mlp.get(melhor_val_mlp)
+                    _cv_val_mlp=float(serie_val_mlp.std()/serie_val_mlp.mean()) if len(serie_val_mlp)>0 and serie_val_mlp.mean()>0 else None
+                    if _wape_vencedor_val_mlp is not None:
+                        if _wape_vencedor_val_mlp<=0.20: _confiab_val_mlp="🟢 Confiável"
+                        elif _wape_vencedor_val_mlp<=0.30: _confiab_val_mlp="🟡 Moderado"
+                        else: _confiab_val_mlp="🔴 Baixa previsibilidade"
+                    elif _cv_val_mlp is not None and _cv_val_mlp>1.0:
+                        _confiab_val_mlp="🔴 Baixa previsibilidade"
+                    else:
+                        _confiab_val_mlp="—"
+
+                    # Crescimento de Patamar POR FAIXA — mesmo esquema do Viés:
+                    # st.session_state[_chave_cresc_mlp] guarda um dict {"🟢 Confiável":
+                    # fator_ou_None,...} em vez de um fator único. Compatível com o slider
+                    # manual de Crescimento (que grava o mesmo valor nas 3 faixas, sem
+                    # seletividade) e com a Auto-Calibração (que deixa marcar por faixa).
+                    _cresc_por_tier_val_mlp=st.session_state.get(_chave_cresc_mlp)
+                    _fator_cresc_val_mlp=_cresc_por_tier_val_mlp.get(_confiab_val_mlp) if isinstance(_cresc_por_tier_val_mlp,dict) else None
+                    # Exceção POR PRODUTO (mesma arquitetura do Fator de Risco) —
+                    # se existir, SEMPRE vence a faixa, mesmo que a faixa também
+                    # tenha um fator configurado. Refinamento cirúrgico, não
+                    # substitui a calibração em grupo pra quem não tem exceção.
+                    _cresc_excecao_produto=st.session_state.get(f"cfgml_crescimento_por_produto{_sufixo_calib_mlp}",{})
+                    if prod_val_mlp in _cresc_excecao_produto:
+                        _fator_cresc_val_mlp=_cresc_excecao_produto[prod_val_mlp]
                     if _fator_cresc_val_mlp:
                         _meses_cresc_val_mlp=st.session_state.get(_chave_cresc_meses_mlp,[])
                         _meses_nomes_cresc=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
                         proj_lista_val_mlp=[
                             max(0.0,p*_fator_cresc_val_mlp) if (not _meses_cresc_val_mlp or _meses_nomes_cresc[d.month-1] in _meses_cresc_val_mlp) else p
                             for p,d in zip(proj_lista_val_mlp,_datas_fut_val_mlp)]
-                    _fator_vies_val_mlp=st.session_state.get(_chave_vies_pooled_mlp)
+
+                    # Viés POR FAIXA — st.session_state[_chave_vies_pooled_mlp] agora guarda
+                    # um dict {"🟢 Confiável":fator_ou_None, "🟡 Moderado":..., "🔴 Baixa
+                    # previsibilidade":...} em vez de um fator único pra todo mundo. Só
+                    # aplica na faixa desse produto, e só se essa faixa tiver sido marcada
+                    # pra receber o Viés.
+                    _vies_por_tier_val_mlp=st.session_state.get(_chave_vies_pooled_mlp)
+                    _fator_vies_val_mlp=_vies_por_tier_val_mlp.get(_confiab_val_mlp) if isinstance(_vies_por_tier_val_mlp,dict) else None
                     if _fator_vies_val_mlp:
                         proj_lista_val_mlp=[max(0.0,p*_fator_vies_val_mlp) for p in proj_lista_val_mlp]
 
@@ -8933,10 +13000,13 @@ elif pg=="ml_produtos":
                         linhas_val_mlp.append({"Produto":prod_val_mlp,"Mes":str(serie_real_pos_mlp.index[i_vm]),
                             "Modelo":melhor_val_mlp,"Previsto":round(prev_vm,2),"Real":round(real_vm,2),
                             "Erro %":round(erro_pct_vm,1),"Bias":round(prev_vm-real_vm,2),
-                            "MediaHistorica":round(_media_hist_val_mlp,2)})
+                            "MediaHistorica":round(_media_hist_val_mlp,2),"Confiabilidade":_confiab_val_mlp,
+                            "Horizonte":i_vm+1,"ADF_pvalor":_adf_pvalor_val_mlp,"Estacionaria":_adf_estacionaria_val_mlp})
                 if len(top_produtos_val_mlp)>0:
                     pb_val_mlp.progress((idx_val_mlp+1)/len(top_produtos_val_mlp))
             pb_val_mlp.empty(); texto_pb_val_mlp.empty()
+            if st.session_state.cid:
+                save_ordens_modelo(st.session_state.cid,_ordens_cache_val_mlp,st.session_state.get("mlp_filial_sel"))
             _df_val_mlp_novo=pd.DataFrame(linhas_val_mlp) if linhas_val_mlp else None
             st.session_state["mlp_validacao_resultado"]=_df_val_mlp_novo
             st.session_state["mlp_validacao_ranks"]=ranks_todos_val_mlp
@@ -8946,7 +13016,7 @@ elif pg=="ml_produtos":
             # pra um recorte diferente do que está sendo testado agora.
             st.session_state["mlp_modelos_vencedores"]=modelos_vencedores_val_mlp
             st.session_state["mlp_modelos_vencedores_escopo"]={
-                "filial":st.session_state.get("mlp_filial_sel"),"corte":data_corte_mlp,"categoria":categoria_sel_mlp,"curva":curva_sel_mlp}
+                "filial":st.session_state.get("mlp_filial_sel"),"corte":data_corte_mlp,"categoria":categoria_sel_mlp,"curva":curva_sel_mlp,"min_periodos":min_periodos,"pct_top":pct_top}
             if st.session_state.cid:
                 save_modelos_vencedores(st.session_state.cid,modelos_vencedores_val_mlp,st.session_state["mlp_modelos_vencedores_escopo"])
             if st.session_state.cid and _df_val_mlp_novo is not None:
@@ -9018,25 +13088,496 @@ elif pg=="ml_produtos":
                 if _peso_total_wape>0:
                     wape_pond_val_mlp=(_wape_por_prod_val[_validos_wape]*_peso_por_prod_val[_validos_wape]).sum()/_peso_total_wape
 
-            # Score de Validação — resumo num número só (100 - WAPE ponderado, entre
-            # 0 e 100). Ajuda a decidir rápido se o resultado justifica seguir em frente.
-            _score_val_mlp=max(0,min(100,round(100-(wape_pond_val_mlp if wape_pond_val_mlp is not None else (wape_val_mlp if wape_val_mlp is not None else mape_val_mlp)))))
-            if _score_val_mlp>90: _label_score_val="🟢 Excelente"
-            elif _score_val_mlp>80: _label_score_val="🟢 Bom"
-            elif _score_val_mlp>70: _label_score_val="🟡 Aceitável"
-            else: _label_score_val="🔴 Baixa confiabilidade"
-            st.markdown(
-                f'<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:10px;'
-                f'padding:16px 20px;margin-bottom:14px;text-align:center;border:1px solid #A9762F">'
-                f'<div style="font-size:.75rem;letter-spacing:1px;color:#CFEFE0;text-transform:uppercase">Score de Validação</div>'
-                f'<div style="font-size:2.2rem;font-weight:700;color:#fff;margin:4px 0">{_score_val_mlp}<span style="font-size:1rem;color:#D9F2E6">/100</span></div>'
-                f'<div style="font-size:.85rem;color:#D9BD82">{_label_score_val}</div>'
-                f'</div>',unsafe_allow_html=True)
+            # Resumo por faixa de confiabilidade — substitui o "Score" num número só
+            # por 3 blocos (quantos produtos e o WAPE médio de cada grupo). Um número
+            # único escondia, por exemplo, 209 produtos ótimos e 20 ruins atrás de uma
+            # média só — aqui dá pra ver os três grupos lado a lado, direto.
+            # Transações por mês, por produto — contagem de LINHAS reais (não valor),
+            # a partir da base bruta (df_v), não da série já somada. É um sinal
+            # complementar à Confiabilidade: produto com poucas transações/mês tende a
+            # ser mais errático (um pedido isolado grande domina o mês inteiro), mesmo
+            # que o motor já esteja acertando o modelo certo pra ele.
+            _df_transacoes_mlp=df_v.copy()
+            _df_transacoes_mlp["_periodo_transacoes_mlp"]=pd.to_datetime(
+                _df_transacoes_mlp[data_col],errors="coerce",dayfirst=True).dt.to_period("M")
+            _transacoes_prod_mes_mlp=_df_transacoes_mlp.groupby(["_ProdutoUnico","_periodo_transacoes_mlp"]).size()
+            _media_transacoes_prod_mlp=_transacoes_prod_mes_mlp.groupby("_ProdutoUnico").mean()
+
+            if {"Produto","Previsto","Real","MediaHistorica"}.issubset(df_val_mlp.columns):
+                # Reclassifica com o mesmo WAPE de verdade (soma erro ÷ soma real, não
+                # média simples de "Erro %" por mês) usado na tabela "Produtos por erro"
+                # mais abaixo — mesma fórmula nos dois lugares, nunca duas réguas
+                # diferentes pro mesmo dado.
+                def _classificar_confiab_topo_mlp(w):
+                    if pd.isna(w): return "—"
+                    if w<=20: return "🟢 Confiável"
+                    elif w<=30: return "🟡 Moderado"
+                    else: return "🔴 Baixa previsibilidade"
+                def _wape_por_produto_topo_mlp(g):
+                    _soma_r=g["Real"].abs().sum()
+                    return (g["Previsto"]-g["Real"]).abs().sum()/_soma_r*100 if _soma_r>0 else None
+                _prod_confiab_score=df_val_mlp.groupby("Produto").apply(_wape_por_produto_topo_mlp).reset_index(name="_wape_prod")
+                _prod_confiab_score["_confiab_prod"]=_prod_confiab_score["_wape_prod"].apply(_classificar_confiab_topo_mlp)
+                # Padronizado pra usar os ÚLTIMOS 3 MESES REAIS de venda (mesma base
+                # que "Top 30 por faturamento" mais abaixo usa) — antes usava
+                # "MediaHistorica" (vinda de dentro da Validação, presa ao corte de
+                # treino), que podia divergir bastante do faturamento atual se o
+                # produto mudou de padrão desde a última Validação rodada.
+                _df_fat3_score_mlp=df_v.copy()
+                _df_fat3_score_mlp["_periodo_fat3_score"]=pd.to_datetime(_df_fat3_score_mlp[data_col],errors="coerce",dayfirst=True).dt.to_period("M")
+                _df_fat3_score_mlp=_df_fat3_score_mlp[_df_fat3_score_mlp["_periodo_fat3_score"].isin(_meses_recentes_curva_mlp)].copy()
+                _df_fat3_score_mlp[metrica_col]=pd.to_numeric(_df_fat3_score_mlp[metrica_col],errors="coerce")
+                _n_meses_fat3_score=max(1,len(_meses_recentes_curva_mlp))
+                _fat_por_prod_score=_df_fat3_score_mlp.groupby("_ProdutoUnico")[metrica_col].sum()/_n_meses_fat3_score
+                _prod_confiab_score["_fat_prod"]=_prod_confiab_score["Produto"].map(_fat_por_prod_score)
+                _fat_total_score=_prod_confiab_score["_fat_prod"].sum()
+                _prod_confiab_score["_transacoes_prod"]=_prod_confiab_score["Produto"].map(_media_transacoes_prod_mlp)
+                _cores_grupo={"🟢 Confiável":"#0F6E56","🟡 Moderado":"#8A6D1F","🔴 Baixa previsibilidade":"#7A2A2A"}
+                _colg1,_colg2,_colg3=st.columns(3)
+                for _colg,_grupo in zip((_colg1,_colg2,_colg3),("🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade")):
+                    _sub_grupo=_prod_confiab_score[_prod_confiab_score["_confiab_prod"]==_grupo]
+                    _n_grupo=len(_sub_grupo)
+                    _wape_medio_grupo=_sub_grupo["_wape_prod"].mean() if _n_grupo>0 else None
+                    _wape_txt_grupo=f"{_wape_medio_grupo:.1f}%" if _wape_medio_grupo is not None else "—"
+                    _fat_grupo=_sub_grupo["_fat_prod"].sum()
+                    _fat_pct_grupo=(_fat_grupo/_fat_total_score*100) if _fat_total_score>0 else 0
+                    _transacoes_medio_grupo=_sub_grupo["_transacoes_prod"].mean() if _n_grupo>0 else None
+                    _transacoes_txt_grupo=f"{_transacoes_medio_grupo:.1f}" if pd.notna(_transacoes_medio_grupo) else "—"
+                    _colg.markdown(
+                        f'<div style="background:{_cores_grupo[_grupo]};border-radius:10px;'
+                        f'padding:14px 12px;margin-bottom:14px;text-align:center;border:1px solid #A9762F">'
+                        f'<div style="font-size:.75rem;letter-spacing:1px;color:#EAF6F1;text-transform:uppercase">{_grupo}</div>'
+                        f'<div style="font-size:1.6rem;font-weight:700;color:#fff;margin:4px 0">{_n_grupo} <span style="font-size:.9rem;font-weight:400">produto(s)</span></div>'
+                        f'<div style="border:2px solid #fff;border-radius:6px;padding:6px 8px;margin:8px 0;'
+                        f'font-size:1.05rem;font-weight:700;color:#fff">WAPE médio: {_wape_txt_grupo}</div>'
+                        f'<div style="font-size:.85rem;color:#EAF6F1">Faturamento: {_fat_pct_grupo:.1f}%</div>'
+                        f'<div style="font-size:.85rem;color:#EAF6F1">Transações/mês (méd. por produto): {_transacoes_txt_grupo}</div>'
+                        f'</div>',unsafe_allow_html=True)
 
             cv1,=st.columns(1)
             _cor_wape_pond=("g" if (wape_pond_val_mlp or 999)<20 else ("y" if (wape_pond_val_mlp or 999)<30 else "r"))
             mc(cv1,"WAPE ponderado (erro médio previsto x real)",
                f"{wape_pond_val_mlp:.1f}%" if wape_pond_val_mlp is not None else "—",_cor_wape_pond)
+
+            with st.expander("📉 O WAPE acima se sustenta em outros cortes? — teste de estabilidade"):
+                st.markdown('<div class="al-i">A escolha do MODELO já é protegida por múltiplas janelas. Mas os '
+                    'números acima (Confiabilidade, WAPE ponderado) vêm de um teste único, contra o corte que você '
+                    'escolheu. Este painel tenta pegar até 10 produtos de maior faturamento dentro do grupo 🟢 '
+                    'Confiável (pode testar menos, se o grupo tiver poucos produtos ou se algum não tiver '
+                    'histórico suficiente pra 3 janelas) e testa o modelo já escolhido, sem competir de novo, '
+                    'contra 3 janelas de 6 meses diferentes, deslizando pra trás a partir do dado mais recente. Se '
+                    'o produto continuar dentro da faixa Confiável (WAPE até 20%) nas 3 janelas, a classificação '
+                    'de hoje se sustenta — você pode confiar nela mesmo quando o corte mudar, mês a mês, no uso '
+                    'real do sistema.</div>',unsafe_allow_html=True)
+                if st.button("📉 Testar Estabilidade do WAPE (até 10 produtos do grupo Confiável)",key="sens_corte_btn"):
+                    # Só a faixa 🟢 Confiável entra nesse teste — Moderado e Baixa
+                    # previsibilidade já carregam o aviso de risco pelo próprio WAPE
+                    # alto, e testar sensibilidade neles mistura dois problemas
+                    # diferentes: a variação observada ali tende a refletir a demanda
+                    # naturalmente errática do produto (e, com poucas transações/mês,
+                    # também ruído de amostra pequena nas 3 janelas de 6 meses) — não
+                    # necessariamente uma fragilidade do teste em si. Ordenado por
+                    # faturamento — testa primeiro onde o dinheiro está.
+                    _faixa_sens="🟢 Confiável"
+                    if {"_confiab_prod","_fat_prod"}.issubset(_prod_confiab_score.columns):
+                        _confiaveis_ord_sens=_prod_confiab_score[_prod_confiab_score["_confiab_prod"]==_faixa_sens].sort_values("_fat_prod",ascending=False)
+                        _amostra_sens=[(p,_faixa_sens) for p in _confiaveis_ord_sens["Produto"].tolist()[:10]]
+                    else:
+                        _amostra_sens=[]
+                    _modelo_por_prod_sens=df_val_mlp.groupby("Produto")["Modelo"].first().to_dict()
+                    _linhas_sens=[]
+                    pb_sens=st.progress(0)
+                    for _i_sens,(_prod_sens,_faixa_sens) in enumerate(_amostra_sens):
+                        pb_sens.progress((_i_sens+1)/max(len(_amostra_sens),1),text=f"Testando {_prod_sens}")
+                        _modelo_sens=_modelo_por_prod_sens.get(_prod_sens)
+                        if not _modelo_sens: continue
+                        _serie_sens=serie_mensal_produto(df_v,"_ProdutoUnico",_prod_sens,data_col,metrica_col)
+                        _wapes_sens=[]
+                        for _offset_sens in (0,6,12):
+                            _mse_sens,_pred_sens,_real_sens=treinar_backtest(_serie_sens,_modelo_sens,offset_meses=_offset_sens)
+                            if _pred_sens is None or _real_sens is None: continue
+                            _real_abs_sens=sum(abs(r) for r in _real_sens)
+                            if _real_abs_sens>0:
+                                _wape_sens=sum(abs(p-r) for p,r in zip(_pred_sens,_real_sens))/_real_abs_sens*100
+                                _wapes_sens.append(_wape_sens)
+                        if len(_wapes_sens)>=2:
+                            _linhas_sens.append({"Confiabilidade":_faixa_sens,"Produto":_prod_sens,"Modelo":_modelo_sens,
+                                "WAPE min":round(min(_wapes_sens),1),"WAPE max":round(max(_wapes_sens),1),
+                                "Variação (pontos)":round(max(_wapes_sens)-min(_wapes_sens),1),
+                                "Janelas testadas":len(_wapes_sens)})
+                    pb_sens.empty()
+                    if _linhas_sens:
+                        st.session_state["sens_corte_resultado"]=pd.DataFrame(_linhas_sens)
+                        if len(_linhas_sens)<len(_amostra_sens):
+                            st.caption(f"ℹ️ Tentou {len(_amostra_sens)} produto(s) do grupo Confiável — "
+                                f"{len(_linhas_sens)} tinham histórico suficiente pra testar as 3 janelas.")
+                    else:
+                        st.caption("Não consegui testar nenhum produto (histórico insuficiente pra 3 janelas de 6 meses).")
+
+                _df_sens=st.session_state.get("sens_corte_resultado")
+                if _df_sens is not None and len(_df_sens)>0:
+                    # Critério: continua Confiável em TODAS as janelas testadas, ou
+                    # em alguma delas passaria de WAPE 20% (o mesmo limiar que já
+                    # define a faixa 🟢 Confiável em todo o resto do sistema) e
+                    # cairia pra Moderado/Baixa? Não é "quanto variou" — é "será que
+                    # a classificação atual se sustentaria, testada em outro mês".
+                    _df_sens["Continua Confiável em todas as janelas?"]=_df_sens["WAPE max"].apply(
+                        lambda w: "✅ Sim" if w<=20 else "⚠️ Não")
+                    _resumo_sens=_df_sens.groupby("Confiabilidade").agg(
+                        WAPE_max_medio=("WAPE max","mean"),
+                        WAPE_max_pior=("WAPE max","max"),
+                        Produtos=("Produto","count")).reset_index()
+                    _resumo_sens.columns=["Confiabilidade","WAPE máx. médio (3 janelas)","WAPE máx. pior janela","Produtos testados"]
+                    st.dataframe(_resumo_sens.round(1),use_container_width=True,hide_index=True)
+                    _n_instaveis_sens=(_df_sens["WAPE max"]>20).sum()
+                    if _n_instaveis_sens>0:
+                        st.markdown(f'<div class="al-w">⚠️ {_n_instaveis_sens} de {len(_df_sens)} produto(s) testado(s) '
+                            'teriam saído da faixa Confiável (WAPE acima de 20%) em pelo menos uma das 3 janelas — '
+                            'pra esses, a classificação de hoje pode não se sustentar dependendo de qual mês vira '
+                            'teste no futuro.</div>',unsafe_allow_html=True)
+                    else:
+                        st.markdown('<div class="al-s">✅ Todos os produtos testados permaneceram dentro da faixa '
+                            'Confiável (WAPE ≤ 20%) nas 3 janelas — a classificação se sustenta, mesmo trocando o '
+                            'período de teste.</div>',unsafe_allow_html=True)
+                    with st.expander("📋 Ver detalhe por produto"):
+                        st.dataframe(_df_sens,use_container_width=True,hide_index=True)
+
+            # Curva de Degradação por Horizonte — até quantos meses no futuro dá
+            # pra confiar na previsão, antes do erro crescer demais. Reaproveita
+            # a coluna "Horizonte" (posição do mês dentro da janela testada) já
+            # gravada linha a linha durante o backtest — sem retreinar nada.
+            if "Horizonte" in df_val_mlp.columns:
+                sec("📉 Curva de Degradação por Horizonte")
+                st.markdown('<div class="al-i">Até quantos meses no futuro a previsão continua confiável, medido '
+                    'com erro real do backtest — não é estimativa teórica.</div>',unsafe_allow_html=True)
+
+                def _wape_por_horizonte(g):
+                    _sr=g["Real"].abs().sum()
+                    return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+                _wape_horizonte=df_val_mlp.groupby("Horizonte").apply(_wape_por_horizonte).dropna()
+                _n_horizonte=df_val_mlp.groupby("Horizonte").size()
+
+                if len(_wape_horizonte)>=2:
+                    _x_horizonte=list(_wape_horizonte.index)
+                    _y_horizonte=list(_wape_horizonte.values)
+                    _fig_horizonte=go.Figure()
+                    _fig_horizonte.add_trace(go.Scatter(
+                        x=_x_horizonte,y=_y_horizonte,mode="lines+markers",
+                        line=dict(color="#0F6E56",width=3,shape="spline",smoothing=0.3),
+                        marker=dict(size=9,color="#0F6E56",line=dict(color="#9FE1CB",width=2)),
+                        fill="tozeroy",fillcolor="rgba(15,110,86,0.15)",
+                        hovertemplate="Mês %{x}: <b>%{y:.1f}%</b><extra></extra>",
+                        name="WAPE"))
+                    _fig_horizonte.update_layout(
+                        plot_bgcolor="#FFE4C4",paper_bgcolor="#FFE4C4",
+                        font=dict(color="#4A2E1A",size=12,family="Segoe UI, Arial"),
+                        margin=dict(l=10,r=30,t=20,b=10),height=320,
+                        xaxis=dict(title="Horizonte (meses à frente)",tickmode="linear",dtick=1,
+                            gridcolor="#E8B888",showline=True,linecolor="#A9762F",
+                            range=[min(_x_horizonte)-0.3,max(_x_horizonte)+0.3]),
+                        yaxis=dict(title="WAPE (%)",gridcolor="#E8B888",showline=False,
+                            zeroline=False,ticksuffix="%"),
+                        showlegend=False,hovermode="x unified")
+                    st.plotly_chart(_fig_horizonte,use_container_width=True)
+                    with st.expander("📋 Ver números — WAPE por horizonte"):
+                        _df_horizonte_tab=pd.DataFrame({
+                            "Horizonte (meses à frente)":_wape_horizonte.index,
+                            "WAPE":[f"{v:.1f}%" for v in _wape_horizonte.values],
+                            "Pontos testados":[_n_horizonte.get(h,0) for h in _wape_horizonte.index]})
+                        st.dataframe(_df_horizonte_tab,use_container_width=True,hide_index=True)
+                else:
+                    st.caption("Histórico testado curto demais pra montar a curva (precisa de pelo menos 2 horizontes diferentes).")
+
+            # Estacionariedade (ADF) — só informativo, não muda escolha de modelo
+            # (isso já é decidido pelo backtest empírico). Fecha o ponto do
+            # feedback acadêmico sem alterar nenhuma lógica de decisão existente.
+            if "Estacionaria" in df_val_mlp.columns:
+                with st.expander("📐 Estacionariedade (Teste ADF) — diagnóstico + ajuste opcional por produto"):
+                    st.markdown('<div class="al-i">Testa uma forma ESPECÍFICA de não-estacionariedade — presença de '
+                        'raiz unitária (Augmented Dickey-Fuller) — não uma verificação completa de estacionariedade. '
+                        'O ADF não captura, por exemplo, quebras estruturais isoladas ou heterocedasticidade '
+                        '(variância mudando de forma que não seja tendência linear). É um diagnóstico específico e '
+                        'útil, mas não substitui uma análise completa de estacionariedade (que tipicamente '
+                        'combinaria ADF com KPSS — teste de hipótese nula OPOSTA — e inspeção visual de ACF/PACF). '
+                        'O teste em si NÃO muda qual modelo vence — isso continua sendo decidido pelo resultado '
+                        'real do backtest.<br><br>'
+                        '<b>Mas o Crescimento aplicado aqui embaixo AFETA o resultado final</b>, sim — ele entra na '
+                        'previsão desse produto específico, e essa correção é automaticamente considerada como '
+                        '"estado atual" por qualquer outra calibração que você rodar depois (Auto-Calibração, Viés), '
+                        'em qualquer ordem. Ou seja: aplicar aqui muda o WAPE de verdade, em cadeia com o resto do '
+                        'sistema — não é só um diagnóstico "de olhar e não mexer".</div>',unsafe_allow_html=True)
+                    st.markdown('<div class="al-i"><b>Por que isso é mais uma análise, além da Auto-Calibração:</b> '
+                        'a Auto-Calibração testa tendência de forma empírica — busca janelas de descoberta e vê '
+                        'se aplicar um crescimento melhora o resultado, por Curva/faixa inteira. O teste ADF funciona '
+                        'diferente: identifica ANTES, estatisticamente, se aquele produto específico tem uma '
+                        'tendência real (não é ruído normal) — mesmo quando essa tendência não aparece forte o '
+                        'suficiente na média da faixa inteira pra Auto-Calibração pegar sozinha. As duas se '
+                        'complementam: uma descobre por tentativa, a outra aponta candidato por diagnóstico '
+                        'estatístico direto, produto a produto.</div>',unsafe_allow_html=True)
+                    _df_adf_resumo=df_val_mlp.groupby("Produto").agg(
+                        Estacionaria=("Estacionaria","first"),ADF_pvalor=("ADF_pvalor","first")).reset_index()
+                    _n_estacionaria=(_df_adf_resumo["Estacionaria"]==True).sum()
+                    _n_nao_estacionaria=(_df_adf_resumo["Estacionaria"]==False).sum()
+                    _n_sem_adf=_df_adf_resumo["Estacionaria"].isna().sum()
+                    c_adf1,c_adf2,c_adf3=st.columns(3)
+                    mc(c_adf1,"✅ Estacionária",str(_n_estacionaria),"g")
+                    mc(c_adf2,"⚠️ Não estacionária",str(_n_nao_estacionaria),"y")
+                    mc(c_adf3,"— Sem dado suficiente",str(_n_sem_adf),"b")
+                    _df_adf_disp=_df_adf_resumo.copy()
+                    _df_adf_disp["Estacionaria"]=_df_adf_disp["Estacionaria"].map({True:"✅ Sim",False:"⚠️ Não"}).fillna("—")
+                    st.dataframe(_df_adf_disp.rename(columns={"ADF_pvalor":"p-valor"}),
+                        use_container_width=True,height=min(400,80+35*len(_df_adf_disp)),hide_index=True)
+
+                    # Refinamento — Crescimento de Patamar POR PRODUTO (exceção
+                    # que vence a faixa), pros candidatos naturais: produtos
+                    # marcados "Não estacionária" aqui. Mesmo padrão de tela do
+                    # Fator de Risco: calcula pra todos de uma vez, mostra numa
+                    # lista com checkbox pré-marcado só onde ajuda, aplica em
+                    # bloco — sem precisar escolher produto por produto.
+                    st.markdown("---")
+                    st.markdown("**📈 Crescimento de Patamar por Produto — candidatos (não-estacionários)**")
+                    _produtos_nao_estac=_df_adf_resumo[_df_adf_resumo["Estacionaria"]==False]["Produto"].tolist()
+                    if not _produtos_nao_estac:
+                        st.caption("Nenhum produto não-estacionário nessa rodada.")
+                    else:
+                        _linhas_cresc_preview=[]
+                        for _prod_cresc in _produtos_nao_estac:
+                            _serie_cresc_sug=serie_mensal_produto(df_v,"_ProdutoUnico",_prod_cresc,data_col,metrica_col)
+                            if len(_serie_cresc_sug)<6: continue
+                            _metade=len(_serie_cresc_sug)//2
+                            _media_antiga=_serie_cresc_sug.iloc[:_metade].mean()
+                            _media_recente=_serie_cresc_sug.iloc[_metade:].mean()
+                            if _media_antiga<=0: continue
+                            _sugestao_pct=(_media_recente/_media_antiga-1)
+                            _fator_sug=round(1.0+_sugestao_pct,2)
+
+                            _linhas_prod=df_val_mlp[df_val_mlp["Produto"]==_prod_cresc]
+                            if len(_linhas_prod)==0: continue
+                            _real_sum=_linhas_prod["Real"].abs().sum()
+                            if _real_sum<=0: continue
+                            _wape_sem=(_linhas_prod["Previsto"]-_linhas_prod["Real"]).abs().sum()/_real_sum*100
+                            _previsto_com=_linhas_prod["Previsto"]*_fator_sug
+                            _wape_com=(_previsto_com-_linhas_prod["Real"]).abs().sum()/_real_sum*100
+                            _linhas_cresc_preview.append({"Produto":_prod_cresc,"Fator":_fator_sug,
+                                "WAPE sem":_wape_sem,"WAPE com":_wape_com,"Melhora":_wape_com<_wape_sem})
+
+                        if not _linhas_cresc_preview:
+                            st.caption("Nenhum candidato com dado suficiente pra calcular sugestão.")
+                        else:
+                            _df_cresc_preview=pd.DataFrame(_linhas_cresc_preview)
+                            _n_melhora_cresc=_df_cresc_preview["Melhora"].sum()
+                            st.caption(f"{_n_melhora_cresc} de {len(_df_cresc_preview)} produtos melhorariam com a sugestão calculada.")
+                            _selecoes_cresc={}
+                            for _,_linha_c in _df_cresc_preview.sort_values("Melhora",ascending=False).iterrows():
+                                _delta=_linha_c["WAPE sem"]-_linha_c["WAPE com"]
+                                _sinal="✅ melhora" if _linha_c["Melhora"] else "⚠️ piora"
+                                _marcado=st.checkbox(
+                                    f"{_linha_c['Produto']} — fator {_linha_c['Fator']:.2f}× — "
+                                    f"WAPE {_linha_c['WAPE sem']:.1f}% → {_linha_c['WAPE com']:.1f}% ({_sinal}, {abs(_delta):.1f} pts)",
+                                    value=bool(_linha_c["Melhora"]),key=f"adf_cresc_check_{_linha_c['Produto']}")
+                                _selecoes_cresc[_linha_c["Produto"]]={"marcado":_marcado,"fator":_linha_c["Fator"]}
+
+                            if st.button("💾 Aplicar seleção",key="adf_cresc_aplicar_lote",use_container_width=True):
+                                _chave_cresc_prod_atual=f"cfgml_crescimento_por_produto{_sufixo_calib_mlp}"
+                                if _chave_cresc_prod_atual not in st.session_state:
+                                    st.session_state[_chave_cresc_prod_atual]={}
+                                _n_aplicados_cresc=0
+                                for _prod_sel,_info_sel in _selecoes_cresc.items():
+                                    if _info_sel["marcado"]:
+                                        st.session_state[_chave_cresc_prod_atual][_prod_sel]=_info_sel["fator"]
+                                        _n_aplicados_cresc+=1
+                                if st.session_state.cid:
+                                    save_calibracoes_ml(st.session_state.cid)
+                                st.success(f"✅ Aplicado em {_n_aplicados_cresc} produto(s). Rode a Validação e o Cenário de novo pra ver refletido.")
+
+                    _chave_cresc_prod_exibir=f"cfgml_crescimento_por_produto{_sufixo_calib_mlp}"
+                    if not st.session_state.get(_chave_cresc_prod_exibir) and st.session_state.get("cfgml_crescimento_por_produto"):
+                        # Migração — dado salvo ANTES da correção de hoje (sem sufixo
+                        # de Categoria) ainda mora na chave antiga. Move pra chave
+                        # nova uma vez, sem perder o que já estava aplicado.
+                        st.session_state[_chave_cresc_prod_exibir]=st.session_state.pop("cfgml_crescimento_por_produto")
+                        if st.session_state.cid: save_calibracoes_ml(st.session_state.cid)
+                    if st.session_state.get(_chave_cresc_prod_exibir):
+                        with st.expander(f"✅ {len(st.session_state[_chave_cresc_prod_exibir])} produto(s) com exceção aplicada — remover aqui"):
+                            for _prod_rm,_fator_rm in list(st.session_state[_chave_cresc_prod_exibir].items()):
+                                _col_rm1,_col_rm2=st.columns([4,1])
+                                _col_rm1.caption(f"{_prod_rm} — fator {_fator_rm:.2f}×")
+                                if _col_rm2.button("🗑",key=f"adf_cresc_rm_{_prod_rm}"):
+                                    del st.session_state[_chave_cresc_prod_exibir][_prod_rm]
+                                    if st.session_state.cid:
+                                        save_calibracoes_ml(st.session_state.cid)
+                                    st.rerun()
+
+            # Estabilidade de Modelo — retreina o MESMO modelo vencedor,
+            # mesmo dado, várias vezes seguidas, medindo o quanto o WAPE varia
+            # entre execuções idênticas. Amostra pequena (3 por modelo) pra não
+            # pesar — é diagnóstico opcional, sob demanda, não roda sozinho.
+            with st.expander("🔁 Estabilidade de Modelo — reotimização muda o resultado?"):
+                st.markdown('<div class="al-i">Retreina o mesmo modelo vencedor, com o mesmo histórico e corte, '
+                    '3 vezes seguidas — mede se o resultado muda mesmo sem nada ter mudado de verdade. Isso não '
+                    'reflete erro de previsão, só instabilidade do processo de treino.</div>',unsafe_allow_html=True)
+                if st.button("🔁 Testar Estabilidade (amostra por modelo)",key="estab_modelo_btn"):
+                    _modelos_presentes_estab=df_val_mlp["Modelo"].unique().tolist()
+                    _linhas_estab=[]
+                    pb_estab=st.progress(0)
+                    for _i_estab,_modelo_estab in enumerate(_modelos_presentes_estab):
+                        pb_estab.progress((_i_estab+1)/len(_modelos_presentes_estab),text=f"Testando {_modelo_estab}")
+                        _produtos_desse_modelo=df_val_mlp[df_val_mlp["Modelo"]==_modelo_estab]["Produto"].unique().tolist()[:3]
+                        for _prod_estab in _produtos_desse_modelo:
+                            _serie_estab=serie_mensal_produto(df_v,"_ProdutoUnico",_prod_estab,data_col,metrica_col)
+                            _corte_ts_estab=pd.Period(data_corte_mlp,freq="M").to_timestamp(how="end").normalize()
+                            _serie_treino_estab=_serie_estab[_serie_estab.index<=_corte_ts_estab]
+                            if len(_serie_treino_estab)<8: continue
+                            _wapes_estab=[]
+                            _real_pos_estab=_serie_estab[_serie_estab.index>_corte_ts_estab].head(n_meses_valid_mlp)
+                            if len(_real_pos_estab)==0: continue
+                            for _rep in range(3):
+                                try:
+                                    _proj_estab=treinar(_serie_treino_estab,_modelo_estab,n_meses_valid_mlp)
+                                except Exception:
+                                    _proj_estab=None
+                                if _proj_estab is None: continue
+                                _real_l=_real_pos_estab.tolist()
+                                _proj_l=list(_proj_estab)[:len(_real_l)]
+                                _real_abs_sum=sum(abs(r) for r in _real_l)
+                                if _real_abs_sum>0:
+                                    _wape_rep=sum(abs(p-r) for p,r in zip(_proj_l,_real_l))/_real_abs_sum*100
+                                    _wapes_estab.append(_wape_rep)
+                            if len(_wapes_estab)>=2:
+                                _linhas_estab.append({"Modelo":_modelo_estab,"Produto":_prod_estab,
+                                    "WAPE min":round(min(_wapes_estab),2),"WAPE max":round(max(_wapes_estab),2),
+                                    "Variação (pontos)":round(max(_wapes_estab)-min(_wapes_estab),2)})
+                    pb_estab.empty()
+                    if _linhas_estab:
+                        st.session_state["estab_modelo_resultado"]=pd.DataFrame(_linhas_estab)
+                    else:
+                        st.caption("Não consegui testar nenhum produto (histórico insuficiente).")
+
+                _df_estab=st.session_state.get("estab_modelo_resultado")
+                if _df_estab is not None and len(_df_estab)>0:
+                    _resumo_estab=_df_estab.groupby("Modelo")["Variação (pontos)"].agg(["mean","max","count"]).reset_index()
+                    _resumo_estab.columns=["Modelo","Variação média","Variação máxima","Produtos testados"]
+                    st.dataframe(_resumo_estab.round(2),use_container_width=True,hide_index=True)
+                    with st.expander("📋 Ver detalhe por produto"):
+                        st.dataframe(_df_estab,use_container_width=True,hide_index=True)
+
+            with st.expander("📏 Calibração do Intervalo — diagnóstico, NÃO afeta Validação/Auto-Calibração/Viés"):
+                st.markdown('<div class="al-i"><b>Onde isso se encaixa no sistema:</b> a política padrão de '
+                    'estoque já sugere Mínimo/Máximo por CURVA inteira, usando o Giro Relativo (demanda média da '
+                    'Curva ÷ demanda média do catálogo) — Dias Mínimo = 30÷Giro Relativo, Dias Máximo = Dias '
+                    'Mínimo × um fator de dispersão (P75 de variação dentro da Curva). É uma boa base, igual pra '
+                    'todo produto da mesma Curva. O <b>Fator de Risco</b> é um refinamento ADICIONAL em cima '
+                    'dessa base — ajusta produto a produto (não a Curva inteira) quando o comportamento '
+                    'individual dele justifica um Mínimo/Máximo diferente do padrão da sua Curva, usando o '
+                    'histórico específico daquele produto. É rigor extra aplicado a poucos casos, não uma '
+                    'substituição da política geral.<br><br>'
+
+                    '<b>Pra que serve este painel especificamente:</b> mede se os limites P10 e P90 usados no '
+                    'Fator de Risco refletem a demanda real, ou são só teoria. <b>É 100% um termômetro de '
+                    'diagnóstico</b> — não recalcula, não altera e não mede a acurácia de nenhuma previsão de '
+                    'Validação, Auto-Calibração, Viés, Estacionariedade, Config Avançado ou da Sugestão por '
+                    'Curva; nenhum desses lê ou é afetado pelo resultado daqui. É uma medida isolada, específica '
+                    'do refinamento por produto (Mín/Máx), não uma métrica geral do sistema de previsão.<br><br>'
+
+                    '<b>O que exatamente é medido:</b> cada quantil é conferido individualmente contra sua própria '
+                    'definição — "quantas vezes a demanda real ficou abaixo do P90 previsto" (meta: ~90% das '
+                    'vezes) e "quantas vezes ficou abaixo do P10" (meta: ~10% das vezes). Isso NÃO é o mesmo que '
+                    'dizer que o intervalo P10–P90 tem 90% de cobertura central — um intervalo entre P10 e P90 '
+                    'cobre, por definição, ~80% dos casos; aqui medimos cada extremidade separadamente, contra a '
+                    'meta própria dela. A comparação usa "menor ou igual" (≤) em ambos os lados — em séries com '
+                    'muitos meses de demanda zero, isso pode inflar levemente a cobertura medida do P10, um '
+                    'efeito ainda não isolado nesta versão.<br><br>'
+
+                    '<b>Metodologia da correção:</b> o intervalo NATIVO de cada modelo (calculado direto pela '
+                    'biblioteca) foi testado primeiro, e não bateu com a meta (cobertura bem abaixo do esperado, '
+                    'em todos os modelos testados). A partir desse diagnóstico, o sistema usa <i>Conformal '
+                    'Prediction</i> (Vovk, Gammerman & Shafer, 2005; Lei et al., 2018, JASA) como mecanismo de '
+                    'recalibração, construindo o intervalo a partir do erro real observado em retreinos '
+                    'anteriores (walk-forward dentro do próprio histórico de treino do produto), em vez de '
+                    'confiar na suposição teórica do modelo. <b>Isso melhora a calibração medida — não é uma '
+                    'garantia formal de cobertura exata</b>: séries temporais podem ter dependência entre '
+                    'observações e mudança de distribuição ao longo do tempo, condições que a literatura de '
+                    'Conformal Prediction assume ausentes ou tratadas à parte na versão clássica do método. Essa '
+                    'correção já está em uso na funcionalidade real do Fator de Risco; a tabela abaixo mostra a '
+                    'cobertura medida depois dela.<br><br>'
+
+                    '<b>Sobre o limite de 20 pontos percentuais:</b> é um <b>limite operacional interno deste '
+                    'sistema</b>, definido para fins de diagnóstico prático — não é um padrão estabelecido pela '
+                    'literatura de Conformal Prediction ou de gestão de estoques.<br><br>'
+
+                    '<b>Por que 20, mesmo sem base na literatura:</b> o argumento é de engenharia de risco, não '
+                    'estatístico. O Fator de Risco atua como CAMADA ADICIONAL sobre uma política de estoque já '
+                    'estabelecida (a Sugestão por Curva, que continua ativa como base pra todo produto) — não '
+                    'como decisão isolada. Um desvio de calibração nessa camada de refinamento reduz sua eficácia '
+                    'marginal, mas não expõe o sistema a risco descoberto, já que a política de base permanece '
+                    'funcionando como salvaguarda por trás. Por isso, um limite mais permissivo que o exigido '
+                    'para uma decisão primária de estoque é justificável aqui. Reforçando essa proteção: mesmo '
+                    'com esse desvio de calibração, cada produto só é efetivamente recomendado depois de passar '
+                    'por um <b>teste econômico</b> contra a demanda REAL já ocorrida (não contra teoria) — uma '
+                    'segunda camada de verificação, independente da calibração do intervalo. O limite permanece '
+                    'sujeito a validação e ajuste conforme o risco econômico de cada aplicação (custo de ruptura '
+                    'vs. custo de excesso pode justificar um limite mais rígido ou mais frouxo, dependendo do '
+                    'produto).</div>',
+                    unsafe_allow_html=True)
+                if st.button("📏 Testar Calibração — Nativo vs Corrigido",key="calib_intervalo_btn"):
+                    _modelos_calib=df_val_mlp["Modelo"].unique().tolist()
+                    _linhas_calib=[]
+                    pb_calib=st.progress(0)
+                    for _i_calib,_modelo_calib in enumerate(_modelos_calib):
+                        pb_calib.progress((_i_calib+1)/len(_modelos_calib),text=f"Testando {_modelo_calib}")
+                        _produtos_calib=df_val_mlp[df_val_mlp["Modelo"]==_modelo_calib]["Produto"].unique().tolist()[:5]
+                        for _prod_calib in _produtos_calib:
+                            _serie_calib=serie_mensal_produto(df_v,"_ProdutoUnico",_prod_calib,data_col,metrica_col)
+                            _periodos_calib=_serie_calib.index.unique()
+                            if len(_periodos_calib)<20: continue
+                            _cortes_calib=_periodos_calib[-18:-6:2]
+                            for _corte_calib in _cortes_calib:
+                                _serie_treino_calib=_serie_calib[_serie_calib.index<=_corte_calib]
+                                _real_pos_calib=_serie_calib[_serie_calib.index>_corte_calib].head(6)
+                                if len(_serie_treino_calib)<8 or len(_real_pos_calib)==0: continue
+                                _p10_c,_p50_c,_p90_c=obter_p10_p50_p90_arrays(_serie_treino_calib,_modelo_calib,n=len(_real_pos_calib))
+                                if _p10_c is None: continue
+                                # Versão CORRIGIDA — mesma função que o Fator de
+                                # Risco usa de verdade (Conformal Prediction).
+                                _fu_c,_fd_c=calcular_fator_risco_intervalo_nativo(_serie_treino_calib,_modelo_calib,n=len(_real_pos_calib))
+                                _real_l_c=_real_pos_calib.tolist()
+                                for _idx_c,(_r,_p10v,_p90v,_p50v) in enumerate(zip(_real_l_c,_p10_c,_p90_c,_p50_c)):
+                                    _linha_c={"Modelo":_modelo_calib,"Produto":_prod_calib,
+                                        "abaixo_p90_nativo":_r<=_p90v,"abaixo_p10_nativo":_r<=_p10v}
+                                    if _fu_c is not None:
+                                        _linha_c["abaixo_p90_corrigido"]=_r<=(_p50v*_fu_c)
+                                        _linha_c["abaixo_p10_corrigido"]=_r<=(_p50v*_fd_c)
+                                    _linhas_calib.append(_linha_c)
+                    pb_calib.empty()
+                    if _linhas_calib:
+                        st.session_state["calib_intervalo_resultado"]=pd.DataFrame(_linhas_calib)
+                    else:
+                        st.caption("Não consegui testar nenhum produto (histórico insuficiente, ou nenhum modelo suporta intervalo nativo).")
+
+                _df_calib=st.session_state.get("calib_intervalo_resultado")
+                if _df_calib is not None and len(_df_calib)>0:
+                    if "abaixo_p90_corrigido" not in _df_calib.columns:
+                        st.caption("Nenhum modelo testado tinha correção disponível — rode de novo.")
+                    else:
+                        _df_corr=_df_calib.dropna(subset=["abaixo_p90_corrigido"])
+                        if len(_df_corr)>0:
+                            _cov_p90_cor=_df_corr["abaixo_p90_corrigido"].mean()*100
+                            _cov_p10_cor=_df_corr["abaixo_p10_corrigido"].mean()*100
+                            _dev_p90=round(abs(90-_cov_p90_cor),1)
+                            _dev_p10=round(abs(10-_cov_p10_cor),1)
+                            _veredito=("✅ Dentro do limite operacional (≤20pp)" if max(_dev_p90,_dev_p10)<=20
+                                else "⚠️ Fora do limite operacional (>20pp)")
+                            _df_resumo_final=pd.DataFrame([{
+                                "Observações":len(_df_corr),
+                                "Cobertura P90 (meta: 90%)":round(_cov_p90_cor,1),
+                                "Diferença P90 (pontos)":_dev_p90,
+                                "Cobertura P10 (meta: 10%)":round(_cov_p10_cor,1),
+                                "Diferença P10 (pontos)":_dev_p10,
+                                "Veredito":_veredito}])
+                            st.dataframe(_df_resumo_final,use_container_width=True,hide_index=True)
+                            st.caption("Diferença = distância entre a cobertura medida (já corrigida) e a meta "
+                                "(90% ou 10%). Até 20 pontos percentuais é um limite operacional razoável pra uso "
+                                "prático no Fator de Risco.")
 
             if {"Previsto","Real","MediaHistorica"}.issubset(df_val_mlp.columns):
                 with st.expander("🔎 Viés agregado — testar janelas"):
@@ -9046,28 +13587,79 @@ elif pg=="ml_produtos":
                         _modelos_para_vies=st.session_state.get("mlp_modelos_vencedores",{})
                         _produtos_para_vies=df_val_mlp["Produto"].unique().tolist()
                         _resultados_vies_janelas=[]
+                        _janelas_sem_dado_v=[]
                         for _jan_v in _janelas_vies_escolhidas:
                             _corte_desc_v=str(pd.Period(data_corte_mlp)-_jan_v)
                             _corte_desc_ts_v=pd.Period(_corte_desc_v).to_timestamp()
                             _fatores_por_produto_v=[]
                             _debug_motivos_v={}
+                            # Produtos vencidos pelo LightGBM (pooled) não dá pra retreinar
+                            # via treinar() isolado (ele precisa da base toda) — treina uma
+                            # vez só, pra esse corte de descoberta, reaproveitado por todos
+                            # eles. Sem isso, o viés descoberto ignorava o LightGBM na conta
+                            # mas depois era aplicado nele do mesmo jeito — descoberto só com
+                            # a parte clássica do portfólio, corrigindo o resto às cegas.
+                            _produtos_lgbm_vies=[p for p in _produtos_para_vies if _modelos_para_vies.get(p)=="LightGBM (pooled)"]
+                            _prev_lgbm_desc_v={}
+                            if _produtos_lgbm_vies:
+                                # Usa df_v (sempre disponível nessa tela) em vez de df_treino_mlp
+                                # (que só existe dentro do fluxo de "Rodar Validação" — o botão
+                                # "Calcular Viés" é separado e pode rodar sem passar por lá antes,
+                                # causando NameError).
+                                _df_v_periodo_vies=df_v.copy()
+                                _df_v_periodo_vies["_periodo_vies_lgbm"]=pd.to_datetime(
+                                    _df_v_periodo_vies[data_col],errors="coerce",dayfirst=True).dt.to_period("M")
+                                _df_treino_desc_v=_df_v_periodo_vies[_df_v_periodo_vies["_periodo_vies_lgbm"]<=pd.Period(_corte_desc_v)]
+                                if not _df_treino_desc_v.empty:
+                                    _prev_lgbm_desc_v=treinar_lightgbm_pooled(
+                                        _df_treino_desc_v,"_ProdutoUnico",data_col,metrica_col,
+                                        _produtos_lgbm_vies,_jan_v,
+                                        meses_pico=meses_pico_mlp,meses_promo=meses_promo_mlp,
+                                        reajustes=st.session_state.get(_chave_reaj_mlp,[]))
                             for _prod_v in _produtos_para_vies:
                                 _modelo_v=_modelos_para_vies.get(_prod_v)
-                                if not _modelo_v or _modelo_v=="LightGBM (pooled)":
-                                    _debug_motivos_v[_prod_v]="pulado: modelo LightGBM ou sem modelo salvo"
+                                if not _modelo_v:
+                                    _debug_motivos_v[_prod_v]="pulado: sem modelo salvo"
                                     continue
                                 _serie_completa_v=serie_mensal_produto(df_v,"_ProdutoUnico",_prod_v,data_col,metrica_col)
                                 _serie_treino_v=_serie_completa_v[_serie_completa_v.index<=_corte_desc_ts_v]
                                 if len(_serie_treino_v)<14:
                                     _debug_motivos_v[_prod_v]=f"pulado: só {len(_serie_treino_v)} meses de histórico antes do corte de descoberta (precisa 14+)"
                                     continue
-                                _proj_v=treinar(_serie_treino_v,_modelo_v,_jan_v)
-                                if _proj_v is None:
-                                    _debug_motivos_v[_prod_v]=f"pulado: modelo {_modelo_v} não conseguiu treinar com esse recorte"
-                                    continue
+                                if _modelo_v=="LightGBM (pooled)":
+                                    if _prod_v not in _prev_lgbm_desc_v:
+                                        _debug_motivos_v[_prod_v]="pulado: LightGBM não conseguiu prever esse produto nesse corte"
+                                        continue
+                                    _proj_vals_full_v=list(_prev_lgbm_desc_v[_prod_v])
+                                else:
+                                    _proj_v=treinar(_serie_treino_v,_modelo_v,_jan_v)
+                                    if _proj_v is None:
+                                        _debug_motivos_v[_prod_v]=f"pulado: modelo {_modelo_v} não conseguiu treinar com esse recorte"
+                                        continue
+                                    _proj_vals_full_v=_proj_v.tolist()
+
+                                # Aplica o Crescimento ATIVO (por faixa OU por produto) ANTES
+                                # de medir o Viés — mesmo princípio da Validação Financeira:
+                                # cada etapa parte do estado atual real, não de um zero
+                                # artificial, em qualquer ordem que as calibrações tenham
+                                # sido aplicadas.
+                                _fator_cresc_aplicar_viesp=None
+                                _cresc_excecao_viesp=st.session_state.get("cfgml_crescimento_por_produto",{})
+                                if _prod_v in _cresc_excecao_viesp:
+                                    _fator_cresc_aplicar_viesp=_cresc_excecao_viesp[_prod_v]
+                                else:
+                                    _cresc_por_tier_viesp=st.session_state.get(_chave_cresc_mlp)
+                                    if isinstance(_cresc_por_tier_viesp,dict):
+                                        _linha_prod_viesp_ref=df_val_mlp[df_val_mlp["Produto"]==_prod_v]
+                                        if len(_linha_prod_viesp_ref)>0:
+                                            _tier_prod_viesp=_linha_prod_viesp_ref["Confiabilidade"].iloc[0]
+                                            _fator_cresc_aplicar_viesp=_cresc_por_tier_viesp.get(_tier_prod_viesp)
+                                if _fator_cresc_aplicar_viesp:
+                                    _proj_vals_full_v=[max(0.0,v*_fator_cresc_aplicar_viesp) for v in _proj_vals_full_v]
+
                                 _serie_real_pos_v=_serie_completa_v[_serie_completa_v.index>_corte_desc_ts_v].head(_jan_v)
                                 _real_vals_v=_serie_real_pos_v.tolist()
-                                _proj_vals_v=_proj_v.tolist()[:len(_real_vals_v)]
+                                _proj_vals_v=_proj_vals_full_v[:len(_real_vals_v)]
                                 if len(_real_vals_v)==0:
                                     _debug_motivos_v[_prod_v]="pulado: não sobrou mês real depois do corte de descoberta pra comparar"
                                     continue
@@ -9075,26 +13667,61 @@ elif pg=="ml_produtos":
                                 if _soma_prev_prod_v>0:
                                     _fator_prod_v=_soma_real_prod_v/_soma_prev_prod_v
                                     _peso_prod_v=max(0.0,float(_serie_treino_v.mean())) if len(_serie_treino_v)>0 else 0.0
-                                    _fatores_por_produto_v.append((_fator_prod_v,_peso_prod_v))
+                                    _fatores_por_produto_v.append((_prod_v,_fator_prod_v,_peso_prod_v))
                                     _debug_motivos_v[_prod_v]=f"OK — entrou na conta (fator {_fator_prod_v:.2f})"
                                 else:
                                     _debug_motivos_v[_prod_v]="pulado: soma da previsão ficou zero ou negativa"
-                            _peso_total_v=sum(p for _,p in _fatores_por_produto_v)
+                            _peso_total_v=sum(p for _,_,p in _fatores_por_produto_v)
                             if _peso_total_v>0:
-                                _fator_jan_v=sum(f*p for f,p in _fatores_por_produto_v)/_peso_total_v
-                                _df_teste_jan=df_val_mlp.copy()
-                                _df_teste_jan["Previsto"]=_df_teste_jan["Previsto"]*_fator_jan_v
-                                def _wape_prod_jan(g):
-                                    _sr=g["Real"].abs().sum()
-                                    return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
-                                _wape_por_prod_jan=_df_teste_jan.groupby("Produto").apply(_wape_prod_jan)
-                                _peso_por_prod_jan=_df_teste_jan.groupby("Produto")["MediaHistorica"].first().clip(lower=0)
+                                _fator_jan_v=sum(f*p for _,f,p in _fatores_por_produto_v)/_peso_total_v
+
+                                def _wape_prod_jan_com_fator(_fator_teste):
+                                    _df_teste=df_val_mlp.copy()
+                                    _df_teste["Previsto"]=_df_teste["Previsto"]*_fator_teste
+                                    def _wp(g):
+                                        _sr=g["Real"].abs().sum()
+                                        return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+                                    return _df_teste.groupby("Produto").apply(_wp)
+
+                                _wape_por_prod_jan=_wape_prod_jan_com_fator(_fator_jan_v)
+                                _peso_por_prod_jan=df_val_mlp.groupby("Produto")["MediaHistorica"].first().clip(lower=0)
                                 _validos_jan=_wape_por_prod_jan.notna()
                                 _peso_total_jan=_peso_por_prod_jan[_validos_jan].sum()
                                 _wape_com_jan=None
                                 if _peso_total_jan>0:
                                     _wape_com_jan=(_wape_por_prod_jan[_validos_jan]*_peso_por_prod_jan[_validos_jan]).sum()/_peso_total_jan
-                                _resultados_vies_janelas.append({"janela":_jan_v,"fator":_fator_jan_v,"wape_com":_wape_com_jan})
+
+                                # Cruza com a faixa de Confiabilidade de cada produto (já
+                                # calculada na Validação, coluna "Confiabilidade" de df_val_mlp)
+                                # — fator, WAPE sem e WAPE com, separado POR FAIXA. É isso que
+                                # permite decidir "aplico só no 🔴" em vez de tudo ou nada.
+                                _confiab_por_prod_v=df_val_mlp.groupby("Produto")["Confiabilidade"].first()
+                                _wape_sem_por_prod=df_val_mlp.groupby("Produto").apply(
+                                    lambda g:(g["Previsto"]-g["Real"]).abs().sum()/g["Real"].abs().sum()*100 if g["Real"].abs().sum()>0 else None)
+                                _por_tier_v={}
+                                for _tier_v in ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"]:
+                                    _fatores_tier=[(f,p) for pr,f,p in _fatores_por_produto_v if _confiab_por_prod_v.get(pr)==_tier_v]
+                                    _peso_tier=sum(p for _,p in _fatores_tier)
+                                    if _peso_tier<=0:
+                                        _por_tier_v[_tier_v]={"n":0,"fator":None,"wape_sem":None,"wape_com":None}
+                                        continue
+                                    _fator_tier_v=sum(f*p for f,p in _fatores_tier)/_peso_tier
+                                    _produtos_tier=[pr for pr in _confiab_por_prod_v.index if _confiab_por_prod_v.get(pr)==_tier_v]
+                                    _peso_prod_tier=_peso_por_prod_jan.reindex(_produtos_tier).clip(lower=0)
+                                    _wape_sem_tier_s=_wape_sem_por_prod.reindex(_produtos_tier)
+                                    # IMPORTANTE: "com" precisa usar o fator DA PRÓPRIA FAIXA
+                                    # (_fator_tier_v) — não o agregado da janela (_fator_jan_v).
+                                    # Usar o agregado fazia o preview mentir: mostrava melhora
+                                    # com um fator pequeno, mas o que fica salvo/aplicado ao
+                                    # marcar o checkbox é o fator da faixa (bem diferente).
+                                    _wape_com_tier_s=_wape_prod_jan_com_fator(_fator_tier_v).reindex(_produtos_tier)
+                                    _v_sem=_wape_sem_tier_s.notna()
+                                    _v_com=_wape_com_tier_s.notna()
+                                    _wape_sem_tier=((_wape_sem_tier_s[_v_sem]*_peso_prod_tier[_v_sem]).sum()/_peso_prod_tier[_v_sem].sum()) if _peso_prod_tier[_v_sem].sum()>0 else None
+                                    _wape_com_tier=((_wape_com_tier_s[_v_com]*_peso_prod_tier[_v_com]).sum()/_peso_prod_tier[_v_com].sum()) if _peso_prod_tier[_v_com].sum()>0 else None
+                                    _por_tier_v[_tier_v]={"n":len(_fatores_tier),"fator":_fator_tier_v,"wape_sem":_wape_sem_tier,"wape_com":_wape_com_tier}
+
+                                _resultados_vies_janelas.append({"janela":_jan_v,"fator":_fator_jan_v,"wape_com":_wape_com_jan,"por_tier":_por_tier_v})
                         st.session_state["mlp_vies_resultados_janelas"]=_resultados_vies_janelas
 
                     _resultados_vies_janelas=st.session_state.get("mlp_vies_resultados_janelas")
@@ -9102,29 +13729,51 @@ elif pg=="ml_produtos":
                         st.markdown(f"**WAPE ponderado sem Viés: {wape_pond_val_mlp:.1f}%**" if wape_pond_val_mlp is not None else "")
                         for _rv in _resultados_vies_janelas:
                             _wape_str_rv=f"{_rv['wape_com']:.1f}%" if _rv['wape_com'] is not None else "—"
-                            st.markdown(f"- Janela {_rv['janela']} meses: Viés {(_rv['fator']-1)*100:+.1f}% → WAPE seria **{_wape_str_rv}**")
-                        _opcoes_aplicar_vies=[f"Janela {r['janela']} meses ({r['wape_com']:.1f}%)" for r in _resultados_vies_janelas if r["wape_com"] is not None]
+                            st.markdown(f"**Janela {_rv['janela']} meses** — agregado: Viés {(_rv['fator']-1)*100:+.1f}% → WAPE seria {_wape_str_rv}")
+                            for _tier_disp,_dados_tier in _rv.get("por_tier",{}).items():
+                                if _dados_tier["n"]==0:
+                                    st.caption(f"　{_tier_disp}: nenhum produto elegível nessa janela")
+                                    continue
+                                _ws=_dados_tier["wape_sem"]; _wc=_dados_tier["wape_com"]
+                                _ws_txt=f"{_ws:.1f}%" if _ws is not None else "—"
+                                _wc_txt=f"{_wc:.1f}%" if _wc is not None else "—"
+                                _seta="↓ melhora" if (_ws is not None and _wc is not None and _wc<_ws) else ("↑ piora" if (_ws is not None and _wc is not None and _wc>_ws) else "")
+                                st.caption(f"　{_tier_disp} ({_dados_tier['n']} produtos): {_ws_txt} → {_wc_txt}  {_seta}")
+
+                        _opcoes_aplicar_vies=[f"Janela {r['janela']} meses" for r in _resultados_vies_janelas]
                         if _opcoes_aplicar_vies:
-                            _escolha_vies=st.selectbox("Qual janela de Viés aplicar?",_opcoes_aplicar_vies,key="mlp_escolha_vies_janela")
+                            _escolha_vies=st.selectbox("De qual janela usar o fator de Viés?",_opcoes_aplicar_vies,key="mlp_escolha_vies_janela")
                             _jan_escolhida_vies=int(_escolha_vies.split(" ")[1])
                             _r_escolhido_vies=next(r for r in _resultados_vies_janelas if r["janela"]==_jan_escolhida_vies)
-                            st.caption(f"🔎 Confirme antes de aplicar: Janela {_r_escolhido_vies['janela']} meses, "
-                                f"fator {_r_escolhido_vies['fator']:.4f} ({(_r_escolhido_vies['fator']-1)*100:+.1f}%), "
-                                f"WAPE previsto {_r_escolhido_vies['wape_com']:.1f}%")
-                            if st.button("📥 Aplicar esse Viés e rodar de novo",key="mlp_aplicar_vies_direto_botao"):
-                                st.session_state[_chave_vies_pooled_mlp]=_r_escolhido_vies["fator"]
+                            st.markdown("**Em quais faixas aplicar o Viés dessa janela?** (só nas que você marcar — as outras ficam sem correção)")
+                            _tiers_marcados_vies={}
+                            for _tier_apl in ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"]:
+                                _dados_tier_apl=_r_escolhido_vies["por_tier"].get(_tier_apl,{})
+                                if _dados_tier_apl.get("n",0)==0: continue
+                                _melhora_tier=(_dados_tier_apl["wape_com"] is not None and _dados_tier_apl["wape_sem"] is not None
+                                    and _dados_tier_apl["wape_com"]<_dados_tier_apl["wape_sem"])
+                                _marcado=st.checkbox(
+                                    f"{_tier_apl} — fator {_dados_tier_apl['fator']:.4f} ({(_dados_tier_apl['fator']-1)*100:+.1f}%)"
+                                    + (" ✅ melhora" if _melhora_tier else " ⚠️ não melhorou nessa janela"),
+                                    value=_melhora_tier,key=f"mlp_vies_marcar_{_tier_apl}")
+                                if _marcado:
+                                    _tiers_marcados_vies[_tier_apl]=_dados_tier_apl["fator"]
+                            if st.button("📥 Aplicar Viés nas faixas marcadas e rodar de novo",key="mlp_aplicar_vies_direto_botao"):
+                                _vies_dict_novo={"🟢 Confiável":None,"🟡 Moderado":None,"🔴 Baixa previsibilidade":None}
+                                _vies_dict_novo.update(_tiers_marcados_vies)
+                                st.session_state[_chave_vies_pooled_mlp]=_vies_dict_novo
                                 del st.session_state["mlp_vies_resultados_janelas"]
                                 if st.session_state.cid:
                                     save_calibracoes_ml(st.session_state.cid)
                                 st.info("Viés salvo — clique em 'Rodar Validação' de novo, bem no topo, pra ver o resultado com ele aplicado.")
                                 st.rerun()
 
-                    _fator_vies_atual_display=st.session_state.get(_chave_vies_pooled_mlp)
-                    if _fator_vies_atual_display:
-                        st.markdown(f'<div class="al-w">⚠️ Viés atualmente APLICADO: fator {_fator_vies_atual_display:.4f} '
-                            f'({(_fator_vies_atual_display-1)*100:+.1f}%) — continua valendo em toda validação/previsão '
-                            f'até você remover.</div>',unsafe_allow_html=True)
-                        if st.button("🗑 Remover Viés aplicado",key="mlp_remover_vies_botao"):
+                    _vies_atual_display=st.session_state.get(_chave_vies_pooled_mlp)
+                    if isinstance(_vies_atual_display,dict) and any(v for v in _vies_atual_display.values()):
+                        _linhas_vies_ativo=[f"{k}: {v:.4f} ({(v-1)*100:+.1f}%)" for k,v in _vies_atual_display.items() if v]
+                        st.markdown(f'<div class="al-w">⚠️ Viés atualmente APLICADO por faixa: {" | ".join(_linhas_vies_ativo)} '
+                            f'— continua valendo em toda validação/previsão até você remover.</div>',unsafe_allow_html=True)
+                        if st.button("🗑 Remover Viés aplicado (todas as faixas)",key="mlp_remover_vies_botao"):
                             st.session_state[_chave_vies_pooled_mlp]=None
                             if st.session_state.cid:
                                 save_calibracoes_ml(st.session_state.cid)
@@ -9204,6 +13853,74 @@ elif pg=="ml_produtos":
             _breakdown_val_mlp=_breakdown_val_mlp.sort_values("Produtos",ascending=False)
             _breakdown_val_mlp["WAPE ponderado"]=_breakdown_val_mlp["_wape_pond"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
             _breakdown_val_mlp=_breakdown_val_mlp[["Modelo","Produtos","WAPE ponderado"]]
+# ===== Convergência entre métricas de erro (WAPE/MAPE/RMSE%) =====
+            # Mesma peça já construída no financeiro — calculado em cima do
+            # que já existe (Previsto x Real, mês a mês, em df_val_mlp), sem
+            # retreinar nada. WAPE continua sendo o ÚNICO critério de decisão
+            # do sistema (escolha de modelo, faixa de Confiabilidade) — isso
+            # aqui é só uma camada a mais de validação, visando compatibilidade
+            # de aferição com outras métricas de erro.
+            def _mape_produto_mlp(g):
+                _g_valido=g[g["Real"]!=0]
+                if len(_g_valido)==0: return None
+                return ((_g_valido["Previsto"]-_g_valido["Real"]).abs()/_g_valido["Real"].abs()).mean()*100
+            def _rmse_pct_produto_mlp(g):
+                _media_real=g["Real"].abs().mean()
+                if _media_real<=0: return None
+                _rmse=np.sqrt(((g["Previsto"]-g["Real"])**2).mean())
+                return _rmse/_media_real*100
+            def _wape_produto_mlp(g):
+                sr=g["Real"].abs().sum()
+                return (g["Previsto"]-g["Real"]).abs().sum()/sr*100 if sr>0 else None
+
+            _wape_por_prod_converg=df_val_mlp.groupby("Produto").apply(_wape_produto_mlp)
+            _mape_por_prod_converg=df_val_mlp.groupby("Produto").apply(_mape_produto_mlp)
+            _rmse_pct_por_prod_converg=df_val_mlp.groupby("Produto").apply(_rmse_pct_produto_mlp)
+
+            _tab_converg_mlp=pd.DataFrame({"Produto":_wape_por_prod_converg.index,"WAPE":_wape_por_prod_converg.values})
+            _tab_converg_mlp["MAPE"]=_tab_converg_mlp["Produto"].map(_mape_por_prod_converg)
+            _tab_converg_mlp["RMSE%"]=_tab_converg_mlp["Produto"].map(_rmse_pct_por_prod_converg)
+            _tab_converg_mlp["Desvio"]=_tab_converg_mlp[["WAPE","MAPE","RMSE%"]].apply(
+                lambda r: r.max()-r.min() if r.notna().all() else None,axis=1)
+
+            def _classificar_converg_mlp(d):
+                if pd.isna(d): return "—"
+                if d<=15: return "🟢 Compatível"
+                elif d<=30: return "🟡 Moderado"
+                else: return "🔴 Não compatível"
+            _tab_converg_mlp["Convergência"]=_tab_converg_mlp["Desvio"].apply(_classificar_converg_mlp)
+
+            sec("🔀 Convergência entre Métricas de Erro")
+            st.markdown('<div class="al-i">Uma camada a mais de validação, visando compatibilidade de aferição com '
+                'outras métricas de erro (MAPE, RMSE). WAPE continua sendo o único critério de decisão do sistema.</div>',
+                unsafe_allow_html=True)
+
+            _n_sem_converg_mlp=_tab_converg_mlp["Desvio"].isna().sum()
+            _n_verde_cp=(_tab_converg_mlp["Convergência"]=="🟢 Compatível").sum()
+            _n_amarelo_cp=(_tab_converg_mlp["Convergência"]=="🟡 Moderado").sum()
+            _n_vermelho_cp=(_tab_converg_mlp["Convergência"]=="🔴 Não compatível").sum()
+
+            st.markdown(
+                '<div style="background:#1a1a1a;border-radius:10px;padding:16px;border:1px solid #A9762F">'
+                '<div style="font-size:.75rem;letter-spacing:1px;color:#EAF6F1;text-transform:uppercase;margin-bottom:10px">'
+                'Compatibilidade entre WAPE / MAPE / RMSE%</div>'
+                '<div style="display:flex;gap:24px;flex-wrap:wrap">'
+                f'<div><span style="color:#3ED9A8;font-weight:700;font-size:1.3rem">{_n_verde_cp}</span> '
+                f'<span style="color:#EAF6F1">🟢 Compatível (≤15 pts)</span></div>'
+                f'<div><span style="color:#D9B23E;font-weight:700;font-size:1.3rem">{_n_amarelo_cp}</span> '
+                f'<span style="color:#EAF6F1">🟡 Moderado (15-30 pts)</span></div>'
+                f'<div><span style="color:#D96E3E;font-weight:700;font-size:1.3rem">{_n_vermelho_cp}</span> '
+                f'<span style="color:#EAF6F1">🔴 Não compatível (>30 pts)</span></div>'
+                '</div></div>',unsafe_allow_html=True)
+            if _n_sem_converg_mlp>0:
+                st.caption(f"⚠️ {_n_sem_converg_mlp} produto(s) sem comparação calculável (algum mês com Real=0 no período testado).")
+
+            with st.expander(f"📋 Detalhe WAPE × MAPE × RMSE% ({len(_tab_converg_mlp)} produtos)"):
+                _tab_converg_disp_mlp=_tab_converg_mlp.copy()
+                for _col_pct in ["WAPE","MAPE","RMSE%","Desvio"]:
+                    _tab_converg_disp_mlp[_col_pct]=_tab_converg_disp_mlp[_col_pct].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
+                st.dataframe(_tab_converg_disp_mlp,use_container_width=True,height=min(420,80+35*len(_tab_converg_disp_mlp)))
+
             with st.expander(f"📊 WAPE por modelo ({len(_breakdown_val_mlp)} modelos usados)"):
                 st.dataframe(_breakdown_val_mlp,use_container_width=True,
                   height=min(420,80+35*len(_breakdown_val_mlp)))
@@ -9259,14 +13976,32 @@ elif pg=="ml_produtos":
             # classe_abc) — precisa ficar num DataFrame à parte pra sobreviver até o final
             # da tela, onde ele é exibido de fato.
             _top10_mape_mlp=_prod_erro_mlp.dropna(subset=["_fat3"]).nlargest(30,"_fat3").copy()
+            def _classificar_confiab_mlp(w):
+                if pd.isna(w): return "—"
+                if w<=20: return "🟢 Confiável"
+                elif w<=30: return "🟡 Moderado"
+                else: return "🔴 Baixa previsibilidade"
+            _prod_erro_mlp["Confiabilidade"]=_prod_erro_mlp["_wape"].apply(_classificar_confiab_mlp)
             _prod_erro_mlp["WAPE"]=_prod_erro_mlp["_wape"].apply(lambda v: f"{v:.1f}%" if pd.notna(v) else "—")
             _prod_erro_mlp["Faturamento (média/mês, últ. 3 meses)"]=_prod_erro_mlp["_fat3"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
             _prod_erro_mlp["Participação (últ. 3 meses)"]=_prod_erro_mlp["_part3"].apply(lambda v: f"{v:.2f}%" if pd.notna(v) else "—")
+            # Transações/mês (méd.) — quantas notas/pedidos por mês, em média, esse
+            # produto teve historicamente (contagem de linhas reais, não valor). Sinal
+            # complementar à Confiabilidade: poucas transações por mês tende a indicar
+            # erro maior, independente do modelo escolhido — um único pedido grande e
+            # isolado domina o mês inteiro, sem "média" de várias vendas pra suavizar.
+            _prod_erro_mlp["Transações/mês (méd.)"]=_prod_erro_mlp["Produto"].map(_media_transacoes_prod_mlp).apply(
+                lambda v: f"{v:.1f}" if pd.notna(v) else "—")
             _prod_erro_mlp=_prod_erro_mlp.rename(columns={"classe_abc":"Curva"})[
-                ["Produto","WAPE","Faturamento (média/mês, últ. 3 meses)","Curva","Participação (últ. 3 meses)"]]
+                ["Produto","WAPE","Confiabilidade","Transações/mês (méd.)","Faturamento (média/mês, últ. 3 meses)","Curva","Participação (últ. 3 meses)"]]
+
             with st.expander(f"📋 Produtos por erro — Curva e Participação ({len(_prod_erro_mlp)} produtos)"):
                 st.dataframe(_prod_erro_mlp,use_container_width=True,
                   height=min(500,80+35*len(_prod_erro_mlp)))
+                st.download_button("⬇️ Exportar CSV",
+                    data=_prod_erro_mlp.to_csv(index=False,sep=";",decimal=",").encode("utf-8-sig"),
+                    file_name=f"produtos_por_erro_{data_corte_mlp}.csv",mime="text/csv",
+                    key="mlp_download_produtos_erro")
 
             # Destaque — Top 10 produtos por FATURAMENTO, mostrando o erro de cada um.
             # Visual propositalmente diferente do resto da tela (fundo escuro/dourado,
@@ -9281,6 +14016,19 @@ elif pg=="ml_produtos":
                 st.markdown('<div style="border:2px solid #A9762F;border-radius:10px;padding:3px;'
                     'background:linear-gradient(135deg,#FFF8EC 0%,#FDF3DE 100%)">',unsafe_allow_html=True)
                 with st.expander("⭐ Destaque — Top 30 produtos por faturamento"):
+                    # Cruzamento direto — quantos desses 30 (maior faturamento) caem
+                    # em cada faixa de Confiabilidade. Resolve a dúvida "os produtos
+                    # confiáveis deveriam estar aqui?" com número real, não suposição.
+                    _confiab_por_produto_top30=_prod_erro_mlp.set_index("Produto")["Confiabilidade"].to_dict()
+                    _contagem_confiab_top30={"🟢 Confiável":0,"🟡 Moderado":0,"🔴 Baixa previsibilidade":0}
+                    for _p_top30 in _top10_mape_mlp["Produto"]:
+                        _c_top30=_confiab_por_produto_top30.get(_p_top30)
+                        if _c_top30 in _contagem_confiab_top30:
+                            _contagem_confiab_top30[_c_top30]+=1
+                    st.markdown(f"**Desses 30, por Confiabilidade:** "
+                        f"🟢 {_contagem_confiab_top30['🟢 Confiável']} Confiável | "
+                        f"🟡 {_contagem_confiab_top30['🟡 Moderado']} Moderado | "
+                        f"🔴 {_contagem_confiab_top30['🔴 Baixa previsibilidade']} Baixa previsibilidade")
                     # Teste rápido — não exclui nada de verdade, só recalcula a conta
                     # do WAPE ponderado do Top 10 fingindo que os produtos marcados
                     # aqui não existiam, pra você ver o impacto de um produto pontual
@@ -9328,16 +14076,33 @@ elif pg=="ml_produtos":
                         _curva_top=_row_top.get("classe_abc") or "—"
                         _part_raw_top=_row_top.get("_part3")
                         _part_top=f"{_part_raw_top:.2f}%" if pd.notna(_part_raw_top) else "sem venda recente"
-                        st.markdown(f'''<div style="display:flex;align-items:center;gap:12px;background:#0F1C2E;
-                            border-radius:8px;padding:10px 14px;margin-bottom:6px;border-left:3px solid {_cor_top}">
-                            <div style="font-size:1.1rem;min-width:28px">{_icone_top}</div>
-                            <div style="flex:1;color:#fff;font-weight:600;font-size:.85rem">{_row_top["Produto"]}</div>
-                            <div style="color:#9CA3AF;font-size:.72rem;text-align:right;min-width:65px">Curva {_curva_top}</div>
-                            <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:110px">Participação<br>
-                            <b style="color:#D9BD82;font-size:.8rem">{_part_top}</b></div>
-                            <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:60px">WAPE<br>
-                            <b style="color:{_cor_top};font-size:1rem">{_wape_disp_top}</b></div>
-                            </div>''',unsafe_allow_html=True)
+                        _produto_top_atual=_row_top["Produto"]
+                        _confiab_badge_top=_confiab_por_produto_top30.get(_produto_top_atual,"—")
+                        _col_linha_top,_col_lixo_top=st.columns([20,1])
+                        with _col_linha_top:
+                            st.markdown(f'''<div style="display:flex;align-items:center;gap:12px;background:#0F1C2E;
+                                border-radius:8px;padding:10px 14px;margin-bottom:6px;border-left:3px solid {_cor_top}">
+                                <div style="font-size:1.1rem;min-width:28px">{_icone_top}</div>
+                                <div style="flex:1;color:#fff;font-weight:600;font-size:.85rem">{_produto_top_atual}</div>
+                                <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:110px">{_confiab_badge_top}</div>
+                                <div style="color:#9CA3AF;font-size:.72rem;text-align:right;min-width:65px">Curva {_curva_top}</div>
+                                <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:110px">Participação<br>
+                                <b style="color:#D9BD82;font-size:.8rem">{_part_top}</b></div>
+                                <div style="color:#9CA3AF;font-size:.68rem;text-align:right;min-width:60px">WAPE<br>
+                                <b style="color:{_cor_top};font-size:1rem">{_wape_disp_top}</b></div>
+                                </div>''',unsafe_allow_html=True)
+                        with _col_lixo_top:
+                            # Atalho rápido — mesma seleção do multiselect acima (chave
+                            # "mlp_top10_testar_sem"). Clicar aqui ADICIONA esse produto
+                            # à lista de "testar sem", sem precisar abrir o dropdown e
+                            # procurar. Não exclui nada de verdade, só testa.
+                            if st.button("🗑️",key=f"mlp_top10_lixo_{_produto_top_atual}",
+                                    help="Testar o WAPE do Top 30 sem este produto"):
+                                _sel_atual_top10=list(st.session_state.get("mlp_top10_testar_sem",[]))
+                                if _produto_top_atual not in _sel_atual_top10:
+                                    _sel_atual_top10.append(_produto_top_atual)
+                                    st.session_state["mlp_top10_testar_sem"]=_sel_atual_top10
+                                st.rerun()
                 st.markdown('</div>',unsafe_allow_html=True)
 
         elif df_val_mlp is not None:
@@ -9421,6 +14186,8 @@ elif pg=="config_ml":
                 for _k_limpar_curva_cfg in ["cfgml_resultado_atual","cfgml_df_comp_bruto","cfgml_df_escopo_val"]:
                     if _k_limpar_curva_cfg in st.session_state:
                         del st.session_state[_k_limpar_curva_cfg]
+                if st.session_state.get("cid"):
+                    save_config_ml(st.session_state.cid)
 
             if "cfgml_curva_sel_backup" not in st.session_state:
                 st.session_state["cfgml_curva_sel_backup"]=_opcoes_curva_cfg[0]
@@ -9641,6 +14408,16 @@ elif pg=="config_ml":
             else:
                 produtos_excluidos_cfg=[]
 
+            _grupos_confiab_cfg=st.multiselect(
+                "Filtrar por confiabilidade (calculada na última Validação, mesma Categoria/Curva)",
+                ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"],
+                default=["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"],
+                key="cfgml_grupos_confiab",
+                help='Desmarque um grupo pra excluir esses produtos do Cenário — por exemplo, '
+                     'tirar os "🔴 Baixa previsibilidade" e tratá-los com regra de reposição fixa '
+                     'em vez de previsão estatística. Só filtra produtos já classificados numa '
+                     'Validação recente com a mesma Categoria/Curva — os demais continuam entrando normalmente.')
+
             sec("5️⃣ Correção de Preço (Reajustes)")
             st.markdown('<div class="al-i">Cadastre datas de reajuste de preço/custo para "trazer" o histórico para a régua de preço atual, sem distorcer a tendência real de demanda.</div>',unsafe_allow_html=True)
             if _chave_reaj_cfg not in st.session_state:
@@ -9668,16 +14445,27 @@ elif pg=="config_ml":
 
             sec("6️⃣ Crescimento de Patamar")
             st.markdown('<div class="al-i">Mudança de PATAMAR sustentada no faturamento — diferente de Sazonalidade (repete todo ano) e Reajuste (é sobre preço). Detectada automaticamente pela Auto-Calibração na tela de Validação; aqui você pode conferir e ajustar manualmente.</div>',unsafe_allow_html=True)
-            _valor_atual_cresc_cfg=st.session_state.get(_chave_cresc_cfg)
+            _cresc_dict_atual_cfg=st.session_state.get(_chave_cresc_cfg)
+            _valor_atual_cresc_cfg=(next((v for v in _cresc_dict_atual_cfg.values() if v),None)
+                if isinstance(_cresc_dict_atual_cfg,dict) else _cresc_dict_atual_cfg)
             if _valor_atual_cresc_cfg:
-                st.markdown(f"**Fator atual: {(_valor_atual_cresc_cfg-1)*100:+.1f}%** (multiplicador {_valor_atual_cresc_cfg:.3f})")
+                _faixas_ativas_cresc=([k for k,v in _cresc_dict_atual_cfg.items() if v]
+                    if isinstance(_cresc_dict_atual_cfg,dict) else ["🟢 Confiável","🟡 Moderado","🔴 Baixa previsibilidade"])
+                st.markdown(f"**Fator atual: {(_valor_atual_cresc_cfg-1)*100:+.1f}%** (multiplicador {_valor_atual_cresc_cfg:.3f}) "
+                    f"— faixas: {', '.join(_faixas_ativas_cresc)}")
             else:
                 st.caption("Nenhum crescimento de patamar detectado/aplicado ainda pra essa categoria.")
             _pct_cresc_manual_cfg=st.number_input("Ajuste manual (%) — deixe 0 pra desligar",
                 value=round((_valor_atual_cresc_cfg-1)*100,1) if _valor_atual_cresc_cfg else 0.0,
                 step=1.0,key="cfgml_cresc_pct_widget",
-                help="Positivo = negócio num patamar mais alto que o histórico mais antigo. Negativo = patamar mais baixo.")
-            st.session_state[_chave_cresc_cfg]=1.0+(_pct_cresc_manual_cfg/100) if _pct_cresc_manual_cfg!=0 else None
+                help="Positivo = negócio num patamar mais alto que o histórico mais antigo. Negativo = patamar mais baixo. "
+                     "Ajuste manual vale igual pras 3 faixas de confiabilidade (sem seletividade) — pra aplicar só numa "
+                     "faixa específica, use a Auto-Calibração na tela de Validação.")
+            if _pct_cresc_manual_cfg!=0:
+                _fator_manual_cresc=1.0+(_pct_cresc_manual_cfg/100)
+                st.session_state[_chave_cresc_cfg]={"🟢 Confiável":_fator_manual_cresc,"🟡 Moderado":_fator_manual_cresc,"🔴 Baixa previsibilidade":_fator_manual_cresc}
+            else:
+                st.session_state[_chave_cresc_cfg]=None
 
             _valor_atual_cresc_meses_cfg=st.session_state.get(_chave_cresc_meses_cfg,[])
             meses_cresc_cfg=st.multiselect("Aplicar o crescimento só nestes meses (deixe vazio = todos os meses da previsão)",
@@ -9748,7 +14536,7 @@ elif pg=="config_ml":
             <div style="color:#1E3A8A;font-size:.8rem">Ligue/desligue cada uma para isolar o efeito individual, ou combine várias para testar juntas.</div>
             </div>''',unsafe_allow_html=True)
 
-            _opcoes_configs_ativas=["📅 Sazonalidade","🏷️ Promoção","💰 Reajuste de Preço","🚫 Excluir Outliers","🌐 Fatores de Mercado"]
+            _opcoes_configs_ativas=["📅 Sazonalidade","🏷️ Promoção","💰 Reajuste de Preço","🚫 Excluir Outliers","📈 Crescimento de Patamar","🌐 Fatores de Mercado"]
             _chave_configs_ativas_cfg=f"cfgml_configs_ativas{_sufixo_calib_cfg}"
             _backup_key_configs_ativas=f"{_chave_configs_ativas_cfg}_backup"
 
@@ -9757,16 +14545,19 @@ elif pg=="config_ml":
 
             if _backup_key_configs_ativas not in st.session_state:
                 # Autopreenche com base no que JÁ está configurado (Sazonalidade,
-                # Promoção, Reajuste, Outliers) — mesma calibração que "Rodar
-                # Validação" aplica sempre, sem interruptor nenhum. Assim, "Rodar
-                # Cenário" já sai aplicando tudo que você configurou, sem precisar
-                # marcar manualmente toda vez. Fatores de Mercado fica de fora do
-                # automático (é exclusivo desta tela, sempre opt-in).
+                # Promoção, Reajuste, Outliers, Crescimento) — mesma calibração que
+                # "Rodar Validação" aplica sempre, sem interruptor nenhum. Assim,
+                # "Rodar Cenário" já sai aplicando tudo que você configurou, sem
+                # precisar marcar manualmente toda vez. Fatores de Mercado fica de
+                # fora do automático (é exclusivo desta tela, sempre opt-in).
+                _cresc_dict_default_check=st.session_state.get(_chave_cresc_cfg)
+                _tem_cresc_default=(isinstance(_cresc_dict_default_check,dict) and any(_cresc_dict_default_check.values()))
                 _default_configs_ativas_cfg=[]
                 if meses_pico: _default_configs_ativas_cfg.append("📅 Sazonalidade")
                 if meses_promo_cfg: _default_configs_ativas_cfg.append("🏷️ Promoção")
                 if st.session_state.get(_chave_reaj_cfg,[]): _default_configs_ativas_cfg.append("💰 Reajuste de Preço")
                 if meses_excluir: _default_configs_ativas_cfg.append("🚫 Excluir Outliers")
+                if _tem_cresc_default: _default_configs_ativas_cfg.append("📈 Crescimento de Patamar")
                 st.session_state[_backup_key_configs_ativas]=st.session_state.get(_chave_configs_ativas_cfg,_default_configs_ativas_cfg)
             st.session_state[_chave_configs_ativas_cfg]=st.session_state[_backup_key_configs_ativas]
 
@@ -9774,11 +14565,12 @@ elif pg=="config_ml":
             _opcoes_configs_ativas,
             key=_chave_configs_ativas_cfg,on_change=_on_change_configs_ativas,
             placeholder="Selecione as configurações",
-            help="Preenchido automaticamente com o que já está configurado (Sazonalidade/Promoção/Reajuste/Outliers) — desmarque se quiser testar sem alguma delas.")
+            help="Preenchido automaticamente com o que já está configurado (Sazonalidade/Promoção/Reajuste/Outliers/Crescimento) — desmarque se quiser testar sem alguma delas.")
             usar_sazonalidade="📅 Sazonalidade" in configs_ativas
             usar_promocao="🏷️ Promoção" in configs_ativas
             usar_reajuste="💰 Reajuste de Preço" in configs_ativas
             usar_outliers="🚫 Excluir Outliers" in configs_ativas
+            usar_crescimento="📈 Crescimento de Patamar" in configs_ativas
             usar_fatores_mercado="🌐 Fatores de Mercado" in configs_ativas
 
             partes_ativas=[]
@@ -9786,7 +14578,38 @@ elif pg=="config_ml":
             if usar_promocao: partes_ativas.append("Promoção")
             if usar_reajuste: partes_ativas.append("Reajuste de Preço")
             if usar_outliers: partes_ativas.append("Exclusão de Outliers")
+            if usar_crescimento: partes_ativas.append("Crescimento de Patamar")
             efeito_testar=" + ".join(partes_ativas) if partes_ativas else "Nenhuma (linha de base)"
+
+            # Diagnóstico — mostra o que está salvo EM DISCO agora, sempre visível
+            # (fora do bloco do botão de propósito — widget dentro de bloco só-no-
+            # clique some assim que qualquer campo dentro dele muda, porque o botão
+            # "deixa de estar clicado" no rerun seguinte, levando tudo junto).
+            _norm_escopo_cfg=lambda v: None if v in (None,"(Todas)","") else v
+            with st.expander("🔧 Diagnóstico — o que está salvo em disco pra reaproveitamento"):
+                _modelos_disco_diag,_escopo_disco_diag=load_modelos_vencedores(st.session_state.cid) if st.session_state.cid else (None,None)
+                if _modelos_disco_diag is None:
+                    st.caption("❌ Nada salvo em disco ainda — nenhuma Validação foi rodada com salvamento, nesta empresa.")
+                else:
+                    st.markdown(f"**Salvo em disco em:** {_escopo_disco_diag.get('salvo_em','(sem data — salvo antes dessa informação existir)') if isinstance(_escopo_disco_diag,dict) else '—'}")
+                    st.markdown(f"**Escopo salvo:** Filial=`{_escopo_disco_diag.get('filial')}` | "
+                        f"Categoria=`{_escopo_disco_diag.get('categoria')}` | Curva=`{_escopo_disco_diag.get('curva')}` | "
+                        f"Corte=`{_escopo_disco_diag.get('corte')}`" if isinstance(_escopo_disco_diag,dict) else "—")
+                    st.markdown(f"**Total de produtos salvos:** {len(_modelos_disco_diag)}")
+                    _bate_categoria_diag=_norm_escopo_cfg(_escopo_disco_diag.get("categoria")) if isinstance(_escopo_disco_diag,dict) else None
+                    _bate_curva_diag=_norm_escopo_cfg(_escopo_disco_diag.get("curva")) if isinstance(_escopo_disco_diag,dict) else None
+                    if _bate_categoria_diag==_norm_escopo_cfg(_categoria_calib_cfg) and _bate_curva_diag==_norm_escopo_cfg(curva_sel_cfg):
+                        st.markdown('<div class="al-s">✅ O escopo salvo em disco BATE com o que você está configurando agora.</div>',unsafe_allow_html=True)
+                    else:
+                        st.markdown('<div class="al-d">❌ O escopo salvo em disco NÃO bate com o que você está configurando agora — '
+                            'se rodar o Cenário, vai competir do zero, não é bug, é escopo diferente mesmo.</div>',unsafe_allow_html=True)
+                _produto_busca_diag=st.text_input("Conferir modelo salvo de um produto específico (cole o código exato)",key="cfgml_diag_produto_busca")
+                if _produto_busca_diag and _modelos_disco_diag:
+                    _modelo_achado_diag=_modelos_disco_diag.get(_produto_busca_diag)
+                    if _modelo_achado_diag:
+                        st.markdown(f"**{_produto_busca_diag}** → modelo salvo: **{_modelo_achado_diag}**")
+                    else:
+                        st.caption(f"\"{_produto_busca_diag}\" não encontrado nos modelos salvos (nome exato? já foi validado nesse escopo?)")
 
             senha_rodar_cenario=st.text_input("Senha master para rodar",type="password",key="senha_rodar_cenario")
             c_run1,c_run2=st.columns(2)
@@ -9795,6 +14618,26 @@ elif pg=="config_ml":
             if rodar_cenario and senha_rodar_cenario!=SENHA_MASTER:
                 st.markdown('<div class="al-d">❌ Senha master incorreta — nada foi executado.</div>',unsafe_allow_html=True)
                 rodar_cenario=False
+
+            with st.expander("🗑️ Limpar resultado acumulado desta Filial"):
+                st.markdown('<div class="al-w">Apaga TODO o resultado do Motor de Previsão já salvo pra <b>essa Filial</b> '
+                    '(todas as Categorias/Curvas acumuladas nela, incluindo rodadas de teste antigas). '
+                    'Não afeta outras filiais, nem a Validação, nem os dados de vendas — só esse resultado acumulado. '
+                    'Use antes de recomeçar do zero, pra não deixar resultado antigo/de teste se misturar no Motor de Compras.</div>',
+                    unsafe_allow_html=True)
+                _confirma_limpar_cfgml=st.checkbox(
+                    f"Confirmo que quero apagar o resultado acumulado da filial \"{st.session_state.get('cfgml_filial_sel_pag','(Todas as filiais)')}\"",
+                    key="cfgml_confirma_limpar")
+                if st.button("🗑️ Limpar resultado acumulado desta Filial",key="cfgml_btn_limpar",disabled=not _confirma_limpar_cfgml):
+                    if senha_rodar_cenario!=SENHA_MASTER:
+                        st.markdown('<div class="al-d">❌ Senha master incorreta (preencha o campo acima) — nada foi apagado.</div>',unsafe_allow_html=True)
+                    elif st.session_state.cid:
+                        _p_limpar_cfgml=path_cfgml_resultado(st.session_state.cid,st.session_state.get("cfgml_filial_sel_pag"))
+                        if os.path.exists(_p_limpar_cfgml): os.remove(_p_limpar_cfgml)
+                        for _k_limpar_all_cfgml in ["cfgml_resultado_atual","cfgml_df_comp_bruto","cfgml_df_escopo_val"]:
+                            if _k_limpar_all_cfgml in st.session_state: del st.session_state[_k_limpar_all_cfgml]
+                        st.markdown('<div class="al-s">✅ Resultado acumulado dessa filial apagado. Rode o Cenário de novo pra recomeçar do zero.</div>',unsafe_allow_html=True)
+                        st.stop()
 
             meses_pico_usar=meses_pico if usar_sazonalidade else []
             meses_promo_usar=meses_promo_cfg if usar_promocao else []
@@ -9853,7 +14696,12 @@ elif pg=="config_ml":
                     n_periodos_prod=df_rodar.dropna(subset=["_data_ml"]).groupby(produto_col_cfg)["_periodo_ml"].nunique()
                     produtos_com_hist=n_periodos_prod[n_periodos_prod>=_min_hist_sync_cfg].index
                     ranking_elegivel=ranking_prog[ranking_prog[produto_col_cfg].isin(produtos_com_hist)]
-                    top_produtos_cfg=ranking_elegivel.head(n_selecionar_cfg)[produto_col_cfg].tolist()
+                    # Gera previsão pra TODOS os elegíveis, não recorta por Top%
+                    # — essa previsão alimenta o Motor de Compras de verdade;
+                    # limitar por faturamento deixaria produtos menores sem
+                    # previsão real nenhuma. Mesma correção já aplicada na
+                    # Auto-Calibração, pelo mesmo motivo.
+                    top_produtos_cfg=ranking_elegivel[produto_col_cfg].tolist()
                     if produtos_excluidos_cfg:
                         top_produtos_cfg=[p for p in top_produtos_cfg if p not in produtos_excluidos_cfg]
                         st.markdown(f'<div class="al-i">🚫 {len(produtos_excluidos_cfg)} produto(s) excluído(s) manualmente — não vão receber previsão, e vão sumir do Motor de Compras.</div>',unsafe_allow_html=True)
@@ -9879,26 +14727,31 @@ elif pg=="config_ml":
                         df_rodar=df_rodar[~df_rodar["_periodo_str_ex"].isin(meses_excluir_usar)]
 
                     # LightGBM (pooled) — treinado UMA VEZ com todos os produtos juntos,
-                    # antes do loop. Pra competir de forma justa com os outros modelos
-                    # (que fazem backtest interno escondendo os últimos meses), preciso
-                    # de duas rodadas: uma escondendo os últimos meses (pra comparar erro
-                    # contra o que realmente foi vendido neles — mesma lógica dos outros
-                    # modelos), outra com o histórico completo (pra gerar a previsão real,
-                    # só usada se ele vencer esse backtest).
+                    # antes do loop, pra gerar a previsão final (histórico completo). Pra
+                    # decidir se ele vence o clássico, é testado em VÁRIAS janelas cegas
+                    # (mesmo esquema multi-janela dos modelos clássicos) — só usado se
+                    # vencer esse backtest.
                     _janela_bt_lgbm_cfg=6
+                    _n_janelas_lgbm_cfg=1
                     _meses_disp_lgbm_cfg=sorted(df_rodar["_periodo_ml"].dropna().unique())
-                    _prev_bt_lgbm_cfg={}; _reais_bt_lgbm_cfg={}
-                    if len(_meses_disp_lgbm_cfg)>_janela_bt_lgbm_cfg+6:
-                        _corte_bt_lgbm_cfg=_meses_disp_lgbm_cfg[-_janela_bt_lgbm_cfg-1]
-                        _df_treino_bt_lgbm_cfg=df_rodar[df_rodar["_periodo_ml"]<=_corte_bt_lgbm_cfg]
-                        _prev_bt_lgbm_cfg=treinar_lightgbm_pooled(
-                            _df_treino_bt_lgbm_cfg,produto_col_cfg,col_data_cfg,metrica_cfg,
-                            top_produtos_cfg,_janela_bt_lgbm_cfg,
-                            meses_pico=meses_pico_usar,meses_promo=meses_promo_usar,reajustes=reajustes_usar)
-                        _corte_ts_bt_lgbm_cfg=_corte_bt_lgbm_cfg.to_timestamp()
-                        for _p_bt in top_produtos_cfg:
-                            _serie_real_bt_p=serie_mensal_produto(df_rodar,produto_col_cfg,_p_bt,col_data_cfg,metrica_cfg)
-                            _reais_bt_lgbm_cfg[_p_bt]=_serie_real_bt_p[_serie_real_bt_p.index>_corte_ts_bt_lgbm_cfg].head(_janela_bt_lgbm_cfg).tolist()
+                    _prev_bt_lgbm_cfg_janelas=[]
+                    _reais_bt_lgbm_cfg_janelas=[]
+                    for _janela_idx_lgbm_cfg in range(_n_janelas_lgbm_cfg):
+                        _offset_lgbm_cfg=_janela_idx_lgbm_cfg*_janela_bt_lgbm_cfg
+                        _prev_j_cfg={}; _reais_j_cfg={}
+                        if len(_meses_disp_lgbm_cfg)>_janela_bt_lgbm_cfg+6+_offset_lgbm_cfg:
+                            _corte_bt_lgbm_cfg_j=_meses_disp_lgbm_cfg[-_janela_bt_lgbm_cfg-1-_offset_lgbm_cfg]
+                            _df_treino_bt_lgbm_cfg_j=df_rodar[df_rodar["_periodo_ml"]<=_corte_bt_lgbm_cfg_j]
+                            _prev_j_cfg=treinar_lightgbm_pooled(
+                                _df_treino_bt_lgbm_cfg_j,produto_col_cfg,col_data_cfg,metrica_cfg,
+                                top_produtos_cfg,_janela_bt_lgbm_cfg,
+                                meses_pico=meses_pico_usar,meses_promo=meses_promo_usar,reajustes=reajustes_usar)
+                            _corte_ts_bt_lgbm_cfg_j=_corte_bt_lgbm_cfg_j.to_timestamp()
+                            for _p_bt in top_produtos_cfg:
+                                _serie_real_bt_p=serie_mensal_produto(df_rodar,produto_col_cfg,_p_bt,col_data_cfg,metrica_cfg)
+                                _reais_j_cfg[_p_bt]=_serie_real_bt_p[_serie_real_bt_p.index>_corte_ts_bt_lgbm_cfg_j].head(_janela_bt_lgbm_cfg).tolist()
+                        _prev_bt_lgbm_cfg_janelas.append(_prev_j_cfg)
+                        _reais_bt_lgbm_cfg_janelas.append(_reais_j_cfg)
                     _prev_final_lgbm_cfg=treinar_lightgbm_pooled(
                         df_rodar,produto_col_cfg,col_data_cfg,metrica_cfg,
                         top_produtos_cfg,meses_prev_cfg,
@@ -9919,9 +14772,12 @@ elif pg=="config_ml":
                     # novo), sem quebrar nada.
                     _escopo_salvo_reuso_cfg=st.session_state.get("mlp_modelos_vencedores_escopo")
                     _modelos_ja_escolhidos_cfg={}
+                    # "None" (Catálogo inteiro aqui) e "(Todas)" (salvo pela Validação)
+                    # significam a mesma coisa — sem isso, a comparação crua nunca batia.
+                    _norm_escopo_cfg=lambda v: None if v in (None,"(Todas)","") else v
                     if (not agrupar_familia and _escopo_salvo_reuso_cfg is not None
-                            and _escopo_salvo_reuso_cfg.get("categoria")==_categoria_calib_cfg
-                            and _escopo_salvo_reuso_cfg.get("curva")==curva_sel_cfg
+                            and _norm_escopo_cfg(_escopo_salvo_reuso_cfg.get("categoria"))==_norm_escopo_cfg(_categoria_calib_cfg)
+                            and _norm_escopo_cfg(_escopo_salvo_reuso_cfg.get("curva"))==_norm_escopo_cfg(curva_sel_cfg)
                             and st.session_state.get("mlp_modelos_vencedores")):
                         _modelos_ja_escolhidos_cfg=st.session_state["mlp_modelos_vencedores"]
                         st.markdown(f'<div class="al-s">✅ Reaproveitando os {len(_modelos_ja_escolhidos_cfg)} modelos já '
@@ -9930,6 +14786,39 @@ elif pg=="config_ml":
                         st.markdown('<div class="al-w">⚠️ Não encontrei modelos validados pra essa Categoria/Curva ainda — '
                             f'rode "🔬 Rodar Validação" primeiro pra reaproveitar (agora vai competir do zero, mais lento).</div>',unsafe_allow_html=True)
 
+                    # Classificação de confiabilidade reaproveitada da última Validação —
+                    # mesma fórmula usada lá (WAPE de verdade: soma erro ÷ soma real,
+                    # Previsto x Real REALIZADO), não uma estimativa de backtest à parte.
+                    # Usada tanto pro filtro pré-execução aqui quanto pra exibição por
+                    # produto depois do Cenário rodar (mesmo dict, reaproveitado abaixo).
+                    _confiab_lookup_cfg={}
+                    _df_val_salvo_cfg=st.session_state.get("mlp_validacao_resultado")
+                    if _df_val_salvo_cfg is not None and {"Produto","Previsto","Real"}.issubset(_df_val_salvo_cfg.columns):
+                        def _wape_por_produto_lookup_cfg(g):
+                            _sr=g["Real"].abs().sum()
+                            return (g["Previsto"]-g["Real"]).abs().sum()/_sr*100 if _sr>0 else None
+                        _wape_por_prod_cfg=_df_val_salvo_cfg.groupby("Produto").apply(_wape_por_produto_lookup_cfg)
+                        for _p_lk,_w_lk in _wape_por_prod_cfg.items():
+                            if _w_lk is None: continue
+                            if _w_lk<=20: _confiab_lookup_cfg[_p_lk]="🟢 Confiável"
+                            elif _w_lk<=30: _confiab_lookup_cfg[_p_lk]="🟡 Moderado"
+                            else: _confiab_lookup_cfg[_p_lk]="🔴 Baixa previsibilidade"
+
+                    # Filtro por confiabilidade — produto sem classificação conhecida
+                    # (nunca validado nesse escopo) continua entrando normalmente — só
+                    # filtra quem a gente REALMENTE sabe que está num grupo desmarcado.
+                    if _confiab_lookup_cfg and len(_grupos_confiab_cfg)<3:
+                        _antes_filtro_confiab_cfg=len(top_produtos_cfg)
+                        top_produtos_cfg=[p for p in top_produtos_cfg
+                            if _confiab_lookup_cfg.get(p) is None or _confiab_lookup_cfg.get(p) in _grupos_confiab_cfg]
+                        _removidos_confiab_cfg=_antes_filtro_confiab_cfg-len(top_produtos_cfg)
+                        if _removidos_confiab_cfg>0:
+                            st.markdown(f'<div class="al-i">🎯 {_removidos_confiab_cfg} produto(s) removido(s) do Cenário pelo '
+                                f'filtro de confiabilidade.</div>',unsafe_allow_html=True)
+
+                    # Ordem do ARIMA/SARIMAX descoberta em execuções anteriores — reaproveitada
+                    # aqui pra não buscar do zero toda vez (ver escolher_modelo_e_prever).
+                    _ordens_cache_cfg=load_ordens_modelo(st.session_state.cid,st.session_state.get("cfgml_filial_sel_pag")) if st.session_state.cid else {}
                     for idx_p,prod_p in enumerate(top_produtos_cfg):
                         texto_pb.caption(f"Processando {idx_p+1} de {len(top_produtos_cfg)}: {str(prod_p)[:50]}")
                         serie_p=serie_mensal_produto(df_rodar,produto_col_cfg,prod_p,col_data_cfg,metrica_cfg)
@@ -9946,47 +14835,61 @@ elif pg=="config_ml":
                         else:
                             modelos_cfg_p=modelos_cfg
 
-                        proj_p=None; melhor_p=None
-                        if prod_p in _modelos_ja_escolhidos_cfg:
-                            melhor_comparativo_p=_modelos_ja_escolhidos_cfg[prod_p]
-                            _rank_p={}
-                        else:
-                            melhor_comparativo_p,_rank_p=melhor_modelo_multi_janela(serie_p,modelos_cfg_p)
+                        _modelo_reaproveitado_p=_modelos_ja_escolhidos_cfg.get(prod_p)
+                        melhor_p,proj_p,_rank_p=escolher_modelo_e_prever(
+                            serie_p,modelos_cfg_p,meses_prev_cfg,prod_p,
+                            _prev_final_lgbm_cfg,_prev_bt_lgbm_cfg_janelas,_reais_bt_lgbm_cfg_janelas,
+                            modelo_reaproveitado=_modelo_reaproveitado_p,ordens_cache=_ordens_cache_cfg)
 
-                        # LightGBM (pooled) entra na disputa aqui — compara o erro dele
-                        # (calculado escondendo os últimos meses, igual os outros) contra
-                        # o clássico. Só assume se realmente errar menos.
-                        if (prod_p in _prev_bt_lgbm_cfg and prod_p in _reais_bt_lgbm_cfg
-                                and prod_p in _prev_final_lgbm_cfg):
-                            _reais_p_lgbm=_reais_bt_lgbm_cfg[prod_p]
-                            _prev_p_lgbm=_prev_bt_lgbm_cfg[prod_p][:len(_reais_p_lgbm)]
-                            if len(_reais_p_lgbm)>0 and len(_prev_p_lgbm)==len(_reais_p_lgbm):
-                                _mse_lgbm_p=float(np.mean([(pv-rv)**2 for pv,rv in zip(_prev_p_lgbm,_reais_p_lgbm)]))
-                                if melhor_comparativo_p in _rank_p:
-                                    _mse_vencedor_atual_p=_rank_p[melhor_comparativo_p]
-                                else:
-                                    # Modelo reaproveitado da Validação -> _rank_p veio vazio.
-                                    # Sem isso, o .get() caía sempre em infinito e o LightGBM
-                                    # vencia por padrão, não importa quem realmente era melhor.
-                                    _mse_vencedor_atual_p,_,_=treinar_backtest(serie_p,melhor_comparativo_p)
-                                if _mse_lgbm_p<_mse_vencedor_atual_p:
-                                    melhor_p="LightGBM (pooled)"
-                                    proj_p=np.array(_prev_final_lgbm_cfg[prod_p][:meses_prev_cfg])
-
-                        if proj_p is None:
-                            melhor_p=melhor_comparativo_p
-                            proj_p=treinar(serie_p,melhor_p,meses_prev_cfg)
-
-                        # Sazonalidade/Promoção aplicadas aqui — em cima de QUALQUER
-                        # modelo que já venceu a disputa (clássico ou LightGBM), mesma
-                        # lógica da Validação Estatística. Sempre conta, quando marcada.
+                        # Sazonalidade/Promoção aplicadas aqui — em cima do modelo que
+                        # venceu a disputa. EXCETO se foi o LightGBM: ele já recebe
+                        # sazonalidade/promoção como feature de entrada no treino e já
+                        # aprende esse efeito sozinho — aplicar de novo por fora seria
+                        # contar o mesmo efeito duas vezes, exagerando a previsão.
                         _datas_fut_p=pd.date_range(serie_p.index[-1],periods=meses_prev_cfg+1,freq="MS")[1:] if proj_p is not None else None
-                        if proj_p is not None and (_indices_pico_cfg or _indices_promo_cfg):
+                        if proj_p is not None and (_indices_pico_cfg or _indices_promo_cfg) and melhor_p!="LightGBM (pooled)":
                             proj_p=np.array(aplicar_indice_sazonal(
                                 proj_p.tolist() if hasattr(proj_p,"tolist") else list(proj_p),
                                 _datas_fut_p,_indices_pico_cfg,_indices_promo_cfg,
                                 intensidade_pico=intensidade_pico_cfg/100,intensidade_promo=intensidade_promo_cfg/100))
-                        _fator_cresc_cfg=st.session_state.get(_chave_cresc_cfg)
+                        # PRIORIDADE 1: classificação já calculada na Validação (WAPE
+                        # real, Previsto x Real que já aconteceu de verdade) — exatamente
+                        # a mesma que aparece na tela de Validação Estatística pra esse
+                        # produto, sem recalcular com outra fórmula.
+                        # PRIORIDADE 2 (fallback): produto sem Validação recente pra
+                        # reaproveitar — estima pelo WAPE do backtest do modelo vencedor,
+                        # caindo pro CV do histórico quando nem isso tem.
+                        # Calculada ANTES do Crescimento de propósito — ele agora é por
+                        # FAIXA, precisa saber a faixa do produto antes de decidir o fator.
+                        if prod_p in _confiab_lookup_cfg:
+                            _confiab_p=_confiab_lookup_cfg[prod_p]
+                        else:
+                            _wape_vencedor_p=_rank_p.get(melhor_p) if _rank_p else None
+                            _cv_p=float(serie_p.std()/serie_p.mean()) if len(serie_p)>0 and serie_p.mean()>0 else None
+                            if _wape_vencedor_p is not None:
+                                if _wape_vencedor_p<=0.20: _confiab_p="🟢 Confiável"
+                                elif _wape_vencedor_p<=0.30: _confiab_p="🟡 Moderado"
+                                else: _confiab_p="🔴 Baixa previsibilidade"
+                            elif _cv_p is not None and _cv_p>1.0:
+                                _confiab_p="🔴 Baixa previsibilidade"
+                            else:
+                                _confiab_p="—"
+
+                        # Crescimento de Patamar POR FAIXA — mesmo esquema do Viés: dict
+                        # {"🟢 Confiável":fator_ou_None,...} em vez de um fator único.
+                        # Sincronizado com a Validação (mesma chave _chave_cresc_cfg).
+                        # Só aplica se "📈 Crescimento de Patamar" estiver marcado em
+                        # "Configurações ativas" — mesmo comportamento liga/desliga dos
+                        # outros 4 itens (Sazonalidade/Promoção/Reajuste/Outliers).
+                        _cresc_por_tier_cfg=st.session_state.get(_chave_cresc_cfg) if usar_crescimento else None
+                        _fator_cresc_cfg=_cresc_por_tier_cfg.get(_confiab_p) if isinstance(_cresc_por_tier_cfg,dict) else None
+                        # Exceção POR PRODUTO (identificada via teste ADF na Validação) —
+                        # mesma prioridade: SEMPRE vence a faixa, aqui também, não só
+                        # na tela de Validação. Sem isso, a previsão REAL usada pelo
+                        # Motor de Compras nunca refletiria o ajuste aplicado.
+                        _cresc_excecao_produto_cfg=st.session_state.get(f"cfgml_crescimento_por_produto{_sufixo_calib_cfg}",{})
+                        if prod_p in _cresc_excecao_produto_cfg:
+                            _fator_cresc_cfg=_cresc_excecao_produto_cfg[prod_p]
                         if proj_p is not None and _fator_cresc_cfg:
                             _meses_cresc_cfg_ativo=st.session_state.get(_chave_cresc_meses_cfg,[])
                             _meses_nomes_cresc_cfg=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
@@ -9999,11 +14902,14 @@ elif pg=="config_ml":
                         if proj_p is not None:
                             proj_lista_p=proj_p.tolist() if hasattr(proj_p,"tolist") else list(proj_p)
                             proj_lista_p=[max(0.0,v) for v in proj_lista_p]  # venda nunca pode ser negativa
-                            # Viés — mesmo fator aplicado (ou não) em "Rodar Validação",
-                            # pra essa Categoria/Curva. Antes, essa correção só existia
-                            # lá, nunca chegava na previsão real usada pelo Motor de Compras.
+                            # Viés POR FAIXA — mesmo dict {"🟢 Confiável":fator,...} aplicado
+                            # (ou não) em "Rodar Validação", pra essa Categoria/Curva. Usa a
+                            # faixa de confiabilidade DESSE produto (_confiab_p, já calculada
+                            # acima) pra decidir qual fator usar — nunca um fator genérico pra
+                            # todo mundo, mesmo esquema exato da Validação.
                             _chave_vies_cfg=f"cfgml_vies_pooled{_sufixo_calib_cfg}"
-                            _fator_vies_cfg=st.session_state.get(_chave_vies_cfg)
+                            _vies_por_tier_cfg=st.session_state.get(_chave_vies_cfg)
+                            _fator_vies_cfg=_vies_por_tier_cfg.get(_confiab_p) if isinstance(_vies_por_tier_cfg,dict) else None
                             if _fator_vies_cfg:
                                 proj_lista_p=[max(0.0,v*_fator_vies_cfg) for v in proj_lista_p]
                             # Aplicar fatores condicionantes de mercado
@@ -10026,14 +14932,19 @@ elif pg=="config_ml":
                             linhas_cfg.append({produto_col_cfg:prod_p,"n_periodos":len(serie_p),
                                 "modelo_escolhido":melhor_p,"ultimo_real":ultimo_p,
                                 "previsao":[round(v,2) for v in proj_lista_p],
-                                "var_pct_proximo_mes":round(var_p,1),"status":"ok","rank":_rank_p})
+                                "var_pct_proximo_mes":round(var_p,1),"status":"ok","rank":_rank_p,
+                                "confiabilidade":_confiab_p})
                         else:
                             linhas_cfg.append({produto_col_cfg:prod_p,"n_periodos":len(serie_p),
                                 "modelo_escolhido":melhor_p,"ultimo_real":ultimo_p,
-                                "previsao":None,"var_pct_proximo_mes":None,"status":"falhou ao treinar","rank":_rank_p})
+                                "previsao":None,"var_pct_proximo_mes":None,"status":"falhou ao treinar","rank":_rank_p,
+                                "confiabilidade":_confiab_p})
                         if len(top_produtos_cfg)>0:
                             pb_cfg.progress((idx_p+1)/len(top_produtos_cfg))
                     pb_cfg.empty(); texto_pb.empty()
+
+                    if st.session_state.cid:
+                        save_ordens_modelo(st.session_state.cid,_ordens_cache_cfg,st.session_state.get("cfgml_filial_sel_pag"))
                     resultado_cenario=pd.DataFrame(linhas_cfg)
                     st.session_state["cfgml_resultado_atual"]=resultado_cenario
 
@@ -10103,7 +15014,7 @@ elif pg=="config_ml":
             produto_col_cfg_r=st.session_state.get("cfgml_produto_col_usado", col_prod if col_prod else col_cat)
             metrica_cfg_r=next((c for c in cols_v if c.strip().lower() in ["vlr.total","vlr total","valor total","valor"]),None)
             data_col_cfg_r=col_data_cfg
-            df_v=st.session_state.get("cfgml_df_base_usado", df_v)
+
 
             ok_mask_show=resultado_cfg["status"]=="ok"
             n_ok_cfg=int(ok_mask_show.sum())
@@ -10112,13 +15023,33 @@ elif pg=="config_ml":
             mc(mc_cols_cfg[1],"Previsões geradas",str(n_ok_cfg),"g")
             mc(mc_cols_cfg[2],"Sem dados suficientes",str(len(resultado_cfg)-n_ok_cfg),"y")
 
+            # Ajuste de Consenso carregado AQUI, uma vez só — reaproveitado tanto pra
+            # marcar a tabela abaixo quanto pra seção "✏️ Ajuste de Consenso", mais
+            # adiante nesta mesma aba (que usa essa mesma variável, sem recarregar).
+            _filial_consenso_cfg=st.session_state.get("cfgml_filial_sel_pag")
+            _consenso_atual_cfg=load_ajuste_consenso(st.session_state.cid,_filial_consenso_cfg) if st.session_state.cid else None
+            _consenso_lookup_tabela={}
+            if _consenso_atual_cfg is not None and not _consenso_atual_cfg.empty:
+                for _,_lc in _consenso_atual_cfg.iterrows():
+                    try:
+                        _consenso_lookup_tabela[str(_lc["_ProdutoUnico"])]=json.loads(_lc["previsao_ajustada"])
+                    except Exception:
+                        pass
+
             tabela_cfg_show=resultado_cfg.copy()
             tabela_cfg_show["ultimo_real"]=tabela_cfg_show["ultimo_real"].apply(lambda v: fmt(v) if pd.notna(v) else "—")
             tabela_cfg_show["previsao_proximo_mes"]=tabela_cfg_show["previsao"].apply(
             lambda p: fmt(p[0]) if isinstance(p,list) and len(p)>0 else "—")
+            _chave_tabela_cfg=tabela_cfg_show["_ProdutoUnico"].astype(str) if "_ProdutoUnico" in tabela_cfg_show.columns else tabela_cfg_show[produto_col_cfg_r].astype(str)
+            tabela_cfg_show["consenso"]=_chave_tabela_cfg.apply(lambda p: "🔧 Ajustado" if p in _consenso_lookup_tabela else "—")
+            tabela_cfg_show["previsao_ajustada_mes"]=_chave_tabela_cfg.apply(
+                lambda p: fmt(_consenso_lookup_tabela[p][0]) if p in _consenso_lookup_tabela and len(_consenso_lookup_tabela[p])>0 else "—")
             with st.expander(f"📋 Ver tabela completa ({len(tabela_cfg_show)} produtos)"):
+                if _consenso_lookup_tabela:
+                    st.caption(f"🔧 {len(_consenso_lookup_tabela)} produto(s) com Ajuste de Consenso ativo — "
+                        "coluna \"Previsão ajustada\" mostra o valor que o Motor de Compras está usando pra eles.")
                 st.dataframe(tabela_cfg_show[[produto_col_cfg_r,"n_periodos","modelo_escolhido","ultimo_real",
-                "previsao_proximo_mes","var_pct_proximo_mes","status"]],use_container_width=True,height=320)
+                "previsao_proximo_mes","consenso","previsao_ajustada_mes","var_pct_proximo_mes","status"]],use_container_width=True,height=320)
 
             csv_cfg=resultado_cfg.to_csv(sep=";",decimal=",",index=False).encode("utf-8-sig")
             df_fora_previsao=st.session_state.get("cfgml_produtos_fora_previsao")
@@ -10157,6 +15088,82 @@ elif pg=="config_ml":
                 c_exp_cfg2.download_button("📝 Exportar para edição (1 linha por mês)",csv_edit_cfg,
                 file_name="cenario_ml_editavel.csv",use_container_width=True)
 
+            # ═══ Ajuste de Consenso ═══
+            # Camada OPCIONAL por cima do resultado do modelo, já salvo em disco.
+            # Nunca sobrescreve resultado_cfg nem mexe no cálculo do Cenário —
+            # só lê o que já existe e grava um arquivo à parte (cfgml_ajuste_consenso),
+            # upsert por _ProdutoUnico. Se nunca for usada, nada muda pra ninguém.
+            sec("✏️ Ajuste de Consenso — julgamento de negócio sobre a previsão")
+            st.markdown('<div class="al-i">Sobreponha a previsão do modelo quando você souber de algo que ele não '
+                'sabe (contrato novo, cliente perdido, evento pontual). O valor do modelo nunca é apagado — fica '
+                'guardado ao lado do ajustado, pra poder comparar depois qual dos dois acertou mais quando o mês '
+                'virar real.</div>',unsafe_allow_html=True)
+
+            _filial_consenso_cfg=st.session_state.get("cfgml_filial_sel_pag")
+            _consenso_atual_cfg=load_ajuste_consenso(st.session_state.cid,_filial_consenso_cfg) if st.session_state.cid else None
+
+            with st.expander("➕ Adicionar / editar um ajuste"):
+                _produtos_disp_consenso=resultado_cfg[ok_mask_show][produto_col_cfg_r].astype(str).tolist()
+                _produtos_chave_consenso=resultado_cfg[ok_mask_show]["_ProdutoUnico"].astype(str).tolist() if "_ProdutoUnico" in resultado_cfg.columns else _produtos_disp_consenso
+                if _produtos_disp_consenso:
+                    _prod_sel_consenso=st.selectbox("Produto",_produtos_disp_consenso,key="consenso_prod_sel")
+                    _idx_prod_consenso=_produtos_disp_consenso.index(_prod_sel_consenso)
+                    _chave_prod_consenso=_produtos_chave_consenso[_idx_prod_consenso]
+                    _linha_modelo_consenso=resultado_cfg[ok_mask_show].iloc[_idx_prod_consenso]
+                    _prev_modelo_consenso=_linha_modelo_consenso["previsao"] or []
+                    if _prev_modelo_consenso:
+                        st.caption(f"Previsão do modelo — próximo mês: {fmt(_prev_modelo_consenso[0])} "
+                            f"(modelo: {_linha_modelo_consenso['modelo_escolhido']})")
+                        _pct_consenso=st.slider("Ajuste (%)",-80,200,0,step=5,key="consenso_pct",
+                            help="Positivo = aumenta a previsão em todos os meses do horizonte; negativo = reduz.")
+                        _prev_ajustada_consenso=[round(v*(1+_pct_consenso/100),2) for v in _prev_modelo_consenso]
+                        st.caption(f"Previsão ajustada — próximo mês: {fmt(_prev_ajustada_consenso[0])}")
+                        _justif_consenso=st.text_area("Justificativa (obrigatória)",key="consenso_justif",
+                            placeholder="Ex: contrato novo fechado com cliente Y, início em outubro")
+                        _usuario_consenso=st.text_input("Seu nome",key="consenso_usuario")
+                        senha_consenso=st.text_input("Senha master para salvar",type="password",key="consenso_senha")
+                        if st.button("💾 Salvar Ajuste de Consenso",key="consenso_salvar"):
+                            if senha_consenso!=SENHA_MASTER:
+                                st.markdown('<div class="al-d">❌ Senha incorreta.</div>',unsafe_allow_html=True)
+                            elif _pct_consenso==0:
+                                st.markdown('<div class="al-w">⚠️ Ajuste em 0% não altera nada — nada foi salvo.</div>',unsafe_allow_html=True)
+                            elif not _justif_consenso.strip():
+                                st.markdown('<div class="al-w">⚠️ Justificativa obrigatória.</div>',unsafe_allow_html=True)
+                            elif not _usuario_consenso.strip():
+                                st.markdown('<div class="al-w">⚠️ Informe seu nome.</div>',unsafe_allow_html=True)
+                            else:
+                                _df_novo_consenso=pd.DataFrame([{
+                                    "_ProdutoUnico":_chave_prod_consenso,
+                                    "produto_label":_prod_sel_consenso,
+                                    "previsao_modelo":json.dumps(_prev_modelo_consenso),
+                                    "previsao_ajustada":json.dumps(_prev_ajustada_consenso),
+                                    "pct_ajuste":_pct_consenso,
+                                    "justificativa":_justif_consenso.strip(),
+                                    "usuario":_usuario_consenso.strip(),
+                                    "data_ajuste":datetime.now().strftime("%Y-%m-%d %H:%M"),
+                                }])
+                                save_ajuste_consenso(st.session_state.cid,_df_novo_consenso,_filial_consenso_cfg)
+                                addlog(f"Ajuste de Consenso: {_prod_sel_consenso} ({_pct_consenso:+}%) — {_justif_consenso.strip()[:60]}")
+                                st.markdown('<div class="al-s">✅ Ajuste salvo. O Motor de Compras passa a usar a previsão ajustada pra esse produto.</div>',unsafe_allow_html=True)
+                                st.rerun()
+                else:
+                    st.caption("Nenhum produto com previsão disponível nesse Cenário ainda.")
+
+            if _consenso_atual_cfg is not None and not _consenso_atual_cfg.empty:
+                st.markdown(f"**{len(_consenso_atual_cfg)} ajuste(s) ativo(s) nesta filial:**")
+                for _idx_c,_linha_c in _consenso_atual_cfg.iterrows():
+                    _c1,_c2=st.columns([5,1])
+                    _pct_c=_linha_c["pct_ajuste"]
+                    _ico_c="📈" if _pct_c>0 else "📉"
+                    _c1.markdown(f'<div class="al-i" style="margin:2px 0">{_ico_c} <b>{_linha_c.get("produto_label",_linha_c["_ProdutoUnico"])}</b> '
+                        f'— {_pct_c:+}% — {_linha_c["justificativa"]} '
+                        f'<span style="color:#888">({_linha_c["usuario"]}, {_linha_c["data_ajuste"]})</span></div>',unsafe_allow_html=True)
+                    if _c2.button("🗑",key=f"consenso_rm_{_idx_c}"):
+                        remover_ajuste_consenso(st.session_state.cid,_linha_c["_ProdutoUnico"],_filial_consenso_cfg)
+                        st.rerun()
+            else:
+                st.caption("Nenhum ajuste de consenso cadastrado ainda nesta filial.")
+
             # Um gráfico separado por produto (mais fácil de examinar individualmente)
             sec("📈 Evolução — Histórico + Previsão por Produto")
             resultado_ok_cfg=resultado_cfg[ok_mask_show].reset_index(drop=True)
@@ -10167,7 +15174,12 @@ elif pg=="config_ml":
             # "Rodar Validação" já mediu. Usado tanto pra desenhar a camada "Previsto
             # (validação)" sobre o histórico quanto pra ordenar os produtos do menor
             # pro maior erro (em vez de alfabético/aleatório).
-            _escopo_chart_cfg=f"{st.session_state.get('cfgml_filial_sel_pag','')}__{_categoria_calib_cfg}__{curva_sel_cfg}"
+            # "None" (Catálogo inteiro aqui) precisa virar o mesmo texto "(Todas)"
+            # que a Validação usa — sem isso, o f-string jogava a palavra "None"
+            # dentro do nome do escopo, que nunca batia com o arquivo salvo lá.
+            _categoria_escopo_txt_cfg=_categoria_calib_cfg if _categoria_calib_cfg not in (None,"") else "(Todas)"
+            _filial_escopo_txt_cfg=st.session_state.get('cfgml_filial_sel_pag') or "(Todas as filiais)"
+            _escopo_chart_cfg=f"{_filial_escopo_txt_cfg}__{_categoria_escopo_txt_cfg}__{curva_sel_cfg}"
             _df_val_chart_cfg=load_ml_produtos_validacao(st.session_state.cid,_escopo_chart_cfg) if st.session_state.cid else None
             # Sem fallback pra outra filial aqui de propósito: "Histórico" (branco)
             # sempre reflete a filial ativa no Motor de Previsão (cfgml_filial_sel_pag).
@@ -10212,33 +15224,55 @@ elif pg=="config_ml":
                     mc(_c_wape_chart,"WAPE ponderado (produtos com validação conhecida)",f"{_wape_pond_geral_chart:.1f}%",_cor_wape_chart)
             else:
                 st.markdown('<div class="al-w">⚠️ Não encontrei validação às cegas pra essa Filial/Categoria/Curva ainda — '
-                    'rode "🔬 Rodar Validação" primeiro pra ordenar os gráficos por erro e ver a camada "Previsto (validação)". '
-                    'Por enquanto, mostrando em ordem alfabética.</div>',unsafe_allow_html=True)
+                    'rode "🔬 Rodar Validação" primeiro pra ver os gráficos aqui.</div>',unsafe_allow_html=True)
+                st.caption(f"Chave procurada aqui: '{_escopo_chart_cfg}'")
+                _arquivos_validacao_salvos=[f for f in os.listdir(PASTA) if f.startswith(f"{gid(st.session_state.cid)}_ml_produtos_validacao__")] if st.session_state.cid else []
+                if _arquivos_validacao_salvos:
+                    st.caption(f"Validações salvas encontradas nessa empresa: {', '.join(_arquivos_validacao_salvos)}")
+                else:
+                    st.caption("Nenhuma validação salva encontrada em disco pra essa empresa — a Validação pode não ter sido salva de verdade ainda.")
+
+            # Só os produtos que entraram na validação às cegas — não os 85 da previsão
+            # inteira. Sem isso, os que não tinham validação só eram empurrados pro
+            # final (na_position="last"); agora somem da lista de verdade.
+            if _wape_por_produto_chart:
+                resultado_ok_cfg["_wape_ordenar"]=resultado_ok_cfg[produto_col_cfg_r].map(_wape_por_produto_chart)
+                resultado_ok_cfg=resultado_ok_cfg[resultado_ok_cfg["_wape_ordenar"].notna()].copy()
+                resultado_ok_cfg=resultado_ok_cfg.sort_values("_wape_ordenar",ascending=True).reset_index(drop=True)
+            else:
+                resultado_ok_cfg=resultado_ok_cfg.iloc[0:0].reset_index(drop=True)
+
             with st.expander("⚙️ Configurar exibição do gráfico"):
                 mostrar_media_movel=st.checkbox("📉 Mostrar linha de média móvel (3 meses) por cima do histórico",
                 value=True,key="cfgml_media_movel")
                 fator_escala_cfg=st.slider("📏 Alongar escala do gráfico (mais = linha mais suave/achatada)",
                 0.5,3.0,3.0,step=0.25,key="cfgml_fator_escala")
-                max_mostrar_cfg=min(300,len(resultado_ok_cfg)) if len(resultado_ok_cfg)>0 else 1
-                if max_mostrar_cfg<=1:
+                max_mostrar_cfg=min(300,len(resultado_ok_cfg))
+                if len(resultado_ok_cfg)==0:
+                    n_mostrar_cfg=0
+                    st.caption("Nenhum produto validado disponível pra mostrar ainda.")
+                elif max_mostrar_cfg<=1:
                     n_mostrar_cfg=max_mostrar_cfg
                     st.caption(f"Mostrando o único produto disponível.")
                 else:
                     n_mostrar_cfg=st.slider("Quantos produtos mostrar",1,max_mostrar_cfg,
                     min(6,max_mostrar_cfg),key="cfgml_n_mostrar")
-
-            if _wape_por_produto_chart:
-                resultado_ok_cfg["_wape_ordenar"]=resultado_ok_cfg[produto_col_cfg_r].map(_wape_por_produto_chart)
-                resultado_ok_cfg=resultado_ok_cfg.sort_values("_wape_ordenar",na_position="last").reset_index(drop=True)
-            else:
-                resultado_ok_cfg=resultado_ok_cfg.sort_values(produto_col_cfg_r).reset_index(drop=True)
             _corte_atual_grafico=st.session_state.get("mlp_data_corte")
             _corte_ts_grafico=pd.Period(_corte_atual_grafico).to_timestamp() if _corte_atual_grafico else None
+            _produtos_sem_dado_cfg=0
             for i_c,(_,linha_c) in enumerate(resultado_ok_cfg.head(n_mostrar_cfg).iterrows()):
                 prod_c=linha_c[produto_col_cfg_r]
                 proj_c=list(linha_c["previsao"]) if linha_c["previsao"] is not None else []
                 modelo_c=linha_c["modelo_escolhido"]
                 serie_c=serie_mensal_produto(df_v,produto_col_cfg_r,prod_c,data_col_cfg_r,metrica_cfg_r)
+                if serie_c.empty:
+                    # Produto está no resultado acumulado (linha_c) mas não tem
+                    # nenhuma venda no df_v desse escopo/filial atual — sinal de
+                    # resultado acumulado de OUTRA filial/categoria (upsert antigo,
+                    # de antes do botão de limpar existir). Pula em vez de travar
+                    # a página inteira com IndexError.
+                    _produtos_sem_dado_cfg+=1
+                    continue
                 x_h_c=[str(p) for p in serie_c.index]
                 x_p_c=[str(serie_c.index[-1]+pd.DateOffset(months=i2+1)) for i2 in range(len(proj_c))]
 
@@ -10249,6 +15283,15 @@ elif pg=="config_ml":
                 _val_prod_c=pd.DataFrame()
                 if _df_val_chart_cfg is not None and "Produto" in _df_val_chart_cfg.columns:
                     _val_prod_c=_df_val_chart_cfg[_df_val_chart_cfg["Produto"]==prod_c].sort_values("Mes")
+                    if not _val_prod_c.empty:
+                        _val_prod_c=_val_prod_c[_val_prod_c["Mes"].isin(x_h_c)]
+                    # Nunca mostrar um mês de validação que não existe no histórico ATUAL desse
+                    # produto (serie_c) — a Validação Estatística pode ter sido rodada em outro
+                    # momento/recorte, e um mês "Real" salvo ali pode não existir mais na base de
+                    # vendas de hoje. Sem esse filtro, esse mês fantasma aparece no gráfico como
+                    # se fosse histórico de verdade.
+                    if not _val_prod_c.empty:
+                        _val_prod_c=_val_prod_c[_val_prod_c["Mes"].isin(x_h_c)]
 
                 if not _val_prod_c.empty:
                     _x_val_meses_c=_val_prod_c["Mes"].tolist()
@@ -10308,11 +15351,42 @@ elif pg=="config_ml":
 
             if len(resultado_ok_cfg)>n_mostrar_cfg:
                 st.caption(f"Mostrando {n_mostrar_cfg} de {len(resultado_ok_cfg)} produtos com previsão — ajuste o slider acima ou use o CSV para ver todos.")
+            if _produtos_sem_dado_cfg>0:
+                st.markdown(f'<div class="al-w">⚠️ {_produtos_sem_dado_cfg} produto(s) do resultado acumulado não têm '
+                    f'venda nessa Filial/Categoria/Curva e foram ignorados no gráfico — provavelmente sobra de uma '
+                    f'rodada antiga de outro escopo. Use "🗑️ Limpar resultado acumulado desta Filial" (na aba Configurar) '
+                    f'e rode o Cenário de novo pra limpar isso.</div>',unsafe_allow_html=True)
 
         
 
 elif pg=="compras":
     hdr("📦 Gestão de Compras","Estoque, lead time e giro — recomendação de compra por produto, cruzando demanda prevista")
+    # Restaura direto AQUI, na própria página — não depende mais do fluxo de
+    # login/seleção de cliente (pre_carregar_cliente) ter rodado certo antes.
+    # Roda 1x por sessão, sempre que ENTRA nessa página, garantindo que o
+    # valor salvo em disco sempre vence, não importa como chegou até aqui.
+    if "_compras_config_restaurada_direto" not in st.session_state and st.session_state.cid:
+        _cfg_compras_direto=load_config_compras(st.session_state.cid)
+        if _cfg_compras_direto:
+            for _k_direto,_v_direto in _cfg_compras_direto.items():
+                if _v_direto is not None:
+                    st.session_state[_k_direto]=_v_direto
+        # Restaura também os RESULTADOS (Validação Econômica e Fator de
+        # Risco) — mesmo padrão, mesmo bloco, sem depender de mais nada.
+        if "compras_econ_resultado" not in st.session_state:
+            _df_econ_direto=load_resultado_econ_compras(st.session_state.cid)
+            if _df_econ_direto is not None:
+                st.session_state["compras_econ_resultado"]=_df_econ_direto
+        if "compras_fr_resultado" not in st.session_state:
+            _df_fr_direto=load_resultado_fr_compras(st.session_state.cid)
+            if _df_fr_direto is not None:
+                st.session_state["compras_fr_resultado"]=_df_fr_direto
+        if "compras_sugestao_resultado" not in st.session_state:
+            _df_sugestao_direto=load_resultado_sugestao_compras(st.session_state.cid)
+            if _df_sugestao_direto is not None:
+                st.session_state["compras_sugestao_resultado"]=_df_sugestao_direto
+        st.session_state["_compras_config_restaurada_direto"]=True
+
     # Seletor de Filial — fica visível acima das abas, disponível tanto em "Resultado" quanto em "Configurar"
     _df_est_top_cp=get_estoque_compras()
     _df_v_top_cp=get_vendas_df()
@@ -10605,6 +15679,12 @@ elif pg=="compras":
 
         with st.spinner("Classificando produtos..."):
             df_v_calc=df_v_compras.copy()
+            # Respeita o mesmo escopo (Categoria/Produto específico/Catálogo
+            # inteiro) já selecionado mais acima — sem isso, a classificação
+            # (e a Sugestão por Curva) sempre usava o catálogo inteiro da
+            # Filial, ignorando o filtro de Categoria configurado.
+            if produtos_no_escopo is not None:
+                df_v_calc=df_v_calc[df_v_calc[col_prod_v].astype(str).isin(produtos_no_escopo)]
             df_v_calc[col_val_v]=parse_valor_brl(df_v_calc[col_val_v])
             ranking_abc=pareto_analysis(df_v_calc,col_prod_v,col_val_v)
             ranking_abc=ranking_abc.rename(columns={col_prod_v:"Produto"})
@@ -10675,6 +15755,116 @@ elif pg=="compras":
         mc(c_cl4,"Classe D",str(n_d),"y")
         mc(c_cl5,"Classe E",str(n_e),"r")
 
+        sec("💡 Sugestão de Dias Mínimo/Máximo por Curva (baseado em dado real)")
+        st.markdown('<div class="al-i">Calcula uma sugestão de partida pra cada Curva, com base no giro real de '
+            'venda — não é chute nem regra igual pra todos. Você continua editando livremente os campos abaixo; '
+            'isso é só um ponto de partida melhor calibrado, nada é aplicado automaticamente.</div>',unsafe_allow_html=True)
+        with st.expander("📐 Como essa sugestão é calculada"):
+            _escopo_txt_sug=_escopo_compras_texto if "Catálogo" not in escopo_tipo_compras else "todo o catálogo"
+            _base_comparacao_sug=f"do escopo selecionado ({_escopo_txt_sug})" if produtos_no_escopo is not None else "de todo o catálogo (Catálogo inteiro selecionado)"
+            st.markdown(f'<div class="al-i">'
+                f'<b>1) Giro relativo</b> — quanto cada Curva vende, em média por produto, comparado à média '
+                f'{_base_comparacao_sug}. Curva A gira mais rápido que essa média; Curva E gira mais devagar. Isso '
+                f'respeita o mesmo escopo (Categoria/Produto/Catálogo) que você tem selecionado acima — muda a '
+                f'referência se você trocar o escopo.<br><br>'
+                '<b>2) Dias Mínimo</b> = 30 dias (referência de 1 mês, pra quem gira na média) ÷ Giro relativo da '
+                'Curva. Quem gira mais rápido precisa de MENOS dias parado; quem gira mais devagar precisa de MAIS '
+                'dias, pra não zerar entre uma venda e outra.<br><br>'
+                '<b>3) Dias Máximo</b> = Dias Mínimo × Fator de Risco da Curva — o mesmo cálculo já usado no ajuste '
+                'por produto (erro real do modelo no backtest, olhando o pior cenário provável de cada Curva).<br><br>'
+                'Tudo calculado em cima do histórico de venda real da sua base — não é fórmula genérica de mercado, '
+                'é calibrado pro seu negócio especificamente.'
+                '</div>',unsafe_allow_html=True)
+        if st.button("💡 Calcular Sugestão por Curva",key="compras_sugestao_btn"):
+            _modelos_sugestao=st.session_state.get("mlp_modelos_vencedores",{})
+            _classes_sug=["A","B","C","D","E"]
+
+            # PASSADA 1 — coleta CV, Fator e Demanda Média de cada Curva, e
+            # ACUMULA a demanda média de TODO o catálogo junto (pra servir de
+            # referência de "giro médio geral" na Passada 2). CV usa a Curva
+            # inteira (é barato); Fator de Risco usa amostra de até 150
+            # produtos (é caro — treina modelo por produto).
+            _dados_por_classe_sug={}
+            _todas_demandas_medias_global=[]
+            pb_sug=st.progress(0)
+            _ultima_data_sug=pd.to_datetime(df_v_calc[col_data_v],errors="coerce").max()
+            _corte_sug=str(pd.Period(_ultima_data_sug,freq="M"))
+            for _idx_sug,_classe_sug in enumerate(_classes_sug):
+                pb_sug.progress((_idx_sug+1)/len(_classes_sug),text=f"Calculando Classe {_classe_sug}")
+                _produtos_classe_sug=df_class[df_class["classe_abc"]==_classe_sug]["Produto"].tolist()
+                if not _produtos_classe_sug:
+                    continue
+
+                _cvs_sug=[]; _demandas_medias_sug=[]
+                for _prod_sug in _produtos_classe_sug:
+                    _serie_sug=serie_mensal_produto(df_v_calc,col_prod_v,_prod_sug,col_data_v,col_val_v)
+                    if len(_serie_sug)>=3 and _serie_sug.mean()>0:
+                        _cvs_sug.append(float(_serie_sug.std()/_serie_sug.mean()))
+                        _demandas_medias_sug.append(float(_serie_sug.mean()))
+                        _todas_demandas_medias_global.append(float(_serie_sug.mean()))
+
+                _amostra_sug=_produtos_classe_sug[:150]
+                _fatores_sug=[]
+                for _prod_sug in _amostra_sug:
+                    _serie_sug=serie_mensal_produto(df_v_calc,col_prod_v,_prod_sug,col_data_v,col_val_v)
+                    _modelo_sug=_modelos_sugestao.get(_prod_sug)
+                    if _modelo_sug and len(_serie_sug)>=9:
+                        _fator_sug=calcular_fator_risco_produto(_serie_sug,_modelo_sug,_corte_sug)
+                        if _fator_sug is not None:
+                            _fatores_sug.append(_fator_sug)
+
+                _cv_p75_sug=float(np.percentile(_cvs_sug,75)) if _cvs_sug else 0.3
+                _fator_p75_sug=float(np.percentile(_fatores_sug,75)) if _fatores_sug else 1.0
+                _giro_mediano_sug=float(np.median(_demandas_medias_sug)) if _demandas_medias_sug else 0.0
+
+                _cv_min_debug=f"{min(_cvs_sug)*100:.0f}%" if _cvs_sug else "—"
+                _cv_max_debug=f"{max(_cvs_sug)*100:.0f}%" if _cvs_sug else "—"
+                _dados_por_classe_sug[_classe_sug]={"Produtos analisados":len(_produtos_classe_sug),
+                    "cv_p75":_cv_p75_sug,"fator_p75":_fator_p75_sug,"giro_mediano":_giro_mediano_sug,
+                    "amostra_debug":", ".join(_amostra_sug[:5]),
+                    "cv_range_debug":f"{_cv_min_debug} a {_cv_max_debug} (de {len(_cvs_sug)} produtos com CV calculável)"}
+            pb_sug.empty()
+
+            # PASSADA 2 — agora que sei a demanda média de TODO o catálogo,
+            # calculo o "giro relativo" de cada Curva contra essa referência
+            # geral, e SÓ ENTÃO monto Dias Mínimo/Máximo. Fórmula real de
+            # gestão de estoque: dias de cobertura são INVERSAMENTE
+            # proporcionais ao giro — quem vende rápido precisa de poucos
+            # dias parado; quem vende devagar precisa de muitos.
+            _giro_medio_geral_sug=float(np.median(_todas_demandas_medias_global)) if _todas_demandas_medias_global else 1.0
+            _dias_base_sug=30  # referência: 1 mês de cobertura pra quem gira na média do catálogo
+
+            _linhas_sugestao=[]
+            for _classe_sug,_d in _dados_por_classe_sug.items():
+                _giro_relativo_sug=(_d["giro_mediano"]/_giro_medio_geral_sug) if _giro_medio_geral_sug>0 else 1.0
+                _giro_relativo_sug=max(0.05,_giro_relativo_sug)  # evita divisão por quase-zero
+                _dias_min_sug=round(_dias_base_sug/_giro_relativo_sug)
+                _dias_min_sug=max(3,min(180,_dias_min_sug))  # limites de bom senso
+                _dias_max_sug=round(_dias_min_sug*_d["fator_p75"])
+
+                _linhas_sugestao.append({"Classe":_classe_sug,"Produtos analisados":_d["Produtos analisados"],
+                    "Giro relativo":f"{_giro_relativo_sug:.2f}×","CV (P75)":f"{_d['cv_p75']*100:.0f}%",
+                    "Fator (P75)":f"{_d['fator_p75']:.2f}×","Dias Mínimo sugerido":_dias_min_sug,
+                    "Dias Máximo sugerido":_dias_max_sug,"_amostra_debug":_d["amostra_debug"],
+                    "_cv_range_debug":_d["cv_range_debug"]})
+
+            if _linhas_sugestao:
+                st.session_state["compras_sugestao_resultado"]=pd.DataFrame(_linhas_sugestao)
+                if st.session_state.cid:
+                    save_resultado_sugestao_compras(st.session_state.cid)
+            else:
+                st.markdown('<div class="al-w">⚠️ Não consegui calcular — confira se já rodou a classificação ABC/Curva.</div>',unsafe_allow_html=True)
+
+        _df_sugestao=st.session_state.get("compras_sugestao_resultado")
+        if _df_sugestao is not None and len(_df_sugestao)>0:
+            st.dataframe(_df_sugestao.drop(columns=["_amostra_debug"]),use_container_width=True,hide_index=True)
+            st.caption("Copie os números de Dias Mínimo/Máximo sugeridos pros campos da Classe correspondente, "
+                "logo abaixo — nada é aplicado automaticamente.")
+            with st.expander("🔧 Diagnóstico — CV individual e amostra de cada Curva"):
+                for _,_linha_diag in _df_sugestao.iterrows():
+                    st.markdown(f"**{_linha_diag['Classe']}** — faixa real de CV: {_linha_diag['_cv_range_debug']}")
+                    st.caption(f"　Produtos: {_linha_diag['_amostra_debug']}")
+
         sec("Política de Estoque — Dias Mínimo / Máximo por Grupo")
         st.markdown('<div class="al-i">Proposta de partida, editável — ajuste conforme o perfil do negócio.</div>',unsafe_allow_html=True)
 
@@ -10700,21 +15890,31 @@ elif pg=="compras":
                 produtos_disp_mm=[p for p in produtos_disp_mm if busca_mm.upper() in p.upper()]
             produto_sel_mm=st.selectbox(f"Produto ({len(produtos_disp_mm)} encontrados)",produtos_disp_mm[:300],key="compras_produto_sel_mm")
             atual_mm=st.session_state["compras_minmax_produto"].get(produto_sel_mm,(None,None))
-            c_mm1,c_mm2,c_mm3=st.columns(3)
+            c_mm1,c_mm2,c_mm3,c_mm4=st.columns(4)
             novo_min_mm=c_mm1.number_input("Dias mínimo",value=int(atual_mm[0]) if atual_mm[0] else 15,min_value=1,step=1,key="compras_min_mm_input")
             novo_max_mm=c_mm2.number_input("Dias máximo",value=int(atual_mm[1]) if atual_mm[1] else 30,min_value=1,step=1,key="compras_max_mm_input")
             with c_mm3:
                 st.markdown("<br>",unsafe_allow_html=True)
-                if st.button("💾 Salvar exceção",key="compras_salvar_mm"):
+                if st.button("💾 Salvar exceção",key="compras_salvar_mm",use_container_width=True):
                     st.session_state["compras_minmax_produto"][produto_sel_mm]=(novo_min_mm,novo_max_mm)
                     st.rerun()
+            with c_mm4:
+                st.markdown("<br>",unsafe_allow_html=True)
                 if produto_sel_mm in st.session_state["compras_minmax_produto"]:
-                    if st.button("🗑 Remover exceção",key="compras_remover_mm"):
+                    if st.button("🗑 Remover exceção",key="compras_remover_mm",use_container_width=True):
                         del st.session_state["compras_minmax_produto"][produto_sel_mm]
                         st.rerun()
             if st.session_state["compras_minmax_produto"]:
-                st.caption(f"{len(st.session_state['compras_minmax_produto'])} produto(s) com exceção configurada: "+
-                ", ".join(f"{k} ({v[0]}-{v[1]}d)" for k,v in list(st.session_state["compras_minmax_produto"].items())[:10]))
+                with st.expander(f"📋 {len(st.session_state['compras_minmax_produto'])} produto(s) com exceção configurada — ver todos e excluir"):
+                    for _prod_mm_listado,(_min_mm_listado,_max_mm_listado) in list(st.session_state["compras_minmax_produto"].items()):
+                        _col_mmlist1,_col_mmlist2=st.columns([4,1])
+                        _col_mmlist1.caption(f"{_prod_mm_listado} — {_min_mm_listado}-{_max_mm_listado} dias")
+                        if _col_mmlist2.button("🗑",key=f"compras_mm_excluir_{_prod_mm_listado}"):
+                            del st.session_state["compras_minmax_produto"][_prod_mm_listado]
+                            st.session_state.get("compras_fr_produtos_aplicados",{}).pop(_prod_mm_listado,None)
+                            if st.session_state.cid:
+                                save_config_compras(st.session_state.cid)
+                            st.rerun()
 
         sec("🚚 Lead Time de Entrega por Produto, Categoria e Fornecedor")
         st.markdown('<div class="al-i">Defina o prazo de entrega por produto, categoria e/ou fornecedor. O sistema usa sempre o mais específico: Produto+Fornecedor → Produto → Categoria+Fornecedor → Categoria → Fornecedor → Padrão global.</div>',unsafe_allow_html=True)
@@ -10996,6 +16196,21 @@ elif pg=="compras":
                 _df_lt_pre["_pc"]=_df_lt_pre["Produto_ou_Categoria"].astype(str).str.strip().str.upper()
                 _df_lt_pre["_forn"]=_df_lt_pre["Fornecedor"].astype(str).str.strip().str.upper()
 
+            # Ajuste de Consenso — carregado UMA VEZ aqui, não a cada produto. Se não
+            # houver nenhum ajuste salvo pra essa filial, o dicionário fica vazio e o
+            # Motor de Compras segue 100% como sempre foi, sem nenhuma mudança de
+            # comportamento. Só entra em jogo produto a produto, mais abaixo, se
+            # aquele produto específico tiver um ajuste ativo.
+            _consenso_por_produto={}
+            if st.session_state.cid:
+                _df_consenso_compras=load_ajuste_consenso(st.session_state.cid,st.session_state.get("compras_filial_sel"))
+                if _df_consenso_compras is not None and not _df_consenso_compras.empty:
+                    for _,_linha_cons in _df_consenso_compras.iterrows():
+                        try:
+                            _consenso_por_produto[str(_linha_cons["_ProdutoUnico"])]=json.loads(_linha_cons["previsao_ajustada"])
+                        except Exception:
+                            pass
+
             produtos_excluidos_sem_previsao_cfg=0
             produtos_excluidos_sem_previsao_cfg=0
             for idx_c,prod_c in enumerate(produtos_rodar):
@@ -11032,11 +16247,20 @@ elif pg=="compras":
                         _row_cfg=_cfg_ml_u[_cfg_ml_u["_ProdutoUnico"]==prod_c]
                         if not _row_cfg.empty and _row_cfg.iloc[0]["status"]=="ok":
                             _prev=_row_cfg.iloc[0]["previsao"]
+                            # Se existir Ajuste de Consenso pra ESSE produto específico,
+                            # ele substitui a previsão do modelo aqui. Se não existir
+                            # (caso de praticamente todo produto, até alguém decidir
+                            # ajustar um), _prev continua sendo exatamente o valor do
+                            # modelo, como sempre foi — nenhum comportamento muda.
+                            if str(prod_c) in _consenso_por_produto:
+                                _prev=_consenso_por_produto[str(prod_c)]
+                                fonte_previsao_c="1-Config ML (ajuste de consenso)"
                             if _prev is not None and len(_prev)>0:
                                 demanda_mes_valor=max(0.0,float(_prev[0]))
                                 melhor_c=_row_cfg.iloc[0]["modelo_escolhido"]
                                 prev_cache_c=_prev
-                                fonte_previsao_c="1-Config ML (Painel)"
+                                if fonte_previsao_c is None:
+                                    fonte_previsao_c="1-Config ML (Painel)"
 
                     # 2. Se não está no resultado salvo do Config Avançado, o produto fica
                     # de fora — mesmo critério de elegibilidade das duas telas, sem gerar
@@ -11108,6 +16332,12 @@ elif pg=="compras":
                     else:
                         proj_horizonte=treinar(serie_c,melhor_c,horizonte_meses)
                     if proj_horizonte is not None:
+                        # Fator de Risco NÃO entra mais aqui separado — quando
+                        # aplicado (painel "🎯 Testar Fator de Risco"), ele já
+                        # escreve direto em session_state["compras_minmax_produto"]
+                        # (a mesma Exceção por Produto manual que já existia),
+                        # então min_dias_c/max_dias_c já vêm com o fator embutido
+                        # lá em cima, antes desse ponto do código. Nada a fazer aqui.
                         estoque_sim=estoque_c
                         hoje_cal=pd.Timestamp.now().normalize()
                         colchao_dias=max_dias_c-min_dias_c
@@ -11685,7 +16915,471 @@ elif pg=="compras":
 
             
 
-        sec("⚙️ Configurar Desempenho de Fornecedores")
+            sec("🔬 Validação Econômica — se eu tivesse usado outro método, quanto mudaria?")
+            st.markdown('<div class="al-i">Se você tivesse planejado a compra desses meses com um método simples '
+                '(média móvel) em vez do modelo escolhido, qual seria a diferença em R$?</div>',unsafe_allow_html=True)
+
+            if df_res_compras is None or df_res_compras.empty:
+                st.markdown('<div class="al-w">⚠️ Rode o Motor de Compras primeiro.</div>',unsafe_allow_html=True)
+            else:
+                # Teto do slider = produtos com modelo salvo de verdade, não o
+                # total de linhas do resultado — sem isso, o slider deixava
+                # pedir mais do que existia, sem avisar por quê.
+                _n_elegiveis_econ=df_res_compras[df_res_compras["ModeloUsado"].notna()]["Produto"].drop_duplicates().shape[0]
+                # "compras_econ_n_produtos" e "compras_econ_meses_olhar" (persistidas/
+                # restauradas do disco via save_config_compras, chamada automaticamente
+                # ao abrir o cliente) NUNCA são key= de widget — mesma arquitetura já
+                # usada em mlf_n_valid/mlp_data_corte: widget com chave própria
+                # (sufixo "_widget"), value=/index= calculado a partir da persistida a
+                # cada execução, sync de volta + salva em disco no on_change.
+                def _salvar_econ_oncambio():
+                    st.session_state["compras_econ_n_produtos"]=st.session_state["compras_econ_n_produtos_widget"]
+                    st.session_state["compras_econ_meses_olhar"]=st.session_state["compras_econ_meses_olhar_widget"]
+                    if st.session_state.cid:
+                        save_config_compras(st.session_state.cid)
+
+                _min_econ=min(10,_n_elegiveis_econ)
+                _max_econ=max(10,min(500,_n_elegiveis_econ))
+                _valor_atual_n_produtos_econ=st.session_state.get("compras_econ_n_produtos",min(100,_n_elegiveis_econ))
+                _valor_atual_n_produtos_econ=max(_min_econ,min(_max_econ,_valor_atual_n_produtos_econ))
+                n_produtos_econ=st.slider("Quantos produtos testar (amostra, do maior faturamento pro menor)",
+                    _min_econ,_max_econ,value=_valor_atual_n_produtos_econ,
+                    key="compras_econ_n_produtos_widget")
+                st.session_state["compras_econ_n_produtos"]=n_produtos_econ
+
+                _opcoes_meses_econ=list(range(1,19))
+                _valor_atual_meses_econ=st.session_state.get("compras_econ_meses_olhar",18)
+                _idx_atual_meses_econ=_opcoes_meses_econ.index(_valor_atual_meses_econ) if _valor_atual_meses_econ in _opcoes_meses_econ else 17
+                meses_olhar_econ=st.selectbox("Quantos meses olhar pra trás",_opcoes_meses_econ,
+                    index=_idx_atual_meses_econ,key="compras_econ_meses_olhar_widget")
+                st.session_state["compras_econ_meses_olhar"]=meses_olhar_econ
+
+                # SALVA SEMPRE, toda vez que a página roda — não depende mais
+                # de "on_change" disparar certinho (motivo real do bug de hoje).
+                # Escrever um JSON pequeno a cada execução é barato; a garantia
+                # de nunca perder o valor vale muito mais que essa economia.
+                if st.session_state.cid:
+                    save_config_compras(st.session_state.cid)
+
+                senha_econ=st.text_input("Senha master para rodar",type="password",key="compras_econ_senha")
+                if st.button("🔬 Rodar Validação Econômica",key="compras_econ_rodar",use_container_width=True):
+                    if senha_econ!=SENHA_MASTER:
+                        st.markdown('<div class="al-d">❌ Senha master incorreta.</div>',unsafe_allow_html=True)
+                        st.stop()
+
+                    # Horizonte fixo (6 meses — mesmo período de um planejamento
+                    # de compras típico), sem pedir isso ao usuário.
+                    horizonte_econ=6
+
+                    _produtos_econ=df_res_compras[df_res_compras["ModeloUsado"].notna()].sort_values(
+                        "ValorSugerido",ascending=False)["Produto"].drop_duplicates().head(n_produtos_econ).tolist()
+
+                    # SEMPRE roda a mesma conta robusta (6/12/18 meses atrás do
+                    # ÚLTIMO MÊS REAL da base — não do relógio do sistema). O
+                    # seletor "quantos meses olhar pra trás" NÃO muda essa conta
+                    # — ele só reescala o resultado proporcionalmente na hora de
+                    # exibir (mais abaixo). Rodar simulação nova pra janela curta
+                    # (tipo 1 ou 3 meses) dava número instável e sem sentido — a
+                    # base de referência é sempre a mais robusta.
+                    _ultima_data_dataset_econ=pd.to_datetime(df_v_calc[col_data_v],errors="coerce").max()
+                    _ultimo_periodo_dataset_econ=pd.Period(_ultima_data_dataset_econ,freq="M")
+                    _cortes_econ_lista=[str(_ultimo_periodo_dataset_econ-m) for m in (6,12,18)]
+                    _meses_disp_econ_check=[str(p) for p in pd.period_range(end=_ultimo_periodo_dataset_econ-1,periods=30,freq="M")]
+                    _cortes_econ_lista=[c for c in _cortes_econ_lista if c in _meses_disp_econ_check]
+
+                    _linhas_econ_todos_cortes=[]
+                    pb_econ_cortes=st.progress(0)
+                    for i_corte_econ,corte_econ in enumerate(_cortes_econ_lista):
+                        pb_econ_cortes.progress((i_corte_econ+1)/len(_cortes_econ_lista))
+
+                        # LightGBM (pooled) precisa ser treinado UMA VEZ, com todos
+                        # os produtos dele juntos — não dá pra chamar treinar()
+                        # produto a produto como os modelos clássicos. Separa quem
+                        # é LightGBM, treina o pool inteiro de uma vez só, com o
+                        # corte certo, e guarda a previsão de cada um pronta.
+                        _produtos_lgbm_econ=[]
+                        for _p in _produtos_econ:
+                            _l=df_res_compras[df_res_compras["Produto"]==_p].iloc[0]
+                            if _l.get("ModeloUsado")=="LightGBM (pooled)":
+                                _produtos_lgbm_econ.append(_p)
+
+                        _previsoes_lgbm_econ={}
+                        if _produtos_lgbm_econ:
+                            _corte_ts_lgbm_econ=pd.Period(corte_econ,freq="M").to_timestamp(how="end").normalize()
+                            _df_treino_lgbm_econ=df_v_calc[pd.to_datetime(df_v_calc[col_data_v],errors="coerce")<=_corte_ts_lgbm_econ]
+                            try:
+                                _previsoes_lgbm_econ=treinar_lightgbm_pooled(
+                                    _df_treino_lgbm_econ,col_prod_v,col_data_v,col_val_v,
+                                    _produtos_lgbm_econ,horizonte_econ)
+                            except Exception:
+                                _previsoes_lgbm_econ={}
+
+                        for prod_econ in _produtos_econ:
+                            _linha_res=df_res_compras[df_res_compras["Produto"]==prod_econ].iloc[0]
+                            _modelo_econ=_linha_res.get("ModeloUsado")
+                            if not _modelo_econ:
+                                continue
+                            _proj_pronta_econ=None
+                            if _modelo_econ=="LightGBM (pooled)":
+                                _proj_pronta_econ=_previsoes_lgbm_econ.get(prod_econ)
+                                if _proj_pronta_econ is None:
+                                    continue
+                            _serie_econ=serie_mensal_produto(df_v_calc,col_prod_v,prod_econ,col_data_v,col_val_v)
+                            if len(_serie_econ)<9: continue
+                            _preco_econ=float(_linha_res["ValorSugerido"]/_linha_res["QtdSugerida"]) if _linha_res["QtdSugerida"]>0 else float(_linha_res["CustoUnitario"]*1.3)
+                            _resultado_econ=simular_decisao_compra_economica(
+                                _serie_econ,corte_econ,horizonte_econ,float(_linha_res["EstoqueAtual"]),
+                                _preco_econ,float(_linha_res["CustoUnitario"]),
+                                float(_linha_res["MinDias"]),float(_linha_res["MaxDias"]),_modelo_econ,
+                                proj_modelo_pronta=_proj_pronta_econ)
+                            if _resultado_econ is None: continue
+                            _linhas_econ_todos_cortes.append({"Produto":prod_econ,"Modelo":_modelo_econ,
+                                "Corte":corte_econ,**_resultado_econ})
+                    pb_econ_cortes.empty()
+
+                    if not _linhas_econ_todos_cortes:
+                        st.markdown('<div class="al-w">⚠️ Nenhum produto pôde ser testado (histórico curto demais, ou todos usam LightGBM).</div>',unsafe_allow_html=True)
+                    else:
+                        df_econ=pd.DataFrame(_linhas_econ_todos_cortes)
+                        st.session_state["compras_econ_resultado"]=df_econ
+                        st.session_state["compras_econ_cortes_usados"]=_cortes_econ_lista
+                        if st.session_state.cid:
+                            save_resultado_econ_compras(st.session_state.cid)
+
+                df_econ=st.session_state.get("compras_econ_resultado")
+                if df_econ is not None and len(df_econ)>0:
+                    # Base sempre calculada nos 18 meses (conta robusta, 3
+                    # janelas). O seletor só PONDERA esse resultado pro período
+                    # escolhido — regra de três simples, não roda nada de novo.
+                    _total_modelo_18=df_econ["custo_total_modelo"].sum()
+                    _total_naive_18=df_econ["custo_total_naive"].sum()
+                    _economia_18=_total_naive_18-_total_modelo_18
+                    _fator_escala_econ=meses_olhar_econ/18
+
+                    _total_modelo=_total_modelo_18*_fator_escala_econ
+                    _total_naive=_total_naive_18*_fator_escala_econ
+                    _economia=_economia_18*_fator_escala_econ
+
+                    c_ec1,c_ec2,c_ec3=st.columns(3)
+                    mc(c_ec1,"💰 Custo total — decisão do MODELO",fmt(_total_modelo),"b")
+                    mc(c_ec2,"💰 Custo total — decisão NAIVE",fmt(_total_naive),"y")
+                    mc(c_ec3,"✅ Economia do Modelo" if _economia>0 else "⚠️ Naive teria sido melhor",
+                        fmt(abs(_economia)),"g" if _economia>0 else "r")
+                    st.caption("A economia mostra quanto a empresa deixou de perder usando o modelo correto em vez "
+                        "de um método simples — tanto em ruptura (produtos que faltariam) quanto em excesso "
+                        "(produtos parados na prateleira).")
+
+                    # Sem tabela por produto aqui de propósito — as outras
+                    # Validações já deixam o usuário incluir/excluir produto por
+                    # produto; repetir isso aqui não agregaria, só carrega a tela.
+                    # A Validação Econômica é só o card consolidado, e pronto.
+
+        # ===== Fator de Risco — testa ANTES de deixar aplicar, produto a produto =====
+        sec("🎯 Fator de Risco por Produto — testar antes de aplicar")
+        with st.expander("ℹ️ Como funciona"):
+            st.markdown('<div class="al-i">Hoje, todo produto de uma mesma Curva usa a mesma quantidade de dias de '
+                'estoque de segurança. Aqui testamos se vale ajustar isso PRODUTO A PRODUTO — usando uma margem '
+                'calculada por produto, não uma regra fixa igual pra todos. O cálculo depende do modelo vencedor '
+                'daquele produto: pra LightGBM, vem dos quantis nativos do modelo (α=0,10 e α=0,90, treinados '
+                'diretamente pra estimar esses limites); pros demais modelos (Prophet, ARIMA, SARIMAX), o '
+                'intervalo nativo foi medido e não bateu com a realidade — por isso o sistema usa uma correção '
+                'baseada no erro real observado em retreinos anteriores (mesmo princípio do Fator de Risco por '
+                'Curva), sem garantia formal de cobertura exata. Produto previsível (margem estreita) fica com '
+                'menos dias de estoque parado; produto instável (margem larga) ganha mais dias de proteção. '
+                'Cobre as duas pontas de risco: upside (chance de faltar) e downside (chance de sobrar). Nada '
+                'muda na compra real até você escolher aplicar, produto por produto.</div>',unsafe_allow_html=True)
+
+        if df_res_compras is None or df_res_compras.empty:
+            st.markdown('<div class="al-w">⚠️ Rode o Motor de Compras primeiro.</div>',unsafe_allow_html=True)
+        else:
+            _n_elegiveis_fr=df_res_compras[df_res_compras["ModeloUsado"].notna()]["Produto"].drop_duplicates().shape[0]
+            _min_fr=min(10,_n_elegiveis_fr)
+            _max_fr=max(10,min(500,_n_elegiveis_fr))
+            _valor_atual_fr=st.session_state.get("compras_fr_n_produtos",min(100,_n_elegiveis_fr))
+            _valor_atual_fr=max(_min_fr,min(_max_fr,_valor_atual_fr))
+            n_produtos_fr=st.slider("Quantos produtos testar (amostra, do maior faturamento pro menor)",
+                _min_fr,_max_fr,value=_valor_atual_fr,key="compras_fr_n_produtos_widget")
+            st.session_state["compras_fr_n_produtos"]=n_produtos_fr
+            # SALVA SEMPRE, toda vez que a página roda — mesma correção
+            # definitiva aplicada na Validação Econômica, não depende mais de
+            # "on_change" disparar certinho.
+            if st.session_state.cid:
+                save_config_compras(st.session_state.cid)
+            senha_fr=st.text_input("Senha master para rodar",type="password",key="compras_fr_senha")
+
+            if st.button("🎯 Testar Fator de Risco",key="compras_fr_rodar",use_container_width=True):
+                if senha_fr!=SENHA_MASTER:
+                    st.markdown('<div class="al-d">❌ Senha master incorreta.</div>',unsafe_allow_html=True)
+                    st.stop()
+
+                _produtos_fr=df_res_compras[df_res_compras["ModeloUsado"].notna()].sort_values(
+                    "ValorSugerido",ascending=False)["Produto"].drop_duplicates().head(n_produtos_fr).tolist()
+                _ultima_data_fr=pd.to_datetime(df_v_calc[col_data_v],errors="coerce").max()
+                _ultimo_periodo_fr=pd.Period(_ultima_data_fr,freq="M")
+                # Multi-janela (6/12/18), mesmo rigor da Validação Econômica —
+                # uma janela só pode "ter sorte" pra qualquer lado.
+                _cortes_fr_lista=[str(_ultimo_periodo_fr-m) for m in (6,12,18)]
+                _meses_disp_fr_check=[str(p) for p in pd.period_range(end=_ultimo_periodo_fr-1,periods=30,freq="M")]
+                _cortes_fr_lista=[c for c in _cortes_fr_lista if c in _meses_disp_fr_check]
+
+                # LightGBM (pooled) precisa ser treinado em GRUPO, não produto
+                # a produto. Essa função usa 6 cortes diferentes no total
+                # (12/18/24 pro fator + 6/12/18 pra avaliação econômica) — junta
+                # tudo num conjunto de cortes ÚNICOS, e treina o pool 1x por
+                # corte (não 6x), reaproveitando entre as duas camadas onde
+                # o corte coincide (12 e 18 aparecem nas duas).
+                _produtos_lgbm_fr=[]
+                for _p in _produtos_fr:
+                    _l=df_res_compras[df_res_compras["Produto"]==_p].iloc[0]
+                    if _l.get("ModeloUsado")=="LightGBM (pooled)":
+                        _produtos_lgbm_fr.append(_p)
+
+                _cortes_unicos_fr=set(_cortes_fr_lista)
+                for _m in (12,18,24):
+                    _cortes_unicos_fr.add(str(_ultimo_periodo_fr-_m))
+                _meses_disp_fr_check2=[str(p) for p in pd.period_range(end=_ultimo_periodo_fr-1,periods=36,freq="M")]
+                _cortes_unicos_fr=[c for c in _cortes_unicos_fr if c in _meses_disp_fr_check2]
+
+                _previsoes_lgbm_por_corte_fr={}
+                _previsoes_lgbm_p10_por_corte_fr={}
+                _previsoes_lgbm_p90_por_corte_fr={}
+                if _produtos_lgbm_fr:
+                    _pb_lgbm_fr=st.progress(0)
+                    for _idx_c,_corte_lgbm_fr in enumerate(_cortes_unicos_fr):
+                        _pb_lgbm_fr.progress((_idx_c+1)/len(_cortes_unicos_fr),text=f"Treinando LightGBM em grupo (ponto+quantis): corte {_idx_c+1} de {len(_cortes_unicos_fr)}")
+                        _corte_ts_lgbm_fr=pd.Period(_corte_lgbm_fr,freq="M").to_timestamp(how="end").normalize()
+                        _df_treino_lgbm_fr=df_v_calc[pd.to_datetime(df_v_calc[col_data_v],errors="coerce")<=_corte_ts_lgbm_fr]
+                        try:
+                            _prev_ponto_fr,_prev_p10_fr,_prev_p90_fr=treinar_lightgbm_pooled(
+                                _df_treino_lgbm_fr,col_prod_v,col_data_v,col_val_v,_produtos_lgbm_fr,6,
+                                retornar_quantis=True)
+                            _previsoes_lgbm_por_corte_fr[_corte_lgbm_fr]=_prev_ponto_fr
+                            _previsoes_lgbm_p10_por_corte_fr[_corte_lgbm_fr]=_prev_p10_fr
+                            _previsoes_lgbm_p90_por_corte_fr[_corte_lgbm_fr]=_prev_p90_fr
+                        except Exception:
+                            _previsoes_lgbm_por_corte_fr[_corte_lgbm_fr]={}
+                            _previsoes_lgbm_p10_por_corte_fr[_corte_lgbm_fr]={}
+                            _previsoes_lgbm_p90_por_corte_fr[_corte_lgbm_fr]={}
+                    _pb_lgbm_fr.empty()
+
+                _resultados_fr_por_produto={}
+                _motivos_fora_fr={"Sem modelo escolhido":0,"Histórico curto (<9 meses)":0,
+                    "Amostra insuficiente pro fator":0,"LightGBM sem previsão nesse corte":0}
+                pb_fr=st.progress(0)
+                _total_fr_iter=len(_produtos_fr)*len(_cortes_fr_lista)
+                _iter_fr=0
+                for prod_fr in _produtos_fr:
+                    _linha_res_fr=df_res_compras[df_res_compras["Produto"]==prod_fr].iloc[0]
+                    _modelo_fr=_linha_res_fr.get("ModeloUsado")
+                    if not _modelo_fr:
+                        _motivos_fora_fr["Sem modelo escolhido"]+=1; continue
+                    _serie_fr=serie_mensal_produto(df_v_calc,col_prod_v,prod_fr,col_data_v,col_val_v)
+                    if len(_serie_fr)<9:
+                        _motivos_fora_fr["Histórico curto (<9 meses)"]+=1; continue
+                    _preco_fr=float(_linha_res_fr["ValorSugerido"]/_linha_res_fr["QtdSugerida"]) if _linha_res_fr["QtdSugerida"]>0 else float(_linha_res_fr["CustoUnitario"]*1.3)
+
+                    _corte_para_fator_fr=_cortes_fr_lista[-1] if _cortes_fr_lista else str(_ultimo_periodo_fr-6)
+                    # Quantile Forecasting — tenta primeiro o intervalo NATIVO
+                    # do modelo (Prophet/ARIMA/SARIMAX já calculam isso por
+                    # dentro; LightGBM usa objective="quantile", pooled, já
+                    # treinado acima). Cobre as DUAS pontas: upside (risco de
+                    # faltar) e downside (risco de sobrar). Só cai pro método
+                    # antigo (erro histórico, só upside) se nada disso funcionar.
+                    if _modelo_fr=="LightGBM (pooled)":
+                        _p50_lgbm_fr=_previsoes_lgbm_por_corte_fr.get(_corte_para_fator_fr,{}).get(prod_fr)
+                        _p10_lgbm_fr=_previsoes_lgbm_p10_por_corte_fr.get(_corte_para_fator_fr,{}).get(prod_fr)
+                        _p90_lgbm_fr=_previsoes_lgbm_p90_por_corte_fr.get(_corte_para_fator_fr,{}).get(prod_fr)
+                        if _p50_lgbm_fr is not None and _p90_lgbm_fr is not None:
+                            _razoes_up_lgbm=[(p90/p50) for p50,p90 in zip(_p50_lgbm_fr,_p90_lgbm_fr) if p50>0]
+                            _fator_fr=max(0.7,min(2.0,float(np.mean(_razoes_up_lgbm)))) if _razoes_up_lgbm else None
+                        else:
+                            _fator_fr=None
+                        if _p50_lgbm_fr is not None and _p10_lgbm_fr is not None:
+                            _razoes_down_lgbm=[(p10/p50) for p50,p10 in zip(_p50_lgbm_fr,_p10_lgbm_fr) if p50>0]
+                            _fator_downside_fr=max(0.0,min(1.0,float(np.mean(_razoes_down_lgbm)))) if _razoes_down_lgbm else None
+                        else:
+                            _fator_downside_fr=None
+                    else:
+                        _fator_fr,_fator_downside_fr=calcular_fator_risco_intervalo_nativo(_serie_fr,_modelo_fr,n=6)
+                    if _fator_fr is None:
+                        _fator_fr=calcular_fator_risco_produto(_serie_fr,_modelo_fr,_corte_para_fator_fr,
+                            previsoes_lgbm_por_corte=_previsoes_lgbm_por_corte_fr,produto=prod_fr)
+                        _fator_downside_fr=None
+                    if _fator_fr is None:
+                        _motivos_fora_fr["Amostra insuficiente pro fator"]+=1
+                        _iter_fr+=len(_cortes_fr_lista); pb_fr.progress(min(1.0,_iter_fr/max(1,_total_fr_iter))); continue
+
+                    _soma_atual_fr=0.0; _soma_fator_fr=0.0; _n_ok_fr=0
+                    _soma_ruptura_atual_fr=0.0; _soma_ruptura_fator_fr=0.0
+                    _soma_excesso_atual_fr=0.0; _soma_excesso_fator_fr=0.0
+                    for _corte_fr in _cortes_fr_lista:
+                        _iter_fr+=1
+                        pb_fr.progress(min(1.0,_iter_fr/max(1,_total_fr_iter)))
+                        _proj_pronta_fr=None
+                        if _modelo_fr=="LightGBM (pooled)":
+                            _proj_pronta_fr=_previsoes_lgbm_por_corte_fr.get(_corte_fr,{}).get(prod_fr)
+                            if _proj_pronta_fr is None:
+                                continue
+                        _resultado_fr=simular_fator_risco_economico(
+                            _serie_fr,_corte_fr,6,float(_linha_res_fr["EstoqueAtual"]),
+                            _preco_fr,float(_linha_res_fr["CustoUnitario"]),
+                            float(_linha_res_fr["MinDias"]),float(_linha_res_fr["MaxDias"]),_modelo_fr,_fator_fr,
+                            proj_modelo_pronta=_proj_pronta_fr,fator_downside=_fator_downside_fr)
+                        if _resultado_fr is None: continue
+                        _soma_atual_fr+=_resultado_fr["custo_total_atual"]
+                        _soma_fator_fr+=_resultado_fr["custo_total_com_fator"]
+                        _soma_ruptura_atual_fr+=_resultado_fr["receita_perdida_atual"]
+                        _soma_ruptura_fator_fr+=_resultado_fr["receita_perdida_fator"]
+                        _soma_excesso_atual_fr+=_resultado_fr["capital_parado_atual"]
+                        _soma_excesso_fator_fr+=_resultado_fr["capital_parado_fator"]
+                        _n_ok_fr+=1
+
+                    if _n_ok_fr==0:
+                        _motivos_fora_fr["LightGBM sem previsão nesse corte"]+=1; continue
+                    _resultados_fr_por_produto[prod_fr]={"Fator":round(_fator_fr,2),
+                        "Risco de Excesso":round(_fator_downside_fr,2) if _fator_downside_fr is not None else None,
+                        "custo_total_atual":_soma_atual_fr,"custo_total_com_fator":_soma_fator_fr,
+                        "economia_ruptura":_soma_ruptura_atual_fr-_soma_ruptura_fator_fr,
+                        "economia_excesso":_soma_excesso_atual_fr-_soma_excesso_fator_fr}
+                pb_fr.empty()
+
+                _linhas_fr=[{"Produto":p,**vals} for p,vals in _resultados_fr_por_produto.items()]
+                st.session_state["compras_fr_motivos_fora"]=_motivos_fora_fr
+
+                if not _linhas_fr:
+                    st.markdown('<div class="al-w">⚠️ Nenhum produto pôde ser testado.</div>',unsafe_allow_html=True)
+                else:
+                    st.session_state["compras_fr_resultado"]=pd.DataFrame(_linhas_fr)
+                    if st.session_state.cid:
+                        save_resultado_fr_compras(st.session_state.cid)
+
+            df_fr=st.session_state.get("compras_fr_resultado")
+            if df_fr is not None and len(df_fr)>0:
+                df_fr=df_fr.copy()
+                df_fr["Economia"]=df_fr["custo_total_atual"]-df_fr["custo_total_com_fator"]
+                df_fr["Recomendado"]=df_fr["Economia"]>0
+
+                # Soma só onde o fator REALMENTE ajudou — o card não pode
+                # misturar produto recomendado com produto que pioraria.
+                _df_recom_fr=df_fr[df_fr["Recomendado"]]
+                _economia_total_fr=_df_recom_fr["Economia"].sum()
+                _economia_ruptura_fr=_df_recom_fr["economia_ruptura"].sum()
+                _economia_excesso_fr=_df_recom_fr["economia_excesso"].sum()
+                _n_recomendados_fr=df_fr["Recomendado"].sum()
+                # Conta quantos produtos contribuem pra cada tipo — um mesmo
+                # produto pode contar nos dois (tem risco de faltar E de sobrar).
+                _n_ruptura_fr=(_df_recom_fr["economia_ruptura"]>0).sum()
+                _n_excesso_fr=(_df_recom_fr["economia_excesso"]>0).sum()
+                c_fr1,c_fr2=st.columns(2)
+                mc(c_fr1,"💰 Economia ESTIMADA se aplicar nos recomendados",fmt(_economia_total_fr),"g" if _economia_total_fr>0 else "r")
+                mc(c_fr2,"✅ Produtos onde o fator ajuda",f"{_n_recomendados_fr} de {len(df_fr)}","b")
+                st.caption("O Fator de Risco vem do erro real medido na Validação — não é hipótese. Esse valor "
+                    "em R$ compara com a demanda real que já aconteceu; o cálculo assume vendas distribuídas em "
+                    "partes iguais ao longo do mês, não a venda real dia a dia.")
+                c_fr3,c_fr4=st.columns(2)
+                mc(c_fr3,"⚠️ Economia em Ruptura (upside)",f"{fmt(_economia_ruptura_fr)} — {_n_ruptura_fr} produto(s)","g" if _economia_ruptura_fr>0 else "r")
+                mc(c_fr4,"📦 Economia em Excesso (downside)",f"{fmt(_economia_excesso_fr)} — {_n_excesso_fr} produto(s)","g" if _economia_excesso_fr>0 else "r")
+                st.caption("A soma das duas (Ruptura + Excesso) é a Economia total acima — um produto pode aparecer nos dois grupos, se tiver risco nas duas pontas.")
+
+                _motivos_fora_disp=st.session_state.get("compras_fr_motivos_fora",{})
+                _total_fora_fr=sum(_motivos_fora_disp.values())
+                _total_considerados_fr=len(df_fr)+_total_fora_fr
+                if _total_fora_fr>0:
+                    with st.expander(f"ℹ️ Por que só {len(df_fr)} de {_total_considerados_fr} produtos elegíveis entraram no teste"):
+                        for _motivo,_qtd in _motivos_fora_disp.items():
+                            if _qtd>0:
+                                st.caption(f"　{_qtd} — {_motivo}")
+
+                _selecoes_fr={}
+                _df_lista_fr=df_fr[df_fr["Recomendado"]].sort_values("Economia",ascending=False)
+
+                # Tabela simples e direta — mostra os 2 componentes (Ruptura,
+                # Excesso) e a diferença (Economia), pra bater com os cards
+                # de cima sem precisar explicar nada a mais.
+                _tabela_fr=_df_lista_fr[["Produto","economia_ruptura","economia_excesso","Economia"]].copy()
+                _tabela_fr.columns=["Produto","Ganho em Ruptura","Ganho em Excesso","Economia (diferença)"]
+                st.dataframe(_tabela_fr.style.format({
+                    "Ganho em Ruptura":lambda v: fmt(v),
+                    "Ganho em Excesso":lambda v: fmt(v),
+                    "Economia (diferença)":lambda v: fmt(v)}),use_container_width=True,hide_index=True)
+
+                with st.expander(f"☑️ Escolha produto a produto ({len(_df_lista_fr)} de {len(df_fr)} testados realmente ajudam — só esses aparecem aqui)"):
+                    if len(_df_lista_fr)==0:
+                        st.caption("Nenhum produto testado se beneficiaria do Fator de Risco nesse recorte.")
+                    for _,_linha_fr in _df_lista_fr.iterrows():
+                        _marcado=st.checkbox(f"{_linha_fr['Produto']} — fator {_linha_fr['Fator']}×",
+                            value=True,key=f"compras_fr_check_{_linha_fr['Produto']}")
+                        _selecoes_fr[_linha_fr["Produto"]]=_marcado
+
+                if st.button("📥 Aplicar seleção",key="compras_fr_aplicar",use_container_width=True):
+                    # Escreve DIRETO na Exceção de Mínimo/Máximo por Produto que
+                    # já existe — mesma tabela que você já vê e edita manualmente
+                    # em "🎯 Exceção de Mínimo/Máximo por Produto Específico".
+                    # Sem mecanismo separado: Dias Mínimo fica igual ao da Curva
+                    # (o fator só mexe no Máximo, é sobre isso que ele é).
+                    if "compras_minmax_produto" not in st.session_state:
+                        st.session_state["compras_minmax_produto"]={}
+                    # Rastro separado só pra saber QUAIS exceções vieram do Fator
+                    # de Risco (pra remover com segurança aqui, sem arriscar
+                    # apagar uma exceção manual que você tenha configurado
+                    # antes, sem querer, num produto que o Fator também tocou).
+                    if "compras_fr_produtos_aplicados" not in st.session_state:
+                        st.session_state["compras_fr_produtos_aplicados"]={}
+                    _n_aplicados_fr=0
+                    for _,_linha_fr in df_fr.iterrows():
+                        _prod_fr_apl=_linha_fr["Produto"]
+                        if not _selecoes_fr.get(_prod_fr_apl):
+                            continue
+                        _linha_orig_fr=df_res_compras[df_res_compras["Produto"]==_prod_fr_apl].iloc[0]
+                        _min_original_fr=float(_linha_orig_fr["MinDias"])
+                        _max_original_fr=float(_linha_orig_fr["MaxDias"])
+                        _max_com_fator_fr=round(_max_original_fr*float(_linha_fr["Fator"]))
+                        # Downside (risco de excesso) agora entra de verdade na
+                        # aplicação — reduz o MÍNIMO (gatilho de recompra) pra
+                        # produtos com risco real de sobra, não é mais só
+                        # informativo. Downside=None (modelo sem suporte) ou
+                        # >=1 (sem risco de sobra detectado) não muda o mínimo.
+                        _downside_aplicar_fr=_linha_fr.get("Risco de Excesso")
+                        if _downside_aplicar_fr is not None and not pd.isna(_downside_aplicar_fr) and _downside_aplicar_fr<1.0:
+                            _min_com_downside_fr=max(1,round(_min_original_fr*_downside_aplicar_fr))
+                        else:
+                            _min_com_downside_fr=_min_original_fr
+                        st.session_state["compras_minmax_produto"][_prod_fr_apl]=(_min_com_downside_fr,_max_com_fator_fr)
+                        st.session_state["compras_fr_produtos_aplicados"][_prod_fr_apl]=float(_linha_fr["Fator"])
+                        _n_aplicados_fr+=1
+                    if st.session_state.cid:
+                        save_config_compras(st.session_state.cid)
+                    st.success(f"✅ Aplicado em {_n_aplicados_fr} produto(s) — já aparece em '🎯 Exceção de Mínimo/Máximo "
+                        f"por Produto Específico', na Config. Rode o Motor de Compras de novo pra ver refletido.")
+
+            # Lista dos produtos com Fator de Risco atualmente aplicado, com
+            # botão de remover ALI MESMO — sem precisar navegar até a tela de
+            # Exceção manual pra desfazer.
+            _fr_aplicados_atuais=st.session_state.get("compras_fr_produtos_aplicados",{})
+            if _fr_aplicados_atuais:
+                with st.expander(f"✅ {len(_fr_aplicados_atuais)} produto(s) com Fator de Risco aplicado — remover aqui"):
+                    if st.button("🗑 Remover TODOS de uma vez",key="compras_fr_remover_todos"):
+                        for _prod_fr_rm_all in list(_fr_aplicados_atuais.keys()):
+                            if _prod_fr_rm_all in st.session_state.get("compras_minmax_produto",{}):
+                                del st.session_state["compras_minmax_produto"][_prod_fr_rm_all]
+                        st.session_state["compras_fr_produtos_aplicados"]={}
+                        if st.session_state.cid:
+                            save_config_compras(st.session_state.cid)
+                        st.success("Todos removidos.")
+                        st.rerun()
+                    st.markdown("---")
+                    for _prod_fr_rm,_fator_fr_rm in list(_fr_aplicados_atuais.items()):
+                        _col_rm1,_col_rm2=st.columns([4,1])
+                        _col_rm1.caption(f"{_prod_fr_rm} — fator {_fator_fr_rm:.2f}×")
+                        if _col_rm2.button("🗑",key=f"compras_fr_remover_{_prod_fr_rm}"):
+                            if _prod_fr_rm in st.session_state.get("compras_minmax_produto",{}):
+                                del st.session_state["compras_minmax_produto"][_prod_fr_rm]
+                            del st.session_state["compras_fr_produtos_aplicados"][_prod_fr_rm]
+                            if st.session_state.cid:
+                                save_config_compras(st.session_state.cid)
+                            st.rerun()
+
+        sec("⚙️ Configurar Desempenho de Fornecedores")                        
         
         sc_salvo_cfg=load_scorecard_forn(st.session_state.cid) if st.session_state.cid else None
         if sc_salvo_cfg is not None and not sc_salvo_cfg.empty and "Fornecedor" in sc_salvo_cfg.columns:
@@ -12210,6 +17904,39 @@ elif pg=="fluxo_compras":
 
                 saldo_final_real=resumo_real_ff["SaldoAcumulado"].iloc[-1] if len(resumo_real_ff)>0 else saldo_inicial
                 semana_critica_real=resumo_real_ff.loc[resumo_real_ff["SaldoAcumulado"].idxmin()] if len(resumo_real_ff)>0 else None
+
+                # PMR/PMP — média ponderada dos prazos já configurados (mesma
+                # composição usada pra montar o Fluxo, não é novo cadastro).
+                _soma_pct_receber_pmr=sum(p["pct"] for p in st.session_state.get("ff_parcelas_receber",[]))
+                _pmr_calc=sum(p["pct"]*p["dias"] for p in st.session_state.get("ff_parcelas_receber",[]))/_soma_pct_receber_pmr if _soma_pct_receber_pmr>0 else 0
+                _soma_pct_pagar_pmp=sum(p["pct"] for p in st.session_state.get("ff_parcelas_pagar",[]))
+                _pmp_calc=sum(p["pct"]*p["dias"] for p in st.session_state.get("ff_parcelas_pagar",[]))/_soma_pct_pagar_pmp if _soma_pct_pagar_pmp>0 else 0
+                _diferenca_pmr_pmp=_pmr_calc-_pmp_calc
+
+                _cor_diferenca_pmr_pmp="#7A2A2A" if _diferenca_pmr_pmp>0 else "#0F6E56"
+                _icone_diferenca_pmr_pmp="⚠️" if _diferenca_pmr_pmp>0 else "✅"
+                _texto_diferenca_pmr_pmp=(f"Você recebe {abs(_diferenca_pmr_pmp):.0f} dias DEPOIS de pagar" if _diferenca_pmr_pmp>0
+                    else f"Você recebe {abs(_diferenca_pmr_pmp):.0f} dias ANTES de pagar" if _diferenca_pmr_pmp<0
+                    else "Recebimento e pagamento no mesmo prazo")
+
+                _estilo_card_pmr_base='background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:10px;padding:12px;text-align:center;min-height:80px'
+                c_pmr,c_pmp,c_dif=st.columns(3)
+                c_pmr.markdown(
+                    f'<div style="{_estilo_card_pmr_base}">'
+                    '<div style="font-size:.7rem;letter-spacing:1px;color:#9FE1CB;text-transform:uppercase">📥 PMR — Prazo Médio de Recebimento</div>'
+                    f'<div style="font-size:1.3rem;font-weight:700;color:#fff;margin-top:4px">{_pmr_calc:.0f} dias</div>'
+                    '</div>',unsafe_allow_html=True)
+                c_pmp.markdown(
+                    f'<div style="{_estilo_card_pmr_base}">'
+                    '<div style="font-size:.7rem;letter-spacing:1px;color:#9FE1CB;text-transform:uppercase">📤 PMP — Prazo Médio de Pagamento</div>'
+                    f'<div style="font-size:1.3rem;font-weight:700;color:#fff;margin-top:4px">{_pmp_calc:.0f} dias</div>'
+                    '</div>',unsafe_allow_html=True)
+                c_dif.markdown(
+                    f'<div style="{_estilo_card_pmr_base}">'
+                    f'<div style="font-size:.7rem;letter-spacing:1px;color:#9FE1CB;text-transform:uppercase">{_icone_diferenca_pmr_pmp} Diferença PMR − PMP</div>'
+                    f'<div style="font-size:1.3rem;font-weight:700;color:#fff;margin-top:4px">{_diferenca_pmr_pmp:+.0f} dias</div>'
+                    '</div>',unsafe_allow_html=True)
+                st.markdown("<br>",unsafe_allow_html=True)
 
                 c_kr1,c_kr2,c_kr3=st.columns(3)
                 mc(c_kr1,"🏦 Saldo Final Projetado",fmt(saldo_final_real),"g" if saldo_final_real>=0 else "r")
