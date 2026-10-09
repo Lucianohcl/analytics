@@ -4382,6 +4382,20 @@ def load_scorecard_forn(cid,filial=None):
     try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
     except: return None
 
+def path_pedidos_fornecedores(cid): return os.path.join(PASTA,f"{gid(cid)}_pedidos_fornecedores.csv")
+
+def save_pedidos_fornecedores(cid,df):
+    # Guarda o dado BRUTO (pedido a pedido), não só o percentual calculado —
+    # se um fornecedor contestar o número, dá pra abrir o pedido específico
+    # que originou aquele cálculo, em vez de discutir uma % sem lastro.
+    df.to_csv(path_pedidos_fornecedores(cid),sep=";",decimal=",",index=False,encoding="utf-8-sig")
+
+def load_pedidos_fornecedores(cid):
+    p=path_pedidos_fornecedores(cid)
+    if not os.path.exists(p): return None
+    try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
+    except: return None
+
     def path_config_ml(cid): return os.path.join(PASTA,f"{gid(cid)}_config_ml.json")
 
 def path_config_ml(cid): return os.path.join(PASTA,f"{gid(cid)}_config_ml.json")
@@ -4408,6 +4422,502 @@ def load_config_ml(cid):
             return json.load(f)
     except: return None
 
+# ── Mapeador de colunas por cliente (opcional): o cliente aponta uma vez qual coluna dele é cada campo do sistema ──
+_ESQUEMAS_COLUNAS={
+    "vendas":[("Produto",True,["codigo","sku","item"]),("Emissao",True,["data","dtemissao","dataemissao"]),("Quantidade",True,["qtd","qtde","quant"]),
+              ("Vlr.Total",True,["valortotal","total","valor","vlrtotal"]),("Custo Total",False,["custo","custototal"]),("Filial",False,["loja","unidade"]),
+              ("Categoria",False,["grupo","familia","linha"]),("Descricao",False,["nome","descricaoproduto"])],
+    "estoque":[("Produto",True,["codigo","sku","item"]),("EstoqueAtual",True,["estoque","quantidade","qtd","saldo"]),("CustoUnitario",False,["custo","custounit"]),
+               ("Fornecedor",False,["fornec"]),("Filial",False,["loja","unidade"])],
+    "pedidos":[("Fornecedor",True,["fornec"]),("Pedido",True,["numeropedido","npedido","pedidocompra"]),("Produto",True,["codigo","sku","item"]),
+               ("Qtd Pedida",True,["quantidadepedida","qtdped"]),("Qtd Recebida",True,["quantidaderecebida","qtdrec"]),
+               ("Qtd Divergencia",True,["divergencia","qtddiverg","defeito"]),("Data Prevista",True,["previsto","dataprevisao","entregaprevista"]),
+               ("Data Real",True,["recebimento","datarecebimento","entregareal"])]}
+_ESQUEMAS_COLUNAS["pagar"]=[("Vencimento",True,["datavencimento","datadevencimento","venc","vcto","dtvenc","data"]),("Valor",True,["vlr","valortotal","total"]),
+                            ("Conta",False,["categoria","natureza","fornecedor","tipo"]),("Filial",False,["loja","unidade"])]
+_ESQUEMAS_COLUNAS["receber"]=[("Vencimento",True,["datavencimento","datadevencimento","venc","vcto","dtvenc","data"]),("Valor",True,["vlr","valortotal","total"]),
+                              ("Filial",False,["loja","unidade"])]
+_ESQUEMAS_COLUNAS["pedidos"].append(("Data Pedido",False,["datapedido","dtpedido","datadopedido","emissaopedido"]))
+def path_mapeamento_colunas(cid): return os.path.join(PASTA,f"{gid(cid)}_mapeamento_colunas.json")
+def load_mapeamento_colunas(cid):
+    p=path_mapeamento_colunas(cid)
+    if not os.path.exists(p): return {}
+    try:
+        with open(p,"r",encoding="utf-8") as f: return json.load(f)
+    except Exception: return {}
+def save_mapeamento_colunas(cid,dados):
+    with open(path_mapeamento_colunas(cid),"w",encoding="utf-8") as f: json.dump(dados,f,ensure_ascii=False,indent=1)
+def _norm_col(x):
+    import unicodedata
+    s=unicodedata.normalize("NFKD",str(x)).encode("ascii","ignore").decode().lower()
+    return "".join(ch for ch in s if ch.isalnum())
+def _sugerir_coluna(canon,alias,cols):
+    """Coluna do arquivo que mais provavelmente corresponde ao campo do sistema (nome igual, apelido, palavra do nome ou parecido)."""
+    import difflib, re as _re, unicodedata
+    _GEN={"item","total"}   # apelidos genéricos demais: só valem quando o nome da coluna é exatamente igual
+    def _toks(c):
+        s=unicodedata.normalize("NFKD",str(c)).encode("ascii","ignore").decode().lower()
+        return set(t for t in _re.split(r"[^a-z0-9]+",s) if t)
+    ncols={_norm_col(c):c for c in cols}; ap=[canon]+list(alias)
+    for a_ in ap:
+        if _norm_col(a_) in ncols: return ncols[_norm_col(a_)]
+    for a_ in ap:
+        na=_norm_col(a_)
+        if na in _GEN: continue
+        for c in cols:
+            if na in _toks(c): return c
+    nc=_norm_col(canon)
+    for c in cols:
+        for t in _toks(c):
+            if len(t)>=4 and nc.startswith(t): return c
+    for a_ in ap:
+        na=_norm_col(a_)
+        if len(na)>=5 and na not in _GEN:
+            for k,c in ncols.items():
+                if na in k: return c
+    m=difflib.get_close_matches(nc,list(ncols),n=1,cutoff=0.72)
+    return ncols[m[0]] if m else None
+def aplicar_mapeamento_colunas(df,tipo,cid):
+    """Renomeia as colunas do cliente para os nomes que o sistema espera, SE houver mapeamento salvo. Sem mapeamento, devolve o df como veio."""
+    if df is None or not cid: return df
+    m=(load_mapeamento_colunas(cid) or {}).get(tipo)
+    if not m: return df
+    ren={orig:canon for canon,orig in m.items() if orig and orig in df.columns and canon!=orig and canon not in df.columns}
+    return df.rename(columns=ren) if ren else df
+import re as _re_erp, csv as _csv_erp, math as _math_erp, unicodedata as _ud_erp, io as _io_erp
+
+_RE_NUM_ERP=_re_erp.compile(r"^[\s\-\+\(]*(R\$\s*)?\d[\d\.\,\s]*\)?\s*-?\s*%?$")
+_RE_DATA_ERP=_re_erp.compile(r"^\d{1,2}[/.\-]\d{1,2}[/.\-]\d{2,4}(\s+\d{1,2}:\d{2}(:\d{2})?)?$|^\d{4}-\d{2}-\d{2}")
+_RE_TOTAL_ERP=_re_erp.compile(r"^(sub-?\s*)?total(\s+(geral|parcial|final|do\b.*|da\b.*|de\b.*|por\b.*|filial\b.*|grupo\b.*|periodo\b.*))?\s*:?$")
+
+def _cel_txt_erp(x):
+    """Célula como texto para analisar o relatório: vazio vira ''; data vira dd/mm/aaaa."""
+    try:
+        if x is None or pd.isna(x): return ""
+        if hasattr(x,"strftime"): return x.strftime("%d/%m/%Y")
+        if isinstance(x,float) and x==int(x): return str(int(x))
+        return str(x).strip()
+    except Exception: return ""
+
+def _norm_txt_erp(s): return _ud_erp.normalize("NFKD",str(s)).encode("ascii","ignore").decode().lower().strip()
+def _eh_num_erp(c): return bool(c) and bool(_RE_NUM_ERP.match(c))
+def _eh_data_erp(c): return bool(c) and bool(_RE_DATA_ERP.match(c))
+def _eh_texto_erp(c): return bool(c) and not _eh_num_erp(c) and not _eh_data_erp(c)
+
+def _achar_cabecalho_erp(rows):
+    """Linha (a partir de 0) onde começa a tabela, ou None se a primeira linha já é o cabeçalho ou se não houver certeza."""
+    ne=[sum(1 for c in r if c) for r in rows[:200]]
+    cont=sorted(x for x in ne if x>=2)
+    if len(cont)<3: return None
+    W=cont[min(len(cont)-1,int(0.9*len(cont)))]
+    need=max(2,_math_erp.ceil(0.75*W))
+    if ne[0]>=need: return None   # a primeira linha já tem o tamanho da tabela: nada a corrigir
+    for i in range(min(len(rows),60)):
+        cel=[c for c in rows[i] if c]
+        if len(cel)<need: continue
+        if sum(1 for c in cel if _eh_texto_erp(c))<0.8*len(cel): continue
+        seg=[r for r in rows[i+1:i+30] if sum(1 for c in r if c)>=2][:8]   # linhas de uma célula só (grupo, página) não contam
+        if len(seg)<2: continue
+        if sum(sum(1 for c in r if c) for r in seg)/len(seg)<0.5*len(cel): continue
+        if sum(1 for r in seg if any(_eh_num_erp(c) for c in r))<0.5*len(seg): continue
+        return i
+    return None
+
+_RE_RODAPE_ERP=_re_erp.compile(r"^(pagina|pag\.?|page)\s*\d|\bpagina\s*\d+\s*(de|/)\s*\d+|^(emitido|impresso|gerado|processado|extraido)\b|^(usuario|operador|hora)\b|^(continua|continuacao|fim do relatorio|fim de relatorio)\b|^[\*\-=_\.\s]{3,}$|www\.|^relatorio emitido")
+_RE_TOTAL2_ERP=_re_erp.compile(r"^(sub-?\s*)?total\b[^:]{0,30}:\s*[r\$\d\.\,\s\-\(\)%]*$")
+_RE_ROT_ERP=_re_erp.compile(r"^([^:\d\s][^:]{0,30}?)\s*:\s*(\S.*)$")
+_ROT_UTEIS_ERP=("filial","loja","unidade","deposito","almoxarifado","fornecedor","marca","categoria","grupo","subgrupo","familia","linha","setor","departamento","secao","colecao","vendedor","centro de custo","representante")
+
+def _par_erp(cel):
+    """Linha com uma célula 'Rótulo: valor' ou duas células 'Rótulo:' | 'valor': devolve (rótulo, valor) ou None."""
+    if len(cel)==1:
+        m=_RE_ROT_ERP.match(cel[0])
+        if m and not _eh_num_erp(m.group(1)): return m.group(1).strip(),m.group(2).strip()
+    elif len(cel)==2 and cel[0].endswith(":") and len(cel[0])<=32 and not cel[1].endswith(":"):
+        return cel[0][:-1].strip(),cel[1]
+    return None
+
+def _pares_pre_erp(cel):
+    """Linha do topo do relatório (antes do cabeçalho): todos os pares 'Rótulo: valor' que ela traz (pode ter vários lado a lado)."""
+    out=[]; i=0
+    while i<len(cel):
+        m=_RE_ROT_ERP.match(cel[i])
+        if m and not _eh_num_erp(m.group(1)): out.append((m.group(1).strip(),m.group(2).strip())); i+=1; continue
+        if cel[i].endswith(":") and len(cel[i])<=32 and i+1<len(cel) and not cel[i+1].endswith(":"): out.append((cel[i][:-1].strip(),cel[i+1])); i+=2; continue
+        i+=1
+    return out
+
+def _tipo_linha_erp(r,nh,nh_n,W):
+    """O que é a linha: vazia, cab_repetido, total, rodape, rotulo (Rótulo: valor), texto (uma célula só), solta, dado."""
+    cel=[x for x in r if x]
+    if not cel: return "vazia"
+    if len(cel)>=2 and nh_n and sum(1 for a,b in zip(r,nh) if a and _norm_txt_erp(a)==b)>=0.6*nh_n: return "cab_repetido"
+    n0=_norm_txt_erp(cel[0])
+    if sum(1 for x in cel if _eh_texto_erp(x))<=1 and _RE_TOTAL_ERP.match(n0): return "total"
+    if len(cel)==1 and _RE_TOTAL2_ERP.match(n0): return "total"
+    if len(cel)==2 and _RE_TOTAL_ERP.match(_norm_txt_erp(cel[0].rstrip(":"))) and _eh_num_erp(cel[1]): return "total"
+    if len(cel)<=2 and not any(_eh_num_erp(x) for x in cel) and _RE_RODAPE_ERP.search(n0): return "rodape"
+    if len(cel)==1:
+        if _par_erp(cel): return "rotulo"
+        return "texto" if _eh_texto_erp(cel[0]) and len(cel[0])<=60 else "solta"
+    if len(cel)==2 and _par_erp(cel): return "rotulo"
+    if not any(_eh_num_erp(x) for x in cel) and len(cel)<W: return "solta"
+    return "dado"
+
+def _analisar_erp(rows,idx):
+    """Classifica cada linha do relatório. O que é lixo (totais, rodapé, cabeçalho repetido, título de página) sai.
+    O que é informação (linha de grupo 'Grupo: FREIOS', filtro do topo 'Filial: 01') vira coluna nova, repetida nas linhas a que se aplica.
+    Devolve dict com: keep (posições das linhas de dados), extras (nomes das colunas novas), vals (valores por linha mantida), cnt e det (conferência)."""
+    hdr=rows[idx]; dados=rows[idx+1:]; W=len(hdr); nh=[_norm_txt_erp(c) for c in hdr]; nh_n=sum(1 for b in nh if b)
+    nome_hdr=set(x for x in nh if x); cnt={"vazias":0,"cab_repetido":0,"totais":0,"soltas":0,"rodape":0,"grupos":0}; det=[]
+    tipos=[_tipo_linha_erp(r,nh,nh_n,W) for r in dados]
+    # topo do relatório: filtros úteis viram coluna constante; título, período, usuário etc. são só ignorados
+    extras=[]; const={}; topo=set()
+    for i in range(idx):
+        cel=[c for c in rows[i] if c]
+        if not cel: continue
+        topo.add(_norm_txt_erp(cel[0]))
+        pares=_pares_pre_erp(cel)
+        if not pares: det.append((i+1,"Título/cabeçalho do relatório",cel[0][:70],"ignorado (não faz parte da tabela)")); continue
+        for rot,val in pares:
+            nr=_norm_txt_erp(rot)
+            if any(nr==u or nr.startswith(u+" ") for u in _ROT_UTEIS_ERP) and _norm_txt_erp(rot) not in nome_hdr:
+                nm=rot[:1].upper()+rot[1:]
+                if nm not in const: extras.append(nm)
+                const[nm]=val; det.append((i+1,"Filtro do relatório",rot+": "+val[:50],"vira a coluna '"+nm+"' em todas as linhas"))
+            elif any(nr==u or nr.startswith(u+" ") for u in _ROT_UTEIS_ERP): det.append((i+1,"Filtro do relatório",rot+": "+val[:50],"ignorado (a tabela já tem a coluna '"+rot+"')"))
+            else: det.append((i+1,"Informação do cabeçalho",rot+": "+val[:50],"ignorado (não faz parte da tabela)"))
+    # linhas de texto solto: só são grupo quando aparecem em pelo menos 2 textos diferentes; título repetido por página nunca é grupo
+    prox=[None]*len(dados); nxt=None
+    for k in range(len(dados)-1,-1,-1):
+        prox[k]=nxt
+        if tipos[k]!="vazia": nxt=tipos[k]
+    for k,t in enumerate(tipos):
+        if t=="texto":
+            tx=[x for x in dados[k] if x][0]
+            if _norm_txt_erp(tx) in topo: tipos[k]="titulo_pag"
+    cont_txt={}
+    for k,t in enumerate(tipos):
+        if t=="texto": tx=_norm_txt_erp([x for x in dados[k] if x][0]); cont_txt[tx]=cont_txt.get(tx,0)+1
+    for k,t in enumerate(tipos):
+        if t=="texto":
+            tx=_norm_txt_erp([x for x in dados[k] if x][0])
+            if cont_txt[tx]>=2 and prox[k]=="cab_repetido": tipos[k]="titulo_pag"
+    textos=set(_norm_txt_erp([x for x in dados[k] if x][0]) for k,t in enumerate(tipos) if t=="texto")
+    usar_texto=len(textos)>=2
+    ultimo_dado=max([k for k,t in enumerate(tipos) if t=="dado"] or [-1])
+    atual=dict(const); keep=[]; vals=[]; vistos_grupo=0
+    for k,t in enumerate(tipos):
+        ln=idx+2+k; r=dados[k]; cel=[x for x in r if x]
+        if t=="vazia": cnt["vazias"]+=1
+        elif t=="cab_repetido": cnt["cab_repetido"]+=1; det.append((ln,"Cabeçalho repetido (quebra de página)","/".join(cel)[:70],"descartado"))
+        elif t=="total": cnt["totais"]+=1; det.append((ln,"Total/subtotal"," ".join(cel)[:70],"descartado (somar de novo duplicaria os valores)"))
+        elif t=="rodape": cnt["rodape"]+=1; det.append((ln,"Rodapé/página"," ".join(cel)[:70],"descartado"))
+        elif t=="titulo_pag": cnt["soltas"]+=1; det.append((ln,"Título repetido em cada página",cel[0][:70],"descartado"))
+        elif t=="solta": cnt["soltas"]+=1; det.append((ln,"Linha solta",cel[0][:70],"descartado"))
+        elif t in ("rotulo","texto"):
+            if k>ultimo_dado: cnt["soltas"]+=1; det.append((ln,"Rodapé/linha solta depois da tabela"," ".join(cel)[:70],"descartado")); continue
+            if t=="rotulo":
+                rot,val=_par_erp(cel); nm=rot[:1].upper()+rot[1:]
+                if _norm_txt_erp(rot) in nome_hdr: cnt["soltas"]+=1; det.append((ln,"Linha de grupo",rot+": "+val[:50],"ignorado (a tabela já tem a coluna '"+rot+"')")); continue
+            elif usar_texto: nm="Grupo"; val=cel[0]
+            else: cnt["soltas"]+=1; det.append((ln,"Linha solta",cel[0][:70],"descartado (texto único, não parece um grupo)")); continue
+            if nm in nome_hdr or _norm_txt_erp(nm) in nome_hdr: cnt["soltas"]+=1; continue
+            if nm not in extras: extras.append(nm)
+            atual[nm]=val; cnt["grupos"]+=1; vistos_grupo+=1
+            if vistos_grupo<=6: det.append((ln,"Linha de grupo",(nm+": "+val)[:70] if t=="texto" else cel[0][:70],"vira a coluna '"+nm+"' nas linhas seguintes"))
+        else:
+            keep.append(k); vals.append(dict(atual))
+    if cnt["grupos"]>6: det.append(("…","Linha de grupo","mais "+str(cnt["grupos"]-6)+" linhas de grupo","viram a coluna acima"))
+    if len(det)>60: det=det[:55]+[("…","outras linhas","mais "+str(len(det)-55)+" linhas","tratadas da mesma forma")]
+    return {"keep":keep,"extras":extras,"vals":vals,"cnt":cnt,"det":det,"idx":idx,"hdr":hdr,"dados":dados}
+
+def _nomes_colunas_erp(hdr,manter):
+    nomes=[]; vistos={}
+    for j in manter:
+        nm=hdr[j] or ("Coluna "+str(j+1))
+        if nm in vistos: vistos[nm]+=1; nm=nm+"_"+str(vistos[nm])
+        else: vistos[nm]=1
+        nomes.append(nm)
+    return nomes
+
+def _resumo_erp(idx,cnt,extras):
+    p=["relatório de ERP: cabeçalho na linha "+str(idx+1)+" ("+str(idx)+" linha(s) de título/filtro antes dele)"]
+    if extras: p.append("colunas criadas a partir de linhas de grupo/filtro: "+", ".join(extras))
+    if cnt["totais"]: p.append(str(cnt["totais"])+" total/subtotal removido(s)")
+    d=cnt["soltas"]+cnt["rodape"]
+    if d: p.append(str(d)+" linha(s) solta(s)/rodapé removida(s)")
+    if cnt["cab_repetido"]: p.append(str(cnt["cab_repetido"])+" cabeçalho(s) repetido(s) removido(s)")
+    return "; ".join(p)
+
+def _limpar_relatorio_erp(b,n):
+    """Relatório de ERP com título, subtítulo, filtros, grupos e totais: devolve (bytes do arquivo limpo, nome, resumo, conferência).
+    Arquivo que já é uma tabela, ou cabeçalho que não se encontra com segurança: devolve None e a leitura normal segue como sempre."""
+    if n.endswith((".csv",".txt")):
+        ini=b[:150000].decode("utf-8-sig",errors="replace").splitlines()[:300]; melhor=None
+        for d in (";","\t","|",","):
+            cont=[l.count(d) for l in ini if l.strip()]
+            pos=[x for x in cont if x>0]
+            if not pos: continue
+            moda=max(set(pos),key=cont.count); pontos=cont.count(moda)
+            if melhor is None or pontos>melhor[0]: melhor=(pontos,d)
+        if not melhor or melhor[0]<3: return None
+        d=melhor[1]; rh=[[c.strip() for c in r] for r in _csv_erp.reader(ini,delimiter=d)]
+        lh=max(len(r) for r in rh); rh=[r+[""]*(lh-len(r)) for r in rh]
+        if not _achar_cabecalho_erp(rh): return None   # arquivo já é uma tabela: nada a fazer, e o resto do arquivo nem é lido
+        txt=None
+        for enc in ("utf-8-sig","cp1252"):
+            try: txt=b.decode(enc); break
+            except UnicodeDecodeError: pass
+        if txt is None: return None
+        rows=[[c.strip() for c in r] for r in _csv_erp.reader(txt.splitlines(),delimiter=d)]
+        larg=max(len(r) for r in rows); rows=[r+[""]*(larg-len(r)) for r in rows]
+        idx=_achar_cabecalho_erp(rows)
+        if not idx: return None
+        A=_analisar_erp(rows,idx); keep=A["keep"]
+        if not keep: return None
+        hdr=A["hdr"]; dados=A["dados"]; manter=[j for j in range(larg) if hdr[j] or any(dados[k][j] for k in keep)]
+        buf=_io_erp.StringIO(); w=_csv_erp.writer(buf,delimiter=d,lineterminator="\n")
+        w.writerow(_nomes_colunas_erp(hdr,manter)+A["extras"])
+        for k,v in zip(keep,A["vals"]): w.writerow([dados[k][j] for j in manter]+[v.get(e,"") for e in A["extras"]])
+        return buf.getvalue().encode("utf-8-sig"),"relatorio_limpo.csv",_resumo_erp(idx,A["cnt"],A["extras"]),A["det"]
+    if n.endswith((".xlsx",".xls",".xlsm")):
+        xh=pd.read_excel(_io_erp.BytesIO(b),sheet_name=None,header=None,nrows=300)
+        ch=[(int(df.notna().sum().sum()),df) for s,df in xh.items() if not df.dropna(how="all").empty]
+        if not ch: return None
+        ch.sort(key=lambda x:x[0],reverse=True)
+        if not _achar_cabecalho_erp([[_cel_txt_erp(x) for x in r] for r in ch[0][1].itertuples(index=False,name=None)]): return None   # já é uma tabela
+        xls=pd.read_excel(_io_erp.BytesIO(b),sheet_name=None,header=None)
+        cand=[(int(df.notna().sum().sum()),df) for s,df in xls.items() if not df.dropna(how="all").empty]
+        if not cand: return None
+        cand.sort(key=lambda x:x[0],reverse=True); df0=cand[0][1].reset_index(drop=True)
+        rows=[[_cel_txt_erp(x) for x in r] for r in df0.itertuples(index=False,name=None)]
+        idx=_achar_cabecalho_erp(rows)
+        if not idx: return None
+        A=_analisar_erp(rows,idx); keep=A["keep"]
+        if not keep: return None
+        hdr=A["hdr"]; dados=A["dados"]; manter=[j for j in range(len(hdr)) if hdr[j] or any(dados[k][j] for k in keep)]
+        out=df0.iloc[idx+1:].iloc[keep,manter].copy(); out.columns=_nomes_colunas_erp(hdr,manter); out=out.reset_index(drop=True)
+        for e in A["extras"]: out[e]=[v.get(e) or None for v in A["vals"]]
+        out=out.infer_objects(); buf=_io_erp.BytesIO()
+        with pd.ExcelWriter(buf,engine="openpyxl") as xw: out.to_excel(xw,index=False)
+        return buf.getvalue(),"relatorio_limpo.xlsx",_resumo_erp(idx,A["cnt"],A["extras"]),A["det"]
+    return None
+
+def ler_erp_det(b,nome):
+    """Igual ao ler(), mas um relatório de ERP é limpo antes de ser lido. Devolve (tabela, mensagem, conferência); conferência é None quando o arquivo já era uma tabela."""
+    try: r=_limpar_relatorio_erp(b,nome.lower())
+    except Exception: r=None
+    if r is not None:
+        b2,nome2,info,det=r
+        df,msg=ler(b2,nome2)
+        if df is not None and not isinstance(df,tuple): return df,str(msg)+" — "+info,{"resumo":info,"linhas":det}
+    df,msg=ler(b,nome); return df,msg,None
+
+def ler_erp(b,nome):
+    """Igual ao ler(), mas um relatório de ERP (título, subtítulo, filtros, grupos, totais) é limpo antes de ser lido."""
+    df,msg,_det=ler_erp_det(b,nome); return df,msg
+
+def ler_arquivo_pr(arq):
+    """Contas a Pagar/Receber: relatório de ERP é limpo; arquivo que já é uma tabela é lido exatamente como antes."""
+    try:
+        r=_limpar_relatorio_erp(arq.getvalue(),arq.name.lower())
+        if r is not None:
+            b2,nome2=r[0],r[1]
+            return pd.read_csv(_io_erp.BytesIO(b2),sep=None,engine="python",encoding="utf-8-sig") if nome2.endswith(".csv") else pd.read_excel(_io_erp.BytesIO(b2))
+    except Exception: pass
+    arq.seek(0)
+    return pd.read_csv(arq,sep=None,engine="python",encoding="utf-8-sig") if arq.name.endswith(".csv") else pd.read_excel(arq)
+
+def _limpar_topo_fin(b,n):
+    """Versão enxuta para o Financeiro (DRE, Balanço, Fluxo): tira só o que vem antes do cabeçalho (título, empresa, período, filtros),
+    linhas vazias, cabeçalho repetido, rodapé e linhas soltas depois da tabela. NUNCA remove totais/subtotais (no DRE eles são o dado)
+    e não cria colunas. Devolve (bytes, nome, resumo) ou None se o arquivo já é uma tabela ou o cabeçalho não for achado com segurança."""
+    if n.endswith((".csv",".txt")):
+        ini=b[:150000].decode("utf-8-sig",errors="replace").splitlines()[:300]; melhor=None
+        for d in (";","\t","|",","):
+            cont=[l.count(d) for l in ini if l.strip()]
+            pos=[x for x in cont if x>0]
+            if not pos: continue
+            moda=max(set(pos),key=cont.count); pontos=cont.count(moda)
+            if melhor is None or pontos>melhor[0]: melhor=(pontos,d)
+        if not melhor or melhor[0]<3: return None
+        d=melhor[1]; rh=[[c.strip() for c in r] for r in _csv_erp.reader(ini,delimiter=d)]
+        lh=max(len(r) for r in rh); rh=[r+[""]*(lh-len(r)) for r in rh]
+        if not _achar_cabecalho_erp(rh): return None
+        txt=None
+        for enc in ("utf-8-sig","cp1252"):
+            try: txt=b.decode(enc); break
+            except UnicodeDecodeError: pass
+        if txt is None: return None
+        rows=[[c.strip() for c in r] for r in _csv_erp.reader(txt.splitlines(),delimiter=d)]
+        larg=max(len(r) for r in rows); rows=[r+[""]*(larg-len(r)) for r in rows]
+        idx=_achar_cabecalho_erp(rows)
+        if not idx: return None
+        hdr=rows[idx]; dados=rows[idx+1:]; keep,desc=_manter_fin_erp(hdr,dados)
+        if not keep: return None
+        buf=_io_erp.StringIO(); w=_csv_erp.writer(buf,delimiter=d,lineterminator="\n"); w.writerow(hdr)
+        for k in keep: w.writerow(dados[k])
+        return buf.getvalue().encode("utf-8-sig"),"relatorio_limpo.csv","relatório de ERP: cabeçalho na linha "+str(idx+1)+" ("+str(idx)+" linha(s) de título/filtro antes dele ignoradas; "+str(desc)+" linha(s) vazia/rodapé/repetida(s) removida(s); totais e subtotais mantidos)"
+    if n.endswith((".xlsx",".xls",".xlsm")):
+        xh=pd.read_excel(_io_erp.BytesIO(b),sheet_name=None,header=None,nrows=300)
+        ch=[(int(df.notna().sum().sum()),df) for s,df in xh.items() if not df.dropna(how="all").empty]
+        if not ch: return None
+        ch.sort(key=lambda x:x[0],reverse=True)
+        if not _achar_cabecalho_erp([[_cel_txt_erp(x) for x in r] for r in ch[0][1].itertuples(index=False,name=None)]): return None
+        xls=pd.read_excel(_io_erp.BytesIO(b),sheet_name=None,header=None)
+        cand=[(int(df.notna().sum().sum()),df) for s,df in xls.items() if not df.dropna(how="all").empty]
+        if not cand: return None
+        cand.sort(key=lambda x:x[0],reverse=True); df0=cand[0][1].reset_index(drop=True)
+        rows=[[_cel_txt_erp(x) for x in r] for r in df0.itertuples(index=False,name=None)]
+        idx=_achar_cabecalho_erp(rows)
+        if not idx: return None
+        hdr=rows[idx]; dados=rows[idx+1:]; keep,desc=_manter_fin_erp(hdr,dados)
+        if not keep: return None
+        manter=[j for j in range(len(hdr)) if hdr[j] or any(dados[k][j] for k in keep)]
+        out=df0.iloc[idx+1:].iloc[keep,manter].copy(); out.columns=_nomes_colunas_erp(hdr,manter); out=out.reset_index(drop=True).infer_objects()
+        buf=_io_erp.BytesIO()
+        with pd.ExcelWriter(buf,engine="openpyxl") as xw: out.to_excel(xw,index=False)
+        return buf.getvalue(),"relatorio_limpo.xlsx","relatório de ERP: cabeçalho na linha "+str(idx+1)+" ("+str(idx)+" linha(s) de título/filtro antes dele ignoradas; "+str(desc)+" linha(s) vazia/rodapé/repetida(s) removida(s); totais e subtotais mantidos)"
+    return None
+
+def _manter_fin_erp(hdr,dados):
+    """Linhas a manter: tudo, menos vazias, cabeçalho repetido, rodapé e linhas soltas depois da última linha de dados/total."""
+    W=len(hdr); nh=[_norm_txt_erp(c) for c in hdr]; nh_n=sum(1 for b in nh if b)
+    tipos=[_tipo_linha_erp(r,nh,nh_n,W) for r in dados]
+    ult=max([k for k,t in enumerate(tipos) if t in ("dado","total")] or [-1])
+    keep=[k for k,t in enumerate(tipos) if t not in ("vazia","cab_repetido","rodape") and k<=ult]
+    return keep,len(dados)-len(keep)
+
+def limpar_topo_fin_bytes(b,nome):
+    """(bytes, nome) limpos para o Financeiro; se nada a fazer, devolve os mesmos."""
+    try:
+        r=_limpar_topo_fin(b,nome.lower())
+        if r is not None: return r[0],r[1]
+    except Exception: pass
+    return b,nome
+
+def ler_fin(b,nome):
+    """Igual ao ler(), mas tira título/filtros/rodapé de relatório de ERP antes (sem remover totais). Arquivo que já é uma tabela, e PDF, são lidos como sempre."""
+    try: r=_limpar_topo_fin(b,nome.lower())
+    except Exception: r=None
+    if r is not None:
+        df,msg=ler(r[0],r[1])
+        if df is not None and not isinstance(df,tuple): return df,str(msg)+" — "+r[2]
+    return ler(b,nome)
+
+def colunas_do_arquivo(arq,sep=None):
+    """Cabeçalho do arquivo enviado (lido uma vez por arquivo e guardado na sessão)."""
+    k=f"_cols_arq_{arq.name}_{arq.size}"
+    if k not in st.session_state:
+        cols=[]
+        try:
+            if sep is not None:
+                import io
+                cols=[str(c).strip() for c in pd.read_csv(io.BytesIO(arq.getvalue()),sep=sep,nrows=0,encoding="utf-8-sig").columns]
+            else:
+                _d,_m,_det=ler_erp_det(arq.getvalue(),arq.name)
+                if _d is not None and not isinstance(_d,tuple): cols=[str(c).strip() for c in _d.columns]
+                st.session_state[k+"_det"]=_det
+        except Exception: cols=[]
+        st.session_state[k]=cols
+    st.session_state["_det_erp_atual"]=st.session_state.get(k+"_det")
+    return st.session_state[k]
+def dica_mapeador_colunas(tipo,cid):
+    """Aviso sempre visível sob o botão de envio, para o usuário saber que o painel de mapeamento existe."""
+    salvo=(load_mapeamento_colunas(cid) or {}).get(tipo,{}) if cid else {}
+    txt="🧭 Colunas com nomes diferentes dos esperados? Escolha o arquivo e o painel Mapear colunas aparece logo abaixo; o mapeamento fica salvo para os próximos envios."
+    if salvo: txt+=" Mapeamento salvo em uso: "+" · ".join(f"{o} → {c}" for c,o in salvo.items() if o)+"."
+    st.caption(txt)
+
+_ROTULO_TIPO_COLUNAS={"vendas":"Vendas","estoque":"Estoque","pedidos":"Pedidos de fornecedores","pagar":"Contas a Pagar","receber":"Contas a Receber"}
+_PARA_QUE_COLUNA={
+    "vendas":{"Produto":"identifica o item vendido; é a base da previsão e da Curva ABC","Emissao":"data da venda; forma a série histórica mensal",
+              "Quantidade":"unidades vendidas; é a demanda que o modelo prevê","Vlr.Total":"valor vendido; define a Curva ABC e a margem",
+              "Custo Total":"custo da venda; usado na margem e no GMROI","Filial":"permite analisar e prever por filial",
+              "Categoria":"permite agrupar e filtrar por categoria","Descricao":"nome do produto nas tabelas"},
+    "estoque":{"Produto":"identifica o item e cruza com as vendas","EstoqueAtual":"saldo atual; base da recomendação de compra e do estoque ideal",
+               "CustoUnitario":"valor do estoque; usado no Capital Parado e no GMROI","Fornecedor":"agrupa as compras por fornecedor","Filial":"estoque por filial"},
+    "pedidos":{"Fornecedor":"quem entregou o pedido","Pedido":"número que agrupa as linhas de um mesmo pedido","Produto":"item do pedido",
+               "Qtd Pedida":"quantidade pedida; base do OTIF e da Qualidade","Qtd Recebida":"quantidade recebida; base do OTIF e da Qualidade",
+               "Qtd Divergencia":"quantidade com divergência; base da Qualidade","Data Prevista":"prazo prometido; base do Prazo e do OTIF",
+               "Data Real":"data em que chegou; base do Prazo e do OTIF","Data Pedido":"data em que o pedido foi feito; permite medir o lead time real"},
+    "pagar":{"Vencimento":"data de pagamento; posiciona o valor no fluxo de caixa","Valor":"valor da conta","Conta":"categoria ou fornecedor; detalha as saídas","Filial":"análise por filial"},
+    "receber":{"Vencimento":"data de recebimento; posiciona o valor no fluxo de caixa","Valor":"valor a receber","Filial":"análise por filial"}}
+
+def diagnostico_colunas(cols,tipo,cid):
+    """Para cada campo do sistema, de onde virá a coluna: nome igual, mapeamento salvo, correspondência só sugerida (ainda não salva) ou ausente."""
+    esq=_ESQUEMAS_COLUNAS[tipo]; salvo=(load_mapeamento_colunas(cid) or {}).get(tipo,{}) if cid else {}
+    res=[]
+    for canon,obrig,alias in esq:
+        if canon in cols: res.append((canon,obrig,"exato",canon))
+        elif salvo.get(canon) in cols: res.append((canon,obrig,"salvo",salvo[canon]))
+        else:
+            s=_sugerir_coluna(canon,alias,cols); res.append((canon,obrig,"sugerido" if s else "ausente",s))
+    return res
+
+def painel_colunas_arquivo(cols,tipo,cid,chave):
+    """Alerta na importação: o que foi reconhecido (e como), o que só foi sugerido e falta confirmar, e o que falta no arquivo para a empresa providenciar."""
+    import html as _h
+    d=diagnostico_colunas(cols,tipo,cid); rot=_ROTULO_TIPO_COLUNAS.get(tipo,tipo); pq=_PARA_QUE_COLUNA.get(tipo,{})
+    ok=[x for x in d if x[2] in ("exato","salvo")]; sug=[x for x in d if x[2]=="sugerido"]; aus=[x for x in d if x[2]=="ausente"]
+    ob_falta=[x for x in aus if x[1]]; op_falta=[x for x in aus if not x[1]]; ob_sug=[x for x in sug if x[1]]
+    _chip=lambda campo,col: '<span style="display:inline-block;background:#fff;border:1px solid #CFE3DA;border-radius:6px;padding:1px 7px;margin:2px 3px 2px 0;font-size:.82rem">'+_h.escape(campo)+(' ← '+_h.escape(str(col)) if col and col!=campo else '')+'</span>'
+    if ok:
+        st.markdown('<div class="al-s">✅ <b>Reconhecidas ('+str(len(ok))+'):</b> '+"".join(_chip(c,o) for c,_,s,o in ok)+'</div>',unsafe_allow_html=True)
+    if sug:
+        st.markdown('<div class="al-w">🔎 <b>Encontrei uma correspondência provável, mas ela ainda não está salva ('+str(len(sug))+'):</b> '+"".join(_chip(c,o) for c,_,s,o in sug)
+            +'<br>O sistema só usa uma coluna com nome diferente depois que você confirma. Confira as correspondências acima e confirme abaixo, ou ajuste no painel Mapear colunas.</div>',unsafe_allow_html=True)
+        _usadas=[o for c,_,s,o in d if o and s in ("sugerido","salvo")]; _dup=len(set(_usadas))<len(_usadas)
+        if _dup: st.markdown('<div class="al-d">A mesma coluna do arquivo foi sugerida para mais de um campo. Ajuste no painel Mapear colunas.</div>',unsafe_allow_html=True)
+        if st.button("✅ Confirmar estas "+str(len(sug))+" correspondências e salvar",key="mapcol_aplicar_"+chave,use_container_width=True,disabled=bool(ob_falta) or _dup or not cid):
+            _m=load_mapeamento_colunas(cid) or {}; _m[tipo]={**_m.get(tipo,{}),**{c:o for c,_,s,o in d if s in ("salvo","sugerido")}}
+            save_mapeamento_colunas(cid,_m); st.rerun()
+    if ob_falta:
+        st.markdown('<div class="al-d">🚫 <b>Faltam no seu arquivo (obrigatórias para '+_h.escape(rot)+'):</b><br>'
+            +"<br>".join('• <b>'+_h.escape(c)+'</b> — '+_h.escape(pq.get(c,"necessária para o cálculo")) for c,_,s,o in ob_falta)
+            +'<br><br>Peça à área que cuida do seu sistema para incluir essas colunas na exportação e envie o arquivo de novo.</div>',unsafe_allow_html=True)
+    if op_falta:
+        st.markdown('<div class="al-i">ℹ️ <b>Opcionais que seu arquivo não tem:</b><br>'
+            +"<br>".join('• <b>'+_h.escape(c)+'</b> — '+_h.escape(pq.get(c,"")) for c,_,s,o in op_falta)
+            +'<br>Pode importar sem elas; com elas o sistema aproveita mais.</div>',unsafe_allow_html=True)
+    if ob_falta or op_falta:
+        _tx=["Colunas para a importação de "+rot+" no NetExame Analytics BI",""]
+        if ob_falta: _tx+=["OBRIGATÓRIAS (faltam no arquivo atual):"]+["- "+c+": "+pq.get(c,"") for c,_,s,o in ob_falta]+[""]
+        if op_falta: _tx+=["OPCIONAIS (recomendadas):"]+["- "+c+": "+pq.get(c,"") for c,_,s,o in op_falta]+[""]
+        _tx+=["Colunas que o arquivo atual já tem: "+", ".join(str(c) for c in cols)]
+        st.download_button("📋 Baixar a lista de colunas que faltam (para enviar à empresa)","\n".join(_tx),file_name="colunas_faltantes_"+tipo+".txt",mime="text/plain",key="mapcol_lista_"+chave,use_container_width=True)
+    _dt=st.session_state.get("_det_erp_atual")
+    if _dt and _dt.get("linhas"):
+        with st.expander("🧾 Conferência: como o relatório foi lido (o que foi aproveitado e o que foi descartado)",expanded=False):
+            st.caption(_dt.get("resumo",""))
+            st.dataframe(pd.DataFrame(_dt["linhas"],columns=["Linha","O que é","Conteúdo","O que o sistema fez"]).astype(str),hide_index=True,use_container_width=True)
+            st.caption("Se uma linha de dados foi tratada como lixo (ou o contrário), envie o arquivo para ajustarmos a regra.")
+    return not ob_falta and not ob_sug
+
+def ui_mapeador_colunas(cols,tipo,cid,chave):
+    """Painel opcional para apontar qual coluna do arquivo é cada campo do sistema; o mapeamento fica salvo para os próximos envios."""
+    if not cols: return True
+    esq=_ESQUEMAS_COLUNAS[tipo]; salvo=(load_mapeamento_colunas(cid) or {}).get(tipo,{}) if cid else {}
+    _pronto=painel_colunas_arquivo(cols,tipo,cid,chave)   # True quando as obrigatórias estão reconhecidas ou salvas
+    def _ok(canon,alias): return canon in cols or (salvo.get(canon) in cols)   # sugestão ainda não salva não conta como reconhecida
+    faltam=[c for c,o,al in esq if o and not _ok(c,al)]
+    with st.expander("🧭 Mapear colunas deste arquivo (opcional; fica salvo para os próximos envios)",expanded=bool(faltam)):
+        st.caption("Aponte abaixo qual coluna do seu arquivo corresponde a cada campo obrigatório (*)." if faltam else "Só use este painel se quiser trocar a correspondência de alguma coluna.")
+        if salvo: st.caption("Mapeamento salvo em uso: "+" · ".join(f"{o} → {c}" for c,o in salvo.items() if o))
+        opcoes=["(não usar)"]+list(cols); novos={}; cs=st.columns(3)
+        for i,(canon,obrig,alias) in enumerate(esq):
+            padrao=salvo.get(canon) if salvo.get(canon) in cols else (canon if canon in cols else _sugerir_coluna(canon,alias,cols))
+            with cs[i%3]:
+                esc=st.selectbox(canon+(" *" if obrig else ""),opcoes,index=opcoes.index(padrao) if padrao in opcoes else 0,key=f"mapcol_{chave}_{canon}")
+            novos[canon]=None if esc=="(não usar)" else esc
+        _sem=[c for c,o,_ in esq if o and not novos.get(c)]
+        if _sem: st.markdown('<div class="al-w">Campos obrigatórios sem coluna: '+", ".join(_sem)+'.</div>',unsafe_allow_html=True)
+        if st.button("💾 Salvar mapeamento deste cliente",key=f"mapcol_salvar_{chave}",use_container_width=True,disabled=bool(_sem) or not cid):
+            _d=load_mapeamento_colunas(cid) or {}; _d[tipo]={k:v for k,v in novos.items() if v}
+            save_mapeamento_colunas(cid,_d); st.toast("✅ Mapeamento salvo. Ele será aplicado neste e nos próximos envios."); st.rerun()
+    return _pronto
+
 def path_config_compras(cid): return os.path.join(PASTA,f"{gid(cid)}_config_compras.json")
 
 def save_config_compras(cid):
@@ -4415,6 +4925,8 @@ def save_config_compras(cid):
     dados={"compras_escopo_tipo":_escopo_atual,
            "compras_categoria_lead_sel":st.session_state.get("compras_categoria_lead_sel"),
            "compras_curva_sel":st.session_state.get("compras_curva_sel"),
+           "compras_politica_ideal":st.session_state.get("compras_politica_ideal_backup") or st.session_state.get("compras_politica_ideal"),
+           "compras_nivel_servico":st.session_state.get("compras_nivel_servico_backup") or st.session_state.get("compras_nivel_servico"),
            "compras_econ_n_produtos":st.session_state.get("compras_econ_n_produtos"),
            "compras_econ_meses_olhar":st.session_state.get("compras_econ_meses_olhar"),
            "compras_fr_n_produtos":st.session_state.get("compras_fr_n_produtos"),
@@ -4423,7 +4935,10 @@ def save_config_compras(cid):
            # Mínimo/Máximo quanto o "Aplicar seleção" do Fator de Risco
            # escrevem aqui, e os dois eram perdidos em qualquer F5 ou nova
            # sessão, sem aviso nenhum.
-           "compras_minmax_produto":st.session_state.get("compras_minmax_produto",{})}
+           "compras_minmax_produto":st.session_state.get("compras_minmax_produto",{}),
+           # Política manual por Curva (opcional): se acionada, o Motor usa estes dias no lugar da Sugestão por Curva
+           "compras_pol_manual_ativa":bool(st.session_state.get("compras_pol_manual_ativa",False)),
+           "compras_matriz_manual":st.session_state.get("compras_matriz_manual")}
     if _escopo_atual and "Categoria" in _escopo_atual:
         dados["compras_categoria_sel"]=st.session_state.get("compras_categoria_sel")
     elif _escopo_atual and "Produto específico" in _escopo_atual:
@@ -4972,6 +5487,284 @@ def load_pareto_snap(cid,filial=None):
     try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
     except: return None
 
+TT_CAPITAL_PARADO=("Capital Parado = estoque de posições (produto × filial) sem venda há mais dias do que o Dias Máximo da Curva do produto "
+    "(da Sugestão por Curva do recorte, ou a exceção do produto). Produto que nunca vendeu na base também conta. "
+    "Os dias sem venda são contados até a última venda da base. Valor = estoque × custo unitário. Itens = posições produto × filial.")
+
+def calcular_capital_parado(df_est,df_v,col_prod_v,col_data_v,col_fil_est,col_fil_v,df_res,df_class,matriz,excecoes,data_ref=None):
+    # Estoque realmente parado: posição (produto × filial) com estoque > 0 e SEM VENDA há mais dias do que o Máximo
+    # da Curva dela (ou da exceção do produto). Quem nunca vendeu na base também entra. Vem direto do estoque e das
+    # vendas, sem depender do resultado do Motor (que ignora posições com menos de 3 meses de venda).
+    cols_saida=["Produto","Filial","Fornecedor","Classe","EstoqueAtual","CustoUnitario","UltimaVenda","DiasSemVenda","MaxDias","Motivo","CapitalParado","EstoqueEscopo"]
+    if df_est is None or len(df_est)==0 or df_v is None or len(df_v)==0:
+        return pd.DataFrame(columns=cols_saida)
+    est=df_est.copy()
+    est["Produto"]=est["Produto"].astype(str).str.strip()
+    est["EstoqueAtual"]=pd.to_numeric(est["EstoqueAtual"],errors="coerce").fillna(0)
+    est["CustoUnitario"]=pd.to_numeric(est["CustoUnitario"],errors="coerce").fillna(0)
+    est["_fil"]=est[col_fil_est].astype(str).str.strip() if col_fil_est else ""
+    est=est[est["EstoqueAtual"]>0]
+    _agg={"EstoqueAtual":("EstoqueAtual","sum"),"CustoUnitario":("CustoUnitario","first")}
+    if "Fornecedor" in est.columns: _agg["Fornecedor"]=("Fornecedor","first")
+    est=est.groupby(["Produto","_fil"],as_index=False).agg(**_agg)
+    if "Fornecedor" not in est.columns: est["Fornecedor"]=""
+    est["CapitalAtual"]=est["EstoqueAtual"]*est["CustoUnitario"]
+    estoque_escopo=float(est["CapitalAtual"].sum())
+    v=df_v[[col_prod_v,col_data_v]+([col_fil_v] if col_fil_v else [])].copy()
+    v["_p"]=v[col_prod_v].astype(str).str.strip()
+    v["_d"]=pd.to_datetime(v[col_data_v],errors="coerce",dayfirst=True).dt.normalize()
+    v=v.dropna(subset=["_d"])
+    if len(v)==0 or len(est)==0:
+        return pd.DataFrame(columns=cols_saida)
+    if data_ref is None: data_ref=v["_d"].max()   # data de referência = última venda da base inteira (igual p/ todas as filiais)
+    por_filial=bool(col_fil_est and col_fil_v)
+    if por_filial:
+        v["_fk"]=v[col_fil_v].astype(str).str.strip().str.casefold(); est["_fk"]=est["_fil"].str.casefold()
+        ult=v.groupby(["_p","_fk"],as_index=False)["_d"].max().rename(columns={"_p":"Produto","_d":"UltimaVendaDt"})
+        est=est.merge(ult,on=["Produto","_fk"],how="left")
+    else:
+        ult=v.groupby("_p",as_index=False)["_d"].max().rename(columns={"_p":"Produto","_d":"UltimaVendaDt"})
+        est=est.merge(ult,on="Produto",how="left")
+    cls_prod=dict(zip(df_class["Produto"].astype(str),df_class["classe_abc"])) if (df_class is not None and len(df_class)>0) else {}
+    cls_pos={}
+    if por_filial and df_res is not None and len(df_res)>0 and all(c in df_res.columns for c in ["Produto","Classe","Filial"]):
+        cls_pos=dict(zip(zip(df_res["Produto"].astype(str).str.strip(),df_res["Filial"].astype(str).str.strip().str.casefold()),df_res["Classe"]))
+    est["Classe"]=[(cls_pos.get((p,f.casefold())) if por_filial else None) or cls_prod.get(p,"") for p,f in zip(est["Produto"],est["_fil"])]
+    mx_cls={c:(float(m[1]) if isinstance(m,(list,tuple)) and len(m)>1 else np.nan) for c,m in (matriz or {}).items()}
+    exc={str(k):m for k,m in (excecoes or {}).items()}
+    def _mx(p,c):
+        e=exc.get(p)
+        if e is not None and len(e)>1: return float(e[1])
+        return mx_cls.get(c,np.nan)
+    est["MaxDias"]=[_mx(p,c) for p,c in zip(est["Produto"],est["Classe"])]
+    est["DiasSemVenda"]=(data_ref-est["UltimaVendaDt"]).dt.days
+    nunca=est["UltimaVendaDt"].isna()
+    parado=nunca|(est["DiasSemVenda"]>est["MaxDias"])
+    est["Motivo"]=np.where(nunca,"Nunca vendeu na base","Sem venda há "+est["DiasSemVenda"].astype("Int64").astype(str)+" dias (Máximo "+est["MaxDias"].round(0).astype("Int64").astype(str)+")")
+    out=est[parado].copy()
+    out["UltimaVenda"]=out["UltimaVendaDt"].dt.strftime("%d/%m/%Y").fillna("nunca")
+    out["CapitalParado"]=out["CapitalAtual"]
+    out["Filial"]=out["_fil"]
+    out["EstoqueEscopo"]=estoque_escopo
+    return out[cols_saida].sort_values("CapitalParado",ascending=False).reset_index(drop=True)
+
+def calcular_capital_parado_v2(df_est,df_v,col_prod_v,col_data_v,col_fil_est,col_fil_v,col_val_v,df_res,df_class,matriz,excecoes,data_ref=None):
+    # Estoque parado = posição (produto × filial) com estoque > 0 e SEM VENDA há mais dias do que o Máximo da Curva dela
+    # (ou da exceção do produto); quem nunca vendeu na base também entra. O resultado é IDÊNTICO ao olhar "Todas as filiais"
+    # ou uma filial só, porque: (1) a data de referência é a última venda da base inteira; (2) a Curva de cada posição é a do
+    # produto DENTRO da filial dele (ranking pela receita da filial, cortes 70/80/90/97%), igual ao Motor.
+    cols_saida=["Produto","Filial","Fornecedor","Classe","EstoqueAtual","CustoUnitario","UltimaVenda","DiasSemVenda","MaxDias","Motivo","CapitalParado","EstoqueEscopo","EstoqueEscopoFilial"]
+    if df_est is None or len(df_est)==0 or df_v is None or len(df_v)==0:
+        return pd.DataFrame(columns=cols_saida)
+    est_all=df_est.copy()
+    est_all["Produto"]=est_all["Produto"].astype(str).str.strip()
+    escopo=set(est_all["Produto"])
+    est=est_all.copy()
+    est["EstoqueAtual"]=pd.to_numeric(est["EstoqueAtual"],errors="coerce").fillna(0)
+    est["CustoUnitario"]=pd.to_numeric(est["CustoUnitario"],errors="coerce").fillna(0)
+    est["_fil"]=est[col_fil_est].astype(str).str.strip() if col_fil_est else ""
+    est=est[est["EstoqueAtual"]>0]
+    _agg={"EstoqueAtual":("EstoqueAtual","sum"),"CustoUnitario":("CustoUnitario","first")}
+    if "Fornecedor" in est.columns: _agg["Fornecedor"]=("Fornecedor","first")
+    est=est.groupby(["Produto","_fil"],as_index=False).agg(**_agg)
+    if "Fornecedor" not in est.columns: est["Fornecedor"]=""
+    est["CapitalAtual"]=est["EstoqueAtual"]*est["CustoUnitario"]
+    estoque_escopo=float(est["CapitalAtual"].sum())
+    est["EstoqueEscopoFilial"]=est.groupby("_fil")["CapitalAtual"].transform("sum")
+    v=df_v.copy()
+    v["_p"]=v[col_prod_v].astype(str).str.strip()
+    v["_d"]=pd.to_datetime(v[col_data_v],errors="coerce",dayfirst=True).dt.normalize()
+    v=v.dropna(subset=["_d"])
+    if len(v)==0 or len(est)==0:
+        return pd.DataFrame(columns=cols_saida)
+    if data_ref is None:
+        try:
+            data_ref=pd.to_datetime(get_vendas_df()[col_data_v],errors="coerce",dayfirst=True).max().normalize()
+        except Exception:
+            data_ref=v["_d"].max()
+        if pd.isna(data_ref): data_ref=v["_d"].max()
+    por_filial=bool(col_fil_est and col_fil_v)
+    if por_filial:
+        v["_fk"]=v[col_fil_v].astype(str).str.strip().str.casefold(); est["_fk"]=est["_fil"].str.casefold()
+        ult=v.groupby(["_p","_fk"],as_index=False)["_d"].max().rename(columns={"_p":"Produto","_d":"UltimaVendaDt"})
+        est=est.merge(ult,on=["Produto","_fk"],how="left")
+    else:
+        ult=v.groupby("_p",as_index=False)["_d"].max().rename(columns={"_p":"Produto","_d":"UltimaVendaDt"})
+        est=est.merge(ult,on="Produto",how="left")
+    def _classe5(p):
+        if p<=70: return "A"
+        if p<=80: return "B"
+        if p<=90: return "C"
+        if p<=97: return "D"
+        return "E"
+    # Curva das posições que o Motor não classifica (pouca venda na filial): a do produto na EMPRESA (todas as filiais),
+    # igual em "Todas as filiais" e em qualquer filial — por isso o resultado é o mesmo nas duas visões.
+    try:
+        _vall=get_vendas_df()
+        _vall=_vall[_vall[col_prod_v].astype(str).str.strip().isin(escopo)]
+    except Exception:
+        _vall=v[v["_p"].isin(escopo)]
+    cls_emp={}
+    if len(_vall)>0:
+        _r=pareto_analysis(_vall,col_prod_v,col_val_v)
+        cls_emp=dict(zip(_r[col_prod_v].astype(str).str.strip(),_r["pct_acumulado"].apply(_classe5)))
+    cls_pos={}
+    if por_filial and df_res is not None and len(df_res)>0 and all(c in df_res.columns for c in ["Produto","Classe","Filial"]):
+        cls_pos=dict(zip(zip(df_res["Produto"].astype(str).str.strip(),df_res["Filial"].astype(str).str.strip().str.casefold()),df_res["Classe"]))
+    est["Classe"]=[(cls_pos.get((p,f.casefold())) if por_filial else None) or cls_emp.get(p,"") for p,f in zip(est["Produto"],est["_fil"])]
+    mx_cls={c:(float(m[1]) if isinstance(m,(list,tuple)) and len(m)>1 else np.nan) for c,m in (matriz or {}).items()}
+    exc={str(k):m for k,m in (excecoes or {}).items()}
+    def _mx(p,c):
+        e=exc.get(p)
+        if e is not None and len(e)>1: return float(e[1])
+        return mx_cls.get(c,np.nan)
+    est["MaxDias"]=[_mx(p,c) for p,c in zip(est["Produto"],est["Classe"])]
+    est["DiasSemVenda"]=(data_ref-est["UltimaVendaDt"]).dt.days
+    nunca=est["UltimaVendaDt"].isna()
+    parado=nunca|(est["DiasSemVenda"]>est["MaxDias"])
+    est["Motivo"]=np.where(nunca,"Nunca vendeu na base","Sem venda há "+est["DiasSemVenda"].astype("Int64").astype(str)+" dias (Máximo "+est["MaxDias"].round(0).astype("Int64").astype(str)+")")
+    out=est[parado].copy()
+    out["UltimaVenda"]=out["UltimaVendaDt"].dt.strftime("%d/%m/%Y").fillna("nunca")
+    out["CapitalParado"]=out["CapitalAtual"]
+    out["Filial"]=out["_fil"]
+    out["EstoqueEscopo"]=estoque_escopo
+    return out[cols_saida].sort_values("CapitalParado",ascending=False).reset_index(drop=True)
+
+def chave_escopo_sugestao(filial=None):
+    # Chave do recorte a que a Sugestão por Curva se refere: filial + (Categoria | Produtos | Catálogo).
+    import hashlib
+    _e=escopo_compras_atual()
+    if "Categoria" in _e["tipo"]: _b="Categoria:"+str(_e["categoria"])
+    elif "Produto específico" in _e["tipo"]: _b="Produtos:"+hashlib.md5(",".join(_e["produtos"]).encode("utf-8")).hexdigest()[:10]
+    else: _b="Catálogo"
+    _f=filial if (filial and filial!="(Todas as filiais)") else "(Todas as filiais)"
+    return f"{_f}|{_b}"
+
+def sugestao_do_escopo(cid,filial=None):
+    # Sugestão por Curva do recorte ATUAL (None se não houver). O arquivo guarda todos os recortes já calculados.
+    _todas=st.session_state.get("compras_sugestao_resultado")
+    if (_todas is None or len(_todas)==0) and cid:
+        _todas=load_resultado_sugestao_compras(cid)
+    if _todas is None or len(_todas)==0 or "_escopo" not in _todas.columns: return None
+    _s=_todas[_todas["_escopo"]==chave_escopo_sugestao(filial)]
+    return _s if len(_s)>0 else None
+
+def matriz_manual_valida():
+    """Política manual por Curva (do usuário) em forma de {classe: (min, max)}, ou None se não existir ou estiver inválida."""
+    m=st.session_state.get("compras_matriz_manual")
+    if not isinstance(m,dict): return None
+    out={}
+    for k in ["A","B","C","D","E"]:
+        v=m.get(k)
+        try: a,b=int(v[0]),int(v[1])
+        except Exception: return None
+        if a<1 or b<a: return None
+        out[k]=(a,b)
+    return out
+
+def politica_manual_ativa():
+    """True se o usuário acionou a política manual por Curva e ela está válida."""
+    return bool(st.session_state.get("compras_pol_manual_ativa",False)) and matriz_manual_valida() is not None
+
+def matriz_politica_efetiva():
+    """Mín/Máx por Curva que o Motor obedece: a política MANUAL do usuário, se acionada; senão, a Sugestão por Curva."""
+    return matriz_manual_valida() if politica_manual_ativa() else st.session_state.get("compras_matriz")
+
+def politica_ideal_ativa():
+    # Régua escolhida em Gestão de Compras › Simulador (e salva na configuração do cliente).
+    # Padrão = matriz por classe: nada muda para quem não escolher a outra.
+    ss=st.session_state
+    esc=ss.get("compras_politica_ideal_backup") or ss.get("compras_politica_ideal") or ""
+    try: niv=int(ss.get("compras_nivel_servico_backup") or ss.get("compras_nivel_servico") or 95)
+    except Exception: niv=95
+    if politica_manual_ativa():
+        return {"tipo":"matriz","nivel":niv if niv in (90,95,98) else 95}   # política manual: o ideal usa o Mín/Máx que o Motor gravou
+    return {"tipo":"calculada","nivel":niv if niv in (90,95,98) else 95}
+
+def preparar_cenario_motor(df_res,politica=None):
+    # Fonte ÚNICA do "estoque ideal" do sistema: a política Mín/Máx do Motor de Compras,
+    # com PISO de lead time (o alvo de cada produto é o maior entre a política e o
+    # lead time: estoque abaixo da cobertura do lead time é ruptura anunciada).
+    # Simulador de Cenário, Dashboard e Pareto & GMROI usam esta função, então os
+    # números nunca divergem. Excesso/Falta são calculados por linha (produto×loja);
+    # o líquido (excesso − falta) é o "Capital Liberável" do Simulador.
+    d=df_res[df_res["CoberturaDias"].notna()].copy()
+    d["CapitalAtual"]=d["EstoqueAtual"]*d["CustoUnitario"]
+    lead=pd.to_numeric(d["LeadTimeDias"],errors="coerce").fillna(0) if "LeadTimeDias" in d.columns else 0
+    d["DiasAlvoPolitica"]=(d["MinDias"]+d["MaxDias"])/2
+    _pol=politica if politica is not None else politica_ideal_ativa()
+    d["PoliticaIdeal"]="Política manual por Curva (definida pelo usuário, com piso de lead time)"
+    d["MinDiasEf"]=d["MinDias"]
+    d["SegurancaDias"]=np.nan
+    d["NivelServico"]=np.nan
+    d["DiasAlvo"]=np.maximum(d["DiasAlvoPolitica"],lead)
+    if _pol["tipo"]=="calculada":
+        # Régua = a MESMA sugestão de Mín/Máx por Curva (giro + lead time + ciclo): alvo = ponto médio.
+        _fil_sug=d["Filial"].dropna().astype(str).unique().tolist() if "Filial" in d.columns else []
+        _sug=sugestao_do_escopo(st.session_state.get("cid"),_fil_sug[0] if len(_fil_sug)==1 else None)
+        if _sug is not None and len(_sug)>0 and all(c in _sug.columns for c in ["Classe","Dias Mínimo sugerido","Dias Máximo sugerido"]) and "Classe" in d.columns:
+            _mn=d["Classe"].map(dict(zip(_sug["Classe"],pd.to_numeric(_sug["Dias Mínimo sugerido"],errors="coerce"))))
+            _mx=d["Classe"].map(dict(zip(_sug["Classe"],pd.to_numeric(_sug["Dias Máximo sugerido"],errors="coerce"))))
+            # Exceções por produto (inclui o Fator de Risco quando aplicado): valem no lugar do valor da Curva, igual ao Motor.
+            _n_exc_pol=0
+            _exc_pol=st.session_state.get("compras_minmax_produto") or {}
+            if _exc_pol:
+                _pstr=d["Produto"].astype(str)
+                _emin=pd.to_numeric(_pstr.map({str(k):v[0] for k,v in _exc_pol.items()}),errors="coerce")
+                _emax=pd.to_numeric(_pstr.map({str(k):v[1] for k,v in _exc_pol.items()}),errors="coerce")
+                _tem_exc=_emin.notna()&_emax.notna()
+                _mn=_mn.where(~_tem_exc,_emin)
+                _mx=_mx.where(~_tem_exc,_emax)
+                _n_exc_pol=int(d.loc[_tem_exc,"Produto"].nunique())
+            _okc=_mn.notna()&_mx.notna()
+            d["MinDiasEf"]=_mn.where(_okc,d["MinDias"])
+            d["DiasAlvo"]=((_mn+_mx)/2).where(_okc,d["DiasAlvo"])
+            d["PoliticaIdeal"]="Sugestão por Curva (Mín/Máx calculados)"+(f" + {_n_exc_pol} produto(s) com exceção/Fator de Risco" if _n_exc_pol else "")
+        else:
+            d["PoliticaIdeal"]="Matriz por classe (com piso de lead time). Não há Sugestão por Curva calculada para este recorte: calcule em Gestão de Compras"
+    d["DemandaDia"]=d["DemandaPrevMes(un)"]/30
+    d["ConsumoDia"]=d["DemandaDia"]*d["CustoUnitario"]
+    d["CapitalIdeal"]=d["DiasAlvo"]*d["DemandaDia"]*d["CustoUnitario"]
+    d["GiroAlvo"]=np.where(d["DiasAlvo"]>0,365/d["DiasAlvo"].where(d["DiasAlvo"]>0,1),0.0)
+    d["Excesso"]=(d["CapitalAtual"]-d["CapitalIdeal"]).clip(lower=0)
+    d["Falta"]=(d["CapitalIdeal"]-d["CapitalAtual"]).clip(lower=0)
+    d["AbaixoPedido"]=d["CoberturaDias"]<d["MinDiasEf"]
+    return d
+
+def _milhar(txt):
+    # Troca só o separador de milhar (1,234,567 → 1.234.567) e NÃO mexe nas vírgulas do texto.
+    return re.sub(r"(?<=\d),(?=\d{3})",".",txt)
+
+def _cap_rs(txt):
+    # Para st.caption: milhar em ponto e "R$" escapado. Sem o escape, dois "R$" no mesmo
+    # parágrafo viram fórmula (LaTeX) e o texto sai quebrado.
+    return _milhar(txt).replace("R$","R\\$")
+
+def path_gmroi_snap(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_snap_gmroi__{_sufixo_filial(filial)}.csv")
+
+def save_gmroi_snap(cid,df,filial=None):
+    # Salva o resultado JÁ calculado na Pareto — o Dashboard só lê esse
+    # arquivo pra montar o card resumo, nunca recalcula por conta própria.
+    # Única fonte da verdade: esta tabela.
+    df.to_csv(path_gmroi_snap(cid,filial),sep=";",decimal=",",index=False,encoding="utf-8-sig")
+
+def load_gmroi_snap(cid,filial=None):
+    p=path_gmroi_snap(cid,filial)
+    if not os.path.exists(p): return None
+    try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
+    except: return None
+
+def escopo_compras_atual():
+    # Fonte ÚNICA do escopo (Categoria / Produto específico / Catálogo + Curva ABC):
+    # é o mesmo que o Motor de Compras usa. A Pareto & GMROI e o Dashboard leem
+    # daqui, pra nunca trabalharem com recortes diferentes.
+    ss=st.session_state
+    tipo=ss.get("compras_escopo_tipo_backup") or ss.get("compras_escopo_tipo") or ""
+    cat=(ss.get("compras_categoria_sel_backup") or ss.get("compras_categoria_sel") or "") if "Categoria" in tipo else ""
+    prods=sorted(map(str,(ss.get("compras_produtos_escopo_backup") or ss.get("compras_produtos_escopo") or []))) if "Produto específico" in tipo else []
+    curva=ss.get("compras_curva_sel_backup") or ss.get("compras_curva_sel") or "(Todas)"
+    return {"tipo":tipo,"categoria":cat,"produtos":prods,"curva":curva}
+
 def _sufixo_filial(filial):
     if not filial or filial=="(Todas as filiais)": return "consolidado"
     return "".join(c if c.isalnum() else "_" for c in filial).strip("_").lower()
@@ -5037,6 +5830,29 @@ def remover_ajuste_consenso(cid,produto_unico,filial=None):
     p=path_ajuste_consenso(cid,filial)
     if df.empty and os.path.exists(p): os.remove(p)
     else: df.to_csv(p,sep=";",decimal=",",encoding="utf-8-sig",index=False)
+
+def path_snapshot_previsao(cid,filial=None,dominio="comercial"): return os.path.join(PASTA,f"{gid(cid)}_snapshot_previsao_{dominio}__{_sufixo_filial(filial)}.csv")
+
+def save_snapshot_previsao(cid,df_novo,filial=None,dominio="comercial"):
+    # NUNCA sobrescreve nem faz upsert — cada rodada vira um registro novo,
+    # mesmo que já exista uma previsão anterior pro mesmo item+Mês-Alvo.
+    # É proposital: permite comparar depois "a previsão feita em agosto pra
+    # outubro" com "a previsão feita em setembro pra outubro". Comercial e
+    # financeiro ficam em arquivos separados (dominio), nunca se misturam.
+    if df_novo is None or df_novo.empty: return
+    p=path_snapshot_previsao(cid,filial,dominio)
+    if os.path.exists(p):
+        try:
+            df_antigo=pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
+            df_novo=pd.concat([df_antigo,df_novo],ignore_index=True)
+        except Exception: pass
+    df_novo.to_csv(p,sep=";",decimal=",",index=False,encoding="utf-8-sig")
+
+def load_snapshot_previsao(cid,filial=None,dominio="comercial"):
+    p=path_snapshot_previsao(cid,filial,dominio)
+    if not os.path.exists(p): return None
+    try: return pd.read_csv(p,sep=";",decimal=",",encoding="utf-8-sig")
+    except: return None
 
 def path_cfgml_fora_previsao(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_cfgml_fora_previsao__{_sufixo_filial(filial)}.csv")
 
@@ -5177,7 +5993,7 @@ def registrar_pendente(cid,nome_arquivo,dados_bytes,origem="manual"):
     item_id=uuid.uuid4().hex[:10]
     tipo="DESCONHECIDO"
     try:
-        df_prev,_msg_prev=ler(dados_bytes,nome_arquivo)
+        df_prev,_msg_prev=ler_fin(dados_bytes,nome_arquivo)
         if isinstance(df_prev,pd.DataFrame):
             tipo=detectar_tipo_operacional(df_prev) or detectar_tipo(df_prev,nome_arquivo) or "DESCONHECIDO"
     except Exception:
@@ -5369,7 +6185,7 @@ def limpar_sessao_cliente():
         "cfgml_df_base_usado","cfgml_df_comp_bruto","cfgml_df_escopo_val",
         "cfgml_produto_col_val_usado","cfgml_col_data_val_usado","cfgml_metrica_val_usado",
         "compras_df_estoque","compras_resultado","compras_calendario","compras_morto",
-        "compras_matriz","compras_leadtime_produto","compras_leadtime_categoria",
+        "compras_matriz","compras_pol_manual_ativa","compras_matriz_manual","compras_leadtime_produto","compras_leadtime_categoria",
         "compras_leadtime_catalogo","compras_minmax_produto","compras_fam_map",
         "compras_leadtime_tabela","compras_leadtime_fornecedor",
         "pareto_resultado_atual","pareto_dim_atual","pareto_met_atual",
@@ -5378,6 +6194,7 @@ def limpar_sessao_cliente():
         "compras_categoria_sel","compras_categoria_sel_backup",
         "compras_produtos_escopo","compras_produtos_escopo_backup",
         "compras_nivel_lead","compras_nivel_lead_backup",
+        "compras_politica_ideal","compras_politica_ideal_backup","compras_nivel_servico","compras_nivel_servico_backup",
         "cfgml_escopo_tipo","cfgml_categoria","cfgml_produto","cfgml_escopo_tipo_backup",
         "cfgml_produtos_fora_previsao",
         "compras_filial_sel","compras_filial_sel_backup",
@@ -5672,6 +6489,7 @@ with st.sidebar:
     if st.button("📊 Financeiro",  key="sb_importar",   use_container_width=True): ir("importar")
     if st.button("🔗 ERP",  key="sb_erp",         use_container_width=True): ir("erp")
     if st.button("📈 Vendas", key="sb_importar_vendas", use_container_width=True): ir("importar_vendas")
+    if st.button("📦 Fornecedores (Prazo/Qualidade/OTIF)", key="sb_importar_fornecedores", use_container_width=True): ir("importar_fornecedores")
     _n_pend_sb=len(load_pendentes(st.session_state.cid)) if st.session_state.cid else 0
     _label_pend_sb=f"📬 Recebidos ({_n_pend_sb})" if _n_pend_sb else "📬 Recebidos"
     if st.button(_label_pend_sb, key="sb_recebidos", use_container_width=True): ir("recebidos")
@@ -5690,7 +6508,7 @@ with st.sidebar:
     if st.button("📦 Gestão Comercial de Compras", key="sb_compras", use_container_width=True): ir("compras")
     if st.button("💰 Fluxo de Caixa Comercial Projetado", key="sb_fluxo_compras", use_container_width=True): ir("fluxo_compras")
     if st.button("🧠 Motor de Previsão Estatística Avançada - ML", key="sb_config_ml", use_container_width=True): ir("config_ml")
-    if st.button("📉 Curva de Pareto", key="sb_pareto", use_container_width=True): ir("pareto")
+    if st.button("📉 Pareto & GMROI", key="sb_pareto", use_container_width=True): ir("pareto")
 
     st.divider()
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
@@ -6012,9 +6830,60 @@ elif pg=="assistente_conexao":
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
 
-    st.markdown('<div class="al-i">Você não precisa conhecer todas as formas de integração que existem — '
-        'responda 1 pergunta e mostramos exatamente o que fazer no seu caso.</div>',unsafe_allow_html=True)
+    st.markdown('<div class="al-i">Aqui você vê <b>como os dados do seu sistema chegam ao NetExame, como são entendidos e como viram análise</b>. '
+        'Responda 1 pergunta mais abaixo e mostramos exatamente o que fazer no seu caso.</div>',unsafe_allow_html=True)
 
+    # ── O caminho do dado (ETL) ──
+    st.markdown("### 🔄 O caminho do dado: do seu sistema ao dashboard")
+    _etapas=[("📥","1. Entrada","Você envia o arquivo (CSV, Excel ou PDF) à mão, por e-mail, por pasta ou por conector (Omie / Conta Azul)."),
+             ("🧹","2. Limpeza","Relatório de ERP com título, filtros, subtotais e rodapé? O sistema acha a tabela, descarta o que é lixo e aproveita o que é informação (grupo, filial)."),
+             ("🧭","3. De-Para","Colunas com nome diferente do nosso modelo são ligadas aos campos do sistema. O mapeamento fica salvo por cliente."),
+             ("✅","4. Conferência","O sistema avisa o que reconheceu e o que falta. Você confere antes de qualquer dado entrar na base."),
+             ("📊","5. Análise","Com a base carregada: Curva ABC, previsão, sugestão de mínimo e máximo, capital parado, fluxo de caixa e indicadores.")]
+
+    for _col,(_ic,_tt,_tx) in zip(st.columns(len(_etapas)),_etapas):
+        _col.markdown('<div style="background:#F6F8F7;border:1px solid #D9E2DD;border-radius:10px;padding:10px 12px;height:100%">'
+            '<div style="font-size:1.3rem">'+_ic+'</div><div style="font-weight:800;font-size:.86rem;color:#1F3A2D;margin:2px 0 4px 0">'+_tt+'</div>'
+            '<div style="font-size:.78rem;color:#3B4A42;line-height:1.4">'+_tx+'</div></div>',unsafe_allow_html=True)
+
+    st.caption("Em linguagem técnica, isso é um processo de ETL: Extrair (pegar o dado no seu sistema), Transformar (limpar e padronizar) e Carregar (gravar na base do cliente). "
+        "As etapas 2, 3 e 4 são a parte de Transformar, e acontecem automaticamente a cada envio.")
+
+    # ── Destaque: De-Para de colunas ──
+    st.markdown('<div style="background:linear-gradient(135deg,#FFF8E1 0%,#FFF1C2 100%);border:1.5px solid #D4AF37;border-left:6px solid #D4AF37;border-radius:10px;padding:14px 18px;margin:6px 0 10px 0">'
+        '<div style="font-size:.78rem;font-weight:800;color:#8A6A1F;letter-spacing:.6px">🧭 DE-PARA DE COLUNAS</div>'
+        '<div style="font-size:1.02rem;font-weight:700;color:#3D2A00;margin:3px 0 6px 0">Seus arquivos podem vir com qualquer nome de coluna</div>'
+        '<div style="font-size:.86rem;color:#4A3B12;line-height:1.5">Você não precisa ajustar a planilha do seu sistema para ficar igual ao nosso modelo. '
+        'Ao enviar um arquivo, o painel <b>🧭 Mapear colunas</b> aparece logo abaixo do seletor: o sistema <b>mostra o que reconheceu</b>, <b>sugere</b> qual coluna sua corresponde a cada campo, '
+        '<b>avisa o que falta</b> no arquivo (para a empresa providenciar e reenviar), você <b>confirma uma vez</b> e o mapeamento <b>fica salvo para os próximos envios</b>. '
+        'Vale para <b>Vendas, Estoque, Pedidos de fornecedores, Contas a Pagar e Contas a Receber</b>.</div></div>',unsafe_allow_html=True)
+    _map_ass=load_mapeamento_colunas(st.session_state.cid) or {}
+    _rot_ass={"vendas":"Vendas","estoque":"Estoque","pedidos":"Fornecedores","pagar":"Contas a Pagar","receber":"Contas a Receber"}
+    st.caption("Mapeamentos salvos neste cliente: "+" · ".join(f"{r} — {len(_map_ass[k])} colunas" if _map_ass.get(k) else f"{r} — ainda não configurado" for k,r in _rot_ass.items()))
+    with st.expander("🧾 Relatórios que vêm direto do ERP (com título, filtros, subtotais e rodapé)",expanded=False):
+        st.markdown("""
+Relatórios exportados de ERP quase nunca são tabelas limpas. O sistema **identifica sozinho** o que é lixo e o que é informação:
+
+- **Descarta:** título e subtítulo do relatório, período, usuário e data de emissão, totais e subtotais (somar de novo duplicaria os valores), cabeçalho repetido a cada página, "Página 1 de 3" e linhas soltas no rodapé.
+- **Aproveita como coluna:** linha de grupo (por exemplo "Grupo: FREIOS") e filtros do topo (por exemplo "Filial: 01 - MATRIZ") viram uma coluna nova, preenchida nas linhas a que se aplicam.
+- **Confere com você:** no painel **🧾 Conferência** você vê, linha a linha, o que foi descartado e o que virou coluna.
+- **Financeiro (DRE, Balanço, Fluxo):** só título, filtros e rodapé saem. Totais e subtotais **ficam**, porque nessas demonstrações eles são o dado.
+- **Arquivo que já é uma tabela limpa** é lido exatamente como veio.
+""")
+    with st.expander("🔗 Como as bases se relacionam entre si",expanded=False):
+        st.markdown("""
+Cada base funciona sozinha, mas as análises ficam mais completas quando as bases compartilham as mesmas **chaves**:
+
+| Chave | O que liga | Para quê |
+|---|---|---|
+| **Produto** (código ou SKU) | Vendas ↔ Estoque ↔ Pedidos de fornecedores | Juntar a demanda (vendas), a posição (estoque) e o prazo de reposição do mesmo item |
+| **Fornecedor** | Estoque ↔ Pedidos de fornecedores | Prazo de entrega, qualidade e OTIF por fornecedor |
+| **Filial** (opcional) | Vendas, Estoque, Contas a Pagar e Receber | Separar as análises por loja ou filial |
+| **Data** | Emissão (vendas), Vencimento (pagar e receber), Data Pedido, Prevista e Real (pedidos) | Eixo de tempo das análises |
+| **Período** (mês e ano) | DRE, Balanço e Fluxo de Caixa | O Financeiro se liga por período, não por produto |
+
+**Importante:** o De-Para liga **nomes de coluna** (por exemplo "COD_PROD" no seu arquivo é o "Produto" do sistema). Ele **não converte códigos**: o código do produto precisa ser o mesmo nos arquivos de Vendas, Estoque e Pedidos, senão o sistema não consegue reconhecer que é o mesmo item.
+""")
     st.markdown('<div class="al-s">⚡ <b>Atalho:</b> se o seu sistema é <b>Omie</b> ou <b>Conta Azul</b>, já '
         'temos conector pronto — não precisa de e-mail, pasta ou script nenhum, é só cadastrar sua chave de '
         'acesso. Se for <b>TOTVS/Protheus</b>, já reservamos o espaço de configuração — a integração completa '
@@ -6027,14 +6896,15 @@ elif pg=="assistente_conexao":
         'arquivo de exemplo de cada tipo de dado manualmente. Isso confirma que os dados estão sendo entendidos '
         'corretamente <b>antes</b> de qualquer coisa rodar sozinha — automatizar um processo com dado errado é o '
         'maior risco de qualquer integração.</div>',unsafe_allow_html=True)
-    st.caption("O NetExame tem 5 pontos de entrada de dado — clique no que você quer enviar primeiro:")
+    st.caption("O NetExame tem 6 pontos de entrada de dado — clique no que você quer enviar primeiro:")
     ca1,ca2,ca3=st.columns(3)
     if ca1.button("📊 Financeiro\n(DRE/Balanço/Fluxo)",use_container_width=True): ir("importar")
     if ca2.button("📈 Vendas",use_container_width=True): ir("importar_vendas")
     if ca3.button("📦 Estoque",use_container_width=True): ir("compras")
-    ca4,ca5=st.columns(2)
+    ca4,ca5,ca6=st.columns(3)
     if ca4.button("💰 Contas a Pagar",use_container_width=True): ir("fluxo_compras")
     if ca5.button("💵 Contas a Receber",use_container_width=True): ir("fluxo_compras")
+    if ca6.button("📦 Fornecedores\n(Prazo/Qualidade/OTIF)",use_container_width=True): ir("importar_fornecedores")
 
     st.markdown("---")
     st.markdown("### 🧭 Depois do primeiro envio — como automatizar pra sempre")
@@ -6241,7 +7111,7 @@ elif pg=="importar":
     elif arqs and btn_dir:
         dfs_dir=[]
         for a in arqs:
-            b=a.read(); n=a.name.lower()
+            b=a.read(); b,_nm_lim=limpar_topo_fin_bytes(b,a.name); n=_nm_lim.lower()
             try:
                 if n.endswith(".csv"):
                     for enc in ["utf-8-sig","utf-8","latin1","cp1252"]:
@@ -6384,7 +7254,7 @@ elif pg=="importar":
         else:
             for a in arqs:
                 with st.spinner(f"Lendo {a.name}..."):
-                    df_r,msg=ler(a.read(),a.name)
+                    df_r,msg=ler_fin(a.read(),a.name)
                 if df_r is None:
                     st.markdown(f'<div class="al-d">❌ {a.name}: {msg}</div>',unsafe_allow_html=True); continue
                 st.markdown(f'<div class="al-s">✅ {a.name}: {msg}</div>',unsafe_allow_html=True)
@@ -6602,6 +7472,126 @@ elif pg=="importar":
             st.dataframe(df_ex,use_container_width=True,height=400)
 
 # ── ERP ─────────────────────────────────────────────
+elif pg=="importar_fornecedores":
+    hdr("📦 Importar Desempenho de Fornecedores","Calcula Prazo, Qualidade e OTIF automaticamente a partir dos pedidos reais — não é mais preciso digitar o percentual de cabeça")
+
+    st.markdown('<div class="al-i">Em vez de estimar o percentual de cada fornecedor, suba uma planilha com os '
+        'pedidos recebidos (1 linha por produto do pedido) e o sistema calcula os 3 indicadores a partir do fato: '
+        '<b>Prazo</b> = % dos pedidos entregues até a data prevista; <b>Qualidade</b> = % dos itens recebidos sem '
+        'divergência/defeito; <b>OTIF</b> = % dos pedidos que vieram completos E no prazo, ao mesmo tempo.</div>',unsafe_allow_html=True)
+
+    _modelo_forn_csv=("Fornecedor;Pedido;Produto;Qtd Pedida;Qtd Recebida;Qtd Divergencia;Data Prevista;Data Real;Data Pedido\n"
+        "Fornecedor Exemplo;P0001;Produto Exemplo;100;100;0;10/01/2025;09/01/2025;02/01/2025\n")
+    st.download_button("📥 Baixar planilha modelo",_modelo_forn_csv.encode("utf-8-sig"),
+        file_name="modelo_pedidos_fornecedores.csv",use_container_width=True)
+    st.caption("A coluna Data Pedido (data em que o pedido foi feito) é opcional: com ela, o sistema mede também o lead time real de cada fornecedor.")
+    st.caption("Datas no formato dd/mm/aaaa. Se um pedido tiver vários produtos, repita o Pedido numa linha pra "
+        "cada Produto — Qtd Pedida/Recebida/Divergência ficam por linha (por produto), as datas são as mesmas "
+        "pro pedido inteiro.")
+
+    arquivo_forn=st.file_uploader("Envie a planilha preenchida (.csv)",type=["csv"],key="upload_pedidos_forn")
+    dica_mapeador_colunas("pedidos",st.session_state.cid)
+    if arquivo_forn is not None:
+        ui_mapeador_colunas(colunas_do_arquivo(arquivo_forn,sep=";"),"pedidos",st.session_state.cid,"pedidos")
+        try:
+            df_forn_raw=pd.read_csv(arquivo_forn,sep=";",decimal=",",encoding="utf-8-sig")
+            df_forn_raw=aplicar_mapeamento_colunas(df_forn_raw,"pedidos",st.session_state.cid)   # só age se houver mapeamento salvo
+            _col_obrig_forn={"Fornecedor","Pedido","Produto","Qtd Pedida","Qtd Recebida","Qtd Divergencia","Data Prevista","Data Real"}
+            if not _col_obrig_forn.issubset(df_forn_raw.columns):
+                st.markdown(f'<div class="al-d">❌ Faltam colunas: {", ".join(_col_obrig_forn-set(df_forn_raw.columns))}. '
+                    'Baixe a planilha modelo acima e preencha nela.</div>',unsafe_allow_html=True)
+            else:
+                df_forn_raw["Data Prevista"]=pd.to_datetime(df_forn_raw["Data Prevista"],format="%d/%m/%Y",errors="coerce")
+                df_forn_raw["Data Real"]=pd.to_datetime(df_forn_raw["Data Real"],format="%d/%m/%Y",errors="coerce")
+                if "Data Pedido" in df_forn_raw.columns:   # opcional: linha sem data do pedido continua valendo para Prazo, Qualidade e OTIF
+                    df_forn_raw["Data Pedido"]=pd.to_datetime(df_forn_raw["Data Pedido"],format="%d/%m/%Y",errors="coerce")
+                _n_datas_invalidas=df_forn_raw["Data Prevista"].isna().sum()+df_forn_raw["Data Real"].isna().sum()
+                if _n_datas_invalidas>0:
+                    st.markdown(f'<div class="al-w">⚠️ {_n_datas_invalidas} data(s) não reconhecida(s) (formato '
+                        'esperado: dd/mm/aaaa) — essas linhas serão ignoradas no cálculo.</div>',unsafe_allow_html=True)
+                df_forn_raw=df_forn_raw.dropna(subset=["Data Prevista","Data Real"])
+
+                st.markdown("**📋 Prévia dos dados enviados:**")
+                st.dataframe(df_forn_raw.head(20),use_container_width=True,hide_index=True)
+
+                _linhas_sc_forn=[]
+                for _forn_nome,_g_forn in df_forn_raw.groupby("Fornecedor"):
+                    _g_pedido_forn=_g_forn.groupby("Pedido").agg(
+                        qtd_pedida=("Qtd Pedida","sum"),qtd_recebida=("Qtd Recebida","sum"),
+                        data_prevista=("Data Prevista","first"),data_real=("Data Real","first")).reset_index()
+                    _g_pedido_forn["no_prazo"]=_g_pedido_forn["data_real"]<=_g_pedido_forn["data_prevista"]
+                    _g_pedido_forn["completo"]=_g_pedido_forn["qtd_recebida"]>=_g_pedido_forn["qtd_pedida"]
+                    _prazo_pct_forn=round(_g_pedido_forn["no_prazo"].mean()*100)
+                    _soma_receb_forn=_g_forn["Qtd Recebida"].sum()
+                    _qualidade_pct_forn=round((1-_g_forn["Qtd Divergencia"].sum()/_soma_receb_forn)*100) if _soma_receb_forn>0 else 100
+                    _otif_pct_forn=round((_g_pedido_forn["no_prazo"]&_g_pedido_forn["completo"]).mean()*100)
+                    _linhas_sc_forn.append({"Fornecedor":_forn_nome,"Prazo":_prazo_pct_forn,
+                        "Qualidade":_qualidade_pct_forn,"OTIF":_otif_pct_forn,
+                        "Pedidos analisados":len(_g_pedido_forn)})
+                df_sc_calculado_forn=pd.DataFrame(_linhas_sc_forn)
+
+                st.markdown("**📊 Indicadores calculados a partir dos pedidos acima:**")
+                st.dataframe(df_sc_calculado_forn,use_container_width=True,hide_index=True)
+
+                senha_import_forn=st.text_input("Senha master para confirmar a importação",type="password",key="senha_import_forn")
+                if st.button("💾 Confirmar e Acumular ao Histórico de Fornecedores",key="btn_salvar_import_forn",use_container_width=True):
+                    if senha_import_forn!=SENHA_MASTER:
+                        st.markdown('<div class="al-d">❌ Senha master incorreta — nada foi salvo.</div>',unsafe_allow_html=True)
+                    elif not st.session_state.cid:
+                        st.markdown('<div class="al-w">⚠️ Nenhum cliente selecionado — não é possível salvar.</div>',unsafe_allow_html=True)
+                    else:
+                        # Acumula ao histórico — não substitui. Reenviar o MESMO
+                        # Fornecedor+Pedido+Produto corrige/atualiza aquela linha
+                        # específica; pedido novo soma ao que já existia. Erro
+                        # antigo não é mascarado — ele continua contando no cálculo,
+                        # só perde peso relativo conforme mais pedidos se acumulam.
+                        _chave_forn=["Fornecedor","Pedido","Produto"]
+                        _hist_existente_forn=load_pedidos_fornecedores(st.session_state.cid)
+                        if _hist_existente_forn is not None and not _hist_existente_forn.empty:
+                            _hist_existente_forn["Data Prevista"]=pd.to_datetime(_hist_existente_forn["Data Prevista"])
+                            _hist_existente_forn["Data Real"]=pd.to_datetime(_hist_existente_forn["Data Real"])
+                            if "Data Pedido" in _hist_existente_forn.columns: _hist_existente_forn["Data Pedido"]=pd.to_datetime(_hist_existente_forn["Data Pedido"],errors="coerce")
+                            _chaves_novas_forn=set(map(tuple,df_forn_raw[_chave_forn].values))
+                            _mask_manter_forn=~_hist_existente_forn[_chave_forn].apply(tuple,axis=1).isin(_chaves_novas_forn)
+                            _df_acumulado_forn=pd.concat([_hist_existente_forn[_mask_manter_forn],df_forn_raw],ignore_index=True)
+                        else:
+                            _df_acumulado_forn=df_forn_raw.copy()
+
+                        # Recalcula os indicadores em cima do HISTÓRICO INTEIRO
+                        # acumulado, não só do lote que acabou de ser enviado.
+                        _linhas_sc_acum_forn=[]
+                        for _forn_nome_acum,_g_forn_acum in _df_acumulado_forn.groupby("Fornecedor"):
+                            _g_ped_acum=_g_forn_acum.groupby("Pedido").agg(
+                                qtd_pedida=("Qtd Pedida","sum"),qtd_recebida=("Qtd Recebida","sum"),
+                                data_prevista=("Data Prevista","first"),data_real=("Data Real","first")).reset_index()
+                            _g_ped_acum["no_prazo"]=_g_ped_acum["data_real"]<=_g_ped_acum["data_prevista"]
+                            _g_ped_acum["completo"]=_g_ped_acum["qtd_recebida"]>=_g_ped_acum["qtd_pedida"]
+                            _prazo_acum=round(_g_ped_acum["no_prazo"].mean()*100)
+                            _soma_receb_acum=_g_forn_acum["Qtd Recebida"].sum()
+                            _qualidade_acum=round((1-_g_forn_acum["Qtd Divergencia"].sum()/_soma_receb_acum)*100) if _soma_receb_acum>0 else 100
+                            _otif_acum=round((_g_ped_acum["no_prazo"]&_g_ped_acum["completo"]).mean()*100)
+                            _linhas_sc_acum_forn.append({"Fornecedor":_forn_nome_acum,"Prazo":_prazo_acum,
+                                "Qualidade":_qualidade_acum,"OTIF":_otif_acum})
+                        df_sc_acumulado_forn=pd.DataFrame(_linhas_sc_acum_forn)
+
+                        save_pedidos_fornecedores(st.session_state.cid,_df_acumulado_forn)
+                        save_scorecard_forn(st.session_state.cid,df_sc_acumulado_forn)
+                        addlog(f"Importação de Desempenho de Fornecedores: +{len(df_forn_raw)} linha(s) de pedido "
+                            f"(histórico total: {len(_df_acumulado_forn)} linha(s), {len(df_sc_acumulado_forn)} fornecedor(es)).")
+                        st.markdown(f'<div class="al-s">✅ Acumulado ao histórico — {len(_df_acumulado_forn)} linha(s) de '
+                            'pedido no total. Indicadores recalculados a partir de todo o histórico, e o Painel de '
+                            'Indicadores e o Parecer IA já usam o novo número.</div>',unsafe_allow_html=True)
+                        st.dataframe(df_sc_acumulado_forn,use_container_width=True,hide_index=True)
+        except Exception as _e_import_forn:
+            st.markdown(f'<div class="al-d">❌ Erro ao ler o arquivo: {_e_import_forn}</div>',unsafe_allow_html=True)
+
+    _pedidos_salvos_forn=load_pedidos_fornecedores(st.session_state.cid) if st.session_state.cid else None
+    if _pedidos_salvos_forn is not None and not _pedidos_salvos_forn.empty:
+        with st.expander(f"📋 Ver pedidos já importados ({len(_pedidos_salvos_forn)} linha(s))"):
+            st.dataframe(_pedidos_salvos_forn,use_container_width=True,hide_index=True)
+        st.caption("📈 A variação do prazo por fornecedor (média, desvio e P90 do atraso) fica em 📦 Gestão de Compras › Configurar, no fim da página.")
+
+    st.stop()
 elif pg=="erp":
     hdr("🔗 ERP","Omie, Conta Azul e TOTVS/Protheus")
     if not st.session_state.cid:
@@ -6821,7 +7811,7 @@ elif pg=="recebidos":
                             remover_pendente(st.session_state.cid,item["id"]); st.rerun()
                     continue
 
-                df_item,msg_item=ler(dados_item,item["arquivo"])
+                df_item,msg_item=ler_fin(dados_item,item["arquivo"])
                 if isinstance(df_item,pd.DataFrame):
                     st.caption(f"Prévia — {msg_item}")
                     st.dataframe(df_item.head(8),use_container_width=True)
@@ -10208,18 +11198,22 @@ elif pg=="importar_vendas":
     if not st.session_state.cid:
         st.markdown('<div class="al-w">⚠️ Cadastre e selecione um cliente primeiro.</div>',unsafe_allow_html=True); st.stop()
     arq_v=st.file_uploader("Selecione o arquivo (CSV ou Excel)",type=["csv","xlsx","xls"],key="up_vendas")
+    dica_mapeador_colunas("vendas",st.session_state.cid)
     if arq_v is not None:
+        _pronto_vendas=ui_mapeador_colunas(colunas_do_arquivo(arq_v),"vendas",st.session_state.cid,"vendas")
+        if not _pronto_vendas: st.caption("🔒 O botão Processar libera quando as colunas obrigatórias estiverem reconhecidas ou confirmadas acima. Se faltar alguma, peça à área do seu sistema para incluí-la e envie o arquivo de novo.")
         senha_import_vendas=st.text_input("Senha master para confirmar a importação *",type="password",key="senha_import_vendas")
-        if st.button("📤 Processar arquivo importado",use_container_width=True):
+        if st.button("📤 Processar arquivo importado",use_container_width=True,disabled=not _pronto_vendas):
             if senha_import_vendas!=SENHA_MASTER:
                 st.error("❌ Senha master incorreta.")
             else:
                 b=arq_v.read()
-                df_v,msg_v=ler(b,arq_v.name)
+                df_v,msg_v=ler_erp(b,arq_v.name)
                 if df_v is None or isinstance(df_v,tuple):
                     st.markdown(f'<div class="al-d">❌ Não foi possível ler: {msg_v}</div>',unsafe_allow_html=True)
                 else:
                     df_v.columns=[str(c).strip() for c in df_v.columns]
+                    df_v=aplicar_mapeamento_colunas(df_v,"vendas",st.session_state.cid)   # só age se houver mapeamento salvo
                     st.markdown(f'<div class="al-s">✅ {msg_v} — {len(df_v)} linhas, {df_v.shape[1]} colunas</div>',unsafe_allow_html=True)
                     st.session_state.vendas_raw=df_v
                     save_vendas_df(st.session_state.cid,df_v)
@@ -10241,7 +11235,7 @@ elif pg=="importar_vendas":
                     st.rerun()
 
 elif pg=="pareto":
-    hdr("📐 Curva de Pareto","Concentração de vendas por Cliente ou por Produto")
+    hdr("📐 Pareto & GMROI","Concentração de vendas por Cliente ou por Produto, e rentabilidade sobre o capital em estoque")
     df_v=get_vendas_df()
     if df_v is None or df_v.empty:
         st.markdown('<div class="al-w">⚠️ Importe a base de vendas primeiro em <b>📥 Importar Vendas</b>.</div>',unsafe_allow_html=True); st.stop()
@@ -10368,7 +11362,350 @@ elif pg=="pareto":
         with st.expander(f"⭐ Os {n_a} {rotulo_dim} que respondem por 80% do faturamento",expanded=True):
             st.dataframe(resultado_vital,use_container_width=True,height=min(500,80+35*len(resultado_vital)))
         csv_pareto=resultado.to_csv(sep=";",decimal=",",index=False).encode("utf-8-sig")
-        st.download_button("📥 Exportar tabela completa (CSV)",csv_pareto,file_name=f"pareto_{gid(dim_atual)}.csv",use_container_width=True)
+        st.download_button("📥 Exportar tabela completa (CSV)",csv_pareto,file_name=f"pareto_gmroi_{gid(dim_atual)}.csv",use_container_width=True)
+
+        # ═══ GMROI — Concentração × Rentabilidade ═══
+        # Só faz sentido na visão por Produto — Cliente não tem estoque/custo.
+        # Cruza vendas (preço médio, quantidade) com estoque+custo (já importados
+        # em outra tela) pra responder uma pergunta que o Pareto puro não responde:
+        # não só "quanto esse produto vende", mas "vale o capital parado nele".
+        if col_prod==dim_atual:
+            sec("💰 GMROI — Esse produto vale o capital parado nele?")
+            st.markdown('<div class="al-i">GMROI responde uma pergunta simples: <b>quanto de margem bruta cada R$1 investido em estoque devolve no período escolhido?</b> '
+                'É o retorno do período, <b>sem anualizar</b>: margem bruta da janela de venda (definida abaixo) ÷ estoque a custo de hoje. '
+                'Um GMROI de 0,46 em 3 meses significa R$0,46 de margem bruta para cada R$1 investido nesse estoque, naqueles 3 meses. '
+                'Quando chega a 1,00, a margem bruta do período já cobre o valor do estoque (selo verde: capital remunerado); abaixo disso, '
+                'a remuneração do capital ainda não se completou (selo vermelho). Janelas diferentes não são comparáveis: quanto maior a janela, '
+                'maior o GMROI, porque a margem acumula. Produto pode ter faturamento alto e GMROI baixo (capital demais parado pra pouco retorno) '
+                '— ou faturamento baixo e GMROI alto (pouco capital, girando bem). Cruza automaticamente com Custo Unitário e Estoque Atual, já '
+                'importados em 📦 Gestão de Compras. A janela é móvel, contada a partir da última venda da base, pra margem e estoque ficarem '
+                'na mesma janela de tempo. A margem é bruta (antes de despesas).</div>',unsafe_allow_html=True)
+
+            _col_data_gmroi=next((c for c in cols_v if c.strip().lower() in ["emissao","emissão","data"]),None)
+            _meses_janela_gmroi=st.slider("Janela de vendas pro cálculo (meses)",1,12,3,key="gmroi_janela_meses",
+                help="Período de venda usado pra calcular margem e giro. Precisa ser uma janela curta e fixa, pra ficar comparável com o Estoque Atual (uma fotografia de hoje).")
+
+            _rot_janela_gm=f"{_meses_janela_gmroi} meses"; _base_curta_gm=False   # valor padrão: sempre definido (a janela real é calculada mais abaixo)
+            # ── Escopo IDÊNTICO ao do Motor de Compras ──────────────────────────
+            # Filial: a do topo desta página. Categoria / Produto específico /
+            # Catálogo e Curva ABC: lidos do Motor de Compras (escopo_compras_atual),
+            # com a MESMA regra: a Curva é calculada DENTRO do escopo, sobre a venda
+            # da filial, com os cortes 70/80/90/97% — igual a Gestão de Compras.
+            _esc_gm=escopo_compras_atual()
+            _tipo_esc_gm=_esc_gm["tipo"]
+            _col_prod_gmroi=next((c for c in cols_v if c.strip().lower() in ["produto","codigo","código","sku"]),dim_sel)
+            _col_cat_gmroi=next((c for c in cols_v if c.strip().lower() in ["categoria","segmento","grupo"]),None)
+            _filial_ativa_gm=filial_sel_ml if (_col_fil_ml and filial_sel_ml!="(Todas as filiais)") else None
+            _produtos_escopo_gm=None
+            _txt_escopo_gm="Catálogo inteiro"
+            _aviso_escopo_gm=""
+            if not _tipo_esc_gm:
+                _aviso_escopo_gm="O escopo do Motor de Compras ainda não foi definido; usando o catálogo inteiro."
+            elif "Categoria" in _tipo_esc_gm:
+                if _col_cat_gmroi:
+                    _cats_gm=sorted(df_v[_col_cat_gmroi].dropna().astype(str).unique().tolist())
+                    _cat_esc_gm=_esc_gm["categoria"]
+                    if _cat_esc_gm not in _cats_gm:
+                        _cat_esc_gm=_cats_gm[0] if _cats_gm else None
+                    if _cat_esc_gm is not None:
+                        _produtos_escopo_gm=set(df_v[df_v[_col_cat_gmroi].astype(str)==_cat_esc_gm][_col_prod_gmroi].astype(str).str.strip().unique())
+                        _txt_escopo_gm=f"Categoria {_cat_esc_gm}"
+                else:
+                    _aviso_escopo_gm="A base de vendas não tem coluna de Categoria; usando o catálogo inteiro."
+            elif "Produto específico" in _tipo_esc_gm:
+                _produtos_escopo_gm=set(str(p).strip() for p in _esc_gm["produtos"])
+                _txt_escopo_gm=f"Produto específico ({len(_produtos_escopo_gm)} produto(s))"
+
+            _produtos_curva_gm=None
+            _curva_esc_gm=_esc_gm["curva"]
+            if _curva_esc_gm!="(Todas)":
+                _df_calc_gm=df_v.copy()
+                _df_calc_gm["_prod_gm"]=_df_calc_gm[_col_prod_gmroi].astype(str).str.strip()
+                if _produtos_escopo_gm is not None:
+                    _df_calc_gm=_df_calc_gm[_df_calc_gm["_prod_gm"].isin(_produtos_escopo_gm)]
+                _df_calc_gm[col_valor]=parse_valor_brl(_df_calc_gm[col_valor])
+                _rk_gm=pareto_analysis(_df_calc_gm,"_prod_gm",col_valor).rename(columns={"_prod_gm":"Produto"})
+                _rk_gm["_CurvaABC"]=_rk_gm["pct_acumulado"].apply(
+                    lambda p:"A" if p<=70 else ("B" if p<=80 else ("C" if p<=90 else ("D" if p<=97 else "E"))))
+                if _curva_esc_gm in _rk_gm["_CurvaABC"].unique():
+                    _produtos_curva_gm=set(_rk_gm[_rk_gm["_CurvaABC"]==_curva_esc_gm]["Produto"].astype(str))
+                    _txt_escopo_gm+=f" · Curva {_curva_esc_gm}"
+                else:
+                    _aviso_escopo_gm=(_aviso_escopo_gm+" " if _aviso_escopo_gm else "")+f"A Curva {_curva_esc_gm} não existe neste recorte; usando todas as curvas."
+
+            if _produtos_curva_gm is not None:
+                _produtos_final_gm=_produtos_curva_gm
+            else:
+                _produtos_final_gm=_produtos_escopo_gm
+            _filial_txt_gm=f"Filial {_filial_ativa_gm}" if _filial_ativa_gm else "Todas as filiais"
+            _escopo_txt_gmroi=f"{_filial_txt_gm} · {_txt_escopo_gm}"
+            st.markdown(f'<div class="al-i">📌 <b>Escopo (o mesmo do Motor de Compras):</b> {_escopo_txt_gmroi}. '
+                f'A filial é a do topo desta página; categoria, produtos e Curva ABC vêm de 📦 Gestão de Compras › Configurar › Escopo. '
+                f'Para mudar o recorte, altere lá, assim as duas telas nunca trabalham com recortes diferentes.'
+                f'{(" ⚠️ "+_aviso_escopo_gm) if _aviso_escopo_gm else ""}</div>',unsafe_allow_html=True)
+
+            _df_est_gmroi=get_estoque_compras()
+            if _df_est_gmroi is None or _df_est_gmroi.empty or "Produto" not in _df_est_gmroi.columns:
+                st.caption("⚠️ Importe Estoque e Custo Unitário em 📦 Gestão de Compras pra calcular o GMROI.")
+            elif not _col_data_gmroi:
+                st.caption("⚠️ Não encontrei coluna de data na base de vendas — o GMROI precisa dela pra limitar a janela de tempo.")
+            else:
+                _col_qtd_gmroi=next((c for c in cols_v if c.strip().lower() in ["quantidade","qtd","qtde"]),None)
+                if not _col_qtd_gmroi:
+                    st.caption("⚠️ Não encontrei coluna de Quantidade na base de vendas — o GMROI precisa dela pra calcular o preço médio.")
+                else:
+                    _df_v_janela_gmroi=df_v.copy()
+                    _df_v_janela_gmroi["_data_gmroi"]=pd.to_datetime(_df_v_janela_gmroi[_col_data_gmroi],errors="coerce",dayfirst=True)
+                    _data_corte_gmroi=_df_v_janela_gmroi["_data_gmroi"].max()-pd.DateOffset(months=_meses_janela_gmroi)
+                    _data_min_base_gm=_df_v_janela_gmroi["_data_gmroi"].min()
+                    _df_v_janela_gmroi=_df_v_janela_gmroi[_df_v_janela_gmroi["_data_gmroi"]>_data_corte_gmroi]
+                    _data_fim_gmroi=_df_v_janela_gmroi["_data_gmroi"].max()
+                    _base_curta_gm=bool(_data_min_base_gm>_data_corte_gmroi)   # a base de vendas não cobre a janela escolhida
+                    _data_ini_gm=_data_min_base_gm if _base_curta_gm else _data_corte_gmroi+pd.Timedelta(days=1)
+                    _dias_janela_gm=max((_data_fim_gmroi-_data_ini_gm).days+1,1)
+                    _rot_janela_gm=(f"{_dias_janela_gm/30.44:.1f} meses (toda a base)" if _base_curta_gm else f"{_meses_janela_gmroi} meses")
+                    st.caption(f"📅 Usando vendas de {_data_ini_gm.strftime('%d/%m/%Y')} até {_data_fim_gmroi.strftime('%d/%m/%Y')} ({_rot_janela_gm}, {_dias_janela_gm} dias). GMROI do período, sem anualizar.")
+                    if _base_curta_gm:
+                        st.caption(f"⚠️ A base de vendas só cobre {_dias_janela_gm} dias: a janela de {_meses_janela_gmroi} meses foi reduzida à base inteira.")
+                    _df_v_janela_gmroi["_prod_gm"]=_df_v_janela_gmroi[_col_prod_gmroi].astype(str).str.strip()
+                    if _produtos_final_gm is not None:
+                        _df_v_janela_gmroi=_df_v_janela_gmroi[_df_v_janela_gmroi["_prod_gm"].isin(_produtos_final_gm)]
+
+                    if _df_v_janela_gmroi.empty:
+                        _vendas_gmroi=pd.DataFrame(columns=["Produto","Quantidade","Valor"])
+                    else:
+                        _vendas_gmroi=_df_v_janela_gmroi.groupby("_prod_gm").agg(
+                            Quantidade=(_col_qtd_gmroi,"sum"),Valor=(col_valor,lambda s:parse_valor_brl(s).sum())).reset_index()
+                        _vendas_gmroi.columns=["Produto","Quantidade","Valor"]
+                    # Estoque: MESMA filial das vendas e MESMO conjunto de produtos do escopo.
+                    # Agrupa por Produto ANTES do merge (a base pode ter mais de uma linha
+                    # por produto), senão o merge multiplicava cada venda.
+                    _est_gmroi=_df_est_gmroi.copy()
+                    _est_gmroi["Produto"]=_est_gmroi["Produto"].astype(str).str.strip()
+                    _escopo_ok_gmroi=True
+                    _filiais_estoque_gmroi=[]
+                    if _filial_ativa_gm:
+                        _col_fil_est_gmroi=col_filial(_est_gmroi)
+                        if _col_fil_est_gmroi:
+                            _filiais_estoque_gmroi=sorted(_est_gmroi[_col_fil_est_gmroi].dropna().astype(str).str.strip().unique().tolist())
+                            _mask_fil_gmroi=_est_gmroi[_col_fil_est_gmroi].astype(str).str.strip().str.casefold()==str(_filial_ativa_gm).strip().casefold()
+                            _est_gmroi=_est_gmroi[_mask_fil_gmroi].copy()
+                        else:
+                            _escopo_ok_gmroi=False
+                            _est_gmroi=_est_gmroi.iloc[0:0]
+                    if _produtos_final_gm is not None:
+                        _est_gmroi=_est_gmroi[_est_gmroi["Produto"].isin(_produtos_final_gm)].copy()
+                    _est_gmroi["EstoqueAtual"]=pd.to_numeric(_est_gmroi["EstoqueAtual"],errors="coerce").fillna(0)
+                    _est_gmroi["CustoUnitario"]=pd.to_numeric(_est_gmroi["CustoUnitario"],errors="coerce").fillna(0)
+                    _est_gmroi=_est_gmroi.groupby("Produto").agg(
+                        CustoUnitario=("CustoUnitario","first"),EstoqueAtual=("EstoqueAtual","sum")).reset_index()
+                    _estoque_total_escopo_gmroi=float((_est_gmroi["EstoqueAtual"]*_est_gmroi["CustoUnitario"]).sum())
+                    _g_gmroi=_vendas_gmroi.merge(_est_gmroi,on="Produto",how="inner")
+                    _g_gmroi=_g_gmroi[(_g_gmroi["Quantidade"]>0)&(_g_gmroi["EstoqueAtual"]>0)&(_g_gmroi["CustoUnitario"]>0)]
+
+                    if not _escopo_ok_gmroi:
+                        st.caption(f"⚠️ O estoque importado não tem coluna de Filial, então não dá para calcular o GMROI só da filial \"{_filial_ativa_gm}\". Escolha \"(Todas as filiais)\" ou importe o estoque com a coluna Filial.")
+                    elif _g_gmroi.empty:
+                        if _filial_ativa_gm and _filiais_estoque_gmroi and str(_filial_ativa_gm).strip().casefold() not in [f.casefold() for f in _filiais_estoque_gmroi]:
+                            st.caption(f"⚠️ A filial \"{_filial_ativa_gm}\" das vendas não existe no estoque. Filiais no estoque: {', '.join(_filiais_estoque_gmroi)}.")
+                        else:
+                            st.caption("⚠️ Nenhum produto casou entre Vendas e Estoque dentro desse escopo e janela (confira se o código do produto é igual nas duas bases).")
+                    else:
+                        _estoque_analisado_gmroi=float((_g_gmroi["EstoqueAtual"]*_g_gmroi["CustoUnitario"]).sum())
+                        st.caption(f"ℹ️ {len(_g_gmroi)} de {_vendas_gmroi.shape[0]} produtos com venda na janela (dentro do escopo) casaram com Estoque/Custo e entraram no cálculo.")
+                        st.caption(_cap_rs(f"🧮 Conciliação do estoque ({_escopo_txt_gmroi}): "
+                            f"R$ {_estoque_total_escopo_gmroi:,.0f} em estoque a custo no total do escopo = "
+                            f"R$ {_estoque_analisado_gmroi:,.0f} nos produtos analisados aqui (com venda na janela) + "
+                            f"R$ {max(_estoque_total_escopo_gmroi-_estoque_analisado_gmroi,0):,.0f} em produtos sem venda na janela, que ficam fora dos quadrantes."))
+                        _g_gmroi["PrecoMedio"]=_g_gmroi["Valor"]/_g_gmroi["Quantidade"]
+                        _g_gmroi["MargemBruta_R$"]=(_g_gmroi["PrecoMedio"]-_g_gmroi["CustoUnitario"])*_g_gmroi["Quantidade"]
+                        _g_gmroi["EstoqueMedioCusto"]=_g_gmroi["EstoqueAtual"]*_g_gmroi["CustoUnitario"]
+                        _g_gmroi["GMROI"]=(_g_gmroi["MargemBruta_R$"]/_g_gmroi["EstoqueMedioCusto"]).round(2)   # retorno do período, sem anualizar
+                        _g_gmroi["Margem_%"]=((_g_gmroi["PrecoMedio"]-_g_gmroi["CustoUnitario"])/_g_gmroi["PrecoMedio"]*100).round(1)
+                        _g_gmroi["Giro"]=(_g_gmroi["Quantidade"]/_g_gmroi["EstoqueAtual"]).round(2)
+
+                        _med_margem_gmroi=_g_gmroi["Margem_%"].median()
+                        _med_giro_gmroi=_g_gmroi["Giro"].median()
+                        def _quad_gmroi(r):
+                            _ag=r["Giro"]>=_med_giro_gmroi; _am=r["Margem_%"]>=_med_margem_gmroi
+                            if _ag and _am: return "⭐ Estrela"
+                            if _ag and not _am: return "💵 Gerador de Caixa"
+                            if not _ag and _am: return "💎 Joia"
+                            return "⚠️ Candidato a Corte"
+                        _g_gmroi["Quadrante"]=_g_gmroi.apply(_quad_gmroi,axis=1)
+
+                        # Excesso e falta de estoque pela MESMA régua do Simulador de Cenário
+                        # (Gestão de Compras): política Mín/Máx com piso de lead time, lida do
+                        # resultado salvo do Motor. Assim os valores batem entre as telas.
+                        _fil_motor_gm=filial_sel_ml if (_col_fil_ml and filial_sel_ml!="(Todas as filiais)") else None
+                        _df_motor_gm=None
+                        if st.session_state.cid:
+                            _df_motor_gm,_cal_motor_gm,_morto_motor_gm=load_resultado_compras(st.session_state.cid,_fil_motor_gm)
+                        _motor_ok_gm=_df_motor_gm is not None and not _df_motor_gm.empty and all(
+                            c in _df_motor_gm.columns for c in ["CoberturaDias","MinDias","MaxDias","DemandaPrevMes(un)","EstoqueAtual","CustoUnitario"])
+                        _cen_prod_gm=None
+                        if _motor_ok_gm:
+                            _cen_gm=preparar_cenario_motor(_df_motor_gm)
+                            _cen_gm["_prod_gm"]=_cen_gm["Produto"].astype(str).str.strip()
+                            _rotulo_pol_gm=str(_cen_gm["PoliticaIdeal"].iloc[0]) if len(_cen_gm)>0 else "—"
+                            _cen_prod_gm=_cen_gm.groupby("_prod_gm").agg(CapitalAtual=("CapitalAtual","sum"),
+                                CapitalIdeal=("CapitalIdeal","sum"),Excesso=("Excesso","sum"),Falta=("Falta","sum"),ConsumoDia=("ConsumoDia","sum")).reset_index().rename(columns={"_prod_gm":"Produto"})
+                            _g_gmroi=_g_gmroi.merge(_cen_prod_gm[["Produto","CapitalIdeal","Excesso","Falta"]],on="Produto",how="left")
+                        else:
+                            _g_gmroi["CapitalIdeal"]=np.nan; _g_gmroi["Excesso"]=np.nan; _g_gmroi["Falta"]=np.nan
+                        for _c_gm in ["CapitalIdeal","Excesso","Falta"]:
+                            _g_gmroi[_c_gm]=_g_gmroi[_c_gm].fillna(0).round(2)
+                        _g_gmroi["CapitalLiberavel"]=_g_gmroi["Excesso"]
+                        _g_gmroi["EscopoGMROI"]=_escopo_txt_gmroi
+                        _g_gmroi["EscopoChave"]=json.dumps(_esc_gm,sort_keys=True,ensure_ascii=False)
+
+                        # IMPORTANTE: os 4 nomes comparam cada produto com a MEDIANA do
+                        # PRÓPRIO catálogo (medida relativa — "esse produto gira/tem margem
+                        # mais ou menos que a média dos outros?"). Isso é DIFERENTE de
+                        # perguntar se o GMROI está acima ou abaixo de 1 (medida absoluta —
+                        # "esse produto devolveu mais ou menos do que o capital investido
+                        # nele?"). Por isso incluímos, junto do nome do quadrante, um selo
+                        # explícito baseado no GMROI real — pra não dar a entender que
+                        # "Joia" ou "Gerador de Caixa" significam, por si só, bom resultado
+                        # financeiro, quando na verdade podem estar devolvendo menos do que
+                        # foi investido.
+                        st.markdown(f'<div class="al-i">📏 Limiares usados nessa base: margem mediana '
+                            f'<b>{_med_margem_gmroi:.1f}%</b>, giro mediano <b>{_med_giro_gmroi:.2f}</b>. '
+                            f'Cada produto é comparado com esses dois números pra cair num dos 4 grupos — '
+                            f'"acima da mediana" nos dois eixos vira Estrela; "abaixo" nos dois vira Candidato '
+                            f'a Corte; e os dois grupos do meio têm um eixo bom e outro ruim, puxando o GMROI '
+                            f'pra baixo mesmo quando a margem é alta, se o giro for fraco (ou vice-versa).</div>',unsafe_allow_html=True)
+
+                        _cores_quad={"⭐ Estrela":"#0F6E56","💵 Gerador de Caixa":"#A9762F",
+                            "💎 Joia":"#2B6CB0","⚠️ Candidato a Corte":"#B23B3B"}
+                        _cq1,_cq2,_cq3,_cq4=st.columns(4)
+                        for _col_q,_nome_q in zip((_cq1,_cq2,_cq3,_cq4),
+                            ["⭐ Estrela","💵 Gerador de Caixa","💎 Joia","⚠️ Candidato a Corte"]):
+                            _sub_q=_g_gmroi[_g_gmroi["Quadrante"]==_nome_q]
+                            _capital_q=_sub_q["EstoqueMedioCusto"].sum()
+                            _gmroi_medio_q=_sub_q["GMROI"].mean()
+                            _margem_medio_q=_sub_q["Margem_%"].mean()
+                            _giro_medio_q=_sub_q["Giro"].mean()
+                            _selo_q="✅ acima do capital" if _gmroi_medio_q>=1 else "🔴 abaixo do capital"
+                            _acao_q={"⭐ Estrela":"Manter e proteger a disponibilidade.",
+                                "💵 Gerador de Caixa":"Manter enxuto. O ponto fraco é a margem (preço ou custo).",
+                                "💎 Joia":"Reduzir o estoque. A margem é boa; o excesso parado é o problema.",
+                                "⚠️ Candidato a Corte":"Revisar: liquidar, descontinuar ou renegociar."}[_nome_q]
+                            _cor_q=_cores_quad.get(_nome_q,"#A9762F")
+                            _ok_q=_gmroi_medio_q>=1
+                            _chip_bg,_chip_fg=("#E3F3EC","#0F6E56") if _ok_q else ("#FBE7E7","#B23B3B")
+                            _chip_txt="✅ Capital remunerado no período (GMROI ≥ 1,00)" if _ok_q else "🔴 Capital ainda não remunerado no período (GMROI < 1,00)"
+                            _ret_txt=f"R&#36; {_gmroi_medio_q:.2f} de margem bruta por R&#36; 1 investido em {_rot_janela_gm}"
+                            _m_pos="acima" if _margem_medio_q>=_med_margem_gmroi else "abaixo"
+                            _g_pos="acima" if _giro_medio_q>=_med_giro_gmroi else "abaixo"
+                            _cap_txt=f"{_capital_q:,.0f}".replace(",",".")
+                            with _col_q:
+                                st.markdown(f'''<div style="background:linear-gradient(150deg,#FFFEFA 0%,#FBF1D3 100%);border:1.5px solid #D4AF37;border-top:5px solid {_cor_q};border-radius:14px;padding:16px 16px 14px 16px;box-shadow:0 6px 18px rgba(169,118,47,.20);min-height:270px">
+<div style="font-size:.95rem;font-weight:700;color:#7A5A12;letter-spacing:.2px">{_nome_q}</div>
+<div style="font-size:.64rem;color:#9A7B2F;margin-top:3px;text-transform:uppercase;letter-spacing:.8px">GMROI médio · {_rot_janela_gm}</div>
+<div style="font-size:2rem;font-weight:800;color:#5C4410;line-height:1.1;margin:2px 0 7px 0">{_gmroi_medio_q:.2f}</div>
+<div style="background:#FFF3CF;color:#7A5A12;font-size:.72rem;font-weight:700;padding:6px 10px;border-radius:10px;margin-bottom:6px;line-height:1.35">{_ret_txt}</div>
+<div style="background:{_chip_bg};color:{_chip_fg};font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:10px;margin-bottom:10px;line-height:1.3">{_chip_txt}</div>
+<div style="border-top:1px solid #E8D9A8;padding-top:8px;font-size:.76rem;color:#5C4410;line-height:1.6"><b>{len(_sub_q)}</b> produto(s) · R&#36; {_cap_txt} em estoque<br>Margem média <b>{_margem_medio_q:.1f}%</b> <span style="color:#9A7B2F">({_m_pos} da mediana)</span><br>Giro médio <b>{_giro_medio_q:.2f}</b> <span style="color:#9A7B2F">({_g_pos} da mediana)</span></div>
+<div style="margin-top:10px;background:rgba(212,175,55,.16);border-radius:8px;padding:7px 9px;font-size:.74rem;color:#6B4E0E;font-weight:600">👉 {_acao_q}</div></div>''',unsafe_allow_html=True)
+
+                        if not _motor_ok_gm:
+                            st.markdown('<div class="al-w">⚠️ Sem resultado do Motor de Compras para este recorte. Rode o 📦 Motor de Compras (mesma filial e escopo) para ver aqui o estoque liberável e a falta, pela mesma régua do Simulador de Cenário.</div>',unsafe_allow_html=True)
+                        else:
+                            _ponte_gm=_cen_prod_gm.merge(_g_gmroi[["Produto","Quadrante"]],on="Produto",how="left")
+                            _ponte_gm["Quadrante"]=_ponte_gm["Quadrante"].fillna("🧊 Sem venda na janela")
+                            _tab_ponte_gm=_ponte_gm.groupby("Quadrante").agg(Produtos=("Produto","nunique"),
+                                Estoque_atual=("CapitalAtual","sum"),Estoque_ideal=("CapitalIdeal","sum"),
+                                Excesso=("Excesso","sum"),Falta=("Falta","sum"),Consumo=("ConsumoDia","sum")).reset_index()
+                            _tab_ponte_gm["Liberável líquido"]=_tab_ponte_gm["Excesso"]-_tab_ponte_gm["Falta"]
+                            _tot_gm={"Quadrante":"TOTAL","Produtos":int(_cen_prod_gm["Produto"].nunique()),
+                                "Estoque_atual":_tab_ponte_gm["Estoque_atual"].sum(),"Estoque_ideal":_tab_ponte_gm["Estoque_ideal"].sum(),
+                                "Excesso":_tab_ponte_gm["Excesso"].sum(),"Falta":_tab_ponte_gm["Falta"].sum(),
+                                "Consumo":_tab_ponte_gm["Consumo"].sum(),
+                                "Liberável líquido":_tab_ponte_gm["Liberável líquido"].sum()}
+                            _tab_ponte_gm=pd.concat([_tab_ponte_gm,pd.DataFrame([_tot_gm])],ignore_index=True)
+                            # Cobertura em dias = estoque em R$ ÷ consumo diário previsto em R$ (mesma base de demanda do Motor).
+                            _cons_ok_gm=_tab_ponte_gm["Consumo"].where(_tab_ponte_gm["Consumo"]>0)
+                            _tab_ponte_gm["Cobertura hoje (dias)"]=(_tab_ponte_gm["Estoque_atual"]/_cons_ok_gm).round(0)
+                            _tab_ponte_gm["Alvo da política (dias)"]=(_tab_ponte_gm["Estoque_ideal"]/_cons_ok_gm).round(0)
+                            _tab_ponte_gm=_tab_ponte_gm.drop(columns=["Consumo"])
+                            _tab_ponte_gm=_tab_ponte_gm.rename(columns={"Estoque_atual":"Estoque atual","Estoque_ideal":"Estoque ideal"})
+                            for _c_fmt in ["Estoque atual","Estoque ideal","Excesso","Falta","Liberável líquido"]:
+                                _tab_ponte_gm[_c_fmt]=_tab_ponte_gm[_c_fmt].apply(lambda v:f"R$ {v:,.0f}".replace(",","."))
+                            for _c_dias in ["Cobertura hoje (dias)","Alvo da política (dias)"]:
+                                _tab_ponte_gm[_c_dias]=_tab_ponte_gm[_c_dias].apply(lambda v:"—" if pd.isna(v) else f"{v:,.0f}")
+                            st.markdown("**🧮 Ponte do estoque pela política de compras (mesma régua do Simulador de Cenário)**")
+                            st.dataframe(_tab_ponte_gm,use_container_width=True,hide_index=True)
+                            st.caption("ℹ️ Aqui a contagem é por produto distinto (soma das filiais). Em 📦 Gestão de Compras › Giro e Capital por Classe a contagem é por posição (produto × filial), porque a Curva é calculada por filial; os valores em R$ são os mesmos.")
+                            _atual_gm=float(_cen_prod_gm["CapitalAtual"].sum()); _ideal_gm=float(_cen_prod_gm["CapitalIdeal"].sum())
+                            _liq_gm=float(_cen_prod_gm["Excesso"].sum()-_cen_prod_gm["Falta"].sum())
+                            st.caption(_cap_rs(f"✅ Conferência com 📦 Gestão de Compras › Simulador de Cenário: estoque atual R$ {_atual_gm:,.0f} · estoque ideal R$ {_ideal_gm:,.0f} · "
+                                f"{'liberável líquido' if _liq_gm>=0 else 'adicional necessário'} R$ {abs(_liq_gm):,.0f}. Devem ser iguais, desde que o Motor tenha sido rodado com este mesmo escopo "
+                                f"(estoque total do escopo nesta tela: R$ {_estoque_total_escopo_gmroi:,.0f}; a diferença são posições que o Motor não processa). "
+                                f"Régua do estoque ideal: {_rotulo_pol_gm}. O excesso é um teto, não uma meta: reduzir leva tempo."))
+                            if _estoque_total_escopo_gmroi>0 and abs(_atual_gm-_estoque_total_escopo_gmroi)/_estoque_total_escopo_gmroi>0.02:
+                                st.markdown(_milhar(f'<div class="al-i">ℹ️ O Motor cobre R$ {_atual_gm:,.0f} dos R$ {_estoque_total_escopo_gmroi:,.0f} em estoque deste escopo ({_atual_gm/_estoque_total_escopo_gmroi*100:.1f}%). '
+                                    f'Os R$ {abs(_estoque_total_escopo_gmroi-_atual_gm):,.0f} restantes são posições que o Motor não processa: produto com menos de 3 meses de venda na filial, ou sem previsão salva no Config Avançado. Não indica Motor desatualizado.</div>'),unsafe_allow_html=True)
+
+                        _fig_gmroi=go.Figure()
+                        _x_max=float(_g_gmroi["Giro"].max())*1.06; _x_min=0.0
+                        _y_lo=float(_g_gmroi["Margem_%"].min()); _y_hi=float(_g_gmroi["Margem_%"].max()); _y_pad=max((_y_hi-_y_lo)*0.08,2.0)
+                        _y_min=_y_lo-_y_pad; _y_max=_y_hi+_y_pad
+                        # Fundo de cada quadrante (tom suave da cor dele), atrás dos pontos
+                        for _x0,_x1,_y0,_y1,_rgba in [(_med_giro_gmroi,_x_max,_med_margem_gmroi,_y_max,"rgba(15,110,86,0.07)"),
+                                                      (_med_giro_gmroi,_x_max,_y_min,_med_margem_gmroi,"rgba(169,118,47,0.10)"),
+                                                      (_x_min,_med_giro_gmroi,_med_margem_gmroi,_y_max,"rgba(43,108,176,0.07)"),
+                                                      (_x_min,_med_giro_gmroi,_y_min,_med_margem_gmroi,"rgba(178,59,59,0.07)")]:
+                            _fig_gmroi.add_shape(type="rect",x0=_x0,x1=_x1,y0=_y0,y1=_y1,fillcolor=_rgba,line_width=0,layer="below")
+                        # Bolha proporcional ao estoque a custo: mostra onde o dinheiro está parado
+                        _est_max_q=max(float(_g_gmroi["EstoqueMedioCusto"].max()),1.0)
+                        for _nome_q,_cor_q in _cores_quad.items():
+                            _sub_q=_g_gmroi[_g_gmroi["Quadrante"]==_nome_q]
+                            _fig_gmroi.add_trace(go.Scatter(x=_sub_q["Giro"],y=_sub_q["Margem_%"],mode="markers",name=_nome_q,
+                                marker=dict(size=8+24*(_sub_q["EstoqueMedioCusto"]/_est_max_q)**0.5,color=_cor_q,opacity=0.82,line=dict(width=1.3,color="#FFFFFF")),
+                                customdata=np.stack([_sub_q["Produto"].astype(str),_sub_q["GMROI"],_sub_q["EstoqueMedioCusto"]],axis=-1),
+                                hovertemplate="<b>%{customdata[0]}</b><br>Giro: %{x:.2f}<br>Margem: %{y:.1f}%<br>GMROI: %{customdata[1]:.2f}<br>Estoque a custo: R$ %{customdata[2]:,.0f}<extra></extra>"))
+                        # Medianas (as linhas que separam os 4 grupos)
+                        _fig_gmroi.add_shape(type="line",x0=_med_giro_gmroi,x1=_med_giro_gmroi,y0=_y_min,y1=_y_max,line=dict(color="#B8892B",width=1.6,dash="dash"))
+                        _fig_gmroi.add_shape(type="line",x0=_x_min,x1=_x_max,y0=_med_margem_gmroi,y1=_med_margem_gmroi,line=dict(color="#B8892B",width=1.6,dash="dash"))
+                        _fig_gmroi.add_annotation(x=_med_giro_gmroi,y=_y_min,text=f"Giro mediano {_med_giro_gmroi:.2f}",showarrow=False,yanchor="bottom",xanchor="left",xshift=4,font=dict(size=10,color="#9A7B2F"))
+                        _fig_gmroi.add_annotation(x=_x_max,y=_med_margem_gmroi,text=f"Margem mediana {_med_margem_gmroi:.1f}%",showarrow=False,xanchor="right",yanchor="bottom",yshift=3,font=dict(size=10,color="#9A7B2F"))
+                        # Nome de cada grupo no canto dele
+                        for _texto_canto,_sub_canto,_cor_canto,_x_canto,_y_canto in [
+                            ("⭐ Estrela","margem alta · giro alto","#0F6E56",0.985,0.985),
+                            ("💵 Gerador de Caixa","margem baixa · giro alto","#A9762F",0.985,0.015),
+                            ("💎 Joia","margem alta · giro baixo","#2B6CB0",0.015,0.985),
+                            ("⚠️ Candidato a Corte","margem baixa · giro baixo","#B23B3B",0.015,0.015)]:
+                            _fig_gmroi.add_annotation(xref="paper",yref="paper",x=_x_canto,y=_y_canto,
+                                text=f"<b>{_texto_canto}</b><br><span style='font-size:10px;color:#9A7B2F'>{_sub_canto}</span>",showarrow=False,
+                                font=dict(size=13,color=_cor_canto),align="right" if _x_canto>0.5 else "left",
+                                xanchor="right" if _x_canto>0.5 else "left",yanchor="top" if _y_canto>0.5 else "bottom",
+                                bgcolor="rgba(255,253,247,0.85)",bordercolor="#E8D9A8",borderwidth=1,borderpad=5)
+                        _fig_gmroi.add_annotation(xref="paper",yref="paper",x=1,y=1.13,text="Tamanho da bolha = estoque a custo",showarrow=False,xanchor="right",font=dict(size=10,color="#9A7B2F"))
+                        _fig_gmroi.update_layout(height=540,margin=dict(l=62,r=22,t=62,b=58),
+                            plot_bgcolor="#FFFDF7",paper_bgcolor="rgba(0,0,0,0)",
+                            font=dict(family="Segoe UI, Inter, Arial, sans-serif",size=12,color="#5C4410"),
+                            xaxis=dict(title=f"Giro (qtd vendida em {_rot_janela_gm} ÷ estoque atual)",range=[_x_min,_x_max],gridcolor="#F0E6C8",zeroline=False,showline=True,linecolor="#D4AF37",linewidth=1.5,ticks="outside",tickcolor="#D4AF37"),
+                            yaxis=dict(title="Margem bruta (%)",range=[_y_min,_y_max],gridcolor="#F0E6C8",zeroline=False,showline=True,linecolor="#D4AF37",linewidth=1.5,ticks="outside",tickcolor="#D4AF37",ticksuffix="%"),
+                            legend=dict(orientation="h",x=0,y=1.13,yanchor="bottom",bgcolor="rgba(0,0,0,0)",font=dict(size=12)),
+                            hoverlabel=dict(bgcolor="#FFF8E1",bordercolor="#D4AF37",font=dict(color="#5C4410",size=12)))
+                        st.plotly_chart(_fig_gmroi,use_container_width=True)
+
+                        # Uma tabela por grupo (mesma ordem dos cards), do maior estoque a custo para o menor
+                        _desc_grupo_gmroi={"⭐ Estrela":"Margem alta e giro alto: os que mais rendem sobre o capital. Proteger a disponibilidade.",
+                            "💵 Gerador de Caixa":"Giro alto e margem baixa: rodam rápido, mas rendem pouco por unidade. O ponto fraco é preço ou custo.",
+                            "💎 Joia":"Margem alta e giro baixo: rendem bem por unidade, mas ficam parados. O foco é reduzir o estoque.",
+                            "⚠️ Candidato a Corte":"Baixo giro E baixa margem ao mesmo tempo: capital parado sem contrapartida de retorno. Vale questionar a permanência no catálogo."}
+                        for _nome_tab in ["⭐ Estrela","💵 Gerador de Caixa","💎 Joia","⚠️ Candidato a Corte"]:
+                            _tab_g=_g_gmroi[_g_gmroi["Quadrante"]==_nome_tab].sort_values("EstoqueMedioCusto",ascending=False).rename(columns={"Valor":"Faturamento"})
+                            _cap_tab=f"{_tab_g['EstoqueMedioCusto'].sum():,.0f}".replace(",",".")
+                            with st.expander(f"{_nome_tab} — {len(_tab_g)} produtos · R&#36; {_cap_tab} em estoque"):
+                                st.caption(_desc_grupo_gmroi[_nome_tab])
+                                st.dataframe(_tab_g[["Produto","Faturamento","PrecoMedio","CustoUnitario","Margem_%","Giro","GMROI","MargemBruta_R$","EstoqueMedioCusto"]],
+                                    use_container_width=True,hide_index=True,height=380)
+
+                        if st.session_state.cid:
+                            save_gmroi_snap(st.session_state.cid,_g_gmroi,st.session_state.get("cfgml_filial_sel"))
 
 elif pg=="ml_financeiro_val":
     hdr("🔬 Validação Estatística de Previsões Financeiras","Testa a confiabilidade da previsão das contas da DRE contra o que realmente aconteceu, antes de confiar nela")
@@ -11048,6 +12385,17 @@ elif pg=="ml_financeiro_val":
                     buscar_ordem=True,ordem_sugerida=_ordem_fut,normalizar_arima=True)
                 if _proj_fut is not None:
                     _projecao_futura_mlf[_conta_rotulo_fut]=list(_proj_fut)
+                    # Congela a previsão com a data-alvo de cada mês, pra poder
+                    # comparar com o real quando ele chegar — mesmo mecanismo do
+                    # lado comercial (Seção "Acurácia das Previsões Passadas"),
+                    # em domínio separado.
+                    _base_snap_mlf=_serie_completa_fut.index[-1]
+                    _linhas_snap_mlf=[{"Conta":_conta_rotulo_fut,"Demonstracao":_demo_sel_mlf,
+                        "Mes_Alvo":str(_base_snap_mlf+(_i_snap_mlf+1)),"Valor_Previsto":round(float(_v_snap_mlf),2),
+                        "Modelo":_modelo_fut,"Data_Rodada":datetime.now().strftime("%Y-%m-%d")}
+                        for _i_snap_mlf,_v_snap_mlf in enumerate(_proj_fut)]
+                    if st.session_state.cid:
+                        save_snapshot_previsao(st.session_state.cid,pd.DataFrame(_linhas_snap_mlf),filial_sel_mlf,dominio="financeiro")
             except Exception:
                 continue
         st.session_state["mlf_projecao_futura"]=_projecao_futura_mlf
@@ -12048,8 +13396,58 @@ elif pg=="ml_financeiro_val":
                 for _cc in _zeradas_mlf:
                     st.caption(f"　⚠️ \"{_cc}\"")    
 
+    sec("🎯 Acurácia das Previsões Passadas — Previsto × Real, já confirmado")
+    st.markdown('<div class="al-i">Toda vez que a previsão futura é calculada aqui na Validação, o sistema '
+        'congela o valor previsto para cada mês futuro específico, por conta. Quando o dado real daquele mês '
+        'chega — na próxima importação financeira —, este painel cruza automaticamente o que foi previsto com o '
+        'que realmente aconteceu.</div>',unsafe_allow_html=True)
+
+    _snap_mlf_acc=load_snapshot_previsao(st.session_state.cid,filial_sel_mlf,dominio="financeiro") if st.session_state.cid else None
+    if _snap_mlf_acc is not None and not _snap_mlf_acc.empty and "Demonstracao" in _snap_mlf_acc.columns:
+        _snap_mlf_acc=_snap_mlf_acc[_snap_mlf_acc["Demonstracao"]==_demo_sel_mlf]
+    if _snap_mlf_acc is None or _snap_mlf_acc.empty:
+        st.caption("Nenhuma previsão congelada ainda — rode a Validação Financeira (que já gera a previsão futura) para começar a acumular histórico.")
+    else:
+        _real_mensal_mlf_acc=df_mlf.melt(id_vars=["_periodo_mlf"],
+            value_vars=[c for c in df_mlf.columns if c not in ("_periodo_mlf","_mes_num_mlf")],
+            var_name="Conta",value_name="Valor_Real")
+        _real_mensal_mlf_acc["Mes_Alvo"]=_real_mensal_mlf_acc["_periodo_mlf"].astype(str)
+        # Força numérico — algumas colunas de df_mlf que entraram no melt podem
+        # não ser conta de valor (texto, categoria, etc.); o que não converter
+        # vira NaN aqui, e simplesmente não participa da comparação, em vez de
+        # quebrar o cálculo de Erro_% para TODAS as linhas por causa de uma
+        # coluna só.
+        _real_mensal_mlf_acc["Valor_Real"]=pd.to_numeric(_real_mensal_mlf_acc["Valor_Real"],errors="coerce")
+        _real_mensal_mlf_acc=_real_mensal_mlf_acc[["Conta","Mes_Alvo","Valor_Real"]]
+
+        _cruz_snap_mlf_acc=_snap_mlf_acc.merge(_real_mensal_mlf_acc,on=["Conta","Mes_Alvo"],how="left")
+        _cruz_snap_mlf_acc["Valor_Previsto"]=pd.to_numeric(_cruz_snap_mlf_acc["Valor_Previsto"],errors="coerce")
+        _cruz_snap_mlf_acc["Erro_%"]=((_cruz_snap_mlf_acc["Valor_Previsto"]-_cruz_snap_mlf_acc["Valor_Real"])/_cruz_snap_mlf_acc["Valor_Real"].abs()*100).round(1)
+        _cruz_snap_mlf_acc["Status"]=_cruz_snap_mlf_acc["Valor_Real"].apply(lambda v:"✅ Confirmado" if pd.notna(v) else "⏳ Aguardando dado real")
+
+        _confirmados_mlf_acc=_cruz_snap_mlf_acc[_cruz_snap_mlf_acc["Status"]=="✅ Confirmado"]
+        _c1_acc,_c2_acc,_c3_acc=st.columns(3)
+        mc(_c1_acc,"Previsões já confirmadas",f"{len(_confirmados_mlf_acc)} de {len(_cruz_snap_mlf_acc)}")
+        if len(_confirmados_mlf_acc)>0:
+            _wape_acc=(_confirmados_mlf_acc["Valor_Previsto"]-_confirmados_mlf_acc["Valor_Real"]).abs().sum()/_confirmados_mlf_acc["Valor_Real"].abs().sum()*100
+            mc(_c2_acc,"WAPE das previsões confirmadas",f"{_wape_acc:.1f}%",
+               "g" if _wape_acc<20 else ("y" if _wape_acc<30 else "r"))
+            _vieses_acc=((_confirmados_mlf_acc["Valor_Previsto"]-_confirmados_mlf_acc["Valor_Real"])/_confirmados_mlf_acc["Valor_Real"].abs()*100)
+            _direcao_acc="📈 tendendo a prever acima do real" if _vieses_acc.mean()>5 else ("📉 tendendo a prever abaixo do real" if _vieses_acc.mean()<-5 else "⚖️ sem viés sistemático aparente")
+            mc(_c3_acc,"Viés médio (direção do erro)",_direcao_acc)
+        else:
+            mc(_c2_acc,"WAPE das previsões confirmadas","—")
+            mc(_c3_acc,"Viés médio (direção do erro)","—")
+
+        with st.expander(f"📋 Ver todas as previsões congeladas ({len(_cruz_snap_mlf_acc)} registros, todas as rodadas)"):
+            st.caption("Cada linha é uma previsão congelada no momento em que foi feita — se a mesma conta/mês "
+                "aparece mais de uma vez, são rodadas diferentes (vintages).")
+            _disp_snap_mlf_acc=_cruz_snap_mlf_acc.sort_values(["Mes_Alvo","Conta","Data_Rodada"],ascending=[False,True,False])
+            st.dataframe(_disp_snap_mlf_acc[["Conta","Demonstracao","Mes_Alvo","Data_Rodada","Modelo","Valor_Previsto","Valor_Real","Erro_%","Status"]],
+                use_container_width=True,hide_index=True,height=380)    
+
 elif pg=="ml_produtos":
-    hdr("🔬 Validação Estatística de Previsões","Testa a confiabilidade da previsão contra o que realmente aconteceu, antes de confiar nela")
+    hdr("🔬 Validação Estatística de Previsões Comerciais","Testa a confiabilidade da previsão contra o que realmente aconteceu, antes de confiar nela")
     if not STATS_OK:
         st.markdown('<div class="al-d">❌ pip install statsmodels scikit-learn</div>',unsafe_allow_html=True)
     df_v=get_vendas_df()
@@ -13160,30 +14558,39 @@ elif pg=="ml_produtos":
                f"{wape_pond_val_mlp:.1f}%" if wape_pond_val_mlp is not None else "—",_cor_wape_pond)
 
             with st.expander("📉 O WAPE acima se sustenta em outros cortes? — teste de estabilidade"):
-                st.markdown('<div class="al-i">A escolha do MODELO já é protegida por múltiplas janelas. Mas os '
-                    'números acima (Confiabilidade, WAPE ponderado) vêm de um teste único, contra o corte que você '
-                    'escolheu. Este painel tenta pegar até 10 produtos de maior faturamento dentro do grupo 🟢 '
-                    'Confiável (pode testar menos, se o grupo tiver poucos produtos ou se algum não tiver '
-                    'histórico suficiente pra 3 janelas) e testa o modelo já escolhido, sem competir de novo, '
-                    'contra 3 janelas de 6 meses diferentes, deslizando pra trás a partir do dado mais recente. Se '
-                    'o produto continuar dentro da faixa Confiável (WAPE até 20%) nas 3 janelas, a classificação '
-                    'de hoje se sustenta — você pode confiar nela mesmo quando o corte mudar, mês a mês, no uso '
-                    'real do sistema.</div>',unsafe_allow_html=True)
-                if st.button("📉 Testar Estabilidade do WAPE (até 10 produtos do grupo Confiável)",key="sens_corte_btn"):
-                    # Só a faixa 🟢 Confiável entra nesse teste — Moderado e Baixa
-                    # previsibilidade já carregam o aviso de risco pelo próprio WAPE
-                    # alto, e testar sensibilidade neles mistura dois problemas
-                    # diferentes: a variação observada ali tende a refletir a demanda
-                    # naturalmente errática do produto (e, com poucas transações/mês,
-                    # também ruído de amostra pequena nas 3 janelas de 6 meses) — não
-                    # necessariamente uma fragilidade do teste em si. Ordenado por
-                    # faturamento — testa primeiro onde o dinheiro está.
-                    _faixa_sens="🟢 Confiável"
+                st.markdown('<div class="al-i"><b>Por que o teste principal usa um corte só:</b> a Validação '
+                    'precisa simular exatamente o que acontece na vida real — o modelo treina só com o passado, e '
+                    'prevê um futuro que ele nunca viu. Isso só existe de verdade com um corte: dado antes dele é '
+                    'treino, dado depois é a prova real, nunca vista. Se o sistema usasse vários cortes pra compor '
+                    'o número principal, o resultado deixaria de ser "o que aconteceria numa previsão real" e '
+                    'viraria uma média mais artificial — mais estável, só que menos fiel ao que você de fato vive '
+                    'usando o sistema mês a mês.<br><br>'
+                    '<b>Por que fazemos esse teste extra, então:</b> exatamente porque o corte único, sendo fiel à '
+                    'realidade, também fica refém de qual mês calhou de virar teste. Se esse mês foi especialmente '
+                    'bom ou ruim pra um produto, o WAPE reportado herda essa sorte ou azar, mesmo sendo o mesmo '
+                    'modelo. Este painel não substitui o corte único — ele audita se o resultado é representativo '
+                    'ou só coincidência de um mês específico, testando o modelo já escolhido (sem competir de '
+                    'novo) contra outros 2 pedaços do passado, sem mudar o número oficial em nenhum momento.</div>',unsafe_allow_html=True)
+                if st.button("📉 Testar Estabilidade do WAPE (até 30 Confiável + amostra das outras faixas)",key="sens_corte_btn"):
+                    # Amostra por faixa, ordenada por faturamento (testa primeiro
+                    # onde o dinheiro está). Confiável tem limite maior porque é
+                    # onde geralmente está a maior parte do resultado — mas isso
+                    # pode não valer pra toda empresa, por isso testamos as outras
+                    # faixas também, só que numa amostra menor. Pra Moderado/Baixa,
+                    # além de testar estabilidade, também vale a pena ver se, em
+                    # ALGUMA das 3 janelas, o produto se comportou como Confiável —
+                    # isso é informação real: mostra se a classificação de hoje é
+                    # "sempre ruim" ou só "ruim nessa foto específica".
+                    _limites_sens={"🟢 Confiável":30,"🟡 Moderado":10,"🔴 Baixa previsibilidade":10}
+                    _amostra_sens=[]
                     if {"_confiab_prod","_fat_prod"}.issubset(_prod_confiab_score.columns):
-                        _confiaveis_ord_sens=_prod_confiab_score[_prod_confiab_score["_confiab_prod"]==_faixa_sens].sort_values("_fat_prod",ascending=False)
-                        _amostra_sens=[(p,_faixa_sens) for p in _confiaveis_ord_sens["Produto"].tolist()[:10]]
-                    else:
-                        _amostra_sens=[]
+                        for _faixa_lim,_lim_sens in _limites_sens.items():
+                            _sub_sens=_prod_confiab_score[_prod_confiab_score["_confiab_prod"]==_faixa_lim].sort_values("_fat_prod",ascending=False)
+                            _amostra_sens+=[(p,_faixa_lim) for p in _sub_sens["Produto"].tolist()[:_lim_sens]]
+                    def _classif_wape_sens(w):
+                        if w<=20: return "🟢"
+                        elif w<=30: return "🟡"
+                        else: return "🔴"
                     _modelo_por_prod_sens=df_val_mlp.groupby("Produto")["Modelo"].first().to_dict()
                     _linhas_sens=[]
                     pb_sens=st.progress(0)
@@ -13201,46 +14608,61 @@ elif pg=="ml_produtos":
                                 _wape_sens=sum(abs(p-r) for p,r in zip(_pred_sens,_real_sens))/_real_abs_sens*100
                                 _wapes_sens.append(_wape_sens)
                         if len(_wapes_sens)>=2:
-                            _linhas_sens.append({"Confiabilidade":_faixa_sens,"Produto":_prod_sens,"Modelo":_modelo_sens,
-                                "WAPE min":round(min(_wapes_sens),1),"WAPE max":round(max(_wapes_sens),1),
-                                "Variação (pontos)":round(max(_wapes_sens)-min(_wapes_sens),1),
-                                "Janelas testadas":len(_wapes_sens)})
+                            _classifs_sens=[_classif_wape_sens(w) for w in _wapes_sens]
+                            _linhas_sens.append({"Confiabilidade":_faixa_sens,"Produto":_prod_sens,
+                                "WAPE max":round(max(_wapes_sens),1),
+                                "Permaneceu Confiável":all(c=="🟢" for c in _classifs_sens),
+                                "Virou Confiável em alguma janela":"🟢" in _classifs_sens,
+                                "Confiável na janela mais recente":_classifs_sens[0]=="🟢"})
                     pb_sens.empty()
                     if _linhas_sens:
                         st.session_state["sens_corte_resultado"]=pd.DataFrame(_linhas_sens)
                         if len(_linhas_sens)<len(_amostra_sens):
-                            st.caption(f"ℹ️ Tentou {len(_amostra_sens)} produto(s) do grupo Confiável — "
-                                f"{len(_linhas_sens)} tinham histórico suficiente pra testar as 3 janelas.")
+                            st.caption(f"ℹ️ Tentou {len(_amostra_sens)} produto(s) de maior faturamento por faixa "
+                                f"— {len(_linhas_sens)} tinham histórico suficiente pra testar as 3 janelas.")
                     else:
                         st.caption("Não consegui testar nenhum produto (histórico insuficiente pra 3 janelas de 6 meses).")
 
                 _df_sens=st.session_state.get("sens_corte_resultado")
                 if _df_sens is not None and len(_df_sens)>0:
-                    # Critério: continua Confiável em TODAS as janelas testadas, ou
-                    # em alguma delas passaria de WAPE 20% (o mesmo limiar que já
-                    # define a faixa 🟢 Confiável em todo o resto do sistema) e
-                    # cairia pra Moderado/Baixa? Não é "quanto variou" — é "será que
-                    # a classificação atual se sustentaria, testada em outro mês".
-                    _df_sens["Continua Confiável em todas as janelas?"]=_df_sens["WAPE max"].apply(
-                        lambda w: "✅ Sim" if w<=20 else "⚠️ Não")
-                    _resumo_sens=_df_sens.groupby("Confiabilidade").agg(
-                        WAPE_max_medio=("WAPE max","mean"),
-                        WAPE_max_pior=("WAPE max","max"),
-                        Produtos=("Produto","count")).reset_index()
-                    _resumo_sens.columns=["Confiabilidade","WAPE máx. médio (3 janelas)","WAPE máx. pior janela","Produtos testados"]
-                    st.dataframe(_resumo_sens.round(1),use_container_width=True,hide_index=True)
-                    _n_instaveis_sens=(_df_sens["WAPE max"]>20).sum()
-                    if _n_instaveis_sens>0:
-                        st.markdown(f'<div class="al-w">⚠️ {_n_instaveis_sens} de {len(_df_sens)} produto(s) testado(s) '
-                            'teriam saído da faixa Confiável (WAPE acima de 20%) em pelo menos uma das 3 janelas — '
-                            'pra esses, a classificação de hoje pode não se sustentar dependendo de qual mês vira '
-                            'teste no futuro.</div>',unsafe_allow_html=True)
+                    _cs1,_cs2,_cs3=st.columns(3)
+                    _df_c_sens=_df_sens[_df_sens["Confiabilidade"]=="🟢 Confiável"]
+                    _df_m_sens=_df_sens[_df_sens["Confiabilidade"]=="🟡 Moderado"]
+                    _df_b_sens=_df_sens[_df_sens["Confiabilidade"]=="🔴 Baixa previsibilidade"]
+
+                    if len(_df_c_sens)>0:
+                        _pct_c_sens=_df_c_sens["Permaneceu Confiável"].mean()*100
+                        mc(_cs1,"🟢 Confiável — permaneceu Confiável nas 3 janelas",f"{_pct_c_sens:.0f}%",
+                           "g" if _pct_c_sens>=80 else ("y" if _pct_c_sens>=50 else "r"),
+                           sub=f"{_df_c_sens['Permaneceu Confiável'].sum()} de {len(_df_c_sens)} produto(s) de maior faturamento na faixa")
                     else:
-                        st.markdown('<div class="al-s">✅ Todos os produtos testados permaneceram dentro da faixa '
-                            'Confiável (WAPE ≤ 20%) nas 3 janelas — a classificação se sustenta, mesmo trocando o '
-                            'período de teste.</div>',unsafe_allow_html=True)
-                    with st.expander("📋 Ver detalhe por produto"):
-                        st.dataframe(_df_sens,use_container_width=True,hide_index=True)
+                        mc(_cs1,"🟢 Confiável","—",sub="Nenhum produto testado nessa faixa")
+
+                    # "Virou Confiável em alguma janela" sozinho é ambíguo — pode ter
+                    # sido na janela recente (sinal de melhora) ou só na mais antiga
+                    # (o produto piorou desde então). Por isso o subtítulo distingue
+                    # as duas situações, em vez de só contar o total.
+                    if len(_df_m_sens)>0:
+                        _pct_m_sens=_df_m_sens["Virou Confiável em alguma janela"].mean()*100
+                        _n_m_total=_df_m_sens["Virou Confiável em alguma janela"].sum()
+                        _n_m_recente=(_df_m_sens["Virou Confiável em alguma janela"]&_df_m_sens["Confiável na janela mais recente"]).sum()
+                        mc(_cs2,"🟡 Moderado — virou Confiável em alguma janela",f"{_pct_m_sens:.0f}%",
+                           "g" if _pct_m_sens>=50 else "y",
+                           sub=f"{_n_m_total} de {len(_df_m_sens)} produto(s) de maior faturamento na faixa — "
+                               f"{_n_m_recente} deles já na janela mais recente (sinal de melhora)")
+                    else:
+                        mc(_cs2,"🟡 Moderado","—",sub="Nenhum produto testado nessa faixa")
+
+                    if len(_df_b_sens)>0:
+                        _pct_b_sens=_df_b_sens["Virou Confiável em alguma janela"].mean()*100
+                        _n_b_total=_df_b_sens["Virou Confiável em alguma janela"].sum()
+                        _n_b_recente=(_df_b_sens["Virou Confiável em alguma janela"]&_df_b_sens["Confiável na janela mais recente"]).sum()
+                        mc(_cs3,"🔴 Baixa previsibilidade — virou Confiável em alguma janela",f"{_pct_b_sens:.0f}%",
+                           "g" if _pct_b_sens>=50 else "y",
+                           sub=f"{_n_b_total} de {len(_df_b_sens)} produto(s) de maior faturamento na faixa — "
+                               f"{_n_b_recente} deles já na janela mais recente (sinal de melhora)")
+                    else:
+                        mc(_cs3,"🔴 Baixa previsibilidade","—",sub="Nenhum produto testado nessa faixa")
 
             # Curva de Degradação por Horizonte — até quantos meses no futuro dá
             # pra confiar na previsão, antes do erro crescer demais. Reaproveita
@@ -14107,6 +15529,96 @@ elif pg=="ml_produtos":
 
         elif df_val_mlp is not None:
             st.markdown('<div class="al-w">⚠️ Nenhum mês real encontrado depois da data de corte escolhida.</div>',unsafe_allow_html=True)
+
+    sec("🎯 Acurácia das Previsões Passadas — Previsto × Real, já confirmado")
+    st.markdown('<div class="al-i">Toda vez que você roda uma Projeção (Config Avançado), o sistema congela o '
+        'valor previsto para cada mês futuro específico. Quando o dado real daquele mês chega — na próxima '
+        'importação de vendas —, este painel cruza automaticamente o que foi previsto com o que realmente '
+        'aconteceu. Diferente da Validação acima (que testa contra o passado), isto mede a previsão contra o '
+        'futuro que, de fato, já virou presente.</div>',unsafe_allow_html=True)
+
+    _snap_mlp=load_snapshot_previsao(st.session_state.cid,filial_sel_mlp) if st.session_state.cid else None
+    if _snap_mlp is None or _snap_mlp.empty:
+        st.caption("Nenhuma previsão congelada ainda — rode uma Projeção no Config Avançado para começar a acumular histórico.")
+    else:
+        _real_mensal_mlp=df_v.copy()
+        _real_mensal_mlp["_mes_real_mlp"]=pd.to_datetime(_real_mensal_mlp[data_col],errors="coerce").dt.to_period("M").astype(str)
+        _real_mensal_mlp=_real_mensal_mlp.groupby(["_ProdutoUnico","_mes_real_mlp"])[metrica_col].sum().reset_index()
+        _real_mensal_mlp.columns=["_ProdutoUnico","Mes_Alvo","Valor_Real"]
+
+        _cruz_snap_mlp=_snap_mlp.merge(_real_mensal_mlp,on=["_ProdutoUnico","Mes_Alvo"],how="left")
+        _cruz_snap_mlp["Erro_%"]=((_cruz_snap_mlp["Valor_Previsto"]-_cruz_snap_mlp["Valor_Real"])/_cruz_snap_mlp["Valor_Real"].abs()*100).round(1)
+        _cruz_snap_mlp["Status"]=_cruz_snap_mlp["Valor_Real"].apply(lambda v:"✅ Confirmado" if pd.notna(v) else "⏳ Aguardando dado real")
+
+        _confirmados_mlp=_cruz_snap_mlp[_cruz_snap_mlp["Status"]=="✅ Confirmado"]
+        _c1_snap,_c2_snap,_c3_snap=st.columns(3)
+        mc(_c1_snap,"Previsões já confirmadas",f"{len(_confirmados_mlp)} de {len(_cruz_snap_mlp)}")
+        if len(_confirmados_mlp)>0:
+            _wape_confirmado_mlp=(_confirmados_mlp["Valor_Previsto"]-_confirmados_mlp["Valor_Real"]).abs().sum()/_confirmados_mlp["Valor_Real"].abs().sum()*100
+            mc(_c2_snap,"WAPE das previsões confirmadas",f"{_wape_confirmado_mlp:.1f}%",
+               "g" if _wape_confirmado_mlp<20 else ("y" if _wape_confirmado_mlp<30 else "r"))
+            _vieses_mlp=((_confirmados_mlp["Valor_Previsto"]-_confirmados_mlp["Valor_Real"])/_confirmados_mlp["Valor_Real"].abs()*100)
+            _direcao_mlp="📈 tendendo a prever acima do real" if _vieses_mlp.mean()>5 else ("📉 tendendo a prever abaixo do real" if _vieses_mlp.mean()<-5 else "⚖️ sem viés sistemático aparente")
+            mc(_c3_snap,"Viés médio (direção do erro)",_direcao_mlp)
+        else:
+            mc(_c2_snap,"WAPE das previsões confirmadas","—")
+            mc(_c3_snap,"Viés médio (direção do erro)","—")
+
+        with st.expander(f"📋 Ver todas as previsões congeladas ({len(_cruz_snap_mlp)} registros, todas as rodadas)"):
+            st.caption("Cada linha é uma previsão congelada no momento em que foi feita — se o mesmo produto/mês "
+                "aparece mais de uma vez, são rodadas diferentes (vintages), permitindo comparar se a previsão "
+                "ficou mais precisa conforme o mês-alvo se aproximava.")
+            _disp_snap_mlp=_cruz_snap_mlp.sort_values(["Mes_Alvo","Produto","Data_Rodada"],ascending=[False,True,False])
+            st.dataframe(_disp_snap_mlp[["Produto","Mes_Alvo","Data_Rodada","Modelo","Valor_Previsto","Valor_Real","Erro_%","Status"]],
+                use_container_width=True,hide_index=True,height=380)
+        # ── FVA: o Ajuste de Consenso melhorou ou piorou a previsão do modelo? ──
+        # Para cada produto ajustado, pega a rodada que o ajuste corrigiu (a última até o dia do ajuste) e compara, nos meses já
+        # confirmados, o erro do modelo puro com o erro da previsão ajustada (modelo × (1 + ajuste%)).
+        sec("⚖️ FVA — o Ajuste de Consenso melhorou a previsão?")
+        _cons_fva=load_ajuste_consenso(st.session_state.cid,filial_sel_mlp) if st.session_state.cid else None
+        _linhas_fva=[]
+        if _cons_fva is not None and not _cons_fva.empty and len(_confirmados_mlp)>0:
+            for _,_c_fva in _cons_fva.iterrows():
+                _pu_fva=str(_c_fva["_ProdutoUnico"]); _pct_fva=float(_c_fva["pct_ajuste"]); _dt_fva=str(_c_fva["data_ajuste"])[:10]
+                _s_fva=_confirmados_mlp[_confirmados_mlp["_ProdutoUnico"].astype(str)==_pu_fva]
+                _s_fva=_s_fva[_s_fva["Data_Rodada"].astype(str)<=_dt_fva]
+                if _s_fva.empty: continue
+                _s_fva=_s_fva[_s_fva["Data_Rodada"].astype(str)==_s_fva["Data_Rodada"].astype(str).max()]
+                _s_fva=_s_fva[_s_fva["Mes_Alvo"].astype(str)>=_dt_fva[:7]]
+                for _,_r_fva in _s_fva.iterrows():
+                    _linhas_fva.append({"Produto":_r_fva["Produto"],"Mes_Alvo":_r_fva["Mes_Alvo"],"Ajuste_%":_pct_fva,
+                        "Previsto_Modelo":float(_r_fva["Valor_Previsto"]),"Previsto_Ajustado":round(float(_r_fva["Valor_Previsto"])*(1+_pct_fva/100),2),
+                        "Valor_Real":float(_r_fva["Valor_Real"])})
+        if not _linhas_fva:
+            st.caption("Ainda sem Ajuste de Consenso com mês confirmado: o FVA aparece quando o primeiro mês ajustado receber o dado real.")
+        else:
+            _d_fva=pd.DataFrame(_linhas_fva)
+            _d_fva["Erro_Modelo"]=(_d_fva["Previsto_Modelo"]-_d_fva["Valor_Real"]).abs()
+            _d_fva["Erro_Ajustado"]=(_d_fva["Previsto_Ajustado"]-_d_fva["Valor_Real"]).abs()
+            _den_fva=_d_fva["Valor_Real"].abs().sum()
+            if _den_fva>0:
+                _w_mod_fva=_d_fva["Erro_Modelo"].sum()/_den_fva*100; _w_aj_fva=_d_fva["Erro_Ajustado"].sum()/_den_fva*100; _fva_pp=_w_mod_fva-_w_aj_fva
+                _f1,_f2,_f3,_f4=st.columns(4)
+                mc(_f1,"Ajustes avaliados",f"{_d_fva['Produto'].nunique()} produto(s) · {len(_d_fva)} mês(es)")
+                mc(_f2,"WAPE do modelo puro",f"{_w_mod_fva:.1f}%")
+                mc(_f3,"WAPE com o ajuste",f"{_w_aj_fva:.1f}%","g" if _w_aj_fva<_w_mod_fva else ("r" if _w_aj_fva>_w_mod_fva else ""))
+                mc(_f4,"FVA (pontos de WAPE)",f"{_fva_pp:+.1f} pp","g" if _fva_pp>0 else ("r" if _fva_pp<0 else ""))
+                if _fva_pp>0.05:
+                    st.markdown(f'<div class="al-s">✅ O ajuste manual <b>reduziu</b> o erro em {_fva_pp:.1f} pontos de WAPE: o julgamento de negócio agregou valor nos meses confirmados.</div>',unsafe_allow_html=True)
+                elif _fva_pp<-0.05:
+                    st.markdown(f'<div class="al-w">⚠️ O ajuste manual <b>aumentou</b> o erro em {abs(_fva_pp):.1f} pontos de WAPE: nos meses confirmados, o modelo sozinho teria acertado mais.</div>',unsafe_allow_html=True)
+                else:
+                    st.markdown('<div class="al-i">⚖️ O ajuste manual não alterou o erro de forma relevante nos meses confirmados.</div>',unsafe_allow_html=True)
+                _p_fva=_d_fva.groupby("Produto").agg(Ajuste=("Ajuste_%","first"),Meses=("Mes_Alvo","count"),Real=("Valor_Real",lambda s:s.abs().sum()),
+                    EM=("Erro_Modelo","sum"),EA=("Erro_Ajustado","sum")).reset_index()
+                _p_fva["WAPE modelo %"]=(_p_fva["EM"]/_p_fva["Real"]*100).round(1); _p_fva["WAPE ajustado %"]=(_p_fva["EA"]/_p_fva["Real"]*100).round(1)
+                _p_fva["FVA (pp)"]=(_p_fva["WAPE modelo %"]-_p_fva["WAPE ajustado %"]).round(1)
+                _p_fva["Veredito"]=_p_fva["FVA (pp)"].apply(lambda v:"✅ ajuste ajudou" if v>0 else ("❌ ajuste piorou" if v<0 else "➖ neutro"))
+                with st.expander(f"📋 FVA por produto ({len(_p_fva)})"):
+                    st.dataframe(_p_fva[["Produto","Ajuste","Meses","WAPE modelo %","WAPE ajustado %","FVA (pp)","Veredito"]].rename(columns={"Ajuste":"Ajuste %","Meses":"Meses confirmados"}).sort_values("FVA (pp)"),
+                        use_container_width=True,hide_index=True)
+                    st.caption("FVA = WAPE do modelo puro − WAPE da previsão ajustada. Positivo: o ajuste manual reduziu o erro. Negativo: o modelo sozinho acertou mais. "
+                        "Considera só os meses já confirmados, a partir do mês do ajuste, na rodada que o ajuste corrigiu.")
 elif pg=="config_ml":
     hdr("🎛️ Motor de Previsão — Configuração Avançada","Parametrize sazonalidade, promoções e reajustes — e valide antes de aplicar")
     if "cfgml_config_carregada" not in st.session_state:
@@ -14933,7 +16445,7 @@ elif pg=="config_ml":
                                 "modelo_escolhido":melhor_p,"ultimo_real":ultimo_p,
                                 "previsao":[round(v,2) for v in proj_lista_p],
                                 "var_pct_proximo_mes":round(var_p,1),"status":"ok","rank":_rank_p,
-                                "confiabilidade":_confiab_p})
+                                "confiabilidade":_confiab_p,"_data_base_snapshot":serie_p.index[-1]})
                         else:
                             linhas_cfg.append({produto_col_cfg:prod_p,"n_periodos":len(serie_p),
                                 "modelo_escolhido":melhor_p,"ultimo_real":ultimo_p,
@@ -14976,6 +16488,30 @@ elif pg=="config_ml":
                         if "_ProdutoUnico" not in _resultado_cenario_save.columns:
                             _resultado_cenario_save["_ProdutoUnico"]=_resultado_cenario_save[produto_col_cfg]
                         save_cfgml_resultado(st.session_state.cid,_resultado_cenario_save,st.session_state.get("cfgml_filial_sel_pag"))
+
+                        # Congela a previsão com a data-alvo de cada mês, pra poder
+                        # comparar com o dado real quando ele chegar — ver Seção
+                        # "Acurácia das Previsões Passadas". Um snapshot por mês
+                        # previsto, não só o número solto.
+                        _linhas_snapshot=[]
+                        _data_rodada_snap=datetime.now().strftime("%Y-%m-%d")
+                        for _,_linha_snap in _resultado_cenario_save.iterrows():
+                            if _linha_snap.get("status")!="ok" or not isinstance(_linha_snap.get("previsao"),list): continue
+                            try:
+                                _base_snap=pd.Period(_linha_snap["_data_base_snapshot"],freq="M")
+                            except Exception:
+                                continue
+                            for _i_snap,_v_snap in enumerate(_linha_snap["previsao"]):
+                                _linhas_snapshot.append({
+                                    "_ProdutoUnico":_linha_snap["_ProdutoUnico"],
+                                    "Produto":_linha_snap[produto_col_cfg],
+                                    "Mes_Alvo":str(_base_snap+(_i_snap+1)),
+                                    "Valor_Previsto":round(float(_v_snap),2),
+                                    "Modelo":_linha_snap["modelo_escolhido"],
+                                    "Data_Rodada":_data_rodada_snap,
+                                })
+                        if _linhas_snapshot:
+                            save_snapshot_previsao(st.session_state.cid,pd.DataFrame(_linhas_snapshot),st.session_state.get("cfgml_filial_sel_pag"))
                     st.session_state["cfgml_config_usada"]=config_atual
                     st.session_state["cfgml_produto_col_usado"]=produto_col_cfg
                     st.session_state["cfgml_df_base_usado"]=df_rodar
@@ -15421,18 +16957,21 @@ elif pg=="compras":
         sec("Importar Estoque, Fornecedor e Lead Time")
         st.markdown('<div class="al-i">Suba um arquivo com: Produto, EstoqueAtual, CustoUnitario, Fornecedor e LeadTimeDias. O sistema tenta reconhecer as colunas automaticamente.</div>',unsafe_allow_html=True)
         arq_estoque=st.file_uploader("Selecione o arquivo (CSV ou Excel)",type=["csv","xlsx","xls"],key="compras_up_estoque")
+        dica_mapeador_colunas("estoque",st.session_state.cid)
         if arq_estoque is not None:
+            ui_mapeador_colunas(colunas_do_arquivo(arq_estoque),"estoque",st.session_state.cid,"estoque")
             senha_import_estoque=st.text_input("Senha master para confirmar a importação *",type="password",key="senha_import_estoque")
             if st.button("📤 Processar arquivo importado",use_container_width=True,key="compras_btn_processar_estoque"):
                 if senha_import_estoque!=SENHA_MASTER:
                     st.error("❌ Senha master incorreta.")
                 else:
                     b_est=arq_estoque.read()
-                    df_estoque_raw,msg_est=ler(b_est,arq_estoque.name)
+                    df_estoque_raw,msg_est=ler_erp(b_est,arq_estoque.name)
                     if df_estoque_raw is None or isinstance(df_estoque_raw,tuple):
                         st.markdown(f'<div class="al-d">❌ Não foi possível ler: {msg_est}</div>',unsafe_allow_html=True)
                     else:
                         df_estoque_raw.columns=[str(c).strip() for c in df_estoque_raw.columns]
+                        df_estoque_raw=aplicar_mapeamento_colunas(df_estoque_raw,"estoque",st.session_state.cid)   # só age se houver mapeamento salvo
                         col_prod_est=next((c for c in df_estoque_raw.columns if c.strip().lower() in ["produto","codigo","código","sku"]),None)
                         col_qtd_est=next((c for c in df_estoque_raw.columns if "estoqueatual" in c.strip().lower().replace(" ","") or c.strip().lower() in ["estoque","quantidade","saldo","qtd"]),None)
                         col_custo_est=next((c for c in df_estoque_raw.columns if "custo" in c.strip().lower()),None)
@@ -15756,25 +17295,43 @@ elif pg=="compras":
         mc(c_cl5,"Classe E",str(n_e),"r")
 
         sec("💡 Sugestão de Dias Mínimo/Máximo por Curva (baseado em dado real)")
-        st.markdown('<div class="al-i">Calcula uma sugestão de partida pra cada Curva, com base no giro real de '
-            'venda — não é chute nem regra igual pra todos. Você continua editando livremente os campos abaixo; '
-            'isso é só um ponto de partida melhor calibrado, nada é aplicado automaticamente.</div>',unsafe_allow_html=True)
+        st.markdown('<div class="al-i">Calcula a política de Mínimo/Máximo de cada Curva, com base no giro real de '
+            'venda do <b>recorte selecionado</b> (filial e categoria/produtos/catálogo). É a política que o Motor usa: '
+            'mudou o recorte, calcule de novo.</div>',unsafe_allow_html=True)
         with st.expander("📐 Como essa sugestão é calculada"):
             _escopo_txt_sug=_escopo_compras_texto if "Catálogo" not in escopo_tipo_compras else "todo o catálogo"
             _base_comparacao_sug=f"do escopo selecionado ({_escopo_txt_sug})" if produtos_no_escopo is not None else "de todo o catálogo (Catálogo inteiro selecionado)"
             st.markdown(f'<div class="al-i">'
-                f'<b>1) Giro relativo</b> — quanto cada Curva vende, em média por produto, comparado à média '
-                f'{_base_comparacao_sug}. Curva A gira mais rápido que essa média; Curva E gira mais devagar. Isso '
-                f'respeita o mesmo escopo (Categoria/Produto/Catálogo) que você tem selecionado acima — muda a '
-                f'referência se você trocar o escopo.<br><br>'
-                '<b>2) Dias Mínimo</b> = 30 dias (referência de 1 mês, pra quem gira na média) ÷ Giro relativo da '
-                'Curva. Quem gira mais rápido precisa de MENOS dias parado; quem gira mais devagar precisa de MAIS '
-                'dias, pra não zerar entre uma venda e outra.<br><br>'
-                '<b>3) Dias Máximo</b> = Dias Mínimo × Fator de Risco da Curva — o mesmo cálculo já usado no ajuste '
-                'por produto (erro real do modelo no backtest, olhando o pior cenário provável de cada Curva).<br><br>'
-                'Tudo calculado em cima do histórico de venda real da sua base — não é fórmula genérica de mercado, '
-                'é calibrado pro seu negócio especificamente.'
-                '</div>',unsafe_allow_html=True)
+                f'<b>Como ler a tabela, coluna por coluna</b> (cada valor da Curva é a <b>mediana dos produtos dela</b>, '
+                f'dentro do recorte selecionado: filial + categoria/produtos/catálogo).<br><br>'
+                f'<b>Classe</b> — a Curva ABC dos produtos do recorte, por faturamento acumulado: A são os que fazem os primeiros 70% da venda, '
+                f'B até 80%, C até 90%, D até 97% e E o restante.<br><br>'
+                f'<b>Produtos analisados</b> — quantos produtos a Curva tem no recorte. No cálculo do giro e da variabilidade só entram os que têm '
+                f'pelo menos 3 meses de venda; os demais só contam aqui.<br><br>'
+                f'<b>Giro relativo</b> — quanto a Curva vende, em média por produto, comparado ao produto mediano do recorte '
+                f'({_base_comparacao_sug}): mediana da venda média mensal (R$) dos produtos da Curva ÷ mediana da venda média mensal de todos. '
+                f'1,00× = igual ao produto mediano; 1,92× = vende quase o dobro. É o volume de venda em R$ (não o giro do estoque) e tem piso de 0,05×. '
+                f'<i>Serve para:</i> calcular os Dias pelo giro.<br><br>'
+                f'<b>CV (P75)</b> — variação das vendas mensais (desvio ÷ média), no percentil 75 dos produtos da Curva. 19% = venda estável; '
+                f'100% ou mais = muito irregular. <i>Só informativo:</i> não entra na conta do Mínimo/Máximo.<br><br>'
+                f'<b>Fator (P75)</b> — o Fator de Risco: o erro real do modelo de previsão no backtest (pior cenário provável de cada produto), '
+                f'no percentil 75 dos produtos da Curva (amostra de até 150, com modelo e ao menos 9 meses de venda). 1,10× = o pior mês ficou '
+                f'cerca de 10% acima da previsão. <i>Só entra na conta quando faltar o lead time</i> (Máximo = Mínimo × Fator); com lead time, é informativo.<br><br>'
+                f'<b>Dias pelo giro</b> = 30 ÷ giro relativo para quem vende na mediana ou acima; abaixo da mediana, 30 ÷ √giro relativo '
+                f'(lei da raiz do lote econômico: a cobertura dos itens lentos cresce com a raiz, e não linearmente). Os dois coincidem em 30 dias na mediana (1,00×). '
+                f'Limite de 3 a 180 dias. Quem vende mais precisa de menos dias parado; quem vende menos precisa de mais, para não zerar entre uma venda e outra.<br><br>'
+                f'<b>Lead time mediano (dias)</b> — prazo de entrega dos produtos da Curva, do resultado do Motor de Compras (que usa a sua tabela de '
+                f'lead time: produto/fornecedor, categoria ou padrão). Sem resultado do Motor aparece 0 e a tela avisa.<br><br>'
+                f'<b>Dias Mínimo sugerido</b> = Dias pelo giro + Lead time. É o ponto de pedido: com o estoque abaixo desses dias de venda, o Motor '
+                f'manda comprar. Cobre o tempo de a mercadoria chegar mais a proteção entre uma venda e outra.<br><br>'
+                f'<b>Ciclo de compra (dias)</b> — o intervalo entre reposições da Curva. Parte do lead time e cresce quando a Curva vende menos: '
+                f'é o maior entre o lead time e lead time ÷ √giro relativo (lote econômico: quem vende menos compra mais espaçado). Nunca é menor '
+                f'que o lead time, porque não se pede de novo antes de a entrega anterior chegar. É estimado por modelo, não medido no histórico de pedidos.<br><br>'
+                f'<b>Dias Máximo sugerido</b> = Dias Mínimo + Ciclo de compra. É até onde o Motor leva o estoque quando manda comprar '
+                f'(quantidade = Máximo × demanda diária − estoque atual).<br><br>'
+                f'<b>De onde vem cada coisa:</b> vendas, lead time e erro do modelo são dados seus. São convenções do sistema: a base de 30 dias, '
+                f'os limites de 3 a 180 dias e a lei da raiz do ciclo e da cobertura dos itens lentos. Produto que foge da regra da Curva pode receber um Mín/Máx próprio na exceção por produto.'
+                f'</div>',unsafe_allow_html=True)
         if st.button("💡 Calcular Sugestão por Curva",key="compras_sugestao_btn"):
             _modelos_sugestao=st.session_state.get("mlp_modelos_vencedores",{})
             _classes_sug=["A","B","C","D","E"]
@@ -15833,53 +17390,104 @@ elif pg=="compras":
             # dias parado; quem vende devagar precisa de muitos.
             _giro_medio_geral_sug=float(np.median(_todas_demandas_medias_global)) if _todas_demandas_medias_global else 1.0
             _dias_base_sug=30  # referência: 1 mês de cobertura pra quem gira na média do catálogo
+            # Lead time do fornecedor por Curva: mediana dos produtos da Curva, do resultado do Motor de Compras
+            _lead_por_classe_sug={}
+            _res_lead_sug=st.session_state.get("compras_resultado")
+            if _res_lead_sug is None or len(_res_lead_sug)==0:
+                _res_lead_sug=load_resultado_compras(st.session_state.cid,st.session_state.get("compras_filial_sel"))[0] if st.session_state.cid else None
+            if _res_lead_sug is not None and len(_res_lead_sug)>0 and all(c in _res_lead_sug.columns for c in ["Classe","LeadTimeDias"]):
+                _lead_por_classe_sug=_res_lead_sug.groupby("Classe")["LeadTimeDias"].median().to_dict()
+            else:
+                st.markdown('<div class="al-w">⚠️ Sem resultado do Motor de Compras: o lead time NÃO entrou na sugestão. Rode o 📦 Motor de Compras e calcule de novo.</div>',unsafe_allow_html=True)
 
             _linhas_sugestao=[]
             for _classe_sug,_d in _dados_por_classe_sug.items():
                 _giro_relativo_sug=(_d["giro_mediano"]/_giro_medio_geral_sug) if _giro_medio_geral_sug>0 else 1.0
                 _giro_relativo_sug=max(0.05,_giro_relativo_sug)  # evita divisão por quase-zero
-                _dias_min_sug=round(_dias_base_sug/_giro_relativo_sug)
-                _dias_min_sug=max(3,min(180,_dias_min_sug))  # limites de bom senso
-                _dias_max_sug=round(_dias_min_sug*_d["fator_p75"])
+                # Cobertura pelo giro: na mediana (1,00×) vale 30 dias. Acima da mediana, 30 ÷ giro (quem vende mais precisa de menos dias).
+                # Abaixo da mediana, a cobertura cresce com 1/√giro (lei da raiz do lote econômico, EOQ), e não linearmente: a linear superestima os itens
+                # mais lentos. Nos dois lados o valor é 30 dias em 1,00×, então não há salto. Limite de 3 a 180 dias.
+                _dias_giro_sug=max(3,min(180,round(_dias_base_sug/_giro_relativo_sug if _giro_relativo_sug>=1 else _dias_base_sug/(_giro_relativo_sug**0.5))))
+                _lead_cls_sug=int(round(float(_lead_por_classe_sug.get(_classe_sug,0))))
+                _dias_min_sug=_dias_giro_sug+_lead_cls_sug  # giro + lead time do fornecedor
+                if _lead_cls_sug>0:
+                    # Ciclo de compra: quem gira mais pede mais seguido (lote econômico: ciclo ∝ 1/√giro), nunca menor que o lead time
+                    _ciclo_cls_sug=max(_lead_cls_sug,round(_lead_cls_sug/(_giro_relativo_sug**0.5)))
+                    _dias_max_sug=_dias_min_sug+_ciclo_cls_sug
+                else:
+                    _ciclo_cls_sug=0  # sem lead time não há base pro ciclo: mantém o método anterior (Mínimo × Fator de Risco)
+                    _dias_max_sug=round(_dias_min_sug*_d["fator_p75"])
 
                 _linhas_sugestao.append({"Classe":_classe_sug,"Produtos analisados":_d["Produtos analisados"],
                     "Giro relativo":f"{_giro_relativo_sug:.2f}×","CV (P75)":f"{_d['cv_p75']*100:.0f}%",
-                    "Fator (P75)":f"{_d['fator_p75']:.2f}×","Dias Mínimo sugerido":_dias_min_sug,
-                    "Dias Máximo sugerido":_dias_max_sug,"_amostra_debug":_d["amostra_debug"],
+                    "Fator (P75)":f"{_d['fator_p75']:.2f}×","Dias pelo giro":_dias_giro_sug,"Lead time mediano (dias)":_lead_cls_sug,"Dias Mínimo sugerido":_dias_min_sug,
+                    "Ciclo de compra (dias)":_ciclo_cls_sug,"Dias Máximo sugerido":_dias_max_sug,"_amostra_debug":_d["amostra_debug"],
                     "_cv_range_debug":_d["cv_range_debug"]})
 
             if _linhas_sugestao:
-                st.session_state["compras_sugestao_resultado"]=pd.DataFrame(_linhas_sugestao)
+                _chave_sug=chave_escopo_sugestao(st.session_state.get("compras_filial_sel"))
+                _novo_sug=pd.DataFrame(_linhas_sugestao); _novo_sug["_escopo"]=_chave_sug
+                _ant_sug=st.session_state.get("compras_sugestao_resultado")
+                if _ant_sug is not None and len(_ant_sug)>0 and "_escopo" in _ant_sug.columns:
+                    _novo_sug=pd.concat([_ant_sug[_ant_sug["_escopo"]!=_chave_sug],_novo_sug],ignore_index=True)
+                st.session_state["compras_sugestao_resultado"]=_novo_sug
                 if st.session_state.cid:
                     save_resultado_sugestao_compras(st.session_state.cid)
             else:
                 st.markdown('<div class="al-w">⚠️ Não consegui calcular — confira se já rodou a classificação ABC/Curva.</div>',unsafe_allow_html=True)
 
-        _df_sugestao=st.session_state.get("compras_sugestao_resultado")
+        _df_sugestao=sugestao_do_escopo(st.session_state.cid,st.session_state.get("compras_filial_sel"))
         if _df_sugestao is not None and len(_df_sugestao)>0:
-            st.dataframe(_df_sugestao.drop(columns=["_amostra_debug"]),use_container_width=True,hide_index=True)
-            st.caption("Copie os números de Dias Mínimo/Máximo sugeridos pros campos da Classe correspondente, "
-                "logo abaixo — nada é aplicado automaticamente.")
-            with st.expander("🔧 Diagnóstico — CV individual e amostra de cada Curva"):
-                for _,_linha_diag in _df_sugestao.iterrows():
-                    st.markdown(f"**{_linha_diag['Classe']}** — faixa real de CV: {_linha_diag['_cv_range_debug']}")
-                    st.caption(f"　Produtos: {_linha_diag['_amostra_debug']}")
+            st.dataframe(_df_sugestao.drop(columns=["_amostra_debug","_cv_range_debug","_escopo"]),use_container_width=True,hide_index=True)
+            st.caption("Esses números são a política do Motor para o recorte selecionado — aplicados automaticamente na política abaixo.")
 
         sec("Política de Estoque — Dias Mínimo / Máximo por Grupo")
-        st.markdown('<div class="al-i">Proposta de partida, editável — ajuste conforme o perfil do negócio.</div>',unsafe_allow_html=True)
+        st.markdown('<div class="al-i">Calculada automaticamente pela <b>Sugestão por Curva</b> (acima). É a política que o Motor usa para decidir a compra, a menos que você acione a <b>política manual</b> (logo abaixo dos cartões). Para um produto específico, use a exceção por produto.</div>',unsafe_allow_html=True)
 
         if "compras_matriz" not in st.session_state:
-            st.session_state["compras_matriz"]={"A":(15,30),"B":(20,40),"C":(30,55),"D":(40,75),"E":(55,100)}
-
-        valores_padrao_classe={"A":(15,30),"B":(20,40),"C":(30,55),"D":(40,75),"E":(55,100)}
+            st.session_state["compras_matriz"]={"A":(15,30),"B":(20,40),"C":(30,55),"D":(40,75),"E":(55,100)}  # só enquanto não houver sugestão calculada
+        _sug_pol=sugestao_do_escopo(st.session_state.cid,st.session_state.get("compras_filial_sel"))
+        _tem_sug_pol=False
+        if _sug_pol is not None and len(_sug_pol)>0 and all(c in _sug_pol.columns for c in ["Classe","Dias Mínimo sugerido","Dias Máximo sugerido"]):
+            for _,_r_pol in _sug_pol.iterrows():
+                if str(_r_pol["Classe"]) in ["A","B","C","D","E"]:
+                    st.session_state["compras_matriz"][str(_r_pol["Classe"])]=(int(_r_pol["Dias Mínimo sugerido"]),int(_r_pol["Dias Máximo sugerido"]))
+                    _tem_sug_pol=True
+        if not _tem_sug_pol and not politica_manual_ativa():
+            st.markdown('<div class="al-w">⚠️ Não há Sugestão por Curva calculada para este recorte (filial, categoria/produtos/catálogo). Calcule acima: o Motor fica bloqueado até lá.</div>',unsafe_allow_html=True)
         cols_matriz=st.columns(5)
         for i,classe in enumerate(["A","B","C","D","E"]):
-            min_atual,max_atual=st.session_state["compras_matriz"].get(classe,valores_padrao_classe[classe])
+            min_atual,max_atual=st.session_state["compras_matriz"].get(classe,(20,40))
             with cols_matriz[i]:
-                st.caption(f"Classe {classe}")
-                novo_min=st.number_input("Dias mínimo",value=int(min_atual),min_value=1,step=1,key=f"compras_min_{classe}")
-                novo_max=st.number_input("Dias máximo",value=int(max_atual),min_value=1,step=1,key=f"compras_max_{classe}")
-                st.session_state["compras_matriz"][classe]=(novo_min,novo_max)
+                _txt_pol=f"{int(min_atual)} – {int(max_atual)} dias" if _tem_sug_pol else "—"
+                st.markdown(f'<div style="line-height:1.3"><div style="font-size:.8rem;color:#6B7280">Classe {classe}</div><div style="font-size:1.25rem;font-weight:700;color:#14243B">{_txt_pol}</div><div style="font-size:.68rem;color:#9CA3AF">Mínimo – Máximo</div></div>',unsafe_allow_html=True)
+
+        # ── Política MANUAL por Curva (opcional): acionada, o Motor usa os dias do usuário; desligada, usa a Sugestão por Curva ──
+        if politica_manual_ativa():
+            _mv=matriz_manual_valida()
+            st.markdown('<div class="al-w">🟣 <b>Em uso pelo Motor: a sua política manual</b> — '+" · ".join(f"{k} {a}–{b}" for k,(a,b) in _mv.items())+' dias. A Sugestão por Curva fica só como referência. Rode o Motor de novo para aplicar.</div>',unsafe_allow_html=True)
+        else:
+            st.markdown('<div class="al-s">🟢 <b>Em uso pelo Motor: a Sugestão por Curva.</b> Se preferir, defina os seus próprios dias Mínimo/Máximo por Curva logo abaixo.</div>',unsafe_allow_html=True)
+        with st.expander("✏️ Política manual por Curva (opcional): defina você mesmo os dias Mínimo e Máximo",expanded=bool(st.session_state.get("compras_pol_manual_ativa",False))):
+            st.markdown('<div class="al-i">Por padrão o Motor usa a <b>Sugestão por Curva</b>. Ligando a política manual, o Motor passa a obedecer os dias que você definir para cada Curva. As <b>exceções por produto</b> continuam valendo sobre qualquer uma das duas. Ligue ou desligue e clique em <b>Salvar</b> para aplicar; depois rode o Motor de novo.</div>',unsafe_allow_html=True)
+            _man_ativar=st.toggle("Usar a minha política manual (o Motor obedece estes dias)",value=bool(st.session_state.get("compras_pol_manual_ativa",False)),key="compras_pol_manual_toggle")
+            _man_base=matriz_manual_valida() or {}
+            _man_cols=st.columns(5); _man_novos={}
+            for _mi,_mk in enumerate(["A","B","C","D","E"]):
+                _mn0,_mx0=_man_base.get(_mk) or st.session_state["compras_matriz"].get(_mk,(20,40))
+                with _man_cols[_mi]:
+                    st.markdown(f"**Classe {_mk}**")
+                    _man_mn=st.number_input("Mínimo (dias)",min_value=1,max_value=730,value=int(_mn0),step=1,key=f"compras_man_min_{_mk}")
+                    _man_mx=st.number_input("Máximo (dias)",min_value=1,max_value=730,value=int(_mx0),step=1,key=f"compras_man_max_{_mk}")
+                    _man_novos[_mk]=(int(_man_mn),int(_man_mx))
+            _man_ruins=[_k for _k,(_a,_b) in _man_novos.items() if _b<_a]
+            if _man_ruins:
+                st.markdown('<div class="al-w">⚠️ O Máximo está menor que o Mínimo na(s) Curva(s) '+", ".join(_man_ruins)+'. Corrija para poder salvar.</div>',unsafe_allow_html=True)
+            if st.button("💾 Salvar política manual",key="compras_pol_manual_salvar",use_container_width=True,disabled=bool(_man_ruins)):
+                st.session_state["compras_matriz_manual"]={_k:[_a,_b] for _k,(_a,_b) in _man_novos.items()}
+                st.session_state["compras_pol_manual_ativa"]=bool(_man_ativar)
+                if st.session_state.cid: save_config_compras(st.session_state.cid)
+                st.rerun()
 
         with st.expander("🎯 Exceção de Mínimo/Máximo por Produto Específico"):
             st.markdown('<div class="al-i">Para produtos que precisam fugir da regra geral da Classe (ex: item crítico que deve ficar sempre bem estocado).</div>',unsafe_allow_html=True)
@@ -16100,7 +17708,7 @@ elif pg=="compras":
         
 
         senha_rodar_compras=st.text_input("Senha master para rodar",type="password",key="senha_rodar_compras")
-        if st.button("🚀 Rodar Motor de Compras",use_container_width=True,key="compras_btn_rodar"):
+        if st.button("🚀 Rodar Motor de Compras",use_container_width=True,key="compras_btn_rodar",disabled=not (_tem_sug_pol or politica_manual_ativa())):
             if senha_rodar_compras!=SENHA_MASTER:
                 st.markdown('<div class="al-d">❌ Senha master incorreta — nada foi executado.</div>',unsafe_allow_html=True)
                 st.stop()
@@ -16288,6 +17896,7 @@ elif pg=="compras":
                     cls_row=df_class[df_class["Produto"]==prod_c]
                     classe_c=cls_row["classe_abc"].iloc[0] if not cls_row.empty else "SV"
                     vol_c=cls_row["Volatilidade"].iloc[0] if not cls_row.empty else "Sem dados"
+                    cv_c=float(cls_row["CV"].iloc[0]) if (not cls_row.empty and "CV" in cls_row.columns and pd.notna(cls_row["CV"].iloc[0])) else None
 
                     minmax_produto_map=st.session_state.get("compras_minmax_produto",{})
                     if prod_c in minmax_produto_map:
@@ -16295,7 +17904,7 @@ elif pg=="compras":
                     elif classe_c=="SV":
                         min_dias_c,max_dias_c=(0,0)
                     else:
-                        min_dias_c,max_dias_c=st.session_state["compras_matriz"].get(classe_c,(20,40))
+                        min_dias_c,max_dias_c=(matriz_politica_efetiva() or {}).get(classe_c,(20,40))
 
                     # Lead time: Produto+Fornecedor > Produto > Categoria+Fornecedor > Categoria > Fornecedor > Padrão
                     lead_padrao_val=st.session_state.get("compras_lead_padrao",15)
@@ -16396,7 +18005,7 @@ elif pg=="compras":
 
                     linhas_compras.append({
                         "Produto":prod_c,"Filial":_filial_u if _filial_u else st.session_state.get("compras_filial_sel"),
-                        "Fornecedor":forn_c,"Classe":classe_c,"Volatilidade":vol_c,
+                        "Fornecedor":forn_c,"Classe":classe_c,"Volatilidade":vol_c,"CVDemanda":cv_c,"PrecoVenda":round(preco_venda_c,2),
                         "EstoqueAtual":round(estoque_c,1),"DemandaPrevMes(un)":round(demanda_unid_mes,1),
                         "CoberturaDias":round(cobertura_dias,1) if cobertura_dias<999 else None,
                         "MinDias":min_dias_c,"MaxDias":max_dias_c,"LeadTimeDias":lead_c,
@@ -16608,11 +18217,28 @@ elif pg=="compras":
 
             sec("Simulador de Cenário — Impacto no Giro e no Caixa")
 
-            df_cenario=df_res_compras[df_res_compras["CoberturaDias"].notna()].copy()
-            df_cenario["CapitalAtual"]=df_cenario["EstoqueAtual"]*df_cenario["CustoUnitario"]
-            df_cenario["DiasAlvo"]=(df_cenario["MinDias"]+df_cenario["MaxDias"])/2
-            df_cenario["DemandaDia"]=df_cenario["DemandaPrevMes(un)"]/30
-            df_cenario["CapitalIdeal"]=df_cenario["DiasAlvo"]*df_cenario["DemandaDia"]*df_cenario["CustoUnitario"]
+            # ── Régua do estoque ideal: matriz por classe (atual) ou Lead time + segurança (calculada) ──
+            # Só muda as ANÁLISES de estoque ideal (Simulador, Dashboard, Pareto & GMROI).
+            # As recomendações de compra do Motor continuam pela matriz por classe.
+            _opcoes_pol_ideal=["Sugestão por Curva (calculada)","Matriz por classe (atual)"]
+            def _on_change_pol_ideal():
+                st.session_state["compras_politica_ideal_backup"]=st.session_state["compras_politica_ideal"]
+                st.session_state["compras_nivel_servico_backup"]=st.session_state["compras_nivel_servico"]
+                if st.session_state.cid:
+                    save_config_compras(st.session_state.cid)
+            if "compras_politica_ideal_backup" not in st.session_state:
+                st.session_state["compras_politica_ideal_backup"]=st.session_state.get("compras_politica_ideal",_opcoes_pol_ideal[0])
+            if "compras_nivel_servico_backup" not in st.session_state:
+                st.session_state["compras_nivel_servico_backup"]=st.session_state.get("compras_nivel_servico",95)
+            if st.session_state["compras_politica_ideal_backup"] not in _opcoes_pol_ideal:
+                st.session_state["compras_politica_ideal_backup"]=_opcoes_pol_ideal[0]
+            if st.session_state["compras_nivel_servico_backup"] not in (90,95,98):
+                st.session_state["compras_nivel_servico_backup"]=95
+            st.session_state["compras_politica_ideal"]=st.session_state["compras_politica_ideal_backup"]
+            st.session_state["compras_nivel_servico"]=st.session_state["compras_nivel_servico_backup"]
+            st.caption("Régua do estoque ideal: Sugestão por Curva, a mesma política que o Motor usa para decidir a compra.")
+
+            df_cenario=preparar_cenario_motor(df_res_compras)
 
             capital_atual_total=df_cenario["CapitalAtual"].sum()
             capital_ideal_total=df_cenario["CapitalIdeal"].sum()
@@ -16621,7 +18247,9 @@ elif pg=="compras":
             peso_capital_cen=df_cenario["EstoqueAtual"]*df_cenario["CustoUnitario"]
             if peso_capital_cen.sum()>0:
                 giro_atual_medio=float((df_cenario["GiroAtual"]*peso_capital_cen).sum()/peso_capital_cen.sum())
-                giro_alvo_medio=float((df_cenario["GiroAlvo"]*peso_capital_cen).sum()/peso_capital_cen.sum())
+                # Giro alvo ponderado pelo capital IDEAL (não pelo atual): assim fecha com o card do estoque ideal (giro implícito = 365 × consumo ÷ estoque ideal)
+                _peso_ideal_cen=df_cenario["CapitalIdeal"]
+                giro_alvo_medio=float((df_cenario["GiroAlvo"]*_peso_ideal_cen).sum()/_peso_ideal_cen.sum()) if _peso_ideal_cen.sum()>0 else 0
             else:
                 giro_atual_medio=0; giro_alvo_medio=0
             giro_pct_atual=giro_atual_medio*30/365*100
@@ -16636,6 +18264,11 @@ elif pg=="compras":
             c_gir1,c_gir2=st.columns(2)
             mc(c_gir1,"🔄 Giro Médio Atual",f"{giro_pct_atual:.0f}%","b",f"{giro_atual_medio:.1f}x ao ano")
             mc(c_gir2,"🎯 Giro Médio Alvo",f"{giro_pct_alvo:.0f}%","g",f"{giro_alvo_medio:.1f}x ao ano")
+            _exc_cen=float(df_cenario["Excesso"].sum()); _fal_cen=float(df_cenario["Falta"].sum())
+            st.caption(_cap_rs(f"🧮 Ponte: estoque atual {fmt(capital_atual_total)} − excesso {fmt(_exc_cen)} + falta {fmt(_fal_cen)} = estoque ideal {fmt(capital_ideal_total)}. "
+                f"Liberável líquido = excesso − falta = {fmt(_exc_cen-_fal_cen)}. Régua do estoque ideal: {df_cenario['PoliticaIdeal'].iloc[0] if len(df_cenario)>0 else '—'}. "
+                f"Os mesmos números aparecem em 📐 Pareto & GMROI."))
+            # (a comparação matriz × sugestão saiu: o Motor agora decide só pela Sugestão por Curva)
 
             st.markdown("<br>",unsafe_allow_html=True)
             sec("📊 Giro e Capital por Classe")
@@ -16649,11 +18282,12 @@ elif pg=="compras":
                 # Mesma fórmula ponderada por capital usada nos cards do topo (giro_atual_medio/giro_alvo_medio),
                 # em vez de 365/média(dias) — que não é matematicamente igual a média dos giros individuais.
                 giro_atual_cl=float((df_cl["GiroAtual"]*peso_cl).sum()/peso_cl.sum())
-                giro_alvo_cl=float((df_cl["GiroAlvo"]*peso_cl).sum()/peso_cl.sum())
+                giro_alvo_cl=float((df_cl["GiroAlvo"]*df_cl["CapitalIdeal"]).sum()/df_cl["CapitalIdeal"].sum()) if df_cl["CapitalIdeal"].sum()>0 else 0   # ponderado pelo capital ideal
                 _giro_por_classe_cache[classe_res]=(giro_atual_cl,giro_alvo_cl)
                 resumo_classe.append({
                     "Classe":classe_res,
-                    "Produtos":len(df_cl),
+                    "Posições (produto × filial)":len(df_cl),
+                    "Produtos distintos":int(df_cl["Produto"].nunique()),
                     "Giro Atual (%)":round(giro_atual_cl*30/365*100,0),
                     "Giro Atual (x/ano)":round(giro_atual_cl,1),
                     "Giro Alvo (%)":round(giro_alvo_cl*30/365*100,0),
@@ -16663,6 +18297,21 @@ elif pg=="compras":
                 })
             if resumo_classe:
                 st.dataframe(pd.DataFrame(resumo_classe),use_container_width=True,hide_index=True)
+                _pos_proc=len(df_cenario); _prod_proc=int(df_cenario["Produto"].nunique())
+                _n_fil_proc=int(df_cenario["Filial"].nunique()) if "Filial" in df_cenario.columns else 1
+                _txt_conc=(f"ℹ️ <b>Como ler a contagem:</b> cada linha conta <b>posições (produto × filial)</b>, porque a Curva é calculada por filial: "
+                    f"o mesmo produto pode estar em Curvas diferentes em filiais diferentes. Aqui são <b>{_pos_proc} posições</b> = "
+                    f"<b>{_prod_proc} produtos distintos</b> em {_n_fil_proc} filial(is).")
+                try:
+                    _e_conc=df_est_atual[pd.to_numeric(df_est_atual["EstoqueAtual"],errors="coerce").fillna(0)>0]
+                    _n_pos_est=int(_e_conc.groupby(["Produto",_col_fil_est_atual]).ngroups) if _col_fil_est_atual else int(_e_conc["Produto"].nunique())
+                    if _n_pos_est>_pos_proc:
+                        _txt_conc+=(f" O estoque do escopo tem {_n_pos_est} posições; o Motor processou {_pos_proc}. As {_n_pos_est-_pos_proc} restantes têm "
+                            f"menos de 3 meses de venda na filial ou não têm previsão salva, e aparecem no Capital Parado, não aqui.")
+                except Exception:
+                    pass
+                _txt_conc+=" Em 📐 Pareto & GMROI a contagem é por <b>produto distinto</b>, somando as filiais."
+                st.markdown(f'<div class="al-i">{_txt_conc}</div>',unsafe_allow_html=True)
                 classe_raw_snapshot=[]
                 for classe_res2 in ["A","B","C","D","E"]:
                     df_cl2=df_cenario[df_cenario["Classe"]==classe_res2]
@@ -16674,7 +18323,7 @@ elif pg=="compras":
                     _giro_atual_snap,_giro_alvo_snap=_giro_por_classe_cache[classe_res2]
                     if _giro_atual_snap<=0 or _giro_alvo_snap<=0: continue
                     classe_raw_snapshot.append({
-                        "classe":classe_res2,"produtos":len(df_cl2),
+                        "classe":classe_res2,"produtos":len(df_cl2),"posicoes":len(df_cl2),"produtos_distintos":int(df_cl2["Produto"].nunique()),
                         "giro_atual_pct":round(_giro_atual_snap*30/365*100,0),"giro_atual_xano":round(_giro_atual_snap,1),
                         "giro_alvo_pct":round(_giro_alvo_snap*30/365*100,0),"giro_alvo_xano":round(_giro_alvo_snap,1),
                         "capital_atual":float(df_cl2["CapitalAtual"].sum()),
@@ -16686,31 +18335,52 @@ elif pg=="compras":
             
 
                 
-                sec("Capital Parado — Estoque sem Giro")
+                sec("Capital Parado — Estoque sem venda além do Máximo da Curva")
             
 
-            df_morto=df_res_compras.copy()
-            limite_demanda_baixa=df_morto[df_morto["DemandaPrevMes(un)"]>0]["DemandaPrevMes(un)"].quantile(0.10) if (df_morto["DemandaPrevMes(un)"]>0).any() else 0
-            df_morto=df_morto[(df_morto["EstoqueAtual"]>0) & (df_morto["DemandaPrevMes(un)"]<=limite_demanda_baixa)].copy()
-            df_morto["CapitalParado"]=df_morto["EstoqueAtual"]*df_morto["CustoUnitario"]
-            df_morto=df_morto.sort_values("CapitalParado",ascending=False)
+            _dt_ref_parado=pd.to_datetime(get_vendas_df()[col_data_v],errors="coerce",dayfirst=True).max()
+            # Estoque e vendas COMPLETOS: o escopo (categoria) vem das vendas de TODAS as filiais. Em filial única, o filtro
+            # de escopo do topo usa só as vendas daquela filial e deixava de fora o produto que nunca vendeu nela.
+            _vendas_parado=get_vendas_df()
+            _est_parado=get_estoque_compras()
+            if produtos_no_escopo is not None:
+                if "Categoria" in escopo_tipo_compras and col_cat_v_compras:
+                    _prod_escopo_full=set(_vendas_parado[_vendas_parado[col_cat_v_compras].astype(str)==categoria_sel_compras][col_prod_v].astype(str).unique())
+                else:
+                    _prod_escopo_full=produtos_no_escopo
+                _est_parado=_est_parado[_est_parado["Produto"].astype(str).isin(_prod_escopo_full)]
+            if filial_sel_compras!="(Todas as filiais)" and _col_fil_est_atual:
+                _est_parado=_est_parado[_est_parado[_col_fil_est_atual].astype(str)==filial_sel_compras]
+            df_morto=calcular_capital_parado_v2(_est_parado,_vendas_parado,col_prod_v,col_data_v,_col_fil_est_atual,_col_fil_v_compras,col_val_v,
+                df_res_compras,df_class,matriz_politica_efetiva(),st.session_state.get("compras_minmax_produto"),
+                data_ref=(_dt_ref_parado.normalize() if pd.notna(_dt_ref_parado) else None))
             st.session_state["compras_morto"]=df_morto
             # Salva o Capital Morto já calculado — no momento do clique em "Rodar Motor de Compras"
             # esse cálculo ainda não tinha rodado, então o arquivo salvo ficava com dado velho/vazio
             if st.session_state.cid:
                 save_resultado_compras(st.session_state.cid,None,None,df_morto,st.session_state.get("compras_filial_sel"))
+            # Visão consolidada: grava também o Capital Parado de CADA filial (o Dashboard lê um arquivo por filial);
+            # sem isso, só a visão "Todas as filiais" teria o número novo.
+            if filial_sel_compras=="(Todas as filiais)" and _col_fil_est_atual and st.session_state.cid:
+                _est_tmp=df_est_atual.copy()
+                _est_tmp["_cap"]=pd.to_numeric(_est_tmp["EstoqueAtual"],errors="coerce").fillna(0)*pd.to_numeric(_est_tmp["CustoUnitario"],errors="coerce").fillna(0)
+                _est_por_fil=_est_tmp.groupby(_est_tmp[_col_fil_est_atual].astype(str).str.strip())["_cap"].sum()
+                for _fil_nome,_cap_fil in _est_por_fil.items():
+                    _df_fil=df_morto[df_morto["Filial"]==_fil_nome].copy()
+                    _df_fil["EstoqueEscopo"]=float(_cap_fil)
+                    save_resultado_compras(st.session_state.cid,None,None,_df_fil,_fil_nome)
 
             if df_morto.empty:
-                st.markdown('<div class="al-s">✅ Nenhum produto identificado como capital morto, dentro dos produtos calculados.</div>',unsafe_allow_html=True)
+                st.markdown('<div class="al-s">✅ Nenhuma posição parada: todo item com estoque vendeu dentro do Dias Máximo da Curva.</div>',unsafe_allow_html=True)
             else:
                 total_capital_morto=df_morto["CapitalParado"].sum()
                 c_cm1,c_cm2=st.columns(2)
-                mc(c_cm1,"📦 Produtos com Capital Parado",str(len(df_morto)),"y")
-                mc(c_cm2,"💰 Capital Total Parado (baixíssimo giro)",fmt(total_capital_morto),"r")
+                mc(c_cm1,f'📦 Posições paradas <span title="{TT_CAPITAL_PARADO}" style="cursor:help">ℹ️</span>',str(len(df_morto)),"y")
+                mc(c_cm2,f'💰 Capital Parado <span title="{TT_CAPITAL_PARADO}" style="cursor:help">ℹ️</span>',fmt(total_capital_morto),"r")
 
-                with st.expander(f"📋 Ver produtos com capital parado ({len(df_morto)})"):
-                    st.dataframe(df_morto[["Produto","Fornecedor","Classe","EstoqueAtual","DemandaPrevMes(un)",
-                    "CoberturaDias","CustoUnitario","CapitalParado"]],use_container_width=True,height=380)
+                with st.expander(f"📋 Ver posições paradas ({len(df_morto)})"):
+                    st.dataframe(df_morto[["Produto","Filial","Fornecedor","Classe","EstoqueAtual","CustoUnitario",
+                    "UltimaVenda","DiasSemVenda","MaxDias","CapitalParado"]],use_container_width=True,height=380)
 
                 if not df_morto.empty:
                     csv_morto=df_morto.to_csv(sep=";",decimal=",",index=False).encode("utf-8-sig")
@@ -17041,6 +18711,7 @@ elif pg=="compras":
                         st.markdown('<div class="al-w">⚠️ Nenhum produto pôde ser testado (histórico curto demais, ou todos usam LightGBM).</div>',unsafe_allow_html=True)
                     else:
                         df_econ=pd.DataFrame(_linhas_econ_todos_cortes)
+                        df_econ["_escopo"]=chave_escopo_sugestao(st.session_state.get("compras_filial_sel"))   # recorte (filial + categoria/produtos) em que foi calculada
                         st.session_state["compras_econ_resultado"]=df_econ
                         st.session_state["compras_econ_cortes_usados"]=_cortes_econ_lista
                         if st.session_state.cid:
@@ -17412,6 +19083,55 @@ elif pg=="compras":
                 else:
                     st.markdown('<div class="al-w">⚠️ Não foi possível salvar em disco — nenhum cliente selecionado (session_state.cid vazio). Os dados ficam só nesta sessão e se perdem ao reiniciar.</div>',unsafe_allow_html=True)
 
+
+        # ── Desempenho de entrega dos fornecedores (Prazo, OTIF) + variação do prazo — fim da página ──
+        sec("🚚 Desempenho de Entrega e Variação do Prazo dos Fornecedores")
+        _df_res_perf=globals().get("df_res_compras")   # resultado do Motor, se existir nesta execução
+        _ped_perf=load_pedidos_fornecedores(st.session_state.cid) if st.session_state.cid else None
+        _sc_perf=load_scorecard_forn(st.session_state.cid) if st.session_state.cid else None
+        if _ped_perf is None or _ped_perf.empty:
+            st.markdown('<div class="al-i">Importe os pedidos em 📦 Fornecedores (Prazo/Qualidade/OTIF) para ver aqui o desempenho de entrega e a variação do prazo de cada fornecedor.</div>',unsafe_allow_html=True)
+        else:
+            _ped_perf=_ped_perf.copy()
+            _ped_perf["Data Prevista"]=pd.to_datetime(_ped_perf["Data Prevista"],errors="coerce"); _ped_perf["Data Real"]=pd.to_datetime(_ped_perf["Data Real"],errors="coerce")
+            _tem_dped=("Data Pedido" in _ped_perf.columns)
+            if _tem_dped: _ped_perf["Data Pedido"]=pd.to_datetime(_ped_perf["Data Pedido"],errors="coerce")
+            _agg_perf=dict(prev=("Data Prevista","first"),real=("Data Real","first"))
+            if _tem_dped: _agg_perf["ped"]=("Data Pedido","first")
+            _ped_perf=_ped_perf.dropna(subset=["Data Prevista","Data Real"]).groupby(["Fornecedor","Pedido"],as_index=False).agg(**_agg_perf)
+            _ped_perf["atraso"]=(_ped_perf["real"]-_ped_perf["prev"]).dt.days
+            if _tem_dped: _ped_perf["lt_real"]=(_ped_perf["real"]-_ped_perf["ped"]).dt.days   # lead time real = data real − data do pedido
+            _part_perf={}
+            if _df_res_perf is not None and not _df_res_perf.empty and "Fornecedor" in _df_res_perf.columns and "ValorSugerido" in _df_res_perf.columns:
+                _tot_perf=_df_res_perf.groupby("Fornecedor")["ValorSugerido"].sum()
+                if _tot_perf.sum()>0: _part_perf=(_tot_perf/_tot_perf.sum()*100).round(1).to_dict()
+            _sc_map_perf={}
+            if _sc_perf is not None and not _sc_perf.empty and "Fornecedor" in _sc_perf.columns:
+                _sc_map_perf={str(r["Fornecedor"]):r for _,r in _sc_perf.iterrows()}
+            _linhas_perf=[]
+            for _fp,_gp in _ped_perf.groupby("Fornecedor"):
+                _ap=_gp["atraso"]; _scp=_sc_map_perf.get(str(_fp))
+                _linhas_perf.append({"Fornecedor":_fp,"Part. nas compras sugeridas (%)":_part_perf.get(_fp),
+                    "Pedidos":len(_ap),"Prazo (%)":(_scp["Prazo"] if _scp is not None and "Prazo" in _scp else None),
+                    "OTIF (%)":(_scp["OTIF"] if _scp is not None and "OTIF" in _scp else None),
+                    "Atraso médio (dias)":round(float(_ap.mean()),1),
+                    "Desvio do atraso (dias)":round(float(_ap.std(ddof=1)),1) if len(_ap)>=3 else None,
+                    "Atraso P90 (dias)":round(float(_ap.quantile(0.90)),1) if len(_ap)>=3 else None,
+                    "Pior atraso (dias)":int(_ap.max())})
+                if _tem_dped:
+                    _lt=_gp["lt_real"].dropna()
+                    _linhas_perf[-1]["Lead time real médio (dias)"]=round(float(_lt.mean()),1) if len(_lt)>=1 else None
+                    _linhas_perf[-1]["Desvio do lead time (dias)"]=round(float(_lt.std(ddof=1)),1) if len(_lt)>=3 else None
+            _df_perf=pd.DataFrame(_linhas_perf).sort_values("Desvio do atraso (dias)",ascending=False,na_position="last")
+            if _tem_dped: st.caption("Lead time real = data real − data do pedido (só pedidos com a Data Pedido preenchida); o desvio aparece com ao menos 3 pedidos.")
+            st.markdown('<div class="al-i">O <b>Prazo</b> e o <b>OTIF</b> dizem quantos pedidos chegaram como previsto, mas não o quanto o prazo <b>oscila</b>. '
+                'O atraso é medido pedido a pedido (data real − data prevista; negativo = adiantado): <b>média</b>, <b>desvio</b> (quanto varia), <b>P90</b> '
+                '(em 9 de cada 10 pedidos o atraso foi menor que isso) e <b>pior caso</b>. A tabela vem ordenada do fornecedor mais instável para o mais estável: '
+                'quem combina <b>participação alta nas compras</b> e <b>desvio alto</b> é o primeiro da fila para negociar.</div>',unsafe_allow_html=True)
+            st.dataframe(_df_perf,use_container_width=True,hide_index=True)
+            st.caption("Desvio e P90 só aparecem com pelo menos 3 pedidos. Sem a data em que o pedido foi feito, o desvio do atraso representa a variação do prazo de entrega "
+                "enquanto o prazo prometido for estável. Fornecedor sem participação ou sem Prazo/OTIF tem o nome diferente entre o estoque e a planilha de pedidos.")
+
     st.stop()
 elif pg=="fluxo_compras":
     hdr("💰 Fluxo Projetado","Saída de caixa por compras x entrada por vendas, distribuídas pelos prazos reais de pagamento e recebimento")
@@ -17534,15 +19254,18 @@ elif pg=="fluxo_compras":
             with c_up_pag:
                 st.markdown("💸 Contas a Pagar")
                 arq_pagar=st.file_uploader("Arquivo (CSV ou Excel)",type=["csv","xlsx","xls"],key="ff_upload_pagar")
+                dica_mapeador_colunas("pagar",st.session_state.cid)
                 if arq_pagar is not None:
+                    ui_mapeador_colunas(colunas_do_arquivo(arq_pagar),"pagar",st.session_state.cid,"pagar")
                     senha_import_pagar=st.text_input("Senha master *",type="password",key="senha_import_pagar")
                     if st.button("📤 Processar",use_container_width=True,key="ff_btn_processar_pagar"):
                         if senha_import_pagar!=SENHA_MASTER:
                             st.error("❌ Senha master incorreta.")
                         else:
                             try:
-                                df_pagar_up=pd.read_csv(arq_pagar,sep=None,engine="python",encoding="utf-8-sig") if arq_pagar.name.endswith(".csv") else pd.read_excel(arq_pagar)
+                                df_pagar_up=ler_arquivo_pr(arq_pagar)
                                 df_pagar_up.columns=[str(c).strip() for c in df_pagar_up.columns]
+                                df_pagar_up=aplicar_mapeamento_colunas(df_pagar_up,"pagar",st.session_state.cid)   # só age se houver mapeamento salvo
                                 cols_pagar=list(df_pagar_up.columns)
                                 col_venc_pag=next((c for c in cols_pagar if c.strip().lower() in ["vencimento","data","data vencimento","data de vencimento"]),None)
                                 col_val_pag=next((c for c in cols_pagar if c.strip().lower() in ["valor","vlr","valor total"]),None)
@@ -17578,15 +19301,18 @@ elif pg=="fluxo_compras":
             with c_up_rec:
                 st.markdown("💰 Contas a Receber")
                 arq_receber=st.file_uploader("Arquivo (CSV ou Excel)",type=["csv","xlsx","xls"],key="ff_upload_receber")
+                dica_mapeador_colunas("receber",st.session_state.cid)
                 if arq_receber is not None:
+                    ui_mapeador_colunas(colunas_do_arquivo(arq_receber),"receber",st.session_state.cid,"receber")
                     senha_import_receber=st.text_input("Senha master *",type="password",key="senha_import_receber")
                     if st.button("📤 Processar",use_container_width=True,key="ff_btn_processar_receber"):
                         if senha_import_receber!=SENHA_MASTER:
                             st.error("❌ Senha master incorreta.")
                         else:
                             try:
-                                df_receber_up=pd.read_csv(arq_receber,sep=None,engine="python",encoding="utf-8-sig") if arq_receber.name.endswith(".csv") else pd.read_excel(arq_receber)
+                                df_receber_up=ler_arquivo_pr(arq_receber)
                                 df_receber_up.columns=[str(c).strip() for c in df_receber_up.columns]
+                                df_receber_up=aplicar_mapeamento_colunas(df_receber_up,"receber",st.session_state.cid)   # só age se houver mapeamento salvo
                                 cols_receber=list(df_receber_up.columns)
                                 col_venc_rec=next((c for c in cols_receber if c.strip().lower() in ["vencimento","data","data vencimento","data de vencimento"]),None)
                                 col_val_rec=next((c for c in cols_receber if c.strip().lower() in ["valor","vlr","valor total"]),None)
@@ -18161,16 +19887,17 @@ elif pg=="parecer_ia":
                                     f"Total Sugerido Compra Imediata {fmt(_sp.get('total_sugerido_imediato',0))}")
 
                         if _sp.get('cap_parado',0)>0:
-                            _cap_parado_txt=f"{fmt(_sp['cap_parado'])} em {_sp.get('n_parado',0)} produto(s) com demanda próxima de zero"
+                            _cap_parado_txt=f"{fmt(_sp['cap_parado'])} em {_sp.get('n_parado',0)} posição(ões) sem venda há mais dias do que o Máximo da Curva"
                         else:
-                            _cap_parado_txt="R$ 0 (nenhum produto com demanda tão próxima de zero a ponto de ser considerado morto)"
+                            _cap_parado_txt="R$ 0 (nenhuma posição sem venda além do Máximo da Curva)"
 
                         _classe_txt="não disponível nesta filial"
                         if _sc:
                             _linhas_c=[]
                             for c_item in _sc:
                                 _liber=c_item["capital_atual"]-c_item["capital_ideal"]
-                                _linhas_c.append(f"Classe {c_item['classe']} ({c_item['produtos']} produtos): Giro {c_item['giro_atual_xano']}x/ano "
+                                _linhas_c.append(f"Classe {c_item['classe']} ({c_item.get('posicoes',c_item['produtos'])} posições produto×filial"
+                                                                 f"{(', '+str(c_item['produtos_distintos'])+' produtos distintos') if c_item.get('produtos_distintos') else ''}): Giro {c_item['giro_atual_xano']}x/ano "
                                                  f"(alvo {c_item['giro_alvo_xano']}x/ano), Capital {fmt(c_item['capital_atual'])} "
                                                  f"({'liberável' if _liber>=0 else 'necessário adicional'} de {fmt(abs(_liber))})")
                             _classe_txt=" | ".join(_linhas_c)
@@ -18237,7 +19964,7 @@ Capital Parado (sem giro / candidatos a liquidação): {_cap_parado_txt}
 Ruptura: {_sp['pct_ruptura']:.1f}% dos produtos | Cobertura média: {_sp['cob_media']:.0f} dias | Giro médio: {_sp['giro_ano']}x/ano | Lead Time médio: {_sp['lt_medio']:.0f} dias
 WAPE do modelo de previsão (validação out-of-sample): {f"{_sp['mape_ml']:.1f}%" if _sp.get('mape_ml') else "não validado ainda"}
 Radar de Estoque — ação imediata: {_radar_txt}
-Giro e Capital por Classe ABC/D/E: {_classe_txt}
+Giro e Capital por Classe ABC/D/E (contagens em posições produto×filial; a Curva é calculada por filial): {_classe_txt}
 Configuração do modelo de ML usado: {_mlconfig_txt}
 Fluxo de Caixa Comercial Projetado: saldo final {fmt(_sf['saldo_final_real']) if _sf else '—'} em {_sf.get('periodo_fim','—') if _sf else '—'}; {_caixa_txt}
 Fornecedores desta filial (participação e capital parado, calculado das compras sugeridas): {_forn_txt_p}
@@ -18953,6 +20680,19 @@ elif pg=="gestao_estoque":
     df_res=df_cal_gs=df_morto_gs=None
     if st.session_state.cid:
         df_res,df_cal_gs,df_morto_gs=load_resultado_compras(st.session_state.cid,filial_sel_ge)
+        # Regra: o consolidado nunca pode ter parado que nenhuma filial mostre. Com a filial escolhida, o Capital Parado
+        # vem SEMPRE da fatia dela no arquivo consolidado (fonte única); só usa o arquivo da filial se não houver consolidado novo.
+        if filial_sel_ge and filial_sel_ge!="(Todas as filiais)":
+            _m_cons=load_resultado_compras(st.session_state.cid,None)[2]
+            if _m_cons is not None and "EstoqueEscopoFilial" in _m_cons.columns and "Filial" in _m_cons.columns:
+                df_morto_gs=_m_cons[_m_cons["Filial"].astype(str).str.strip().str.casefold()==str(filial_sel_ge).strip().casefold()].copy()
+                if "EstoqueEscopoFilial" in df_morto_gs.columns and len(df_morto_gs)>0:
+                    df_morto_gs["EstoqueEscopo"]=df_morto_gs["EstoqueEscopoFilial"]
+                else:
+                    df_morto_gs=df_morto_gs.drop(columns=["EstoqueEscopo"],errors="ignore")
+        # Arquivo gravado por versão antiga da regra (sem EstoqueEscopoFilial): não mostra número velho.
+        if df_morto_gs is not None and "EstoqueEscopoFilial" not in df_morto_gs.columns:
+            df_morto_gs=None
 
     if df_res is None or df_res.empty:
         st.markdown('<div class="al-w">⚠️ Rode o <b>Motor de Compras</b> primeiro para essa filial, para popular este painel.</div>', unsafe_allow_html=True)
@@ -18976,9 +20716,11 @@ elif pg=="gestao_estoque":
     else:
         cobertura_media_pnl = float(df_res["CoberturaDias"].replace(0,np.nan).mean()) if "CoberturaDias" in df_res.columns else 0
         giro_ano   = round(365/cobertura_media_pnl,1) if cobertura_media_pnl>0 else 0
-    if "GiroAlvo" in df_res.columns and "EstoqueAtual" in df_res.columns and "CustoUnitario" in df_res.columns:
-        peso_capital_alvo = df_res["EstoqueAtual"]*df_res["CustoUnitario"]
-        giro_alvo_ano = round(float((df_res["GiroAlvo"]*peso_capital_alvo).sum()/peso_capital_alvo.sum()),1) if peso_capital_alvo.sum()>0 else 0
+    _cen_ge=None
+    if all(c in df_res.columns for c in ["MinDias","MaxDias","DemandaPrevMes(un)","EstoqueAtual","CustoUnitario","CoberturaDias"]):
+        _cen_ge=preparar_cenario_motor(df_res)
+        peso_capital_alvo = _cen_ge["CapitalIdeal"]   # giro alvo ponderado pelo capital IDEAL (fecha com o estoque ideal)
+        giro_alvo_ano = round(float((_cen_ge["GiroAlvo"]*peso_capital_alvo).sum()/peso_capital_alvo.sum()),1) if peso_capital_alvo.sum()>0 else 0
     else:
         giro_alvo_ano = 0
     # Cobertura Média — DERIVADA do Giro Médio (365/giro_ano), não calculada
@@ -19001,11 +20743,12 @@ elif pg=="gestao_estoque":
     cap_parado=0; n_parado=0
     if df_morto_gs is not None and not df_morto_gs.empty and "CapitalParado" in df_morto_gs.columns:
         cap_parado=float(df_morto_gs["CapitalParado"].sum()); n_parado=len(df_morto_gs)
+    _den_parado=val_estoque
+    if df_morto_gs is not None and not df_morto_gs.empty and "EstoqueEscopo" in df_morto_gs.columns:
+        _den_parado=float(df_morto_gs["EstoqueEscopo"].iloc[0]) or val_estoque
     lt_medio      = float(df_res["LeadTimeDias"].mean()) if "LeadTimeDias" in df_res.columns else 0
-    if "MinDias" in df_res.columns and "MaxDias" in df_res.columns and "DemandaPrevMes(un)" in df_res.columns:
-        dias_alvo_prod   = (df_res["MinDias"]+df_res["MaxDias"])/2
-        demanda_dia_prod = df_res["DemandaPrevMes(un)"]/30
-        cap_ideal = float((dias_alvo_prod*demanda_dia_prod*df_res["CustoUnitario"]).sum())
+    if _cen_ge is not None:
+        cap_ideal = float(_cen_ge["CapitalIdeal"].sum())
     else:
         cap_ideal = 0
     cap_liberavel = max(0, val_estoque-cap_ideal)
@@ -19076,7 +20819,7 @@ elif pg=="gestao_estoque":
     score_giro     = min(100, max(0, round((giro_ano/giro_alvo_ano)*100))) if giro_alvo_ano>0 else 50
     score_cobertura= min(100, max(0, round((1-(abs(cob_media-37)/37))*100)))
     score_ruptura  = min(100, max(0, round(100-(pct_ruptura*3))))
-    score_capital  = min(100, max(0, round((1-cap_parado/val_estoque)*100))) if val_estoque>0 else 100
+    score_capital  = min(100, max(0, round((1-cap_parado/_den_parado)*100))) if _den_parado>0 else 100
     score_lead     = min(100, max(0, round(100-max(0,(lt_medio-7)*3)))) if lt_medio>0 else 70
     score_ml       = min(100, max(0, round((1-mape_ml/100)*100))) if mape_ml else 70
     score_final    = max(0, min(100, round(score_giro*0.15 + score_cobertura*0.15 + score_ruptura*0.35 + score_capital*0.15 + score_lead*0.05 + score_ml*0.15)))
@@ -19175,13 +20918,15 @@ elif pg=="gestao_estoque":
     </div>''', unsafe_allow_html=True)
 
     # k5 — Capital Parado
-    _cap_status = "🟢 Sem capital parado" if cap_parado==0 else "🔴 Capital imobilizado"
+    _cap_status = ("⚪ Não calculado — rode o Motor de Compras" if df_morto_gs is None else ("🟢 Sem capital parado" if cap_parado==0 else "🔴 Capital imobilizado"))
     _cap_cor = "#059669" if cap_parado==0 else "#DC2626"
-    k5.markdown(f'''<div class="ge-kpi-box">
+    if df_morto_gs is None:
+        _cap_status="⚪ Não calculado — abra o Compras em Todas as filiais"; _cap_cor="#6B7280"
+    k5.markdown(f'''<div class="ge-kpi-box" title="{TT_CAPITAL_PARADO}" style="cursor:help">
         <div style="font-size:16px;margin-bottom:3px"></div>
         <div class="ge-kpi-lbl">Capital Parado</div>
         <div class="ge-kpi-val">{fv(cap_parado)}</div>
-        <div class="ge-kpi-sub nt">{n_parado} itens sem giro</div>
+        <div class="ge-kpi-sub nt">{n_parado} itens sem venda além do Máximo</div>
         <div class="ge-kpi-sub" style="color:{_cap_cor};font-size:.62rem">{_cap_status}</div>
     </div>''', unsafe_allow_html=True)
 
@@ -19345,7 +21090,7 @@ elif pg=="gestao_estoque":
                 <th style="padding:4px 6px;text-align:left;color:#666;font-weight:600;border-bottom:2px solid #F0A500;font-size:.62rem;white-space:nowrap">Fornecedor</th>
                 <th style="padding:4px 6px;text-align:center;color:#666;font-weight:600;border-bottom:2px solid #F0A500;font-size:.62rem">Prazo</th>
                 <th style="padding:4px 6px;text-align:center;color:#666;font-weight:600;border-bottom:2px solid #F0A500;font-size:.62rem">Qualidade</th>
-                <th style="padding:4px 6px;text-align:center;color:#666;font-weight:600;border-bottom:2px solid #F0A500;font-size:.62rem">OTIF</th>
+                <th title="OTIF (On Time, In Full): percentual de pedidos que chegaram no prazo e completos. Um pedido só conta se cumpriu as duas condições; por isso o OTIF nunca é maior que o Prazo." style="cursor:help;padding:4px 6px;text-align:center;color:#666;font-weight:600;border-bottom:2px solid #F0A500;font-size:.62rem">OTIF ⓘ</th>
             </tr></thead>
             <tbody>{rows}</tbody>
         </table>''',unsafe_allow_html=True)
@@ -19381,5 +21126,107 @@ elif pg=="gestao_estoque":
                 xaxis=dict(showgrid=True,gridcolor="#F5F5F5",tickfont=dict(size=8)),
                 yaxis=dict(showgrid=False,tickfont=dict(size=8)),showlegend=False)
             st.plotly_chart(fig_cob2,use_container_width=True,key="ge_cob2")
+
+    # ── LINHA 4: GMROI (só leitura — nunca recalcula aqui, só aponta pra Pareto) ──
+    _gmroi_ge=None
+    if st.session_state.cid:
+        # Lê o snapshot da MESMA filial escolhida aqui. Sem fallback pro consolidado:
+        # misturar escopos fazia o card mostrar números de todas as filiais dentro
+        # do painel de uma filial só.
+        _gmroi_ge=load_gmroi_snap(st.session_state.cid,filial_sel_ge)
+    _escopo_ge_txt="todas as filiais" if (not filial_sel_ge or filial_sel_ge=="(Todas as filiais)") else f"filial {filial_sel_ge}"
+    if st.session_state.cid and (_gmroi_ge is None or _gmroi_ge.empty):
+        st.caption(f"💰 GMROI ainda não calculado para {_escopo_ge_txt}. Rode em 📐 Pareto & GMROI (Visão por Produto) com esta filial selecionada.")
+    if _gmroi_ge is not None and not _gmroi_ge.empty and "Quadrante" in _gmroi_ge.columns:
+        st.markdown(f'<div class="ge-sec">💰 GMROI — Capital que não está rendendo ({_escopo_ge_txt})</div>', unsafe_allow_html=True)
+        _esc_snap_txt=str(_gmroi_ge["EscopoGMROI"].iloc[0]) if "EscopoGMROI" in _gmroi_ge.columns else "escopo não registrado (recalcule em Pareto & GMROI)"
+        _aviso_esc_ge=""
+        if "EscopoChave" in _gmroi_ge.columns:
+            try:
+                if json.loads(str(_gmroi_ge["EscopoChave"].iloc[0]))!=escopo_compras_atual():
+                    _aviso_esc_ge=" ⚠️ Esse escopo é diferente do que está configurado hoje no Motor de Compras, então os valores não são comparáveis com o resto deste painel. Recalcule em 📐 Pareto & GMROI."
+            except Exception:
+                pass
+        st.caption(f"📌 Escopo do GMROI: {_esc_snap_txt}.{_aviso_esc_ge}")
+        _corte_ge=_gmroi_ge[_gmroi_ge["Quadrante"]=="⚠️ Candidato a Corte"]
+        _capital_corte_ge=_corte_ge["EstoqueMedioCusto"].sum()
+        _capital_analisado_ge=_gmroi_ge["EstoqueMedioCusto"].sum()
+        _pct_corte_ge=_capital_corte_ge/_capital_analisado_ge*100 if _capital_analisado_ge>0 else 0
+        _tem_lib_ge=_cen_ge is not None
+        _exc_ge=float(_cen_ge["Excesso"].sum()) if _tem_lib_ge else 0
+        _fal_ge=float(_cen_ge["Falta"].sum()) if _tem_lib_ge else 0
+        _est_ge_motor=float(_cen_ge["CapitalAtual"].sum()) if _tem_lib_ge else 0
+        _liq_ge=_exc_ge-_fal_ge
+        _rot_ge=str(_cen_ge["PoliticaIdeal"].iloc[0]) if (_tem_lib_ge and len(_cen_ge)>0) else ""
+        _linha_lib_ge=(f'<div style="font-size:.72rem;opacity:.85;margin-top:8px"><b>'
+            f'{"Estoque liberável" if _liq_ge>=0 else "Adicional necessário"} (régua: {_rot_ge}): R$ {abs(_liq_ge):,.0f}</b> '
+            f'(excesso R$ {_exc_ge:,.0f} − falta R$ {_fal_ge:,.0f} sobre R$ {_est_ge_motor:,.0f} de estoque). '
+            f'É o mesmo número do Simulador de Cenário em 📦 Gestão de Compras.</div>') if _tem_lib_ge else ""
+        st.markdown(f'''<div class="ge-radar-glow" style="background:#FFFCF7;border:1px solid #F5C6C6">
+        <div class="ge-radar" style="grid-template-columns:1fr">
+            <div class="ge-radar-item" style="background:#FEF2F2;color:#DC2626;text-align:left;padding:10px 14px">
+                <div style="font-size:.95rem;font-weight:700">{len(_corte_ge)} produto(s) em "Candidato a Corte"</div>
+                <div style="font-size:.72rem;opacity:.85;margin-top:3px">Giram pouco e têm margem baixa. Somam
+                R$ {_capital_corte_ge:,.0f} em estoque ({_pct_corte_ge:.0f}% do estoque analisado).</div>
+                {_linha_lib_ge}
+                <div style="font-size:.68rem;opacity:.75;margin-top:6px">Estoque analisado = produtos com venda na janela escolhida.
+                Veja o detalhe e a conciliação com o estoque total em 📐 Pareto & GMROI.</div>
+            </div>
+        </div>
+        </div>'''.replace(",","."), unsafe_allow_html=True)
+
+    # ── ECONOMIA DO MODELO (Validação Econômica do Compras) — fim do Dashboard, mesma janela de meses escolhida lá ──
+    st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+    st.markdown('<div class="ge-sec">💰 Economia do Modelo — decisão do modelo contra o método simples</div>', unsafe_allow_html=True)
+    _df_econ_ge=load_resultado_econ_compras(st.session_state.cid) if st.session_state.cid else None
+    _meses_econ_ge=st.session_state.get("compras_econ_meses_olhar",18)
+    try: _meses_econ_ge=max(1,min(18,int(_meses_econ_ge)))
+    except Exception: _meses_econ_ge=18
+    _TT_ECON=("Economia do Modelo = custo da decisão simples (naive) menos o custo da decisão do modelo, somando ruptura (produtos que faltariam) e excesso (produtos parados). "
+        "Vem da Validação Econômica do Compras: simulada em 18 meses e proporcional à janela escolhida lá (N/18). Considera só os produtos testados (amostra).")
+    if _df_econ_ge is None or _df_econ_ge.empty or not {"custo_total_modelo","custo_total_naive"}.issubset(_df_econ_ge.columns):
+        st.markdown('<div class="al-i">💰 <b>Economia do Modelo</b>: a Validação Econômica ainda não foi rodada. Rode em 📦 Gestão de Compras › Validação Econômica para ver aqui o custo do modelo contra o método simples.</div>',unsafe_allow_html=True)
+    else:
+        _fator_econ_ge=_meses_econ_ge/18
+        _modelo_econ_ge=float(_df_econ_ge["custo_total_modelo"].sum())*_fator_econ_ge
+        _naive_econ_ge=float(_df_econ_ge["custo_total_naive"].sum())*_fator_econ_ge
+        _eco_econ_ge=_naive_econ_ge-_modelo_econ_ge
+        _n_prod_econ_ge=int(_df_econ_ge["Produto"].nunique()) if "Produto" in _df_econ_ge.columns else 0
+        _esc_econ_ge=str(_df_econ_ge["_escopo"].iloc[0]) if "_escopo" in _df_econ_ge.columns and len(_df_econ_ge)>0 else ""
+        _fil_econ_ge=_esc_econ_ge.split("|")[0] if _esc_econ_ge else ""
+        _fil_dash_ge=filial_sel_ge if (filial_sel_ge and filial_sel_ge!="(Todas as filiais)") else "(Todas as filiais)"
+        _esc_txt_ge=_esc_econ_ge.replace("(","").replace(")","").replace("|"," · ").replace("Categoria:","Categoria ").replace("Produtos:","Produtos selecionados ")
+        _aviso_esc_ge=""
+        if _esc_econ_ge and _fil_econ_ge!=_fil_dash_ge:
+            _aviso_esc_ge=f"⚠️ calculado para: {_esc_txt_ge}"
+        elif _esc_econ_ge:
+            _aviso_esc_ge=f"Recorte: {_esc_txt_ge}"
+        _pct_red_econ=(_eco_econ_ge/_naive_econ_ge*100) if _naive_econ_ge>0 else 0
+        _f_modelo=fv(_modelo_econ_ge).replace("$","&#36;"); _f_naive=fv(_naive_econ_ge).replace("$","&#36;"); _f_eco=fv(abs(_eco_econ_ge)).replace("$","&#36;")
+        _eco_ok=_eco_econ_ge>0
+        e1,e2,e3=st.columns([1,1,1.45])
+        e1.markdown(f'''<div title="{_TT_ECON}" style="cursor:help;background:linear-gradient(150deg,#FFFEFA 0%,#FBF1D3 100%);border:1.5px solid #D4AF37;border-radius:14px;padding:16px 16px 14px 16px;box-shadow:0 6px 18px rgba(169,118,47,.20);min-height:132px">
+<div style="font-size:.64rem;color:#9A7B2F;text-transform:uppercase;letter-spacing:.8px;font-weight:700">Custo · decisão do modelo</div>
+<div style="font-size:1.9rem;font-weight:800;color:#5C4410;line-height:1.15;margin:8px 0 4px 0">{_f_modelo}</div>
+<div style="font-size:.72rem;color:#7A5A12">ruptura + excesso, últimos {_meses_econ_ge} meses</div>
+<div style="font-size:.7rem;color:#9A7B2F;margin-top:10px;border-top:1px solid #E8D9A8;padding-top:6px">{(_modelo_econ_ge/_naive_econ_ge*100) if _naive_econ_ge>0 else 0:.1f}% do custo do naive</div></div>''', unsafe_allow_html=True)
+        e2.markdown(f'''<div title="{_TT_ECON}" style="cursor:help;background:linear-gradient(150deg,#FFFEFA 0%,#FBF1D3 100%);border:1.5px solid #D4AF37;border-radius:14px;padding:16px 16px 14px 16px;box-shadow:0 6px 18px rgba(169,118,47,.20);min-height:132px">
+<div style="font-size:.64rem;color:#9A7B2F;text-transform:uppercase;letter-spacing:.8px;font-weight:700">Custo · decisão naive</div>
+<div style="font-size:1.9rem;font-weight:800;color:#5C4410;line-height:1.15;margin:8px 0 4px 0">{_f_naive}</div>
+<div style="font-size:.72rem;color:#7A5A12">método simples, últimos {_meses_econ_ge} meses</div>
+<div style="font-size:.7rem;color:#9A7B2F;margin-top:10px;border-top:1px solid #E8D9A8;padding-top:6px">referência de comparação (100%)</div></div>''', unsafe_allow_html=True)
+        _bg_eco="linear-gradient(135deg,#FCE08A 0%,#F2B632 52%,#D99A0B 100%)" if _eco_ok else "linear-gradient(135deg,#F7D6D6 0%,#E9A3A3 55%,#D46B6B 100%)"
+        _bd_eco="#B8860B" if _eco_ok else "#A63A3A"
+        _sh_eco="0 12px 30px rgba(184,134,11,.50),0 0 0 3px rgba(252,224,138,.55)" if _eco_ok else "0 10px 26px rgba(166,58,58,.40)"
+        _tx_eco="#3D2A00" if _eco_ok else "#4A1010"
+        _tit_eco="💰 Economia do modelo" if _eco_ok else "⚠️ Naive teria sido melhor"
+        _chip_eco=(f"{_pct_red_econ:.1f}% menos custo que o naive" if _eco_ok else f"{abs(_pct_red_econ):.1f}% mais custo que o naive")
+        e3.markdown(f'''<div title="{_TT_ECON}" style="cursor:help;background:{_bg_eco};border:2px solid {_bd_eco};border-radius:16px;padding:18px 20px 16px 20px;box-shadow:{_sh_eco};min-height:132px">
+<div style="font-size:.74rem;color:{_tx_eco};text-transform:uppercase;letter-spacing:1px;font-weight:800">{_tit_eco}</div>
+<div style="font-size:2.6rem;font-weight:900;color:{_tx_eco};line-height:1.1;margin:6px 0 8px 0;text-shadow:0 1px 0 rgba(255,255,255,.45)">{_f_eco}</div>
+<div style="display:inline-block;background:rgba(255,255,255,.55);color:{_tx_eco};font-size:.74rem;font-weight:800;padding:4px 12px;border-radius:20px">{_chip_eco}</div>
+<div style="font-size:.7rem;color:{_tx_eco};opacity:.85;margin-top:8px">últimos {_meses_econ_ge} meses · economizados em ruptura e excesso</div></div>''', unsafe_allow_html=True)
+        st.markdown(f'''<div style="font-size:.66rem;color:#9A7B2F;line-height:1.5;padding:8px 4px 0 4px">Janela de <b>{_meses_econ_ge} meses</b> (a mesma escolhida na Validação Econômica do Compras), proporcional à simulação de 18 meses · Amostra: <b>{_n_prod_econ_ge}</b> produtos testados · {_aviso_esc_ge}</div>''', unsafe_allow_html=True)
+    st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
     st.markdown('<div style="background:#F8F5EE;border-top:1px solid #EBEBEB;padding:5px 16px;border-radius:0 0 10px 10px;font-size:.60rem;color:#bbb;margin-top:6px">ℹ️ Dados calculados pelo Motor de Compras e ML — rode novamente para atualizar.</div>',unsafe_allow_html=True)
