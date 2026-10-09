@@ -271,6 +271,7 @@ img, iframe{filter:invert(1) hue-rotate(180deg);}
   background:conic-gradient(from 0deg,#A9762F,#D9BD82,#9FE1CB,#0F6E56,#9FE1CB,#D9BD82,#A9762F);
   animation:wcLogoSpin 4s linear infinite;}
 .wc-logo-in{position:relative;z-index:1;background:#fff;border-radius:13px;padding:6px 10px;}
+.wc-logo-bv{display:inline-block;border:3px solid #A9762F;border-radius:16px;overflow:hidden;}
 .wc-logo-in img{display:block;max-height:110px;margin:0 auto;
   transform:perspective(600px) rotateY(-10deg) rotateX(4deg);
   filter:drop-shadow(2px 4px 4px rgba(0,0,0,.28));}
@@ -6597,8 +6598,8 @@ if pg=="boas_vindas":
     if os.path.exists(logo_path):
         with open(logo_path, "rb") as f:
             logo_b64 = base64.b64encode(f.read()).decode()
-        st.markdown(f'''<div style="text-align:center;margin-bottom:16px;perspective:700px">
-<div class="wc-logo"><div class="wc-logo-in"><img src="data:image/png;base64,{logo_b64}"/></div></div>
+        st.markdown(f'''<div style="display:flex;justify-content:center;margin-bottom:16px">
+<div class="wc-logo-bv"><div class="wc-logo-in"><img src="data:image/png;base64,{logo_b64}"/></div></div>
 </div>''',unsafe_allow_html=True)
     if st.session_state.get("cid"):
         _cli_bv=load_cli(st.session_state.cid)
