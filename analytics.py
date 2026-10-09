@@ -6425,13 +6425,9 @@ with st.sidebar:
             logo_b64 = base64.b64encode(f.read()).decode()
         st.markdown(f"""
         <div style="padding:10px 0 14px;text-align:center">
-          <div class="wc-logo" style="animation:wcLogoGlow 3s ease-in-out infinite;margin-bottom:4px">
-            <div class="wc-logo-in" style="background:#FBF6EB;padding:10px 14px">
-              <img src="data:image/png;base64,{logo_b64}"
-                style="width:100%;max-width:170px;max-height:none;display:block;margin:0 auto;
-                transform:perspective(600px) rotateY(-14deg) rotateX(6deg);
-                filter:drop-shadow(1px 1px 0 rgba(10,40,100,.55)) drop-shadow(1px 1px 0 rgba(10,40,100,.45))
-                       drop-shadow(1px 1px 0 rgba(10,40,100,.35)) drop-shadow(3px 6px 6px rgba(0,0,0,.30))"/>
+          <div class="wc-logo" style="margin-bottom:4px">
+            <div class="wc-logo-in">
+              <img src="data:image/png;base64,{logo_b64}" style="width:100%;max-width:170px"/>
             </div>
           </div>
           <div style="color:#484F58;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;margin-top:2px">
