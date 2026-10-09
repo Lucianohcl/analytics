@@ -271,7 +271,9 @@ img, iframe{filter:invert(1) hue-rotate(180deg);}
   background:conic-gradient(from 0deg,#A9762F,#D9BD82,#9FE1CB,#0F6E56,#9FE1CB,#D9BD82,#A9762F);
   animation:wcLogoSpin 4s linear infinite;}
 .wc-logo-in{position:relative;z-index:1;background:#fff;border-radius:13px;padding:6px 10px;}
-.wc-logo-in img{display:block;max-height:110px;}
+.wc-logo-in img{display:block;max-height:110px;margin:0 auto;
+  transform:perspective(600px) rotateY(-10deg) rotateX(4deg);
+  filter:drop-shadow(2px 4px 4px rgba(0,0,0,.28));}
 @keyframes wcLogoSpin{to{transform:rotate(360deg)}}
 @keyframes wcLogoIn{
   0%{transform:perspective(700px) rotateY(-360deg) scale(.4);opacity:0}
