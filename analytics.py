@@ -6599,7 +6599,7 @@ if pg=="boas_vindas":
         with open(logo_path, "rb") as f:
             logo_b64 = base64.b64encode(f.read()).decode()
         st.markdown(f'''<div style="display:flex;justify-content:center;margin-bottom:16px">
-<div class="wc-logo-bv"><div class="wc-logo-in"><img src="data:image/png;base64,{logo_b64}"/></div></div>
+<div class="wc-logo"><div class="wc-logo-in"><img src="data:image/png;base64,{logo_b64}"/></div></div>
 </div>''',unsafe_allow_html=True)
     if st.session_state.get("cid"):
         _cli_bv=load_cli(st.session_state.cid)
