@@ -21225,32 +21225,42 @@ elif pg=="gestao_estoque":
             except Exception:
                 pass
         st.caption(f"📌 Escopo do GMROI: {_esc_snap_txt}.{_aviso_esc_ge}")
-        _corte_ge=_gmroi_ge[_gmroi_ge["Quadrante"]=="⚠️ Candidato a Corte"]
-        _capital_corte_ge=_corte_ge["EstoqueMedioCusto"].sum()
         _capital_analisado_ge=_gmroi_ge["EstoqueMedioCusto"].sum()
-        _pct_corte_ge=_capital_corte_ge/_capital_analisado_ge*100 if _capital_analisado_ge>0 else 0
+        def _brl(v): return f"{v:,.0f}".replace(",",".")
         _tem_lib_ge=_cen_ge is not None
         _exc_ge=float(_cen_ge["Excesso"].sum()) if _tem_lib_ge else 0
         _fal_ge=float(_cen_ge["Falta"].sum()) if _tem_lib_ge else 0
         _est_ge_motor=float(_cen_ge["CapitalAtual"].sum()) if _tem_lib_ge else 0
         _liq_ge=_exc_ge-_fal_ge
         _rot_ge=str(_cen_ge["PoliticaIdeal"].iloc[0]) if (_tem_lib_ge and len(_cen_ge)>0) else ""
-        _linha_lib_ge=(f'<div style="font-size:.72rem;opacity:.85;margin-top:8px"><b>'
-            f'{"Estoque liberável" if _liq_ge>=0 else "Adicional necessário"} (régua: {_rot_ge}): R$ {abs(_liq_ge):,.0f}</b> '
-            f'(excesso R$ {_exc_ge:,.0f} − falta R$ {_fal_ge:,.0f} sobre R$ {_est_ge_motor:,.0f} de estoque). '
-            f'É o mesmo número do Simulador de Cenário em 📦 Gestão de Compras.</div>') if _tem_lib_ge else ""
-        st.markdown(f'''<div class="ge-radar-glow" style="background:#FFFCF7;border:1px solid #F5C6C6">
-        <div class="ge-radar" style="grid-template-columns:1fr">
-            <div class="ge-radar-item" style="background:#FEF2F2;color:#DC2626;text-align:left;padding:10px 14px">
-                <div style="font-size:.95rem;font-weight:700">{len(_corte_ge)} produto(s) em "Candidato a Corte"</div>
-                <div style="font-size:.72rem;opacity:.85;margin-top:3px">Giram pouco e têm margem baixa. Somam
-                R$ {_capital_corte_ge:,.0f} em estoque ({_pct_corte_ge:.0f}% do estoque analisado).</div>
-                {_linha_lib_ge}
-                <div style="font-size:.68rem;opacity:.75;margin-top:6px">Estoque analisado = produtos com venda na janela escolhida.
-                Veja o detalhe e a conciliação com o estoque total em 📐 Pareto & GMROI.</div>
-            </div>
-        </div>
-        </div>'''.replace(",","."), unsafe_allow_html=True)
+        _linha_lib_ge=(f'<b>{"Estoque liberável" if _liq_ge>=0 else "Adicional necessário"}: R&#36; {_brl(abs(_liq_ge))}</b> '
+            f'(excesso R&#36; {_brl(_exc_ge)} − falta R&#36; {_brl(_fal_ge)} sobre R&#36; {_brl(_est_ge_motor)} de estoque; régua: {_rot_ge}). '
+            f'É o mesmo número do Simulador de Cenário em 📦 Gestão de Compras.') if _tem_lib_ge else ""
+        # Resumo dos 4 quadrantes do GMROI, com a ação sugerida; "Candidato a Corte" em destaque
+        _cfg_quad_ge=[("⚠️ Candidato a Corte","#B23B3B","Giram pouco e têm margem baixa.","Revisar: liquidar, descontinuar ou renegociar."),
+            ("⭐ Estrela","#0F6E56","Margem alta e giro alto.","Manter e proteger a disponibilidade."),
+            ("💵 Gerador de Caixa","#A9762F","Giro alto e margem baixa.","Manter enxuto. O ponto fraco é a margem (preço ou custo)."),
+            ("💎 Joia","#2B6CB0","Margem alta e giro baixo.","Reduzir o estoque. A margem é boa; o excesso parado é o problema.")]
+        _qcols_ge=st.columns([1.6,1,1,1])
+        for _col_qg,(_nm_qg,_cor_qg,_desc_qg,_acao_qg) in zip(_qcols_ge,_cfg_quad_ge):
+            _sub_qg=_gmroi_ge[_gmroi_ge["Quadrante"]==_nm_qg]
+            _n_qg=len(_sub_qg); _cap_qg=float(_sub_qg["EstoqueMedioCusto"].sum())
+            _pct_qg=_cap_qg/_capital_analisado_ge*100 if _capital_analisado_ge>0 else 0
+            if _nm_qg=="⚠️ Candidato a Corte":
+                _col_qg.markdown(f'''<div style="background:linear-gradient(150deg,#FEF2F2 0%,#FBE0E0 100%);border:2px solid {_cor_qg};border-radius:14px;padding:16px 18px;box-shadow:0 8px 22px rgba(178,59,59,.22);min-height:150px">
+<div style="font-size:.66rem;color:{_cor_qg};text-transform:uppercase;letter-spacing:.8px;font-weight:800">{_nm_qg}</div>
+<div style="font-family:Georgia,serif;font-size:2.4rem;font-weight:800;color:{_cor_qg};line-height:1.1;margin:6px 0 2px 0">{_n_qg} <span style="font-size:1rem;font-weight:700">produto(s)</span></div>
+<div style="font-size:.78rem;color:#7F1D1D;line-height:1.45">{_desc_qg} Somam <b>R&#36; {_brl(_cap_qg)}</b> em estoque ({_pct_qg:.0f}% do estoque analisado).</div>
+<div style="font-size:.74rem;font-weight:700;color:{_cor_qg};margin-top:8px;border-top:1px solid #F0C4C4;padding-top:6px">👉 {_acao_qg}</div></div>''',unsafe_allow_html=True)
+            else:
+                _col_qg.markdown(f'''<div style="background:#FFFFFF;border:1px solid {_cor_qg}55;border-top:4px solid {_cor_qg};border-radius:12px;padding:12px 14px;min-height:150px">
+<div style="font-size:.64rem;color:{_cor_qg};text-transform:uppercase;letter-spacing:.6px;font-weight:800">{_nm_qg}</div>
+<div style="font-family:Georgia,serif;font-size:1.5rem;font-weight:800;color:#14243B;line-height:1.15;margin:5px 0 2px 0">{_n_qg} <span style="font-size:.75rem;font-weight:600;color:#6B7280">produto(s)</span></div>
+<div style="font-size:.7rem;color:#6B7280;line-height:1.4">R&#36; {_brl(_cap_qg)} em estoque ({_pct_qg:.0f}%). {_desc_qg}</div>
+<div style="font-size:.68rem;font-weight:600;color:{_cor_qg};margin-top:7px;border-top:1px solid #EEE;padding-top:5px">👉 {_acao_qg}</div></div>''',unsafe_allow_html=True)
+        if _linha_lib_ge:
+            st.markdown(f'<div style="background:#F8F5EE;border-radius:8px;padding:9px 14px;margin-top:10px;font-size:.78rem;color:#14243B;line-height:1.5">{_linha_lib_ge}</div>',unsafe_allow_html=True)
+        st.caption("Estoque analisado = produtos com venda na janela escolhida. Veja o detalhe e a conciliação com o estoque total em 📐 Pareto & GMROI.")
 
     # ── ECONOMIA DO MODELO (Validação Econômica do Compras) — fim do Dashboard, mesma janela de meses escolhida lá ──
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
