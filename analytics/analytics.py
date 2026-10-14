@@ -63,18 +63,19 @@ st.markdown("""<style>
 section[data-testid="stSidebar"]{background:linear-gradient(180deg,#0F6E56 0%,#085041 100%)!important;
   border-right:1px solid #A9762F!important;box-shadow:1px 0 4px rgba(169,118,47,.18)!important;}
 section[data-testid="stSidebar"] div.stButton>button{
-  background:linear-gradient(150deg,#B8975F 0%,#D9BF94 55%,#C9A872 100%)!important;
-  color:#1A1306!important;border:1px solid rgba(217,189,130,.75)!important;
-  border-top:2px solid #B8742A!important;border-radius:12px!important;
+  background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),
+    linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%)!important;
+  color:#fff!important;border:1px solid rgba(217,189,130,.55)!important;
+  border-top:2px solid #D9BD82!important;border-radius:12px!important;
   justify-content:flex-start!important;padding:10px 14px!important;
-  box-shadow:0 3px 10px rgba(0,0,0,.3),0 0 10px rgba(217,189,130,.22)!important;
+  box-shadow:0 4px 14px rgba(0,0,0,.3),0 0 12px rgba(217,189,130,.18)!important;
   transition:transform .25s ease,box-shadow .25s ease,filter .25s ease!important;}
 section[data-testid="stSidebar"] div.stButton>button p{
-  color:#1A1306!important;font-family:Georgia,serif!important;font-weight:700!important;
+  color:#fff!important;font-family:Georgia,serif!important;font-weight:700!important;
   text-align:left!important;}
 section[data-testid="stSidebar"] div.stButton>button:hover{
-  filter:brightness(1.08);transform:translateY(-2px);
-  box-shadow:0 8px 18px rgba(0,0,0,.35),0 0 18px rgba(217,189,130,.5)!important;
+  filter:brightness(1.12);transform:translateY(-2px);
+  box-shadow:0 8px 18px rgba(0,0,0,.4),0 0 20px rgba(217,189,130,.5)!important;
   border-color:#F4E4BC!important;}
 section[data-testid="stSidebar"] .stCaption,section[data-testid="stSidebar"] p{color:#A9A290!important;}
 .mc{background:white;border:1px solid #E8ECF0;border-radius:12px;padding:10px 18px;
