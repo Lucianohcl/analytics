@@ -21093,6 +21093,11 @@ elif pg=="gestao_estoque":
         if "Fornecedor" in df_res.columns and "ValorSugerido" in df_res.columns:
             _s_exp=df_res.groupby(df_res["Fornecedor"].map(_nf_forn))["ValorSugerido"].apply(lambda s:s.clip(lower=0).sum())
             if _s_exp.sum()>0: _exp_valor=(_s_exp/_s_exp.sum()*100).to_dict()
+        # Produtos em Ruptura Iminente ou Comprar Agora que dependem de cada fornecedor
+        _exp_risco={}
+        if "Fornecedor" in df_res.columns and "Status" in df_res.columns:
+            _r_exp=df_res[df_res["Status"].isin(["🚨 RUPTURA IMINENTE","🔴 Comprar agora"])]
+            _exp_risco=_r_exp.groupby(_r_exp["Fornecedor"].map(_nf_forn)).size().to_dict()
         # Variação do prazo: atraso por pedido (data real − data prevista), P90 do atraso por fornecedor (mínimo 3 pedidos)
         _p90_forn={}
         _ped_d=load_pedidos_fornecedores(st.session_state.cid) if st.session_state.cid else None
@@ -21107,16 +21112,17 @@ elif pg=="gestao_estoque":
         _linhas_forn=[]
         for _,row in sc.iterrows():
             _k=_nf_forn(row["Fornecedor"])
-            _linhas_forn.append((str(row["Fornecedor"]),int(row["Prazo"]),int(row["Qualidade"]),int(row["OTIF"]),_exp_valor.get(_k),_p90_forn.get(_k)))
+            _linhas_forn.append((str(row["Fornecedor"]),int(row["Prazo"]),int(row["Qualidade"]),int(row["OTIF"]),_exp_valor.get(_k),_p90_forn.get(_k),int(_exp_risco.get(_k,0))))
         _linhas_forn.sort(key=lambda t:(t[4] is None,-(t[4] or 0)))
         _mais_forn=max(0,len(_linhas_forn)-8)
         rows=""
         _alertas_forn=[]
-        for _nm,p,q,o,_pc,_p90 in _linhas_forn[:8]:
+        for _nm,p,q,o,_pc,_p90,_nr in _linhas_forn[:8]:
             _pc_txt=f"{_pc:.0f}%" if _pc is not None else "—"
             if _p90 is None: _p90_txt='<span style="color:#9CA3AF">—</span>'
             elif _p90<=0: _p90_txt='<span style="color:#059669;font-weight:700">no prazo</span>'
             else: _p90_txt=f'<span style="color:{"#DC2626" if _p90>3 else "#D97706"};font-weight:700">+{_p90:.0f}d</span>'
+            _nr_txt=(f'<span style="color:#DC2626;font-weight:700">{_nr}</span>' if _nr>0 else '<span style="color:#9CA3AF">0</span>')
             rows+=f"""<tr>
                 <td style='padding:3px 6px;font-size:.65rem;font-weight:500;color:#14243B'>
                     🏭 {_nm}
@@ -21126,13 +21132,14 @@ elif pg=="gestao_estoque":
                 <td style='padding:3px 6px;text-align:center'>{circulo(o)}</td>
                 <td style='padding:3px 6px;text-align:center;font-size:.72rem;font-weight:700;color:#14243B'>{_pc_txt}</td>
                 <td style='padding:3px 6px;text-align:center;font-size:.72rem'>{_p90_txt}</td>
+                <td style='padding:3px 6px;text-align:center;font-size:.72rem'>{_nr_txt}</td>
             </tr>"""
             # Alerta só para quem pesa nas compras (20% ou mais) E é instável: OTIF/Prazo abaixo de 85% ou atraso P90 acima de 3 dias
             _instavel=(min(p,o)<85) or (_p90 is not None and _p90>3)
             if _pc is not None and _pc>=20 and _instavel:
                 _partes=[f"<b>{_nm}</b> concentra {_pc:.0f}% das compras"]
                 if min(p,o)<85: _partes.append(f"entrega só {o}% dos pedidos completos e no prazo (OTIF)")
-                if _p90 is not None and _p90>3: _partes.append(f"em 9 de cada 10 pedidos o atraso chega a {_p90:.0f} dias")
+                if _p90 is not None and _p90>3: _partes.append(f"em 90% dos pedidos o atraso chega a até {_p90:.0f} dias")
                 _alertas_forn.append(", ".join(_partes)+".")
         _th="padding:4px 6px;text-align:center;color:#666;font-weight:600;border-bottom:2px solid #F0A500;font-size:.62rem"
         st.markdown(f'''<table style="width:100%;border-collapse:collapse;font-size:.68rem">
@@ -21142,10 +21149,13 @@ elif pg=="gestao_estoque":
                 <th style="{_th}">Qualidade</th>
                 <th title="OTIF (On Time, In Full): percentual de pedidos que chegaram no prazo e completos. Um pedido só conta se cumpriu as duas condições; por isso o OTIF nunca é maior que o Prazo." style="cursor:help;{_th}">OTIF ⓘ</th>
                 <th title="Quanto do valor sugerido pelo Motor de Compras depende deste fornecedor. Mesma definição da análise de Desempenho de Entrega em Gestão de Compras › Configurar." style="cursor:help;{_th}">% compras ⓘ</th>
-                <th title="Atraso P90: em 9 de cada 10 pedidos o atraso foi menor que este valor (data real − data prevista). Mostra o quanto o prazo oscila. Precisa de pelo menos 3 pedidos. Análise completa em Gestão de Compras › Configurar." style="cursor:help;{_th}">Atraso P90 ⓘ</th>
+                <th title="Atraso P90: em 90% dos pedidos o atraso foi de até este número de dias (só 1 em cada 10 demora mais). Atraso = data real − data prevista. Mostra o quanto o prazo oscila. Precisa de pelo menos 3 pedidos. Análise completa em Gestão de Compras › Configurar." style="cursor:help;{_th}">Atraso P90 ⓘ</th>
+                <th title="Produtos em Ruptura Iminente ou Comprar Agora que são comprados deste fornecedor." style="cursor:help;{_th}">Em risco ⓘ</th>
             </tr></thead>
             <tbody>{rows}</tbody>
         </table>''',unsafe_allow_html=True)
+        if _p90_forn:
+            st.caption("Atraso P90: em 90% dos pedidos o atraso foi de até esse número de dias; só 1 em cada 10 demora mais. Use como folga ao planejar o lead time do fornecedor.")
         if _mais_forn>0:
             st.caption(f"+ {_mais_forn} fornecedor(es) com menor participação nas compras.")
         if sc.empty:
