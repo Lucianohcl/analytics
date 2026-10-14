@@ -1,0 +1,86 @@
+﻿Fornecedor;Pedido;Produto;Qtd Pedida;Qtd Recebida;Qtd Divergencia;Data Prevista;Data Real
+Fornecedor Alfa;P0001;Vela de Ignição;20;20;0;2025-01-19;2025-01-19
+Fornecedor Alfa;P0001;Amortecedor;100;100;0;2025-01-19;2025-01-19
+Fornecedor Alfa;P0001;Bomba d'Água;50;50;0;2025-01-19;2025-01-19
+Fornecedor Alfa;P0002;Disco de Freio;100;100;0;2025-01-23;2025-01-23
+Fornecedor Alfa;P0002;Filtro de Óleo;50;50;0;2025-01-23;2025-01-23
+Fornecedor Alfa;P0002;Amortecedor;10;10;0;2025-01-23;2025-01-23
+Fornecedor Alfa;P0003;Vela de Ignição;20;20;0;2025-01-28;2025-01-28
+Fornecedor Alfa;P0003;Pastilha de Freio;30;30;0;2025-01-28;2025-01-28
+Fornecedor Alfa;P0004;Disco de Freio;10;10;0;2025-02-04;2025-02-04
+Fornecedor Alfa;P0004;Vela de Ignição;100;100;0;2025-02-04;2025-02-04
+Fornecedor Alfa;P0005;Disco de Freio;100;100;0;2025-02-11;2025-02-11
+Fornecedor Alfa;P0005;Bateria 60Ah;10;10;0;2025-02-11;2025-02-11
+Fornecedor Alfa;P0006;Amortecedor;10;10;0;2025-02-16;2025-02-16
+Fornecedor Alfa;P0007;Pastilha de Freio;30;30;0;2025-02-23;2025-02-23
+Fornecedor Alfa;P0007;Bateria 60Ah;30;30;0;2025-02-23;2025-02-23
+Fornecedor Alfa;P0008;Pastilha de Freio;20;20;0;2025-03-04;2025-03-04
+Fornecedor Alfa;P0008;Bomba d'Água;30;30;0;2025-03-04;2025-03-04
+Fornecedor Alfa;P0008;Amortecedor;100;100;0;2025-03-04;2025-03-04
+Fornecedor Alfa;P0009;Amortecedor;10;10;0;2025-03-10;2025-03-10
+Fornecedor Alfa;P0010;Disco de Freio;30;30;0;2025-03-17;2025-03-17
+Fornecedor Beta;P0011;Radiador;20;20;0;2025-01-17;2025-01-17
+Fornecedor Beta;P0011;Pastilha de Freio;100;100;0;2025-01-17;2025-01-17
+Fornecedor Beta;P0011;Vela de Ignição;100;100;0;2025-01-17;2025-01-17
+Fornecedor Beta;P0012;Pastilha de Freio;100;100;0;2025-01-25;2025-01-25
+Fornecedor Beta;P0013;Pastilha de Freio;50;50;0;2025-02-04;2025-02-05
+Fornecedor Beta;P0014;Bomba d'Água;100;100;0;2025-02-11;2025-02-11
+Fornecedor Beta;P0014;Vela de Ignição;10;10;0;2025-02-11;2025-02-11
+Fornecedor Beta;P0015;Vela de Ignição;30;30;0;2025-02-15;2025-02-15
+Fornecedor Beta;P0015;Bateria 60Ah;50;50;6;2025-02-15;2025-02-15
+Fornecedor Beta;P0015;Correia Dentada;100;100;0;2025-02-15;2025-02-15
+Fornecedor Beta;P0016;Vela de Ignição;20;20;0;2025-02-23;2025-02-23
+Fornecedor Beta;P0016;Bomba d'Água;20;20;0;2025-02-23;2025-02-23
+Fornecedor Beta;P0016;Amortecedor;100;100;0;2025-02-23;2025-02-23
+Fornecedor Beta;P0017;Correia Dentada;30;30;0;2025-03-03;2025-03-03
+Fornecedor Beta;P0018;Filtro de Óleo;20;20;0;2025-03-13;2025-03-13
+Fornecedor Beta;P0019;Bomba d'Água;20;20;0;2025-03-17;2025-03-21
+Fornecedor Beta;P0020;Vela de Ignição;100;100;0;2025-03-24;2025-03-24
+Fornecedor Beta;P0021;Amortecedor;30;30;0;2025-03-31;2025-03-31
+Fornecedor Beta;P0021;Vela de Ignição;100;100;0;2025-03-31;2025-03-31
+Fornecedor Beta;P0021;Óleo Lubrificante;20;20;0;2025-03-31;2025-03-31
+Fornecedor Beta;P0022;Disco de Freio;20;20;3;2025-04-06;2025-04-11
+Fornecedor Beta;P0023;Correia Dentada;20;20;0;2025-04-11;2025-04-12
+Fornecedor Beta;P0023;Bomba d'Água;50;50;0;2025-04-11;2025-04-12
+Fornecedor Beta;P0024;Disco de Freio;50;50;0;2025-04-16;2025-04-16
+Fornecedor Beta;P0024;Radiador;20;20;0;2025-04-16;2025-04-16
+Fornecedor Beta;P0024;Amortecedor;50;50;0;2025-04-16;2025-04-16
+Fornecedor Delta;P0025;Filtro de Óleo;50;50;0;2025-01-17;2025-01-17
+Fornecedor Delta;P0025;Correia Dentada;10;10;0;2025-01-17;2025-01-17
+Fornecedor Delta;P0025;Disco de Freio;20;20;0;2025-01-17;2025-01-17
+Fornecedor Delta;P0026;Radiador;10;10;0;2025-01-22;2025-01-22
+Fornecedor Delta;P0026;Amortecedor;100;100;11;2025-01-22;2025-01-22
+Fornecedor Delta;P0027;Pastilha de Freio;50;50;0;2025-01-26;2025-01-26
+Fornecedor Delta;P0028;Pastilha de Freio;50;50;4;2025-01-31;2025-01-31
+Fornecedor Delta;P0029;Óleo Lubrificante;50;50;0;2025-02-10;2025-02-10
+Fornecedor Delta;P0029;Bomba d'Água;30;30;0;2025-02-10;2025-02-10
+Fornecedor Delta;P0030;Filtro de Óleo;10;10;0;2025-02-14;2025-02-14
+Fornecedor Delta;P0030;Bateria 60Ah;100;100;0;2025-02-14;2025-02-14
+Fornecedor Delta;P0030;Disco de Freio;100;100;0;2025-02-14;2025-02-14
+Fornecedor Delta;P0031;Disco de Freio;10;10;0;2025-02-22;2025-02-25
+Fornecedor Delta;P0032;Amortecedor;50;50;0;2025-02-27;2025-02-27
+Fornecedor Delta;P0032;Filtro de Óleo;100;100;0;2025-02-27;2025-02-27
+Fornecedor Delta;P0032;Correia Dentada;30;30;0;2025-02-27;2025-02-27
+Fornecedor Delta;P0033;Óleo Lubrificante;30;30;0;2025-03-08;2025-03-08
+Fornecedor Delta;P0033;Pastilha de Freio;10;10;1;2025-03-08;2025-03-08
+Fornecedor Delta;P0034;Bateria 60Ah;10;10;0;2025-03-16;2025-03-20
+Fornecedor Delta;P0035;Vela de Ignição;100;100;0;2025-03-22;2025-03-27
+Fornecedor Delta;P0035;Bomba d'Água;10;10;0;2025-03-22;2025-03-27
+Fornecedor Delta;P0035;Filtro de Óleo;20;20;0;2025-03-22;2025-03-27
+Fornecedor Delta;P0036;Vela de Ignição;30;30;0;2025-03-26;2025-03-26
+Fornecedor Gamma;P0037;Radiador;10;10;0;2025-01-19;2025-01-26
+Fornecedor Gamma;P0037;Vela de Ignição;30;30;3;2025-01-19;2025-01-26
+Fornecedor Gamma;P0037;Filtro de Óleo;30;26;4;2025-01-19;2025-01-26
+Fornecedor Gamma;P0038;Pastilha de Freio;30;30;0;2025-01-27;2025-01-31
+Fornecedor Gamma;P0038;Bomba d'Água;20;20;0;2025-01-27;2025-01-31
+Fornecedor Gamma;P0038;Filtro de Óleo;10;10;0;2025-01-27;2025-01-31
+Fornecedor Gamma;P0039;Bateria 60Ah;20;20;0;2025-02-06;2025-02-06
+Fornecedor Gamma;P0040;Disco de Freio;20;20;0;2025-02-15;2025-02-26
+Fornecedor Gamma;P0040;Pastilha de Freio;20;20;0;2025-02-15;2025-02-26
+Fornecedor Gamma;P0041;Amortecedor;20;20;0;2025-02-19;2025-02-27
+Fornecedor Gamma;P0041;Vela de Ignição;10;10;0;2025-02-19;2025-02-27
+Fornecedor Gamma;P0042;Amortecedor;50;50;0;2025-02-23;2025-02-23
+Fornecedor Gamma;P0043;Amortecedor;10;10;0;2025-03-05;2025-03-05
+Fornecedor Gamma;P0044;Bateria 60Ah;50;50;0;2025-03-12;2025-03-16
+Fornecedor Gamma;P0044;Bomba d'Água;100;100;0;2025-03-12;2025-03-16
+Fornecedor Gamma;P0045;Disco de Freio;30;30;4;2025-03-16;2025-03-23
