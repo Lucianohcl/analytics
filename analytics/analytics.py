@@ -246,6 +246,17 @@ img, iframe{filter:invert(1) hue-rotate(180deg);}
   align-items:center;justify-content:space-between;transition:letter-spacing .3s ease, color .3s ease;}
 .wc-card-exp:hover summary{letter-spacing:.05em;color:#fff;}
 .wc-card-exp summary::-webkit-details-marker{display:none;}
+.wc-card-exp summary{min-height:50px;}
+.wc-ico{width:46px;height:46px;flex:0 0 46px;border-radius:14px;display:flex;align-items:center;
+  justify-content:center;font-size:1.4rem;margin-right:14px;background:rgba(217,189,130,.18);
+  border:1px solid rgba(217,189,130,.45);
+  transition:transform .4s ease,background .3s ease,box-shadow .3s ease;}
+.wc-card-exp:hover .wc-ico{transform:rotate(-8deg) scale(1.1);background:rgba(217,189,130,.32);
+  box-shadow:0 0 16px rgba(217,189,130,.5);}
+.wc-card-exp[open] .wc-ico{animation:wcFloat 2.6s ease-in-out infinite;}
+.wc-tt{flex:1;display:block;line-height:1.25;}
+.wc-tt small{display:block;font-family:"Segoe UI",Arial,sans-serif;font-weight:400;font-size:.72rem;
+  letter-spacing:.01em;color:rgba(255,255,255,.72);margin-top:3px;}
 .wc-card-exp summary::after{content:"▾";color:#D9BD82;font-size:.95rem;
   transition:transform .35s ease;animation:wcPulse 1.8s ease-in-out infinite;}
 .wc-card-exp[open] summary::after{transform:rotate(180deg);animation:none;}
@@ -390,6 +401,7 @@ def fmt(v, t="brl"):
         if t=="pct": return f"{f:.1f}%"
         if t=="x":   return f"{f:.2f}x"
         if t=="d":   return f"{f:.0f}d"
+        if t=="n":   return f"{f:.2f}"
     except: pass
     return "—"
 
@@ -6652,42 +6664,44 @@ if pg=="boas_vindas":
 
     cf1,cf2,cf3=st.columns(3)
     cf1.markdown("""<details class="wc-card-exp">
-      <div class="wc-card-exp-icon">📊</div>
-      <summary>Módulo Financeiro</summary>
+      <summary><span class="wc-ico">📊</span><span class="wc-tt">Módulo Financeiro<small>DRE, Balanço, Fluxo, Indicadores e Cenários</small></span></summary>
       <div class="wc-card-exp-content">
         <ul>
-          <li>Demonstrações completas — DRE, Balanço e Fluxo de Caixa, sempre atualizados</li>
-          <li>Mais de 15 indicadores de saúde financeira, calculados automaticamente</li>
-          <li>Previsão de contas com Estacionariedade, Auto-Calibração e Viés testados por janela</li>
-          <li>Alertas quando algo sai do esperado, sem precisar procurar o problema</li>
-          <li>Simulação de cenários — o que acontece se as vendas caírem ou subirem</li>
+          <li>DRE, Balanço e Fluxo de Caixa montados a partir dos relatórios do seu ERP, por filial ou consolidados</li>
+          <li>Indicadores de saúde financeira com gauge, histórico, máximo e mínimo, calculados automaticamente</li>
+          <li>Alertas que apontam o que saiu do esperado, sem você precisar procurar o problema</li>
+          <li>Projeção das contas por modelos estatísticos, cada um testado contra o que realmente aconteceu</li>
+          <li>Cenários FP&amp;A: o que acontece com o caixa e o resultado se as vendas caírem ou subirem</li>
+          <li>Exportação dos resultados e Parecer Consolidado que cruza Financeiro e Comercial</li>
         </ul>
       </div>
     </details>""",unsafe_allow_html=True)
 
     cf2.markdown("""<details class="wc-card-exp">
-      <div class="wc-card-exp-icon">📈</div>
-      <summary>Módulo Comercial</summary>
+      <summary><span class="wc-ico">📈</span><span class="wc-tt">Módulo Comercial<small>Previsão, compras, estoque e fornecedores</small></span></summary>
       <div class="wc-card-exp-content">
         <ul>
-          <li>Previsão de vendas futuras, produto por produto, com base no histórico real</li>
-          <li>Validação Econômica — mede em R$ quanto o modelo economiza vs. um método simples</li>
-          <li>Fator de Risco por produto — margem de segurança calculada com Quantile Forecasting (P10/P90), não estimativa genérica</li>
-          <li>Sugestão automática de quanto comprar e quando, sem depender de achismo</li>
-          <li>Ranking dos produtos que mais pesam no faturamento, e avaliação de fornecedores</li>
+          <li>Previsão de vendas produto por produto, por filial, com base no histórico real e na sazonalidade</li>
+          <li>Validação Econômica: mede em R$ quanto o modelo economiza frente a um método simples</li>
+          <li>Faixa de risco por produto (P10/P90), com margem de segurança calculada e não estimada</li>
+          <li>Gestão de Compras: quanto comprar, quando pedir e ponto de pedido considerando o lead time</li>
+          <li>Fluxo de Caixa Comercial Projetado: o impacto das compras sugeridas no caixa</li>
+          <li>Curva ABC, Pareto e GMROI, estoque morto e Dashboard Executivo</li>
+          <li>Avaliação de fornecedores por prazo, qualidade e OTIF</li>
         </ul>
       </div>
     </details>""",unsafe_allow_html=True)
 
     cf3.markdown("""<details class="wc-card-exp">
-      <div class="wc-card-exp-icon">✨</div>
-      <summary>Inteligência Artificial</summary>
+      <summary><span class="wc-ico">✨</span><span class="wc-tt">Inteligência e Automação<small>Modelos, validação, ERP e pareceres</small></span></summary>
       <div class="wc-card-exp-content">
         <ul>
-          <li>Disputa entre 6 modelos (ARIMA, SARIMAX, Prophet, LightGBM e mais) — vence quem prevê melhor cada produto</li>
-          <li>Ensemble — combina os melhores modelos quando isso bate mais que qualquer um sozinho</li>
-          <li>Toda previsão testada contra o que realmente aconteceu, com Estabilidade de Modelo verificada</li>
-          <li>Relatórios executivos escritos automaticamente, cruzando Comercial e Financeiro</li>
+          <li>Disputa entre modelos (ARIMA, SARIMAX, Holt, Suavização Exponencial, Prophet, LightGBM, Croston/TSB e Ensemble): vence quem prevê melhor cada produto ou conta</li>
+          <li>Validação Estatística: toda previsão é testada contra o que realmente aconteceu, com estabilidade e viés verificados</li>
+          <li>Leitura inteligente dos relatórios do ERP: separa o que é informação do que é cabeçalho, total e rodapé, e mostra o que foi aproveitado</li>
+          <li>Mapeamento de colunas (De-Para) salvo por cliente, para os próximos envios entrarem sozinhos</li>
+          <li>Captação automática por e-mail: os relatórios chegam, ficam na fila de Recebidos e são processados</li>
+          <li>Pareceres executivos escritos pela IA, cruzando Comercial e Financeiro, e trilha de auditoria das ações</li>
         </ul>
       </div>
     </details>""",unsafe_allow_html=True)    
@@ -9258,20 +9272,7 @@ elif pg=="indicadores":
         elif k_v>=-3: st.markdown(f'<div class="kz-w"><b style="color:#FFB627">⚠️ PENUMBRA — {k_v:.2f}</b> &nbsp; Entre -3 e 0: atenção necessária.</div>',unsafe_allow_html=True)
         else: st.markdown(f'<div class="kz-d"><b style="color:#F85149">🔴 INSOLVENTE — {k_v:.2f}</b> &nbsp; Abaixo de -3: alto risco.</div>',unsafe_allow_html=True)
     except: pass
-    sec("📊 Gauges")
-    g1,g2,g3,g4=st.columns(4)
-    try: g1.plotly_chart(gauge(_ultimo_valor_real("margem líquida %"),"Margem Líquida %",-20,50,"#2176FF"),use_container_width=True)
-    except: pass
-    try: g2.plotly_chart(gauge(_ultimo_valor_real("EBITDA %"),"EBITDA %",-10,60,"#00D4AA"),use_container_width=True)
-    except: pass
-    try:
-        lc2=_ultimo_valor_real("liquidez corrente")
-        g3.plotly_chart(gauge(min(lc2,3),"Liquidez Corrente",0,3,"#00D4AA" if lc2>=1.5 else ("#FFB627" if lc2>=1 else "#F85149")),use_container_width=True)
-    except: pass
-    try:
-        k_v2=_ultimo_valor_real("kanitz")
-        g4.plotly_chart(gauge(max(min(k_v2,15),-7),"Kanitz",-7,15,"#00D4AA" if k_v2>0 else ("#FFB627" if k_v2>=-3 else "#F85149")),use_container_width=True)
-    except: pass
+
     sec("📋 Todos os Indicadores")
     inds=[("Receita Bruta","receita bruta de vendas","brl",False),("Receita Líquida","receita líquida","brl",False),
           ("Lucro Bruto","lucro bruto","brl",False),
@@ -9282,7 +9283,8 @@ elif pg=="indicadores":
           ("PMR (dias)","PMR","d",True),("PMP (dias)","PMP","d",False),
           ("PME (dias)","PME","d",True),("Ciclo Caixa","ciclo de caixa","d",True),
           ("Giro Estoque","giro estoque","x",False),("Ticket Médio","ticket médio","brl",False),
-          ("Lucro Líquido","lucro líquido","brl",False),("EBITDA R$","EBITDA","brl",False)]
+          ("Lucro Líquido","lucro líquido","brl",False),("EBITDA R$","EBITDA","brl",False),
+          ("Kanitz","kanitz","n",False)]
     cols_ind=st.columns(4)
     for i,(lbl,campo,t,inv) in enumerate(inds):
         try:
