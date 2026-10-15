@@ -20672,6 +20672,9 @@ elif pg=="gestao_estoque":
 .ge-kpi-val{font-family:Georgia,serif;font-size:1.25rem;font-weight:700;color:#14243B;line-height:1.15}
 .ge-kpi-sub{font-size:.68rem;margin-top:2px}
 .ge-kpi-sub.up{color:#059669}.ge-kpi-sub.dn{color:#DC2626}.ge-kpi-sub.nt{color:#aaa}
+.st-key-ge_ir_parecer button,.st-key-ge_ir_parecer_forn button{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%)!important;border:none!important;border-radius:999px!important;box-shadow:0 4px 12px rgba(15,110,86,.28)!important;transition:transform .15s,box-shadow .15s}
+.st-key-ge_ir_parecer button p,.st-key-ge_ir_parecer_forn button p{color:#fff!important;font-weight:700!important;letter-spacing:.02em}
+.st-key-ge_ir_parecer button:hover,.st-key-ge_ir_parecer_forn button:hover{transform:translateX(4px);box-shadow:0 6px 16px rgba(15,110,86,.38)!important}
 .ge-sec{font-family:Georgia,serif;font-size:.78rem;font-weight:700;color:#14243B;
   padding:5px 10px;border-left:3px solid #F0A500;background:#FFFBF0;
   border-radius:0 5px 5px 0;margin-bottom:8px}
@@ -21322,6 +21325,9 @@ elif pg=="gestao_estoque":
             st.caption("Importe os pedidos em 📦 Fornecedores (Prazo/Qualidade/OTIF) para ver o desempenho aqui.")
         if _alertas_forn:
             st.markdown('<div class="al-w">⚠️ '+"<br>".join(_alertas_forn[:2])+'</div>',unsafe_allow_html=True)
+
+    with f1:
+        if st.button("Ver o parecer comercial da IA sobre os fornecedores  ➜",key="ge_ir_parecer_forn",use_container_width=True,help="Abre o Parecer Consolidado com IA (módulo comercial), que analisa fornecedores, estoque e compras com os números deste painel."): ir("parecer_ia")
 
     with f_cob:
         st.markdown('<div class="ge-sec">📦 Cobertura por Categoria</div>', unsafe_allow_html=True)
