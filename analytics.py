@@ -6682,7 +6682,7 @@ if pg=="boas_vindas":
       <div class="wc-card-exp-content">
         <ul>
           <li>Previsão de vendas produto por produto, por filial, com base no histórico real e na sazonalidade</li>
-          <li>Validação Econômica: mede em R$ quanto o modelo economiza frente a um método simples</li>
+          <li>Validação Econômica: estima em R$ o impacto de caixa que o modelo evita frente a um método simples (simulação)</li>
           <li>Faixa de risco por produto (P10/P90), com margem de segurança calculada e não estimada</li>
           <li>Gestão de Compras: quanto comprar, quando pedir e ponto de pedido considerando o lead time</li>
           <li>Fluxo de Caixa Comercial Projetado: o impacto das compras sugeridas no caixa</li>
@@ -18744,13 +18744,13 @@ elif pg=="compras":
                     _economia=_economia_18*_fator_escala_econ
 
                     c_ec1,c_ec2,c_ec3=st.columns(3)
-                    mc(c_ec1,"💰 Custo total — decisão do MODELO",fmt(_total_modelo),"b")
-                    mc(c_ec2,"💰 Custo total — decisão NAIVE",fmt(_total_naive),"y")
-                    mc(c_ec3,"✅ Economia do Modelo" if _economia>0 else "⚠️ Naive teria sido melhor",
+                    mc(c_ec1,"💰 Impacto de caixa — decisão do MODELO",fmt(_total_modelo),"b")
+                    mc(c_ec2,"💰 Impacto de caixa — decisão NAIVE",fmt(_total_naive),"y")
+                    mc(c_ec3,"✅ Impacto de caixa evitado (simulação)" if _economia>0 else "⚠️ Naive teria sido melhor",
                         fmt(abs(_economia)),"g" if _economia>0 else "r")
-                    st.caption("A economia mostra quanto a empresa deixou de perder usando o modelo correto em vez "
-                        "de um método simples — tanto em ruptura (produtos que faltariam) quanto em excesso "
-                        "(produtos parados na prateleira).")
+                    st.caption("O impacto de caixa evitado é uma estimativa em simulação: mostra quanto a decisão do "
+                        "modelo teria evitado de venda não realizada (ruptura) e de capital imobilizado (excesso) "
+                        "frente a um método simples. Não é resultado realizado.")
 
                     # Sem tabela por produto aqui de propósito — as outras
                     # Validações já deixam o usuário incluir/excluir produto por
@@ -20970,7 +20970,7 @@ elif pg=="gestao_estoque":
     # k8 — Caixa p/ Compras
     k8.markdown(f'''<div class="ge-kpi-box">
         <div style="font-size:16px;margin-bottom:3px"></div>
-        <div class="ge-kpi-lbl">Planejamneto Compras</div>
+        <div class="ge-kpi-lbl">Planejamento Compras</div>
         <div class="ge-kpi-val">{fv(total_horizon)}</div>
         <div class="ge-kpi-sub nt">{periodo_cal}</div>
     </div>''', unsafe_allow_html=True)
@@ -21264,15 +21264,15 @@ elif pg=="gestao_estoque":
 
     # ── ECONOMIA DO MODELO (Validação Econômica do Compras) — fim do Dashboard, mesma janela de meses escolhida lá ──
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
-    st.markdown('<div class="ge-sec">💰 Economia do Modelo — decisão do modelo contra o método simples</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ge-sec">💰 Impacto de Caixa Evitado (simulação) — decisão do modelo contra o método simples</div>', unsafe_allow_html=True)
     _df_econ_ge=load_resultado_econ_compras(st.session_state.cid) if st.session_state.cid else None
     _meses_econ_ge=st.session_state.get("compras_econ_meses_olhar",18)
     try: _meses_econ_ge=max(1,min(18,int(_meses_econ_ge)))
     except Exception: _meses_econ_ge=18
-    _TT_ECON=("Economia do Modelo = custo da decisão simples (naive) menos o custo da decisão do modelo, somando ruptura (produtos que faltariam) e excesso (produtos parados). "
+    _TT_ECON=("Impacto de Caixa Evitado (simulação) = impacto da decisão simples (naive) menos o impacto da decisão do modelo, somando venda não realizada por ruptura e capital imobilizado em excesso. "
         "Vem da Validação Econômica do Compras: simulada em 18 meses e proporcional à janela escolhida lá (N/18). Considera só os produtos testados (amostra).")
     if _df_econ_ge is None or _df_econ_ge.empty or not {"custo_total_modelo","custo_total_naive"}.issubset(_df_econ_ge.columns):
-        st.markdown('<div class="al-i">💰 <b>Economia do Modelo</b>: a Validação Econômica ainda não foi rodada. Rode em 📦 Gestão de Compras › Validação Econômica para ver aqui o custo do modelo contra o método simples.</div>',unsafe_allow_html=True)
+        st.markdown('<div class="al-i">💰 <b>Impacto de Caixa Evitado</b>: a Validação Econômica ainda não foi rodada. Rode em 📦 Gestão de Compras › Validação Econômica para ver aqui o impacto do modelo contra o método simples.</div>',unsafe_allow_html=True)
     else:
         _fator_econ_ge=_meses_econ_ge/18
         _modelo_econ_ge=float(_df_econ_ge["custo_total_modelo"].sum())*_fator_econ_ge
@@ -21293,12 +21293,12 @@ elif pg=="gestao_estoque":
         _eco_ok=_eco_econ_ge>0
         e1,e2,e3=st.columns([1,1,1.45])
         e1.markdown(f'''<div title="{_TT_ECON}" style="cursor:help;background:linear-gradient(150deg,#FFFEFA 0%,#FBF1D3 100%);border:1.5px solid #D4AF37;border-radius:14px;padding:16px 16px 14px 16px;box-shadow:0 6px 18px rgba(169,118,47,.20);min-height:132px">
-<div style="font-size:.64rem;color:#9A7B2F;text-transform:uppercase;letter-spacing:.8px;font-weight:700">Custo · decisão do modelo</div>
+<div style="font-size:.64rem;color:#9A7B2F;text-transform:uppercase;letter-spacing:.8px;font-weight:700">Impacto · decisão do modelo</div>
 <div style="font-size:1.9rem;font-weight:800;color:#5C4410;line-height:1.15;margin:8px 0 4px 0">{_f_modelo}</div>
-<div style="font-size:.72rem;color:#7A5A12">ruptura + excesso, últimos {_meses_econ_ge} meses</div>
-<div style="font-size:.7rem;color:#9A7B2F;margin-top:10px;border-top:1px solid #E8D9A8;padding-top:6px">{(_modelo_econ_ge/_naive_econ_ge*100) if _naive_econ_ge>0 else 0:.1f}% do custo do naive</div></div>''', unsafe_allow_html=True)
+<div style="font-size:.72rem;color:#7A5A12">venda não realizada + capital imobilizado, últimos {_meses_econ_ge} meses</div>
+<div style="font-size:.7rem;color:#9A7B2F;margin-top:10px;border-top:1px solid #E8D9A8;padding-top:6px">{(_modelo_econ_ge/_naive_econ_ge*100) if _naive_econ_ge>0 else 0:.1f}% do impacto do naive</div></div>''', unsafe_allow_html=True)
         e2.markdown(f'''<div title="{_TT_ECON}" style="cursor:help;background:linear-gradient(150deg,#FFFEFA 0%,#FBF1D3 100%);border:1.5px solid #D4AF37;border-radius:14px;padding:16px 16px 14px 16px;box-shadow:0 6px 18px rgba(169,118,47,.20);min-height:132px">
-<div style="font-size:.64rem;color:#9A7B2F;text-transform:uppercase;letter-spacing:.8px;font-weight:700">Custo · decisão naive</div>
+<div style="font-size:.64rem;color:#9A7B2F;text-transform:uppercase;letter-spacing:.8px;font-weight:700">Impacto · decisão naive</div>
 <div style="font-size:1.9rem;font-weight:800;color:#5C4410;line-height:1.15;margin:8px 0 4px 0">{_f_naive}</div>
 <div style="font-size:.72rem;color:#7A5A12">método simples, últimos {_meses_econ_ge} meses</div>
 <div style="font-size:.7rem;color:#9A7B2F;margin-top:10px;border-top:1px solid #E8D9A8;padding-top:6px">referência de comparação (100%)</div></div>''', unsafe_allow_html=True)
@@ -21306,13 +21306,13 @@ elif pg=="gestao_estoque":
         _bd_eco="#B8860B" if _eco_ok else "#A63A3A"
         _sh_eco="0 12px 30px rgba(184,134,11,.50),0 0 0 3px rgba(252,224,138,.55)" if _eco_ok else "0 10px 26px rgba(166,58,58,.40)"
         _tx_eco="#3D2A00" if _eco_ok else "#4A1010"
-        _tit_eco="💰 Economia do modelo" if _eco_ok else "⚠️ Naive teria sido melhor"
-        _chip_eco=(f"{_pct_red_econ:.1f}% menos custo que o naive" if _eco_ok else f"{abs(_pct_red_econ):.1f}% mais custo que o naive")
+        _tit_eco="💰 Impacto de caixa evitado" if _eco_ok else "⚠️ Naive teria sido melhor"
+        _chip_eco=(f"{_pct_red_econ:.1f}% a menos que o naive" if _eco_ok else f"{abs(_pct_red_econ):.1f}% a mais que o naive")
         e3.markdown(f'''<div title="{_TT_ECON}" style="cursor:help;background:{_bg_eco};border:2px solid {_bd_eco};border-radius:16px;padding:18px 20px 16px 20px;box-shadow:{_sh_eco};min-height:132px">
 <div style="font-size:.74rem;color:{_tx_eco};text-transform:uppercase;letter-spacing:1px;font-weight:800">{_tit_eco}</div>
 <div style="font-size:2.6rem;font-weight:900;color:{_tx_eco};line-height:1.1;margin:6px 0 8px 0;text-shadow:0 1px 0 rgba(255,255,255,.45)">{_f_eco}</div>
 <div style="display:inline-block;background:rgba(255,255,255,.55);color:{_tx_eco};font-size:.74rem;font-weight:800;padding:4px 12px;border-radius:20px">{_chip_eco}</div>
-<div style="font-size:.7rem;color:{_tx_eco};opacity:.85;margin-top:8px">últimos {_meses_econ_ge} meses · economizados em ruptura e excesso</div></div>''', unsafe_allow_html=True)
+<div style="font-size:.7rem;color:{_tx_eco};opacity:.85;margin-top:8px">últimos {_meses_econ_ge} meses · estimativa em simulação, não resultado realizado</div></div>''', unsafe_allow_html=True)
         st.markdown(f'''<div style="font-size:.66rem;color:#9A7B2F;line-height:1.5;padding:8px 4px 0 4px">Janela de <b>{_meses_econ_ge} meses</b> (a mesma escolhida na Validação Econômica do Compras), proporcional à simulação de 18 meses · Amostra: <b>{_n_prod_econ_ge}</b> produtos testados · {_aviso_esc_ge}</div>''', unsafe_allow_html=True)
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
