@@ -20973,12 +20973,12 @@ elif pg=="gestao_estoque":
       <div style="display:flex;align-items:center;gap:10px">
         <div style="text-align:right">
           <div style="font-size:.65rem;color:#D9BD82;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Score NetExame</div>
-          <div style="font-size:.85rem;color:{score_cor}">{score_stars}</div>
+          <div style="font-size:1.45rem;color:{score_cor};line-height:1.1">{score_stars}</div>
         </div>
         <div title="{_score_tooltip}" style="display:flex;align-items:baseline;gap:3px;background:{score_cor}26;border:1px solid {score_cor}55;
           border-radius:12px;padding:4px 14px;cursor:help">
-          <div style="font-family:Georgia,serif;font-size:2.2rem;font-weight:800;color:{score_cor};line-height:1">{score_final}</div>
-          <div style="font-size:.75rem;color:{score_cor};opacity:.85">/100</div>
+          <div style="font-family:Georgia,serif;font-size:3.2rem;font-weight:800;color:{score_cor};line-height:1">{score_final}</div>
+          <div style="font-size:1rem;color:{score_cor};opacity:.85">/100</div>
         </div>
         <div style="font-size:.75rem;font-weight:700;color:{score_cor};background:{score_cor}22;padding:3px 10px;border-radius:20px">{score_lbl}</div>
       </div>
@@ -21082,7 +21082,29 @@ elif pg=="gestao_estoque":
     _pr_ge=sorted([(_n,_s,_w0*(100-_s)) for _n,_s,_w0 in _pil_ge if _s is not None],key=lambda x:-x[2])
     _pr_txt=" · ".join(f"{_n} (nota {_s:.0f}/100)" for _n,_s,_x in _pr_ge[:3] if _s<80)
     if _pr_txt:
-        st.markdown(f'<div style="font-size:.7rem;color:#6B7280;padding:6px 4px 0 4px">🎯 <b>Maiores pressões no Score {score_final}/100:</b> {_pr_txt}. Nota 100 = meta, 0 = limite; passe o mouse no Score para ver as metas.</div>',unsafe_allow_html=True)
+        with st.expander(f"🎯 Maiores pressões no Score {score_final}/100: {_pr_txt}. Clique para entender cada pilar.",expanded=False):
+            def _mm_sc(v): return f"{v:,.0f}".replace(",",".")
+            _exc_sc=float(_cen_ge["Excesso"].sum()) if _cen_ge is not None else 0
+            _fal_sc=float(_cen_ge["Falta"].sum()) if _cen_ge is not None else 0
+            st.markdown(
+                "**Como ler:** cada pilar recebe uma nota de 0 a 100, em que **100 = meta atingida** e **0 = limite** (o pior aceitável). "
+                "O Score é a média geométrica dos 4 pilares, então um pilar muito fraco puxa o resultado para baixo mesmo que os outros estejam bons.\n\n"
+                f"**1. Serviço (peso 35%) · nota {_nt_sc(sc_serv)}**  \n"
+                "Mede se o produto está disponível quando o cliente quer comprar. Soma o valor da demanda dos produtos em ruptura iminente ou que precisam ser comprados agora, em relação à demanda total. "
+                f"Hoje: **{f'{_pct_rup_score:.1f}'.replace('.',',')}%** {_rup_base}. Meta 5%, limite 30%.\n\n"
+                f"**2. Eficiência de capital (peso 35%) · nota {_nt_sc(sc_cap)}**  \n"
+                "Mede se o dinheiro em estoque está na medida certa, nem sobrando nem faltando. "
+                "Soma o excesso (estoque acima do ideal) com a falta (abaixo do ideal) e divide pelo estoque atual. "
+                f"Hoje: excesso R\\$ {_mm_sc(_exc_sc)} + falta R\\$ {_mm_sc(_fal_sc)} = **{f'{_desv_cap:.0f}%' if _desv_cap is not None else '—'}** do estoque. Meta 15%, limite 75%. "
+                "Esse desvio responde por 70% da nota; os outros 30% vêm do capital parado (itens sem venda além do Máximo da Curva).\n\n"
+                f"**3. Fornecedor (peso 15%) · nota {_nt_sc(sc_forn)}**  \n"
+                "Mede se o fornecedor entrega o pedido completo e no prazo (OTIF), ponderado pelo valor das compras de cada um. "
+                f"Hoje: **{f'{_otif_med:.0f}%' if _otif_med is not None else '—'}**. Meta 95%, limite 50%.\n\n"
+                f"**4. Previsão (peso 15%) · nota {_nt_sc(sc_prev)}**  \n"
+                "Mede o quanto a previsão de demanda erra (erro médio ponderado, WAPE). A nota é 100 menos o erro. "
+                f"Hoje: erro de **{f'{mape_ml:.1f}%'.replace('.',',') if mape_ml else '—'}**.\n\n"
+                f"Com pesos alternativos, o Score ficaria entre **{_sc_min} e {_sc_max}**."
+                +(f" Score parcial: sem dado de {', '.join(_sc_sem)}; o peso foi redistribuído." if _sc_sem else ""))
 
     # ── Evolução dos indicadores: primeiro registro guardado × atual (só aparece com 2 ou mais registros diferentes) ──
     _h_ge=load_hist_painel(st.session_state.cid,filial_sel_ge) if st.session_state.cid else None
