@@ -5644,7 +5644,7 @@ def calcular_capital_parado_v2(df_est,df_v,col_prod_v,col_data_v,col_fil_est,col
         _fx_ag=pd.Series(_fx_ag,index=est.index).where(est["UltimaVendaDt"].notna(),"Nunca vendeu")
         _ag_df=pd.DataFrame({"Faixa":_fx_ag,"Capital":est["CapitalAtual"]}).groupby("Faixa").agg(Posicoes=("Capital","size"),Capital=("Capital","sum"))
         _ord_ag=["Vendeu nos últimos 30 dias","Última venda há 31 a 60 dias","Última venda há 61 a 90 dias","Última venda há mais de 90 dias","Nunca vendeu"]
-        _ag_df=_ag_df.reindex([x for x in _ord_ag if x in _ag_df.index]).reset_index()
+        _ag_df=_ag_df.reindex(_ord_ag,fill_value=0).rename_axis("Faixa").reset_index()
         st.session_state["compras_aging_estoque"]=_ag_df
     except Exception:
         st.session_state["compras_aging_estoque"]=None
