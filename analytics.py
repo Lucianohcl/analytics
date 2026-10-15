@@ -5640,10 +5640,10 @@ def calcular_capital_parado_v2(df_est,df_v,col_prod_v,col_data_v,col_fil_est,col
     est["Classe"]=[(cls_pos.get((p,f.casefold())) if por_filial else None) or cls_emp.get(p,"") for p,f in zip(est["Produto"],est["_fil"])]
     try:   # Envelhecimento do estoque por tempo sem venda: só um resumo pra tela, não muda o que é "parado"
         _dsv_ag=(data_ref-est["UltimaVendaDt"]).dt.days
-        _fx_ag=pd.cut(_dsv_ag,bins=[-10**9,90,180,360,10**9],labels=["Até 90 dias","91 a 180 dias","181 a 360 dias","Mais de 360 dias"]).astype(object)
+        _fx_ag=pd.cut(_dsv_ag,bins=[-10**9,30,60,90,10**9],labels=["Vendeu nos últimos 30 dias","Última venda há 31 a 60 dias","Última venda há 61 a 90 dias","Última venda há mais de 90 dias"]).astype(object)
         _fx_ag=pd.Series(_fx_ag,index=est.index).where(est["UltimaVendaDt"].notna(),"Nunca vendeu")
         _ag_df=pd.DataFrame({"Faixa":_fx_ag,"Capital":est["CapitalAtual"]}).groupby("Faixa").agg(Posicoes=("Capital","size"),Capital=("Capital","sum"))
-        _ord_ag=["Até 90 dias","91 a 180 dias","181 a 360 dias","Mais de 360 dias","Nunca vendeu"]
+        _ord_ag=["Vendeu nos últimos 30 dias","Última venda há 31 a 60 dias","Última venda há 61 a 90 dias","Última venda há mais de 90 dias","Nunca vendeu"]
         _ag_df=_ag_df.reindex([x for x in _ord_ag if x in _ag_df.index]).reset_index()
         st.session_state["compras_aging_estoque"]=_ag_df
     except Exception:
@@ -18410,9 +18410,9 @@ elif pg=="compras":
 
             _ag_est=st.session_state.get("compras_aging_estoque")
             if _ag_est is not None and len(_ag_est)>0:
-                sec("⏳ Estoque por tempo sem venda")
+                sec("⏳ Estoque por data da última venda")
                 _tot_ag=float(_ag_est["Capital"].sum())
-                _ag_show=pd.DataFrame({"Tempo sem venda":_ag_est["Faixa"],"Posições":_ag_est["Posicoes"].astype(int),
+                _ag_show=pd.DataFrame({"Última venda":_ag_est["Faixa"],"Posições":_ag_est["Posicoes"].astype(int),
                     "Capital (R$)":[fmt(v) for v in _ag_est["Capital"]],
                     "% do estoque":[f"{(v/_tot_ag*100 if _tot_ag>0 else 0):.1f}%" for v in _ag_est["Capital"]]})
                 st.dataframe(_ag_show,use_container_width=True,hide_index=True)
