@@ -21114,6 +21114,11 @@ elif pg=="gestao_estoque":
         if "Fornecedor" in df_res.columns and "ValorSugerido" in df_res.columns:
             _s_exp=df_res.groupby(df_res["Fornecedor"].map(_nf_forn))["ValorSugerido"].apply(lambda s:s.clip(lower=0).sum())
             if _s_exp.sum()>0: _exp_valor=(_s_exp/_s_exp.sum()*100).to_dict()
+        # Consumo diário (R$, a custo) dos produtos de cada fornecedor: base para estimar o estoque que o atraso típico máximo exige
+        _exp_cons={}
+        if all(c in df_res.columns for c in ["Fornecedor","DemandaPrevMes(un)","CustoUnitario"]):
+            _cons_d=(pd.to_numeric(df_res["DemandaPrevMes(un)"],errors="coerce").fillna(0)*pd.to_numeric(df_res["CustoUnitario"],errors="coerce").fillna(0)/30)
+            _exp_cons=_cons_d.groupby(df_res["Fornecedor"].map(_nf_forn)).sum().to_dict()
         # Produtos em Ruptura Iminente ou Comprar Agora que dependem de cada fornecedor
         _exp_risco={}
         if "Fornecedor" in df_res.columns and "Status" in df_res.columns:
@@ -21168,7 +21173,8 @@ elif pg=="gestao_estoque":
                 if min(p,o)<85: _det.append(f"só {o}% dos pedidos chegam completos e no prazo")
                 if _dias>3: _det.append(f"em 90% dos pedidos o atraso chega a até {_dias} dias")
                 _txt_al=f"<b>{_nm}</b> responde por {_pc:.0f}% das compras. "+_det[0][0].upper()+_det[0][1:]+((", e "+_det[1]) if len(_det)>1 else "")+"."
-                _txt_al+=(f" Sugestão: some {_dias} dias ao lead time dele no Motor de Compras." if _dias>3 else " Sugestão: cobrar melhoria na entrega ou avaliar alternativas.")
+                _cons_al=float(_exp_cons.get(_nf_forn(_nm),0))*_dias
+                _txt_al+=(f" Sugestão: some {_dias} dias ao lead time dele no Motor de Compras."+(f" Cobrir esse atraso pede cerca de {fv(_cons_al).replace('$','&#36;')} a mais em estoque; sem isso, o risco é faltar." if _cons_al>0 else "") if _dias>3 else " Sugestão: cobrar melhoria na entrega ou avaliar alternativas.")
                 _alertas_forn.append(_txt_al)
         _th="padding:4px 6px;text-align:center;color:#666;font-weight:600;border-bottom:2px solid #F0A500;font-size:.62rem"
         st.markdown(f'''<table style="width:100%;border-collapse:collapse;font-size:.68rem">
