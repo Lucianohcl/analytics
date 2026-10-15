@@ -20990,12 +20990,6 @@ elif pg=="gestao_estoque":
     # ── LINHA 1: KPIs ──────────────────────────────────────────────────
     # ── LINHA 1: KPIs ──────────────────────────────────────────────────
     # ── LINHA 1: KPIs ──────────────────────────────────────────────────
-    # ── Atalho para o Parecer Comercial da IA (usa os números deste painel) ──
-    _ba_c1,_ba_c2=st.columns([1.6,2.4])
-    with _ba_c1:
-        st.markdown('<div style="font-size:.78rem;color:#6B7280;padding-top:14px">Leitura executiva dos números deste painel, gerada por IA.</div>',unsafe_allow_html=True)
-    with _ba_c2:
-        if st.button("🧭 Ver o Parecer Comercial da IA dos Dashboards  ➜",key="ge_ir_parecer",use_container_width=True,help="Abre o Parecer Consolidado com IA (módulo comercial), que usa os números deste painel."): ir("parecer_ia")
     k1,k2,k3,k4,k5,k6,k7,k8=st.columns(8)
 
     # k2 — Giro
