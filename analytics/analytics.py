@@ -21089,12 +21089,12 @@ elif pg=="gestao_estoque":
             st.markdown(
                 "**Como ler:** cada pilar recebe uma nota de 0 a 100, em que **100 = meta atingida** e **0 = limite** (o pior aceitável). "
                 "O Score é a média geométrica dos 4 pilares, então um pilar muito fraco puxa o resultado para baixo mesmo que os outros estejam bons.\n\n"
-                f"**1. Serviço (peso 35%) · nota {_nt_sc(sc_serv)}**  \n"
-                "Mede se o produto está disponível quando o cliente quer comprar. Soma o valor da demanda dos produtos em ruptura iminente ou que precisam ser comprados agora, em relação à demanda total. "
+                f"**1. Serviço: risco de ruptura (peso 35%) · nota {_nt_sc(sc_serv)}**  \n"
+                "Mede o risco de faltar produto. Considera os produtos em ruptura iminente ou que precisam ser comprados agora (ainda podem ter saldo), soma a demanda prevista do mês deles, valorizada a custo, e divide pela demanda prevista total. Não é venda perdida já ocorrida. "
                 f"Hoje: **{f'{_pct_rup_score:.1f}'.replace('.',',')}%** {_rup_base}. Meta 5%, limite 30%.\n\n"
                 f"**2. Eficiência de capital (peso 35%) · nota {_nt_sc(sc_cap)}**  \n"
                 "Mede se o dinheiro em estoque está na medida certa, nem sobrando nem faltando. "
-                "Soma o excesso (estoque acima do ideal) com a falta (abaixo do ideal) e divide pelo estoque atual. "
+                f"Soma o excesso (estoque acima do ideal) com a falta (abaixo do ideal) e divide pelo estoque das linhas com cobertura calculada (R\\$ {_mm_sc(float(_cen_ge['CapitalAtual'].sum()) if _cen_ge is not None else 0)}), que pode ser menor que o Valor do Estoque dos cartões. Excesso e falta são calculados por linha (produto × filial), então o mesmo desvio nunca é contado duas vezes. "
                 f"Hoje: excesso R\\$ {_mm_sc(_exc_sc)} + falta R\\$ {_mm_sc(_fal_sc)} = **{f'{_desv_cap:.0f}%' if _desv_cap is not None else '—'}** do estoque. Meta 15%, limite 75%. "
                 "Esse desvio responde por 70% da nota; os outros 30% vêm do capital parado (itens sem venda além do Máximo da Curva).\n\n"
                 f"**3. Fornecedor (peso 15%) · nota {_nt_sc(sc_forn)}**  \n"
@@ -21103,7 +21103,7 @@ elif pg=="gestao_estoque":
                 f"**4. Previsão (peso 15%) · nota {_nt_sc(sc_prev)}**  \n"
                 "Mede o quanto a previsão de demanda erra (erro médio ponderado, WAPE). A nota é 100 menos o erro. "
                 f"Hoje: erro de **{f'{mape_ml:.1f}%'.replace('.',',') if mape_ml else '—'}**.\n\n"
-                f"Com pesos alternativos, o Score ficaria entre **{_sc_min} e {_sc_max}**."
+                f"Sensibilidade aos pesos: o Score foi recalculado com três outros conjuntos de pesos (Serviço/Capital/Fornecedor/Previsão): 50/25/15/10, 25/45/15/15 e 25/25/25/25. Resultado: entre **{_sc_min} e {_sc_max}**."
                 +(f" Score parcial: sem dado de {', '.join(_sc_sem)}; o peso foi redistribuído." if _sc_sem else ""))
 
     # ── Evolução dos indicadores: primeiro registro guardado × atual (só aparece com 2 ou mais registros diferentes) ──
