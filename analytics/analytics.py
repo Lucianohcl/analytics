@@ -21037,6 +21037,12 @@ elif pg=="gestao_estoque":
         <div class="ge-kpi-sub" style="color:{cor_est};font-size:.62rem">{status_est}</div>
     </div>''', unsafe_allow_html=True)
 
+    # ── Maiores pressões no Score (pontos perdidos = peso × (100 − nota do componente)) ──
+    _pr_ge=sorted([("Ruptura",0.35*(100-score_ruptura)),("Giro",0.15*(100-score_giro)),("Cobertura",0.15*(100-score_cobertura)),("Capital parado",0.15*(100-score_capital)),("Erro de previsão",0.15*(100-score_ml)),("Lead time",0.05*(100-score_lead))],key=lambda x:-x[1])
+    _pr_txt=" · ".join(f"{_n} (−{_p:.0f} pts)" for _n,_p in _pr_ge[:3] if _p>=1)
+    if _pr_txt:
+        st.markdown(f'<div style="font-size:.7rem;color:#6B7280;padding:6px 4px 0 4px">🎯 <b>Maiores pressões no Score {score_final}/100:</b> {_pr_txt}. Pontos perdidos = peso × (100 − nota do componente).</div>',unsafe_allow_html=True)
+
     # ── Evolução dos indicadores: primeiro registro guardado × atual (só aparece com 2 ou mais registros diferentes) ──
     _h_ge=load_hist_painel(st.session_state.cid,filial_sel_ge) if st.session_state.cid else None
     if _h_ge is not None and len(_h_ge)>=2:
@@ -21342,7 +21348,7 @@ elif pg=="gestao_estoque":
 <div style="font-size:.68rem;font-weight:600;color:{_cor_qg};margin-top:7px;border-top:1px solid #EEE;padding-top:5px">👉 {_acao_qg}</div></div>''',unsafe_allow_html=True)
         if _linha_lib_ge:
             st.markdown(f'<div style="background:#F8F5EE;border-radius:8px;padding:9px 14px;margin-top:10px;font-size:.78rem;color:#14243B;line-height:1.5">{_linha_lib_ge}</div>',unsafe_allow_html=True)
-        st.caption("Estoque analisado = produtos com venda na janela escolhida. Veja o detalhe e a conciliação com o estoque total em 📐 Pareto & GMROI.")
+        st.caption("Estoque analisado = produtos com venda na janela escolhida, a custo médio do período. O Valor do Estoque dos cartões do topo é a posição atual de todos os produtos do recorte; por isso os dois valores diferem. Veja o detalhe e a conciliação em 📐 Pareto & GMROI.")
 
     # ── Estoque liberável em destaque (mesma conta do Simulador de Cenário): total + por Curva ──
     if _cen_ge is not None and len(_cen_ge)>0:
@@ -21359,7 +21365,7 @@ elif pg=="gestao_estoque":
 <div style="font-size:.66rem;color:{_lb_cor};text-transform:uppercase;letter-spacing:.8px;font-weight:800">💸 {_lb_tit}</div>
 <div style="font-family:Georgia,serif;font-size:1.9rem;font-weight:800;color:{_lb_cor};line-height:1.1;margin:6px 0 2px 0">R&#36; {_brl_lb(abs(_lb_liq))}</div>
 <div style="font-size:.76rem;color:#374151;line-height:1.45">Excesso R&#36; {_brl_lb(_lb_exc)} − falta R&#36; {_brl_lb(_lb_fal)}, sobre R&#36; {_brl_lb(_lb_est)} em estoque ({abs(_lb_pct):.0f}%).</div>
-<div style="font-size:.68rem;color:#6B7280;margin-top:6px;border-top:1px solid #0F6E5533;padding-top:5px">Mesmo número do Simulador de Cenário.</div></div>''',unsafe_allow_html=True)
+<div style="font-size:.68rem;color:#6B7280;margin-top:6px;border-top:1px solid #0F6E5533;padding-top:5px">Potencial calculado, não caixa já realizado. Mesmo número do Simulador de Cenário.</div></div>''',unsafe_allow_html=True)
         with _lb_c1:
             if "Classe" in _cen_ge.columns:
                 _lb_g=_cen_ge.assign(Classe=_cen_ge["Classe"].fillna("—").astype(str)).groupby("Classe").agg(Excesso=("Excesso","sum"),Falta=("Falta","sum"),Itens=("Produto","nunique")).reset_index().sort_values("Classe")
