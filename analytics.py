@@ -21155,6 +21155,8 @@ elif pg=="gestao_estoque":
                 if _dias==0: _p90_txt=f'<span title="{_tt}" style="cursor:help;color:#059669;font-weight:700">sem atraso</span>'
                 else: _p90_txt=f'<span title="{_tt}" style="cursor:help;color:{"#DC2626" if _dias>3 else "#D97706"};font-weight:700">até {_dias} dias</span>'
             _nr_txt=(f'<span style="color:#DC2626;font-weight:700">{_nr}</span>' if _nr>0 else '<span style="color:#9CA3AF">0</span>')
+            _cap_atraso=float(_exp_cons.get(_nf_forn(_nm),0))*_dias
+            _cap_txt=(fv(_cap_atraso).replace("$","&#36;") if _cap_atraso>0 else '<span style="color:#9CA3AF">—</span>')
             rows+=f"""<tr>
                 <td style='padding:3px 6px;font-size:.65rem;font-weight:500;color:#14243B'>
                     🏭 {_nm}
@@ -21164,6 +21166,7 @@ elif pg=="gestao_estoque":
                 <td style='padding:3px 6px;text-align:center'>{circulo(o)}</td>
                 <td style='padding:3px 6px;text-align:center;font-size:.72rem;font-weight:700;color:#14243B'>{_pc_txt}</td>
                 <td style='padding:3px 6px;text-align:center;font-size:.72rem'>{_p90_txt}</td>
+                <td style='padding:3px 6px;text-align:center;font-size:.72rem;font-weight:700;color:#14243B'>{_cap_txt}</td>
                 <td style='padding:3px 6px;text-align:center;font-size:.72rem'>{_nr_txt}</td>
             </tr>"""
             # Aviso só para quem pesa nas compras (20% ou mais) E é instável: OTIF/Prazo abaixo de 85% ou atraso típico máximo acima de 3 dias
@@ -21173,8 +21176,7 @@ elif pg=="gestao_estoque":
                 if min(p,o)<85: _det.append(f"só {o}% dos pedidos chegam completos e no prazo")
                 if _dias>3: _det.append(f"em 90% dos pedidos o atraso chega a até {_dias} dias")
                 _txt_al=f"<b>{_nm}</b> responde por {_pc:.0f}% das compras. "+_det[0][0].upper()+_det[0][1:]+((", e "+_det[1]) if len(_det)>1 else "")+"."
-                _cons_al=float(_exp_cons.get(_nf_forn(_nm),0))*_dias
-                _txt_al+=(f" Sugestão: some {_dias} dias ao lead time dele no Motor de Compras."+(f" Cobrir esse atraso pede cerca de {fv(_cons_al).replace('$','&#36;')} a mais em estoque; sem isso, o risco é faltar." if _cons_al>0 else "") if _dias>3 else " Sugestão: cobrar melhoria na entrega ou avaliar alternativas.")
+                _txt_al+=(f" Sugestão: some {_dias} dias ao lead time dele no Motor de Compras." if _dias>3 else " Sugestão: cobrar melhoria na entrega ou avaliar alternativas.")
                 _alertas_forn.append(_txt_al)
         _th="padding:4px 6px;text-align:center;color:#666;font-weight:600;border-bottom:2px solid #F0A500;font-size:.62rem"
         st.markdown(f'''<table style="width:100%;border-collapse:collapse;font-size:.68rem">
@@ -21185,12 +21187,13 @@ elif pg=="gestao_estoque":
                 <th title="OTIF (On Time, In Full): percentual de pedidos que chegaram completos E no prazo. Um pedido só conta se cumpriu as duas condições; por isso o OTIF nunca é maior que o No prazo." style="cursor:help;{_th}">Completo e no prazo (OTIF)</th>
                 <th title="Quanto do valor sugerido pelo Motor de Compras depende deste fornecedor. Mesma definição da análise de Desempenho de Entrega em Gestão de Compras › Configurar." style="cursor:help;{_th}">Peso nas compras</th>
                 <th title="Em 90% dos pedidos o atraso foi de até este número de dias; só 1 em cada 10 demora mais (P90). Passe o mouse no valor para ver média, desvio e pior caso. Precisa de pelo menos 3 pedidos." style="cursor:help;{_th}">Atraso típico máximo</th>
+                <th title="Estoque adicional (a custo) que cobriria o atraso típico máximo deste fornecedor: consumo diário previsto dos produtos que ele fornece × dias de atraso. Estimativa; sem esse estoque, o risco é faltar." style="cursor:help;{_th}">Estoque para cobrir o atraso</th>
                 <th title="Produtos em Ruptura Iminente ou Comprar Agora que são comprados deste fornecedor." style="cursor:help;{_th}">Produtos em falta</th>
             </tr></thead>
             <tbody>{rows}</tbody>
         </table>''',unsafe_allow_html=True)
         if not sc.empty:
-            st.caption("**Atraso típico máximo:** em 9 de cada 10 pedidos o atraso foi de até esse número de dias. **Completo e no prazo (OTIF):** pedidos que chegaram inteiros e dentro da data.")
+            st.caption("**Atraso típico máximo:** em 9 de cada 10 pedidos o atraso foi de até esse número de dias. **Estoque para cobrir o atraso:** estimativa do estoque adicional (a custo) que absorveria esse atraso; sem ele, o risco é faltar. **Completo e no prazo (OTIF):** pedidos que chegaram inteiros e dentro da data.")
         if _mais_forn>0:
             st.caption(f"+ {_mais_forn} fornecedor(es) com menor peso nas compras.")
         if sc.empty:
