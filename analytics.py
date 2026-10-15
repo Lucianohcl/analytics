@@ -5497,7 +5497,7 @@ def save_snap(cid,nome,dados,filial=None):
 
 _COLS_HIST_PAINEL=["gerado_em","score_final","val_estoque","pct_ruptura","giro_ano","cob_media","cap_parado","mape_ml"]
 
-def path_hist_painel(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_hist_painel__{_sufixo_filial(filial)}.csv")
+def path_hist_painel(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_hist_painel_v2__{_sufixo_filial(filial)}.csv")
 
 def save_hist_painel(cid,dados,filial=None):
     # Histórico do Dashboard Executivo: acrescenta uma linha só quando algum indicador mudou em relação à última linha
@@ -20879,13 +20879,53 @@ elif pg=="gestao_estoque":
 
 
     # ── SCORE DE SAÚDE DO ESTOQUE ───────────────────────────────────────
-    score_giro     = min(100, max(0, round((giro_ano/giro_alvo_ano)*100))) if giro_alvo_ano>0 else 50
-    score_cobertura= min(100, max(0, round((1-(abs(cob_media-37)/37))*100)))
-    score_ruptura  = min(100, max(0, round(100-(pct_ruptura*3))))
-    score_capital  = min(100, max(0, round((1-cap_parado/_den_parado)*100))) if _den_parado>0 else 100
-    score_lead     = min(100, max(0, round(100-max(0,(lt_medio-7)*3)))) if lt_medio>0 else 70
-    score_ml       = min(100, max(0, round((1-mape_ml/100)*100))) if mape_ml else 70
-    score_final    = max(0, min(100, round(score_giro*0.15 + score_cobertura*0.15 + score_ruptura*0.35 + score_capital*0.15 + score_lead*0.05 + score_ml*0.15)))
+    # Score v2: 4 pilares (serviço, eficiência de capital, fornecedor, previsão). Cada nota vai de 0 (limite) a 100 (meta),
+    # linear entre os dois, e o Score é a média geométrica ponderada (um pilar ruim não é escondido por outro bom).
+    def _nota_meta(v,meta,limite):
+        try:
+            if v is None or pd.isna(v): return None
+            return float(min(100,max(0,(float(v)-limite)/(meta-limite)*100)))
+        except Exception: return None
+    _pct_rup_score=pct_ruptura; _rup_base="dos produtos"
+    if all(c in df_res.columns for c in ["Status","DemandaPrevMes(un)","CustoUnitario"]):
+        _dv_sc=pd.to_numeric(df_res["DemandaPrevMes(un)"],errors="coerce").fillna(0).clip(lower=0)*pd.to_numeric(df_res["CustoUnitario"],errors="coerce").fillna(0)
+        if float(_dv_sc.sum())>0:
+            _pct_rup_score=float(_dv_sc[df_res["Status"].isin(["🚨 RUPTURA IMINENTE","🔴 Comprar agora"])].sum()/_dv_sc.sum()*100); _rup_base="do valor da demanda"
+    sc_serv=_nota_meta(_pct_rup_score,5,30)
+    sc_cap=None; _desv_cap=None
+    if _cen_ge is not None and float(_cen_ge["CapitalAtual"].sum())>0:
+        _desv_cap=float((_cen_ge["Excesso"].sum()+_cen_ge["Falta"].sum())/_cen_ge["CapitalAtual"].sum()*100)
+        _n_desv=_nota_meta(_desv_cap,15,75)
+        _n_parado=min(100,max(0,(1-cap_parado/_den_parado)*100)) if _den_parado>0 else 100
+        sc_cap=0.7*_n_desv+0.3*_n_parado
+    sc_forn=None; _otif_med=None
+    try:
+        _scf_sc=load_scorecard_forn(st.session_state.cid) if st.session_state.cid else None
+        if _scf_sc is not None and len(_scf_sc)>0 and {"Fornecedor","OTIF"}.issubset(_scf_sc.columns):
+            _scf_sc=_scf_sc.copy(); _scf_sc["_k"]=_scf_sc["Fornecedor"].astype(str).str.strip().str.upper()
+            _scf_sc["OTIF"]=pd.to_numeric(_scf_sc["OTIF"],errors="coerce"); _scf_sc=_scf_sc.dropna(subset=["OTIF"])
+            if len(_scf_sc)>0:
+                _w_sc={}
+                if "Fornecedor" in df_res.columns and "ValorSugerido" in df_res.columns:
+                    _w_sc=df_res.groupby(df_res["Fornecedor"].astype(str).str.strip().str.upper())["ValorSugerido"].apply(lambda s:s.clip(lower=0).sum()).to_dict()
+                _pw_sc=_scf_sc["_k"].map(_w_sc).fillna(0)
+                _otif_med=float((_scf_sc["OTIF"]*_pw_sc).sum()/_pw_sc.sum()) if float(_pw_sc.sum())>0 else float(_scf_sc["OTIF"].mean())
+                sc_forn=_nota_meta(_otif_med,95,50)
+    except Exception:
+        sc_forn=None
+    sc_prev=float(min(100,max(0,100-mape_ml))) if mape_ml else None
+    _pil_ge=[("Serviço",sc_serv,35),("Eficiência de capital",sc_cap,35),("Fornecedor",sc_forn,15),("Previsão",sc_prev,15)]
+    def _geo_ge(pesos):
+        _it=[(s,w) for (_n,s,_w0),w in zip(_pil_ge,pesos) if s is not None]
+        _sw=sum(w for _,w in _it)
+        if _sw<=0: return None
+        return float(np.exp(sum(w*np.log(min(100,max(5,s))) for s,w in _it)/_sw))
+    _sg_ge=_geo_ge([35,35,15,15])
+    score_final=int(max(0,min(100,round(_sg_ge)))) if _sg_ge is not None else 0
+    _alts_ge=[x for x in [_geo_ge(_p) for _p in ([35,35,15,15],[50,25,15,10],[25,45,15,15],[25,25,25,25])] if x is not None]
+    _sc_min=int(round(min(_alts_ge))) if _alts_ge else score_final
+    _sc_max=int(round(max(_alts_ge))) if _alts_ge else score_final
+    _sc_sem=[_n for _n,_s,_w0 in _pil_ge if _s is None]
 
     if score_final>=85:   score_cor="#059669"; score_lbl="Excelente"; score_stars="★★★★★"
     elif score_final>=70: score_cor="#059669"; score_lbl="Bom";       score_stars="★★★★☆"
@@ -20910,13 +20950,14 @@ elif pg=="gestao_estoque":
     # Tooltip do Score — mostra os pesos de cada componente e a nota que ele
     # tirou, pra quem passar o mouse entender o cálculo sem precisar de mais
     # nada na tela (o "\n" vira quebra de linha no tooltip nativo do navegador).
-    _score_tooltip=(f"Como o Score é calculado:\n"
-        f"Ruptura (peso 35%): {pct_ruptura:.1f}% → {score_ruptura}/100\n"
-        f"Giro (peso 15%): {giro_ano}x → {score_giro}/100\n"
-        f"Cobertura (peso 15%): {cob_media:.0f}d → {score_cobertura}/100\n"
-        f"Capital Parado (peso 15%): {fv(cap_parado)} → {score_capital}/100\n"
-        f"Precisão ML (peso 15%): {f'{mape_ml:.1f}%' if mape_ml else '—'} → {score_ml}/100\n"
-        f"Lead Time (peso 5%): {lt_medio:.0f}d → {score_lead}/100")
+    def _nt_sc(x): return f"{x:.0f}/100" if x is not None else "sem dado"
+    _score_tooltip=(f"Como o Score é calculado (média geométrica de 4 pilares; nota 100 = meta, 0 = limite):\n"
+        f"Serviço (peso 35%): ruptura de {_pct_rup_score:.1f}% {_rup_base} (meta 5%, limite 30%) → {_nt_sc(sc_serv)}\n"
+        f"Eficiência de capital (peso 35%): desvio de {f'{_desv_cap:.0f}%' if _desv_cap is not None else '—'} do estoque ideal, excesso + falta (meta 15%, limite 75%), e capital parado → {_nt_sc(sc_cap)}\n"
+        f"Fornecedor (peso 15%): OTIF de {f'{_otif_med:.0f}%' if _otif_med is not None else '—'}, ponderado pelas compras (meta 95%, limite 50%) → {_nt_sc(sc_forn)}\n"
+        f"Previsão (peso 15%): erro médio {f'{mape_ml:.1f}%' if mape_ml else '—'} → {_nt_sc(sc_prev)}\n"
+        f"Com pesos alternativos o Score fica entre {_sc_min} e {_sc_max}."
+        +(f"\nScore parcial: sem dado de {', '.join(_sc_sem)}; o peso foi redistribuído." if _sc_sem else ""))
 
     # Renderizar header com score
     _header_placeholder.markdown(f'''<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);
@@ -21038,10 +21079,10 @@ elif pg=="gestao_estoque":
     </div>''', unsafe_allow_html=True)
 
     # ── Maiores pressões no Score (pontos perdidos = peso × (100 − nota do componente)) ──
-    _pr_ge=sorted([("Ruptura",0.35*(100-score_ruptura)),("Giro",0.15*(100-score_giro)),("Cobertura",0.15*(100-score_cobertura)),("Capital parado",0.15*(100-score_capital)),("Erro de previsão",0.15*(100-score_ml)),("Lead time",0.05*(100-score_lead))],key=lambda x:-x[1])
-    _pr_txt=" · ".join(f"{_n} (−{_p:.0f} pts)" for _n,_p in _pr_ge[:3] if _p>=1)
+    _pr_ge=sorted([(_n,_s,_w0*(100-_s)) for _n,_s,_w0 in _pil_ge if _s is not None],key=lambda x:-x[2])
+    _pr_txt=" · ".join(f"{_n} (nota {_s:.0f}/100)" for _n,_s,_x in _pr_ge[:3] if _s<80)
     if _pr_txt:
-        st.markdown(f'<div style="font-size:.7rem;color:#6B7280;padding:6px 4px 0 4px">🎯 <b>Maiores pressões no Score {score_final}/100:</b> {_pr_txt}. Pontos perdidos = peso × (100 − nota do componente).</div>',unsafe_allow_html=True)
+        st.markdown(f'<div style="font-size:.7rem;color:#6B7280;padding:6px 4px 0 4px">🎯 <b>Maiores pressões no Score {score_final}/100:</b> {_pr_txt}. Nota 100 = meta, 0 = limite; passe o mouse no Score para ver as metas.</div>',unsafe_allow_html=True)
 
     # ── Evolução dos indicadores: primeiro registro guardado × atual (só aparece com 2 ou mais registros diferentes) ──
     _h_ge=load_hist_painel(st.session_state.cid,filial_sel_ge) if st.session_state.cid else None
