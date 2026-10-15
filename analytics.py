@@ -5495,6 +5495,37 @@ def save_snap(cid,nome,dados,filial=None):
     with open(path_snap(cid,nome,filial),"w",encoding="utf-8") as f:
         json.dump(dados,f,ensure_ascii=False,default=str)
 
+_COLS_HIST_PAINEL=["gerado_em","score_final","val_estoque","pct_ruptura","giro_ano","cob_media","cap_parado","mape_ml"]
+
+def path_hist_painel(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_hist_painel__{_sufixo_filial(filial)}.csv")
+
+def save_hist_painel(cid,dados,filial=None):
+    # Histórico do Dashboard Executivo: acrescenta uma linha só quando algum indicador mudou em relação à última linha
+    # (o snapshot "painel" é sobrescrito a cada cálculo; aqui fica o "antes" para comparar com o "depois").
+    try:
+        _linha={c:dados.get(c) for c in _COLS_HIST_PAINEL}
+        _p=path_hist_painel(cid,filial)
+        def _v(x):
+            try:
+                if x is None or pd.isna(x): return None
+                return round(float(x),2)
+            except Exception: return None
+        _existe=os.path.exists(_p)
+        if _existe:
+            _ant=pd.read_csv(_p)
+            if len(_ant)>0:
+                _ult=_ant.iloc[-1]
+                if [_v(_ult[c]) for c in _COLS_HIST_PAINEL[1:]]==[_v(_linha[c]) for c in _COLS_HIST_PAINEL[1:]]: return
+        pd.DataFrame([_linha]).to_csv(_p,mode="a",header=not _existe,index=False)
+    except Exception:
+        pass
+
+def load_hist_painel(cid,filial=None):
+    _p=path_hist_painel(cid,filial)
+    if not os.path.exists(_p): return None
+    try: return pd.read_csv(_p)
+    except Exception: return None
+
 def load_snap(cid,nome,filial=None):
     p=path_snap(cid,nome,filial)
     if not os.path.exists(p): return None
@@ -20874,6 +20905,7 @@ elif pg=="gestao_estoque":
         "gerado_em":datetime.now().strftime("%Y-%m-%d %H:%M"),
     }
     if st.session_state.cid: save_snap(st.session_state.cid,"painel",st.session_state["painel_snapshot"],filial=filial_sel_ge)
+    if st.session_state.cid: save_hist_painel(st.session_state.cid,st.session_state["painel_snapshot"],filial=filial_sel_ge)
 
     # Tooltip do Score — mostra os pesos de cada componente e a nota que ele
     # tirou, pra quem passar o mouse entender o cálculo sem precisar de mais
@@ -21004,6 +21036,27 @@ elif pg=="gestao_estoque":
         <div class="ge-kpi-sub nt">alvo: {fv(cap_ideal)}</div>
         <div class="ge-kpi-sub" style="color:{cor_est};font-size:.62rem">{status_est}</div>
     </div>''', unsafe_allow_html=True)
+
+    # ── Evolução dos indicadores: primeiro registro guardado × atual (só aparece com 2 ou mais registros diferentes) ──
+    _h_ge=load_hist_painel(st.session_state.cid,filial_sel_ge) if st.session_state.cid else None
+    if _h_ge is not None and len(_h_ge)>=2:
+        _p_ge=_h_ge.iloc[0]; _u_ge=_h_ge.iloc[-1]
+        def _evo_ge(rot,col,fmtf):
+            try:
+                _a=float(_p_ge[col]); _b=float(_u_ge[col])
+                if pd.isna(_a) or pd.isna(_b): return None
+                return f"{rot} {fmtf(_a)} → {fmtf(_b)}"
+            except Exception: return None
+        _partes_ge=[x for x in [
+            _evo_ge("Score","score_final",lambda v:f"{v:.0f}"),
+            _evo_ge("Ruptura","pct_ruptura",lambda v:f"{v:.1f}%".replace(".",",")),
+            _evo_ge("Estoque","val_estoque",lambda v:fv(v).replace("$","&#36;")),
+            _evo_ge("Giro","giro_ano",lambda v:f"{v:.1f}x".replace(".",",")),
+            _evo_ge("Erro médio","mape_ml",lambda v:f"{v:.1f}%".replace(".",","))] if x]
+        try: _dt_ge=pd.to_datetime(str(_p_ge["gerado_em"])).strftime("%d/%m/%Y")
+        except Exception: _dt_ge=str(_p_ge["gerado_em"])[:10]
+        if _partes_ge:
+            st.markdown(f'<div style="font-size:.7rem;color:#6B7280;padding:2px 4px 0 4px">📈 <b>Desde {_dt_ge}</b> ({len(_h_ge)} registros): '+" · ".join(_partes_ge)+'</div>',unsafe_allow_html=True)
 
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
