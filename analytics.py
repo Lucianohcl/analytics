@@ -21060,6 +21060,40 @@ elif pg=="gestao_estoque":
 
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
+    # ── Estoque liberável em destaque (mesma conta do Simulador de Cenário): total + por Curva ──
+    if _cen_ge is not None and len(_cen_ge)>0:
+        def _brl_lb(v): return f"{v:,.0f}".replace(",",".")
+        _lb_exc=float(_cen_ge["Excesso"].sum()); _lb_fal=float(_cen_ge["Falta"].sum())
+        _lb_liq=_lb_exc-_lb_fal; _lb_est=float(_cen_ge["CapitalAtual"].sum())
+        _lb_pct=_lb_liq/_lb_est*100 if _lb_est>0 else 0
+        _lb_pos=_lb_liq>=0
+        _lb_cor="#0F6E56" if _lb_pos else "#B23B3B"
+        _lb_bg="linear-gradient(150deg,#ECFDF5 0%,#D1F5E4 100%)" if _lb_pos else "linear-gradient(150deg,#FEF2F2 0%,#FBE0E0 100%)"
+        _lb_tit="Estoque liberável" if _lb_pos else "Adicional necessário"
+        _lb_c0,_lb_c1=st.columns([1.5,2.5])
+        _lb_c0.markdown(f'''<div style="background:{_lb_bg};border:2px solid {_lb_cor};border-radius:14px;padding:16px 18px;box-shadow:0 8px 22px rgba(15,110,86,.18);min-height:150px">
+<div style="font-size:.66rem;color:{_lb_cor};text-transform:uppercase;letter-spacing:.8px;font-weight:800">💸 {_lb_tit}</div>
+<div style="font-family:Georgia,serif;font-size:2.2rem;font-weight:800;color:{_lb_cor};line-height:1.1;margin:6px 0 2px 0">R&#36; {_brl_lb(abs(_lb_liq))}</div>
+<div style="font-size:.76rem;color:#374151;line-height:1.45">Excesso R&#36; {_brl_lb(_lb_exc)} − falta R&#36; {_brl_lb(_lb_fal)}, sobre R&#36; {_brl_lb(_lb_est)} em estoque ({abs(_lb_pct):.0f}%).</div>
+<div style="font-size:.68rem;color:#6B7280;margin-top:6px;border-top:1px solid #0F6E5533;padding-top:5px">Mesmo número do Simulador de Cenário.</div></div>''',unsafe_allow_html=True)
+        with _lb_c1:
+            if "Classe" in _cen_ge.columns:
+                _lb_g=_cen_ge.assign(Classe=_cen_ge["Classe"].fillna("—").astype(str)).groupby("Classe").agg(Excesso=("Excesso","sum"),Falta=("Falta","sum"),Itens=("Produto","nunique")).reset_index().sort_values("Classe")
+                _lb_g["Liq"]=_lb_g["Excesso"]-_lb_g["Falta"]
+                _lb_cc=st.columns(max(1,len(_lb_g)))
+                for _lb_col,(_,_lb_r) in zip(_lb_cc,_lb_g.iterrows()):
+                    _lb_l=float(_lb_r["Liq"]); _lb_ok=_lb_l>=0
+                    _lb_cr="#0F6E56" if _lb_ok else "#B23B3B"
+                    _lb_sh=float(_lb_r["Excesso"])/_lb_exc*100 if _lb_exc>0 else 0
+                    _lb_col.markdown(f'''<div style="background:#FFFFFF;border:1px solid {_lb_cr}55;border-top:4px solid {_lb_cr};border-radius:12px;padding:12px 14px;min-height:150px">
+<div style="font-size:.64rem;color:{_lb_cr};text-transform:uppercase;letter-spacing:.6px;font-weight:800">Curva {_lb_r["Classe"]} · {int(_lb_r["Itens"])} produtos</div>
+<div style="font-family:Georgia,serif;font-size:1.5rem;font-weight:800;color:#14243B;line-height:1.15;margin:5px 0 2px 0">R&#36; {_brl_lb(abs(_lb_l))}</div>
+<div style="font-size:.7rem;font-weight:700;color:{_lb_cr}">{"liberável" if _lb_ok else "adicional necessário"}</div>
+<div style="font-size:.68rem;color:#6B7280;line-height:1.4;margin-top:5px">Excesso R&#36; {_brl_lb(float(_lb_r["Excesso"]))} ({_lb_sh:.0f}% do excesso total)<br>Falta R&#36; {_brl_lb(float(_lb_r["Falta"]))}</div></div>''',unsafe_allow_html=True)
+            else:
+                st.caption("Sem a coluna Curva no resultado do Motor: mostrando só o total.")
+        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+
     # ── LINHA 2: ABC + GIRO/CAPITAL POR CLASSE + RADAR + COBERTURA ─────
     g1,g2,g3=st.columns([1,1.1,1])
 
