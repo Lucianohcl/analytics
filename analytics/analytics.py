@@ -20668,8 +20668,8 @@ elif pg=="gestao_estoque":
     st.markdown("""<style>
 .ge-kpi-box{background:#fff;border:1px solid #EBEBEB;border-radius:10px;padding:7px 6px;text-align:center}
 .block-container{padding-top:1rem!important}
-.ge-kpi-lbl{font-size:.72rem;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;line-height:1.3;font-weight:600}
-.ge-kpi-val{font-family:Georgia,serif;font-size:1.05rem;font-weight:700;color:#14243B;line-height:1.1}
+.ge-kpi-lbl{font-size:.78rem;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;line-height:1.3;font-weight:600}
+.ge-kpi-val{font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:#14243B;line-height:1.15}
 .ge-kpi-sub{font-size:.68rem;margin-top:2px}
 .ge-kpi-sub.up{color:#059669}.ge-kpi-sub.dn{color:#DC2626}.ge-kpi-sub.nt{color:#aaa}
 .ge-sec{font-family:Georgia,serif;font-size:.78rem;font-weight:700;color:#14243B;
