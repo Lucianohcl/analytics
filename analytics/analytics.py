@@ -20672,9 +20672,9 @@ elif pg=="gestao_estoque":
 .ge-kpi-val{font-family:Georgia,serif;font-size:1.25rem;font-weight:700;color:#14243B;line-height:1.15}
 .ge-kpi-sub{font-size:.68rem;margin-top:2px}
 .ge-kpi-sub.up{color:#059669}.ge-kpi-sub.dn{color:#DC2626}.ge-kpi-sub.nt{color:#aaa}
-.st-key-ge_ir_parecer button,.st-key-ge_ir_parecer_forn button{background:linear-gradient(135deg,#0F6E56 0%,#085041 100%)!important;border:none!important;border-radius:999px!important;box-shadow:0 4px 12px rgba(15,110,86,.28)!important;transition:transform .15s,box-shadow .15s}
-.st-key-ge_ir_parecer button p,.st-key-ge_ir_parecer_forn button p{color:#fff!important;font-weight:700!important;letter-spacing:.02em}
-.st-key-ge_ir_parecer button:hover,.st-key-ge_ir_parecer_forn button:hover{transform:translateX(4px);box-shadow:0 6px 16px rgba(15,110,86,.38)!important}
+.st-key-ge_ir_parecer button,.st-key-ge_ir_parecer_fim button{min-height:3.4rem!important;background:linear-gradient(135deg,#0F6E56 0%,#085041 100%)!important;border:2px solid #F0A500!important;border-radius:14px!important;box-shadow:0 8px 20px rgba(15,110,86,.32)!important;transition:transform .15s,box-shadow .15s}
+.st-key-ge_ir_parecer button p,.st-key-ge_ir_parecer_fim button p{color:#fff!important;font-size:1.05rem!important;font-weight:800!important;letter-spacing:.02em}
+.st-key-ge_ir_parecer button:hover,.st-key-ge_ir_parecer_fim button:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(15,110,86,.42)!important}
 .ge-sec{font-family:Georgia,serif;font-size:.78rem;font-weight:700;color:#14243B;
   padding:5px 10px;border-left:3px solid #F0A500;background:#FFFBF0;
   border-radius:0 5px 5px 0;margin-bottom:8px}
@@ -20990,6 +20990,12 @@ elif pg=="gestao_estoque":
     # ── LINHA 1: KPIs ──────────────────────────────────────────────────
     # ── LINHA 1: KPIs ──────────────────────────────────────────────────
     # ── LINHA 1: KPIs ──────────────────────────────────────────────────
+    # ── Atalho para o Parecer Comercial da IA (usa os números deste painel) ──
+    _ba_c1,_ba_c2=st.columns([1.6,2.4])
+    with _ba_c1:
+        st.markdown('<div style="font-size:.78rem;color:#6B7280;padding-top:14px">Leitura executiva dos números deste painel, gerada por IA.</div>',unsafe_allow_html=True)
+    with _ba_c2:
+        if st.button("🧭 Ver o Parecer Comercial da IA dos Dashboards  ➜",key="ge_ir_parecer",use_container_width=True,help="Abre o Parecer Consolidado com IA (módulo comercial), que usa os números deste painel."): ir("parecer_ia")
     k1,k2,k3,k4,k5,k6,k7,k8=st.columns(8)
 
     # k2 — Giro
@@ -21326,9 +21332,6 @@ elif pg=="gestao_estoque":
         if _alertas_forn:
             st.markdown('<div class="al-w">⚠️ '+"<br>".join(_alertas_forn[:2])+'</div>',unsafe_allow_html=True)
 
-    with f1:
-        if st.button("Ver o parecer comercial da IA sobre os fornecedores  ➜",key="ge_ir_parecer_forn",use_container_width=True,help="Abre o Parecer Consolidado com IA (módulo comercial), que analisa fornecedores, estoque e compras com os números deste painel."): ir("parecer_ia")
-
     with f_cob:
         st.markdown('<div class="ge-sec">📦 Cobertura por Categoria</div>', unsafe_allow_html=True)
         if "CoberturaDias" in df_res.columns and "GiroAtual" in df_res.columns:
@@ -21506,5 +21509,12 @@ elif pg=="gestao_estoque":
 <div style="font-size:.7rem;color:{_tx_eco};opacity:.85;margin-top:8px">últimos {_meses_econ_ge} meses · estimativa em simulação, não resultado realizado</div></div>''', unsafe_allow_html=True)
         st.markdown(f'''<div style="font-size:.66rem;color:#9A7B2F;line-height:1.5;padding:8px 4px 0 4px">Janela de <b>{_meses_econ_ge} meses</b> (a mesma escolhida na Validação Econômica do Compras), proporcional à simulação de 18 meses · Amostra: <b>{_n_prod_econ_ge}</b> produtos testados · {_aviso_esc_ge}</div>''', unsafe_allow_html=True)
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+
+    # ── Atalho final para o Parecer Comercial da IA ──
+    st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
+    _bf1,_bf2,_bf3=st.columns([1,2,1])
+    with _bf2:
+        st.markdown('<div style="text-align:center;font-size:.8rem;color:#6B7280;margin-bottom:6px">Quer a leitura executiva destes números?</div>',unsafe_allow_html=True)
+        if st.button("🧭 Ver o Parecer Comercial da IA dos Dashboards  ➜",key="ge_ir_parecer_fim",use_container_width=True,help="Abre o Parecer Consolidado com IA (módulo comercial), que usa os números deste painel."): ir("parecer_ia")
 
     st.markdown('<div style="background:#F8F5EE;border-top:1px solid #EBEBEB;padding:5px 16px;border-radius:0 0 10px 10px;font-size:.60rem;color:#bbb;margin-top:6px">ℹ️ Dados calculados pelo Motor de Compras e ML — rode novamente para atualizar.</div>',unsafe_allow_html=True)
