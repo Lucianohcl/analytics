@@ -6567,7 +6567,7 @@ with st.sidebar:
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">MÓDULO COMERCIAL</div>',unsafe_allow_html=True)
-    if st.button("📊 Dashboard Executivo", key="sb_gestao_estoque", use_container_width=True): ir("gestao_estoque")
+    if st.button("📊 Dashboard Executivo/Comercial", key="sb_gestao_estoque", use_container_width=True): ir("gestao_estoque")
     if st.button("📦 Gestão Comercial de Compras", key="sb_compras", use_container_width=True): ir("compras")
     if st.button("💰 Fluxo de Caixa Comercial Projetado", key="sb_fluxo_compras", use_container_width=True): ir("fluxo_compras")
     if st.button("🧠 Motor de Previsão Estatística Avançada - ML", key="sb_config_ml", use_container_width=True): ir("config_ml")
