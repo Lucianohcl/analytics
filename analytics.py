@@ -6606,6 +6606,11 @@ with st.sidebar:
 # ═══════════════════════════════════════════════════
 # HELPERS
 # ═══════════════════════════════════════════════════
+st.markdown("""<style>
+section[data-testid="stSidebar"],section[data-testid="stSidebar"]>div,div[data-testid="stSidebarContent"]{
+  background:linear-gradient(180deg,#0B1A33 0%,#050D1C 100%)!important;background-color:#0B1A33!important;}
+</style>""",unsafe_allow_html=True)
+
 def hdr(titulo,sub=""):
     st.markdown(f'''<div style="background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%);border:1px solid rgba(217,189,130,.55);border-top:2px solid #D9BD82;
       border-radius:14px;padding:26px 32px;margin-bottom:20px;box-shadow:0 4px 14px rgba(0,0,0,.12)">
