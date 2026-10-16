@@ -8906,7 +8906,8 @@ elif pg=="dash_fin":
         st.plotly_chart(_fig_h,use_container_width=True)
     else:
         _xp=_x_pr[:_n_pr]
-        _fig_h.add_trace(go.Scatter(x=[_xh[-1]]+_xp,y=[_sh[-1]]+_sp_fin,name="Projeção (modelos ML)",mode="lines+markers",line=dict(color="#0F6E56",width=3,dash="dash"),marker=dict(size=7,symbol="diamond"),hovertemplate="<b>Projeção</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
+        _fig_h.add_trace(go.Scatter(x=[_xh[-1],_xp[0]],y=[_sh[-1],_sp_fin[0]],mode="lines",line=dict(color="#0F6E56",width=3,dash="dash"),showlegend=False,hoverinfo="skip"))
+        _fig_h.add_trace(go.Scatter(x=_xp,y=_sp_fin,name="Projeção (modelos ML)",mode="lines+markers",line=dict(color="#0F6E56",width=3,dash="dash"),marker=dict(size=7,symbol="diamond"),hovertemplate="<b>Projeção</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
         _fig_h.add_hline(y=0,line_dash="dot",line_color="#9CA3AF",opacity=.7)
         _fig_h.add_shape(type="line",x0=_xh[-1],x1=_xh[-1],y0=0,y1=1,yref="paper",line=dict(color="#9CA3AF",width=1,dash="dot"))
         _fig_h.add_annotation(x=_xh[-1],y=1.02,yref="paper",text="hoje",showarrow=False,font=dict(size=10,color="#6B7280"))
