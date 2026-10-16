@@ -9113,7 +9113,7 @@ elif pg=="dash_fin":
             _dg=_df_res_fd[_df_res_fd["CoberturaDias"].notna()&(_df_res_fd["CoberturaDias"]<999)&(_df_res_fd["CoberturaDias"]>0)]
             if len(_dg)>0: _cob_c=365/float((_dg["GiroAtual"]*_dg["EstoqueAtual"]*_dg["CustoUnitario"]).sum()/(_dg["EstoqueAtual"]*_dg["CustoUnitario"]).sum())
         except Exception: _cob_c=None
-    if _cob_c and _pme>0 and abs(_cob_c-_pme)/max(_cob_c,_pme)>0.5: _avisos.append(f"PME do balanço ({_pme:.0f} d) e cobertura do Motor ({_cob_c:.0f} d) bem diferentes: conferir estoque e CMV importados")
+    # (comparação PME do balanço x cobertura do Motor removida: bases e escopos diferentes)
     st.markdown(f'<div class="fd-q">🧪 <b>Qualidade do dado:</b> {len(set(_per_all))} meses ({_rot_fd[0]} a {_rot_fd[-1]}) · última importação {_ts}. '+(("⚠️ "+" · ".join(_avisos)) if _avisos else "Nenhuma inconsistência detectada.")+'</div>',unsafe_allow_html=True)
  
     # ── ATALHO FINAL PARA O PARECER ──────────────────────────────────────
