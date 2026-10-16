@@ -8940,9 +8940,9 @@ elif pg=="dash_fin":
             _ef_fim=_cum[-1]; _pos=_ef_fim>=0
             st.markdown(f'<div class="fd-q" style="margin-top:0"><b>Como ler:</b> a projeção de caixa da empresa (gráfico acima) já supõe que a categoria continua comprando no <b>ritmo habitual</b> ({_fd_m(_hab)}/mês). Aqui trocamos esse ritmo habitual pelo <b>plano de compras que você simulou no Motor de Compras</b> e medimos a diferença no caixa de toda a empresa. <b>Verde</b> = o plano deixa mais dinheiro no caixa do que o ritmo habitual deixaria. <b>Vermelho</b> = o plano tira dinheiro do caixa (compra mais, ou paga antes de receber). O pagamento das compras é deslocado pelo prazo médio de pagamento ({_pmp:.0f} dias).</div>'.replace("$","&#36;"),unsafe_allow_html=True)
             _v1,_v2,_v3=st.columns(3)
-            _v1.markdown(_fd_card(f"Efeito do plano até {_xs[-1]}",("+" if _pos else "−")+_fd_m(abs(_ef_fim)),"melhora o caixa da empresa" if _pos else "piora o caixa da empresa",ac="#059669" if _pos else "#DC2626"),unsafe_allow_html=True)
-            _v2.markdown(_fd_card(f"Saldo da empresa em {_xs[-1]}",_fd_m(_sp_com[-1]),f"sem o plano (ritmo habitual): {_fd_m(_sp_sem[-1])}",ac="#14243B"),unsafe_allow_html=True)
-            _v3.markdown(_fd_card("Mês mais pesado para o caixa",_xs[_pior] if _imp[_pior]<0 else "nenhum",(f"−{_fd_m(abs(_imp[_pior]))} no mês" if _imp[_pior]<0 else "nenhum mês pressiona o caixa"),ac="#DC2626" if _imp[_pior]<0 else "#059669"),unsafe_allow_html=True)
+            _v1.markdown(_fd_card(f"1) Caixa em {_xs[-1]} SEM o plano",_fd_m(_sp_sem[-1]),"projeção da empresa com compras no ritmo habitual",ac="#0F6E56"),unsafe_allow_html=True)
+            _v2.markdown(_fd_card("2) Efeito do plano da categoria",("+" if _pos else "−")+_fd_m(abs(_ef_fim)),"dinheiro a mais no caixa" if _pos else "dinheiro a menos no caixa",ac="#059669" if _pos else "#DC2626"),unsafe_allow_html=True)
+            _v3.markdown(_fd_card(f"1 {'+' if _pos else '−'} 2) Caixa em {_xs[-1]} COM o plano",_fd_m(_sp_com[-1]),"resultado final para a empresa",ac="#14243B"),unsafe_allow_html=True)
             _c1,_c2=st.columns(2)
             _fig_i=make_subplots(specs=[[{"secondary_y":True}]])
             _fig_i.add_trace(go.Bar(x=_xs,y=_imp,name="Efeito no caixa do mês",marker_color=["#059669" if v>=0 else "#DC2626" for v in _imp],opacity=.9,
