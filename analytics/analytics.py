@@ -8019,9 +8019,7 @@ elif pg=="recebidos":
                         st.markdown('<div class="al-w">⚠️ Escolha um tipo válido acima antes de confirmar.</div>',unsafe_allow_html=True)
 
 # ── DRE ─────────────────────────────────────────────
-elif pg=="dash_fin":
-    hdr("📊 Dashboard Financeiro","Visão executiva da saúde financeira da empresa")
-    st.markdown('<div class="al-i">🚧 Página em construção. Os blocos serão definidos a partir das páginas do Módulo Financeiro.</div>',unsafe_allow_html=True)
+
 
 elif pg=="dash_fin":
     from plotly.subplots import make_subplots
