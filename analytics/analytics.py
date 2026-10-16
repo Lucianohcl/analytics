@@ -67,7 +67,7 @@ section[data-testid="stSidebar"] div[style*="background:#085041"]{background:#05
 section[data-testid="stSidebar"] div[style*="color:#9FE1CB"]{color:#CFE0FF!important;}
 html body section[data-testid="stSidebar"],html body section[data-testid="stSidebar"]>div,html body div[data-testid="stSidebarContent"]{
   background:linear-gradient(180deg,#D9E8FF 0%,#EBF3FF 100%)!important;background-color:#D9E8FF!important;}
-html body section[data-testid="stSidebar"] div[style*="background:#0F6E56"]{background:#ADC9FD!important;}
+html body section[data-testid="stSidebar"] div[style*="background:#0F6E56"],html body section[data-testid="stSidebar"] div[style*="rgb(15, 110, 86)"]{background:#ADC9FD!important;}
 html body section[data-testid="stSidebar"] div[style*="background:#085041"]{background:#EBF3FF!important;border-color:#ADC9FD!important;}
 html body section[data-testid="stSidebar"] div[style*="color:#9FE1CB"]{color:#112241!important;}
 section[data-testid="stSidebar"] div.stButton>button{
@@ -85,7 +85,7 @@ section[data-testid="stSidebar"] div.stButton>button:hover{
   filter:brightness(1.12);transform:translateY(-2px);
   box-shadow:0 8px 18px rgba(0,0,0,.4),0 0 20px rgba(217,189,130,.5)!important;
   border-color:#F4E4BC!important;}
-section[data-testid="stSidebar"] .stCaption,section[data-testid="stSidebar"] p{color:#A9A290!important;}
+section[data-testid="stSidebar"] .stCaption,section[data-testid="stSidebar"] p,section[data-testid="stSidebar"] summary,section[data-testid="stSidebar"] label{color:#34343F!important;}
 .mc{background:white;border:1px solid #E8ECF0;border-radius:12px;padding:10px 18px;
   text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06);}
 .mc-lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;
