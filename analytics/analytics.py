@@ -6592,10 +6592,10 @@ with st.sidebar:
 # HELPERS
 # ═══════════════════════════════════════════════════
 def hdr(titulo,sub=""):
-    st.markdown(f'''<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);
+    st.markdown(f'''<div style="background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%);border:1px solid rgba(217,189,130,.55);border-top:2px solid #D9BD82;
       border-radius:14px;padding:26px 32px;margin-bottom:20px;box-shadow:0 4px 14px rgba(0,0,0,.12)">
-      <div style="font-family:Georgia,serif;font-size:1.5rem;font-weight:600;color:#fff">{titulo}</div>
-      <div style="color:#9FE1CB;font-size:.85rem;margin-top:6px;letter-spacing:.02em">{sub}</div>
+      <div style="font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:#fff">{titulo}</div>
+      <div style="color:#F4E4BC;font-size:.85rem;margin-top:6px;letter-spacing:.02em">{sub}</div>
       </div>''',unsafe_allow_html=True)
 
 def mc(col,lbl,val,cls="",sub=""):
@@ -8159,12 +8159,12 @@ elif pg=="dash_fin_antigo":
     _saldo_fim_fd=float(_saldo_fd.iloc[_idx_fd[-1]])
  
     # ── 1) CABEÇALHO COM O SCORE ─────────────────────────────────────────
-    _hdr_fd.markdown(f'''<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:14px;padding:22px 32px;margin-bottom:4px;box-shadow:0 4px 14px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    _hdr_fd.markdown(f'''<div style="background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%);border:1px solid rgba(217,189,130,.55);border-top:2px solid #D9BD82;border-radius:14px;padding:22px 32px;margin-bottom:4px;box-shadow:0 4px 14px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="background:#9FE1CB;border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px">💼</div>
+        <div style="background:#D9BD82;border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px">💼</div>
         <div>
           <div style="font-family:Georgia,serif;font-size:1.05rem;font-weight:600;color:#fff">DASHBOARD FINANCEIRO | SAÚDE FINANCEIRA DA EMPRESA</div>
-          <div style="color:#9FE1CB;font-size:.78rem;margin-top:4px">{(filial_sel_fd or "(Todas as filiais)")} · {_per_txt_fd}</div>
+          <div style="color:#F4E4BC;font-size:.78rem;margin-top:4px">{(filial_sel_fd or "(Todas as filiais)")} · {_per_txt_fd}</div>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:12px">
@@ -8591,9 +8591,9 @@ elif pg=="dash_fin_antigo":
 elif pg=="dash_fin":
     from plotly.subplots import make_subplots
     st.markdown("""<style>
-.fd-hero{background:linear-gradient(135deg,#0B3D33 0%,#0F6E56 55%,#14876A 100%);border-radius:16px;padding:20px 28px;box-shadow:0 8px 24px rgba(11,61,51,.22);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:12px}
+.fd-hero{background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%);border:1px solid rgba(217,189,130,.55);border-top:2px solid #D9BD82;border-radius:16px;padding:20px 28px;box-shadow:0 8px 24px rgba(11,61,51,.22);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:12px}
 .fd-hero .t{font-family:Georgia,serif;font-size:1.15rem;font-weight:700;color:#fff;letter-spacing:.01em}
-.fd-hero .s{color:#BFEBDD;font-size:.8rem;margin-top:4px}
+.fd-hero .s{color:#F4E4BC;font-size:.8rem;margin-top:4px}
 .fd-score{display:flex;align-items:center;gap:14px}
 .fd-score .n{font-family:Georgia,serif;font-size:3.4rem;font-weight:800;color:#fff;line-height:1}
 .fd-score .d{font-size:1rem;color:#BFEBDD}
@@ -8737,7 +8737,7 @@ elif pg=="dash_fin":
  
     _hdr_fd.markdown(f'''<div class="fd-hero">
       <div style="display:flex;align-items:center;gap:12px">
-        <div style="background:#9FE1CB;border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:22px">💼</div>
+        <div style="background:#D9BD82;border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:22px">💼</div>
         <div><div class="t">DASHBOARD FINANCEIRO</div><div class="s">Visão do CFO · {(filial_sel_fd or "(Todas as filiais)")} · {_per_txt_fd}</div></div>
       </div>
       <div class="fd-score">
@@ -22056,14 +22056,14 @@ elif pg=="gestao_estoque":
         +(f"\nScore parcial: sem dado de {', '.join(_sc_sem)}; o peso foi redistribuído." if _sc_sem else ""))
 
     # Renderizar header com score
-    _header_placeholder.markdown(f'''<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);
+    _header_placeholder.markdown(f'''<div style="background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%);border:1px solid rgba(217,189,130,.55);border-top:2px solid #D9BD82;
       border-radius:14px;padding:22px 32px;margin-bottom:4px;box-shadow:0 4px 14px rgba(0,0,0,.12);
       display:flex;align-items:center;justify-content:space-between">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="background:#9FE1CB;border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px">📦</div>
+        <div style="background:#D9BD82;border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px">📦</div>
         <div>
           <div style="font-family:Georgia,serif;font-size:1.05rem;font-weight:600;color:#fff">PAINEL EXECUTIVO | GESTÃO INTELIGENTE DE ESTOQUES</div>
-          <div style="color:#9FE1CB;font-size:.78rem;margin-top:4px;letter-spacing:.02em">Da previsão de demanda ao planejamento de compras.</div>
+          <div style="color:#F4E4BC;font-size:.78rem;margin-top:4px;letter-spacing:.02em">Da previsão de demanda ao planejamento de compras.</div>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
