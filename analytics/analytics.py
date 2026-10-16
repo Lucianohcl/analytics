@@ -6537,15 +6537,17 @@ with st.sidebar:
     st.divider()
 
     # GESTÃO
-    def _faixa_sb(txt):
-        st.markdown(f'<div style="background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%);color:#fff;font-family:Georgia,serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:6px;border:1px solid rgba(217,189,130,.55);border-top:2px solid #D9BD82;box-shadow:0 2px 8px rgba(0,0,0,.25);display:inline-block;margin-bottom:4px">{txt}</div>',unsafe_allow_html=True)
-    _faixa_sb("GESTÃO")
+    st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
+                'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
+                'display:inline-block;margin-bottom:4px">GESTÃO</div>',unsafe_allow_html=True)
     if st.button("🏢 Clientes",        key="sb_clientes",   use_container_width=True): ir("clientes")
     if st.button("➕ Novo Cliente",     key="sb_novo",        use_container_width=True): ir("novo")
     if st.button("⚙️ Configurações",   key="sb_config",      use_container_width=True): ir("config")
 
     st.divider()
-    _faixa_sb("IMPORTAR")
+    st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
+                'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
+                'display:inline-block;margin-bottom:4px">IMPORTAR</div>',unsafe_allow_html=True)
     if st.button("🧭 Assistente de Conexão", key="sb_assistente", use_container_width=True): ir("assistente_conexao")
     if st.button("📊 Financeiro",  key="sb_importar",   use_container_width=True): ir("importar")
     if st.button("🔗 ERP",  key="sb_erp",         use_container_width=True): ir("erp")
@@ -6556,11 +6558,15 @@ with st.sidebar:
     if st.button(_label_pend_sb, key="sb_recebidos", use_container_width=True): ir("recebidos")
 
     st.divider()
-    _faixa_sb("VALIDAÇÃO")
+    st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
+                'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
+                'display:inline-block;margin-bottom:4px">VALIDAÇÃO</div>',unsafe_allow_html=True)
     if st.button("🔬 Validação Estatística de Previsões Comerciais", key="sb_ml_produtos", use_container_width=True): ir("ml_produtos")
 
     st.divider()
-    _faixa_sb("MÓDULO COMERCIAL")
+    st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
+                'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
+                'display:inline-block;margin-bottom:4px">MÓDULO COMERCIAL</div>',unsafe_allow_html=True)
     if st.button("📊 Dashboard Comercial", key="sb_gestao_estoque", use_container_width=True): ir("gestao_estoque")
     if st.button("📦 Gestão Comercial de Compras", key="sb_compras", use_container_width=True): ir("compras")
     if st.button("💰 Fluxo de Caixa Comercial Projetado", key="sb_fluxo_compras", use_container_width=True): ir("fluxo_compras")
@@ -6568,11 +6574,15 @@ with st.sidebar:
     if st.button("📉 Pareto & GMROI", key="sb_pareto", use_container_width=True): ir("pareto")
 
     st.divider()
-    _faixa_sb("VALIDAÇÃO")
+    st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
+                'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
+                'display:inline-block;margin-bottom:4px">VALIDAÇÃO</div>',unsafe_allow_html=True)
     if st.button("🔬 Validação Estatística de Previsões Financeiras", key="sb_ml_financeiro_val", use_container_width=True): ir("ml_financeiro_val")
 
     st.divider()
-    _faixa_sb("MÓDULO FINANCEIRO")
+    st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
+                'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
+                'display:inline-block;margin-bottom:4px">MÓDULO FINANCEIRO</div>',unsafe_allow_html=True)
     if st.button("📊 Dashboard Financeiro", key="sb_dash_fin", use_container_width=True): ir("dash_fin")
     if st.button("📄 DRE",             key="sb_dre",         use_container_width=True): ir("dre")
     if st.button("🏦 Balanço",         key="sb_balanco",     use_container_width=True): ir("balanco")
@@ -6584,7 +6594,9 @@ with st.sidebar:
     if st.button("📤 Exportação",      key="sb_exportar",    use_container_width=True): ir("exportar")
 
     st.divider()
-    _faixa_sb("ANÁLISE")
+    st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
+                'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
+                'display:inline-block;margin-bottom:4px">ANÁLISE</div>',unsafe_allow_html=True)
     if st.button("🧭 Parecer Consolidado", key="sb_parecer_ia", use_container_width=True): ir("parecer_ia")
     
 
