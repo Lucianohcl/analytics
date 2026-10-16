@@ -9031,11 +9031,7 @@ elif pg=="dash_fin":
 
             if _liq[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: entram {_fd_m(_ent[_pior])} e saem {_fd_m(_sai[_pior])}, resultado de −{_fd_m(abs(_liq[_pior]))}. Mês mais leve: {_xs[_melhor]} ({'+' if _liq[_melhor]>=0 else '−'}{_fd_m(abs(_liq[_melhor]))})."))
             else: _itens.append((2,"Nenhum mês consome caixa",f"Em todos os meses entra mais do que sai. Melhor mês: {_xs[_melhor]} (+{_fd_m(_liq[_melhor])})."))
-            _vr_med=sum((_vr[i] if i<len(_vr) else _rb3)*_cob_motor for i in range(_i0,_i0+_nn))/_nn
-            _vc_med=sum(_vend)/_nn
-            if _vr_med>0 and _vc_med>0:
-                _dv2=(_vc_med/_vr_med-1)*100
-                _itens.append((1 if abs(_dv2)>=15 else 2,"Projeção comercial × financeira",f"Para o mesmo escopo, o Comercial projeta vendas de {_fd_m(_vc_med)}/mês e o Financeiro, de ≈ {_fd_m(_vr_med)}/mês ({_dv2:+.0f}%). Os dois modelos são rodados separadamente; este bloco usa só a projeção do Comercial, igual à página Fluxo de Caixa Comercial Projetado."))
+
             try:
                 _cenx=preparar_cenario_motor(_df_res_fd); _libx=float(_cenx["Excesso"].sum()-_cenx["Falta"].sum())
                 if _libx>0 and _saldo_hoje>0: _itens.append((2,"Estoque liberável (potencial)",f"O estoque em excesso da seleção, descontada a falta, soma {_fd_m(_libx)}, equivalente a {_libx/_saldo_hoje*100:.0f}% do saldo atual de caixa. É potencial simulado, ainda não é caixa."))
