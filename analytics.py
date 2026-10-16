@@ -8814,6 +8814,9 @@ elif pg=="dash_fin":
     _rec_com=None
     if _tem_com and {"DemandaPrevMes(un)","PrecoVenda"}.issubset(_df_res_fd.columns):
         _rec_com=float((pd.to_numeric(_df_res_fd["DemandaPrevMes(un)"],errors="coerce").fillna(0)*pd.to_numeric(_df_res_fd["PrecoVenda"],errors="coerce").fillna(0)).sum())
+    _rb3=float(pd.to_numeric(df_fd["receita bruta de vendas"],errors="coerce").tail(3).mean()) if "receita bruta de vendas" in df_fd.columns else 0.0
+    _cob_motor=min(1.0,_rec_com/_rb3) if (_rec_com and _rb3>0) else 1.0
+    _base_esc=_compras_base*_cob_motor
     _n_pr=0; _ve=[]; _vs=[]; _vr=[]
     _cr="receita bruta de vendas"; _ce,_cs="Disponibilidades entradas","Disponibilidades Saida"
     if _projs_fd:
@@ -8845,8 +8848,8 @@ elif pg=="dash_fin":
         if _lb in _plano_map: _ult_plano=_i
     _liq_adj=[]
     for _i in range(_n_pr):
-        _pl=_plano_map.get(_x_pr[_i],0.0) if _i<=_ult_plano else _compras_base
-        _liq_adj.append(_liq_fin[_i]+_compras_base-_pl)
+        _pl=_plano_map.get(_x_pr[_i],0.0) if _i<=_ult_plano else _base_esc
+        _liq_adj.append(_liq_fin[_i]+_base_esc-_pl)
     _sp_adj=[]; _acc=_saldo_hoje
     for _x in _liq_adj: _acc+=_x; _sp_adj.append(_acc)
     _tem_cruz=_n_pr>0 and _ult_plano>=0
@@ -8864,8 +8867,10 @@ elif pg=="dash_fin":
     if _tem_cruz:
         _imp=_sp_adj[-1]-_sp_fin[-1]
         _g=0 if (_sp_adj[-1]<0) else (1 if _imp<-0.1*max(abs(_saldo_hoje),1) else 2)
-        _add(_g,"Plano de compras × caixa",f"Se o plano do comercial for executado, o saldo em {_x_pr[_n_pr-1]} fica {_fd_m(_sp_adj[-1])}, "+("abaixo" if _imp<0 else "acima")+f" da projeção financeira pura ({_fd_m(_sp_fin[-1])}), diferença de {_fd_m(abs(_imp))}. Estimativa: troca o nível habitual de compras ({_fd_m(_compras_base)}/mês, média dos 6 últimos meses) pelo plano mês a mês.",("Revisar com o Comercial os meses de pico do plano ou escalonar os pedidos." if _imp<0 else "Há folga: o plano cabe no caixa projetado."))
-    if _rec_com and _vr:
+        _add(_g,"Plano de compras × caixa",f"Se o plano do comercial for executado, o saldo em {_x_pr[_n_pr-1]} fica {_fd_m(_sp_adj[-1])}, "+("abaixo" if _imp<0 else "acima")+f" da projeção financeira pura ({_fd_m(_sp_fin[-1])}), diferença de {_fd_m(abs(_imp))}. Estimativa: troca o nível habitual de compras do mesmo escopo do Motor ({_fd_m(_base_esc)}/mês, {_cob_motor*100:.0f}% das compras da empresa) pelo plano mês a mês.",("Revisar com o Comercial os meses de pico do plano ou escalonar os pedidos." if _imp<0 else "Há folga: o plano cabe no caixa projetado."))
+    if _rec_com and _rb3>0 and _cob_motor<0.85:
+        _add(1,"O Motor de Compras cobre só parte da empresa",f"A demanda prevista × preço do Motor dá {_fd_m(_rec_com)}/mês, cerca de {_cob_motor*100:.0f}% da receita bruta realizada da empresa ({_fd_m(_rb3)}/mês, média de 3 meses). Ele só prevê as categorias/produtos que foram rodados; por isso não comparei receita com a projeção financeira (que é da empresa toda) e confrontei o plano de compras apenas com a parcela proporcional das compras habituais ({_fd_m(_base_esc)}/mês).","Rodar o Motor de Compras para todas as categorias para cruzar a empresa inteira.")
+    elif _rec_com and _vr:
         _rfin=sum(_vr)/len(_vr); _dv=(_rec_com/_rfin-1)*100 if _rfin else 0
         if abs(_dv)>=15: _add(1,"Comercial e Financeiro projetam receitas diferentes",f"A demanda prevista × preço no Motor de Compras dá {_fd_m(_rec_com)}/mês; a projeção financeira de receita bruta dá {_fd_m(_rfin)}/mês ({_dv:+.0f}%).","Alinhar as premissas: uma das duas previsões está otimista ou conservadora demais.")
         else: _add(2,"Comercial e Financeiro alinhados na receita",f"Demanda × preço ({_fd_m(_rec_com)}/mês) e projeção financeira ({_fd_m(_rfin)}/mês) diferem só {_dv:+.0f}%.","")
@@ -8902,7 +8907,7 @@ elif pg=="dash_fin":
         _plano_y=[(_plano_map.get(l,0.0) if i<=_ult_plano else None) for i,l in enumerate(_xp)]
         if _tem_cruz:
             _fig_h.add_trace(go.Bar(x=_xp,y=_plano_y,name="Plano de compras (comercial)",marker_color="rgba(169,118,47,.55)",hovertemplate="<b>Plano de compras</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"),secondary_y=True)
-            _fig_h.add_trace(go.Scatter(x=_xp,y=[_compras_base]*_n_pr,name="Compras habituais (média 6m)",mode="lines",line=dict(color="#A9762F",width=1.5,dash="dot"),hoverinfo="skip"),secondary_y=True)
+            _fig_h.add_trace(go.Scatter(x=_xp,y=[_base_esc]*_n_pr,name="Compras habituais do escopo do Motor (média 6m)",mode="lines",line=dict(color="#A9762F",width=1.5,dash="dot"),hoverinfo="skip"),secondary_y=True)
         _fig_h.add_trace(go.Scatter(x=_xh,y=_sh,name="Saldo realizado (retrovisor)",mode="lines+markers",line=dict(color="#14243B",width=3.5),marker=dict(size=6,line=dict(color="white",width=2)),fill="tozeroy",fillcolor="rgba(20,36,59,.07)",hovertemplate="<b>Realizado</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
         _fig_h.add_trace(go.Scatter(x=[_xh[-1]]+_xp,y=[_sh[-1]]+_sp_fin,name="Projeção financeira",mode="lines+markers",line=dict(color="#0F6E56",width=3,dash="dash"),marker=dict(size=7,symbol="diamond"),hovertemplate="<b>Projeção financeira</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
         if _tem_cruz:
@@ -8912,14 +8917,14 @@ elif pg=="dash_fin":
         _fig_h.add_annotation(x=_xh[-1],y=1.02,yref="paper",text="hoje",showarrow=False,font=dict(size=10,color="#6B7280"))
         _fig_h.update_layout(title=dict(text="Saldo de caixa: o que aconteceu, o que o financeiro projeta e o que muda com o plano de compras",font=_FD_TIT),barmode="overlay",**_FD_PLOT,height=430,xaxis=dict(type="category",categoryorder="array",categoryarray=list(_xh)+list(_xp)))
         _fig_h.update_yaxes(gridcolor="#F3F4F6",secondary_y=False); _fig_h.update_yaxes(showgrid=False,showticklabels=False,secondary_y=True)
-        _mx_pl=max([v for v in _plano_y if v]+[_compras_base,1.0]); _fig_h.update_yaxes(range=[0,_mx_pl*3.2],secondary_y=True)
+        _mx_pl=max([v for v in _plano_y if v]+[_base_esc,1.0]); _fig_h.update_yaxes(range=[0,_mx_pl*3.2],secondary_y=True)
         st.plotly_chart(_fig_h,use_container_width=True)
         _h1,_h2,_h3,_h4=st.columns(4)
         _rfin_m=(sum(_vr)/len(_vr)) if _vr else None
         _rreal3=float(pd.to_numeric(df_fd[_cr],errors="coerce").tail(3).mean()) if _cr in df_fd.columns else None
-        _h1.markdown(_fd_card("Receita bruta mensal",_fd_m(_rfin_m) if _rfin_m else "—",f"projeção financeira · comercial prevê {_fd_m(_rec_com) if _rec_com else '—'} · realizado 3m {_fd_m(_rreal3) if _rreal3 else '—'}","","","Comercial = demanda prevista × preço de venda (Motor de Compras). Financeiro = projeção ML da receita bruta. Realizado = média dos 3 últimos meses.",ac="#2563EB"),unsafe_allow_html=True)
+        _h1.markdown(_fd_card("Receita bruta mensal",_fd_m(_rfin_m) if _rfin_m else "—",f"projeção financeira (empresa toda) · Motor de Compras {_fd_m(_rec_com) if _rec_com else '—'} ({_cob_motor*100:.0f}% da receita) · realizado 3m {_fd_m(_rb3)}","","","Comercial = demanda prevista × preço de venda (Motor de Compras). Financeiro = projeção ML da receita bruta. Realizado = média dos 3 últimos meses.",ac="#2563EB"),unsafe_allow_html=True)
         _pl_med=(sum(_plano_map.values())/len(_plano_map)) if _plano_map else None
-        _h2.markdown(_fd_card("Compras por mês",_fd_m(_pl_med) if _pl_med else "—",f"plano do comercial · histórico (balanço) {_fd_m(_compras_base)}","","","Histórico = estoque final + CMV − estoque inicial (média dos 6 últimos meses).",ac="#A9762F"),unsafe_allow_html=True)
+        _h2.markdown(_fd_card("Compras por mês",_fd_m(_pl_med) if _pl_med else "—",f"plano do comercial · histórico no mesmo escopo {_fd_m(_base_esc)} (empresa toda {_fd_m(_compras_base)})","","","Histórico = estoque final + CMV − estoque inicial (média dos 6 últimos meses).",ac="#A9762F"),unsafe_allow_html=True)
         _fim_a=_sp_adj[-1] if _tem_cruz else _sp_fin[-1]
         _h3.markdown(_fd_card(f"Saldo em {_xp[-1]}",_fd_m(_fim_a),("com o plano do comercial" if _tem_cruz else "projeção financeira")+(f" · sem plano {_fd_m(_sp_fin[-1])}" if _tem_cruz else ""),"","","",ac="#D97706" if _tem_cruz else "#0F6E56"),unsafe_allow_html=True)
         _lst=_sp_adj if _tem_cruz else _sp_fin; _im=int(np.argmin(_lst))
