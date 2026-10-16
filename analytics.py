@@ -67,9 +67,9 @@ section[data-testid="stSidebar"] div[style*="background:#085041"]{background:#05
 section[data-testid="stSidebar"] div[style*="color:#9FE1CB"]{color:#CFE0FF!important;}
 html body section[data-testid="stSidebar"],html body section[data-testid="stSidebar"]>div,html body div[data-testid="stSidebarContent"]{
   background:linear-gradient(180deg,#D9E8FF 0%,#EBF3FF 100%)!important;background-color:#D9E8FF!important;}
-html body section[data-testid="stSidebar"] div[style*="background:#0F6E56"],html body section[data-testid="stSidebar"] div[style*="rgb(15, 110, 86)"]{background:#ADC9FD!important;}
+html body section[data-testid="stSidebar"] div[style*="background:#0F6E56"],html body section[data-testid="stSidebar"] div[style*="rgb(15, 110, 86)"]{background:#ADC9FD!important;color:#FFFFFF!important;}
 html body section[data-testid="stSidebar"] div[style*="background:#085041"]{background:#EBF3FF!important;border-color:#ADC9FD!important;}
-html body section[data-testid="stSidebar"] div[style*="color:#9FE1CB"]{color:#112241!important;}
+html body section[data-testid="stSidebar"] div[style*="color:#9FE1CB"]:not([style*="background:#0F6E56"]){color:#112241!important;}
 section[data-testid="stSidebar"] div.stButton>button{
   background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),
     linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%)!important;
