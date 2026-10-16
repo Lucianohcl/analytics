@@ -22068,6 +22068,7 @@ elif pg=="gestao_estoque":
         +(f"\nScore parcial: sem dado de {', '.join(_sc_sem)}; o peso foi redistribuído." if _sc_sem else ""))
 
     # Renderizar header com score
+    _sc_v={"#059669":"#4ADE80","#D97706":"#FCD34D","#DC2626":"#FF6B6B","#7f1d1d":"#FF5A5A"}.get(score_cor,score_cor)
     _header_placeholder.markdown(f'''<div style="background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%);border:1px solid rgba(217,189,130,.55);border-top:2px solid #D9BD82;
       border-radius:14px;padding:22px 32px;margin-bottom:4px;box-shadow:0 4px 14px rgba(0,0,0,.12);
       display:flex;align-items:center;justify-content:space-between">
@@ -22078,17 +22079,16 @@ elif pg=="gestao_estoque":
           <div style="color:#F4E4BC;font-size:.78rem;margin-top:4px;letter-spacing:.02em">Da previsão de demanda ao planejamento de compras.</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px;background:rgba(20,12,2,.82);border:1px solid rgba(217,189,130,.45);border-radius:14px;padding:6px 16px">
         <div style="text-align:right">
-          <div style="font-size:.65rem;color:#D9BD82;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Score NetExame</div>
-          <div style="font-size:1.45rem;color:{score_cor};line-height:1.1">{score_stars}</div>
+          <div style="font-size:.65rem;color:#FFE9A8;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Score NetExame</div>
+          <div style="font-size:1.45rem;color:{_sc_v};line-height:1.1">{score_stars}</div>
         </div>
-        <div title="{_score_tooltip}" style="display:flex;align-items:baseline;gap:3px;background:{score_cor}26;border:1px solid {score_cor}55;
-          border-radius:12px;padding:4px 14px;cursor:help">
-          <div style="font-family:Georgia,serif;font-size:3.2rem;font-weight:800;color:{score_cor};line-height:1">{score_final}</div>
-          <div style="font-size:1rem;color:{score_cor};opacity:.85">/100</div>
+        <div title="{_score_tooltip}" style="display:flex;align-items:baseline;gap:3px;cursor:help">
+          <div style="font-family:Georgia,serif;font-size:3.2rem;font-weight:800;color:{_sc_v};line-height:1">{score_final}</div>
+          <div style="font-size:1rem;color:{_sc_v};opacity:.9">/100</div>
         </div>
-        <div style="font-size:.75rem;font-weight:700;color:{score_cor};background:{score_cor}22;padding:3px 10px;border-radius:20px">{score_lbl}</div>
+        <div style="font-size:.78rem;font-weight:800;color:#1A1204;background:{_sc_v};padding:3px 12px;border-radius:20px">{score_lbl}</div>
       </div>
     </div>''', unsafe_allow_html=True)
 
