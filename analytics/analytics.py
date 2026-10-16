@@ -8896,44 +8896,66 @@ elif pg=="dash_fin":
     st.markdown("".join(f'<div class="fd-dx" style="--c:{_cores[g]}"><div class="i">{_icos[g]}</div><div><div class="h">{t}</div><div class="b">{b}</div>'+(f'<div class="a">→ {a}</div>' if a else "")+'</div></div>' for g,t,b,a in _dx).replace("$","&#36;"),unsafe_allow_html=True)
  
     # ── 3) HERO: RETROVISOR × PARA-FRENTE ────────────────────────────────
-    sec("🔭 Caixa: retrovisor × para-frente (Financeiro × Comercial)")
+        sec("🔭 Caixa: linha do tempo do Financeiro")
     _n_h=min(12,len(df_fd)); _xh=_rot_fd[-_n_h:]; _sh=_saldo_fd.iloc[-_n_h:].tolist()
+    _fig_h=go.Figure()
+    _fig_h.add_trace(go.Scatter(x=_xh,y=_sh,name="Realizado",mode="lines+markers",line=dict(color="#14243B",width=3.5),marker=dict(size=6,line=dict(color="white",width=2)),fill="tozeroy",fillcolor="rgba(20,36,59,.07)",hovertemplate="<b>Realizado</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
     if not _n_pr:
-        st.markdown('<div class="al-i">ℹ️ Gere as projeções em <b>🔮 Projeções ML - Financeiro</b> (incluindo Entradas e Saídas de caixa) para ver aqui o caixa para-frente cruzado com o plano de compras do comercial.</div>',unsafe_allow_html=True)
-        _fig_h=go.Figure(go.Scatter(x=_xh,y=_sh,name="Saldo realizado",mode="lines+markers",line=dict(color="#14243B",width=3),fill="tozeroy",fillcolor="rgba(20,36,59,.08)"))
+        st.markdown('<div class="al-i">ℹ️ Gere as projeções em <b>🔮 Projeções ML - Financeiro</b> (incluindo Entradas e Saídas de caixa) para ver aqui o caixa para-frente.</div>',unsafe_allow_html=True)
         _fig_h.update_layout(title=dict(text="Saldo de caixa realizado",font=_FD_TIT),**_FD_PLOT,height=340,xaxis=dict(type="category"),yaxis=dict(gridcolor="#F3F4F6"))
         st.plotly_chart(_fig_h,use_container_width=True)
     else:
         _xp=_x_pr[:_n_pr]
-        _fig_h=make_subplots(specs=[[{"secondary_y":True}]])
-        _plano_y=[(_plano_map.get(l,0.0) if i<=_ult_plano else None) for i,l in enumerate(_xp)]
-        if _tem_cruz:
-            _fig_h.add_trace(go.Bar(x=_xp,y=_plano_y,name="Plano de compras (comercial)",marker_color="rgba(169,118,47,.55)",hovertemplate="<b>Plano de compras</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"),secondary_y=True)
-            _fig_h.add_trace(go.Scatter(x=_xp,y=[_base_esc]*_n_pr,name="Compras habituais do escopo do Motor (média 6m)",mode="lines",line=dict(color="#A9762F",width=1.5,dash="dot"),hoverinfo="skip"),secondary_y=True)
-        _fig_h.add_trace(go.Scatter(x=_xh,y=_sh,name="Saldo realizado (retrovisor)",mode="lines+markers",line=dict(color="#14243B",width=3.5),marker=dict(size=6,line=dict(color="white",width=2)),fill="tozeroy",fillcolor="rgba(20,36,59,.07)",hovertemplate="<b>Realizado</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
-        _fig_h.add_trace(go.Scatter(x=[_xh[-1]]+_xp,y=[_sh[-1]]+_sp_fin,name="Projeção financeira",mode="lines+markers",line=dict(color="#0F6E56",width=3,dash="dash"),marker=dict(size=7,symbol="diamond"),hovertemplate="<b>Projeção financeira</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
-        if _tem_cruz:
-            _fig_h.add_trace(go.Scatter(x=[_xh[-1]]+_xp,y=[_sh[-1]]+_sp_adj,name="Com o plano do comercial",mode="lines+markers",line=dict(color="#D97706",width=3),marker=dict(size=7),hovertemplate="<b>Com plano do comercial</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
-        _fig_h.add_hline(y=0,line_dash="dot",line_color="#9CA3AF",opacity=.7,secondary_y=False)
+        _fig_h.add_trace(go.Scatter(x=[_xh[-1]]+_xp,y=[_sh[-1]]+_sp_fin,name="Projeção (modelos ML)",mode="lines+markers",line=dict(color="#0F6E56",width=3,dash="dash"),marker=dict(size=7,symbol="diamond"),hovertemplate="<b>Projeção</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
+        _fig_h.add_hline(y=0,line_dash="dot",line_color="#9CA3AF",opacity=.7)
         _fig_h.add_shape(type="line",x0=_xh[-1],x1=_xh[-1],y0=0,y1=1,yref="paper",line=dict(color="#9CA3AF",width=1,dash="dot"))
         _fig_h.add_annotation(x=_xh[-1],y=1.02,yref="paper",text="hoje",showarrow=False,font=dict(size=10,color="#6B7280"))
-        _fig_h.update_layout(title=dict(text="Saldo de caixa: o que aconteceu, o que o financeiro projeta e o que muda com o plano de compras",font=_FD_TIT),barmode="overlay",**_FD_PLOT,height=430,xaxis=dict(type="category",categoryorder="array",categoryarray=list(_xh)+list(_xp)))
-        _fig_h.update_yaxes(gridcolor="#F3F4F6",secondary_y=False); _fig_h.update_yaxes(showgrid=False,showticklabels=False,secondary_y=True)
-        _mx_pl=max([v for v in _plano_y if v]+[_base_esc,1.0]); _fig_h.update_yaxes(range=[0,_mx_pl*3.2],secondary_y=True)
+        _im=int(np.argmin(_sp_fin))
+        _fig_h.add_annotation(x=_xp[_im],y=_sp_fin[_im],text=f"menor saldo: {fmt(_sp_fin[_im])}",showarrow=True,arrowhead=2,ax=0,ay=38,font=dict(size=10,color="#B45309"))
+        _fig_h.add_annotation(x=_xp[-1],y=_sp_fin[-1],text=f"{fmt(_sp_fin[-1])}",showarrow=True,arrowhead=2,ax=0,ay=-30,font=dict(size=10,color="#0F6E56"))
+        _fig_h.update_layout(title=dict(text="Saldo de caixa da empresa: o que aconteceu e o que os modelos projetam",font=_FD_TIT),**_FD_PLOT,height=380,xaxis=dict(type="category",categoryorder="array",categoryarray=list(_xh)+list(_xp)),yaxis=dict(gridcolor="#F3F4F6"))
         st.plotly_chart(_fig_h,use_container_width=True)
-        _h1,_h2,_h3,_h4=st.columns(4)
-        _rfin_m=(sum(_vr)/len(_vr)) if _vr else None
-        _rreal3=float(pd.to_numeric(df_fd[_cr],errors="coerce").tail(3).mean()) if _cr in df_fd.columns else None
-        _h1.markdown(_fd_card("Receita bruta mensal",_fd_m(_rfin_m) if _rfin_m else "—",f"projeção financeira (empresa toda) · Motor de Compras {_fd_m(_rec_com) if _rec_com else '—'} ({_cob_motor*100:.0f}% da receita) · realizado 3m {_fd_m(_rb3)}","","","Comercial = demanda prevista × preço de venda (Motor de Compras). Financeiro = projeção ML da receita bruta. Realizado = média dos 3 últimos meses.",ac="#2563EB"),unsafe_allow_html=True)
-        _pl_med=(sum(_plano_map.values())/len(_plano_map)) if _plano_map else None
-        _h2.markdown(_fd_card("Compras por mês",_fd_m(_pl_med) if _pl_med else "—",f"plano do comercial · histórico no mesmo escopo {_fd_m(_base_esc)} (empresa toda {_fd_m(_compras_base)})","","","Histórico = estoque final + CMV − estoque inicial (média dos 6 últimos meses).",ac="#A9762F"),unsafe_allow_html=True)
-        _fim_a=_sp_adj[-1] if _tem_cruz else _sp_fin[-1]
-        _h3.markdown(_fd_card(f"Saldo em {_xp[-1]}",_fd_m(_fim_a),("com o plano do comercial" if _tem_cruz else "projeção financeira")+(f" · sem plano {_fd_m(_sp_fin[-1])}" if _tem_cruz else ""),"","","",ac="#D97706" if _tem_cruz else "#0F6E56"),unsafe_allow_html=True)
-        _lst=_sp_adj if _tem_cruz else _sp_fin; _im=int(np.argmin(_lst))
-        _h4.markdown(_fd_card("Menor saldo projetado",_fd_m(_lst[_im]),f"em {_xp[_im]}","","","",ac="#DC2626" if _lst[_im]<0 else "#059669"),unsafe_allow_html=True)
-        if _dxc:
-            st.markdown('<div style="font-weight:700;color:#14243B;font-size:.9rem;margin:10px 0 6px">🔗 Cruzamento com o Comercial (Motor de Compras)</div>'+"".join(f'<div class="fd-dx" style="--c:{_cores[g]}"><div class="i">{_icos[g]}</div><div><div class="h">{t}</div><div class="b">{b}</div>'+(f'<div class="a">→ {a}</div>' if a else "")+'</div></div>' for g,t,b,a in sorted(_dxc,key=lambda x:x[0])).replace("$","&#36;"),unsafe_allow_html=True)
-        st.markdown('<div class="fd-q">Como ler: a linha escura é o que já aconteceu; a verde tracejada é a projeção financeira (entradas − saídas, modelos ML). A laranja troca o nível habitual de compras embutido nas saídas pelo plano mês a mês do Motor de Compras. É uma estimativa para conversar com o Comercial, não um orçamento.</div>',unsafe_allow_html=True)
+        _h1,_h2,_h3=st.columns(3)
+        _h1.markdown(_fd_card("Saldo hoje",_fd_m(_saldo_hoje),f"fim de {_xh[-1]}",ac="#14243B"),unsafe_allow_html=True)
+        _h2.markdown(_fd_card(f"Saldo projetado em {_xp[-1]}",_fd_m(_sp_fin[-1]),f"{'+' if _sp_fin[-1]>=_saldo_hoje else '−'}{_fd_m(abs(_sp_fin[-1]-_saldo_hoje))} em relação a hoje",ac="#0F6E56"),unsafe_allow_html=True)
+        _h3.markdown(_fd_card("Menor saldo projetado",_fd_m(_sp_fin[_im]),f"em {_xp[_im]}",ac="#DC2626" if _sp_fin[_im]<0 else "#059669"),unsafe_allow_html=True)
+
+        # ── Impacto da categoria rodada no Motor de Compras no fluxo geral ──
+        sec("🎯 Impacto da categoria do Motor de Compras no caixa da empresa")
+        if not _tem_cruz:
+            st.markdown('<div class="al-i">ℹ️ Rode o <b>Motor de Compras</b> para ver o impacto do plano de compras da categoria no caixa projetado.</div>',unsafe_allow_html=True)
+        else:
+            _nn=_ult_plano+1; _xs=_xp[:_nn]; _plan=[_plano_map.get(l,0.0) for l in _xs]; _hab=_base_esc
+            _lag=int(round(max(_pmp,0)/30.0))
+            _pagto=[(_plan[i-_lag] if i-_lag>=0 else _hab) for i in range(_nn)]
+            _imp=[_hab-_pagto[i] for i in range(_nn)]
+            _cum=list(np.cumsum(_imp))
+            _fig_i=make_subplots(specs=[[{"secondary_y":True}]])
+            _fig_i.add_trace(go.Bar(x=_xs,y=_imp,name="Efeito no caixa do mês",marker_color=["#059669" if v>=0 else "#DC2626" for v in _imp],opacity=.9,
+                text=[("+" if v>=0 else "−")+fmt(abs(v)) for v in _imp],textposition="outside",hovertemplate="<b>%{x}</b><br>Efeito no caixa: R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
+            _fig_i.add_trace(go.Scatter(x=_xs,y=_cum,name="Efeito acumulado",mode="lines+markers",line=dict(color="#14243B",width=3),marker=dict(size=6),hovertemplate="<b>Acumulado</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"),secondary_y=True)
+            _m1=max([abs(v) for v in _imp]+[1.0])*1.35; _m2=max([abs(v) for v in _cum]+[1.0])*1.2
+            _fig_i.update_yaxes(range=[-_m1,_m1],gridcolor="#F3F4F6",secondary_y=False); _fig_i.update_yaxes(range=[-_m2,_m2],showgrid=False,secondary_y=True)
+            _fig_i.add_hline(y=0,line_color="#9CA3AF",line_width=1)
+            _fig_i.update_layout(title=dict(text="Mês a mês: o plano de compras da categoria melhora (verde) ou piora (vermelho) o caixa?",font=_FD_TIT),**_FD_PLOT,height=360,xaxis=dict(type="category"))
+            st.plotly_chart(_fig_i,use_container_width=True)
+            _tot_plan=sum(_plan); _tot_hab=_hab*_nn; _d_vol=_tot_hab-_tot_plan
+            _pior=int(np.argmin(_imp)); _melhor=int(np.argmax(_imp))
+            _sem_prazo=sum(_hab-_plan[i] for i in range(_nn)); _ef_prazo=_cum[-1]-_sem_prazo
+            _plan_med=_tot_plan/_nn; _preso=(_plan_med-_hab)*max(_ciclo_fd,0)/30.0
+            _itens=[]
+            _itens.append((2 if _d_vol>=0 else 1,"Volume de compras",f"Nos próximos {_nn} meses o plano compra {_fd_m(_tot_plan)}, contra {_fd_m(_tot_hab)} no ritmo habitual da categoria. Isso {'poupa' if _d_vol>=0 else 'consome'} {_fd_m(abs(_d_vol))} de caixa."))
+            _itens.append((2 if _ef_prazo>=0 else 1,"Prazo de pagamento",f"Com prazo médio de pagamento de {_pmp:.0f} dias (≈ {_lag} mês(es) de defasagem), as saídas do plano caem depois da compra: efeito de {'+' if _ef_prazo>=0 else '−'}{_fd_m(abs(_ef_prazo))} no caixa até {_xs[-1]}.") if _lag>0 else (1,"Prazo de pagamento",f"O prazo médio de pagamento é de {_pmp:.0f} dias, menos de 1 mês de defasagem: as compras do plano saem do caixa praticamente no mês da compra."))
+            _itens.append((2 if _preso<=0 else 1,"Prazo de retorno (capital de giro)",f"O ciclo de caixa é de {_ciclo_fd:.0f} dias: o dinheiro de cada compra só volta como venda recebida cerca de {_ciclo_fd:.0f} dias depois de pago. Com o plano em {_fd_m(_plan_med)}/mês contra {_fd_m(_hab)}/mês habituais, o capital de giro {'liberado' if _preso<=0 else 'preso a mais'} é de ≈ {_fd_m(abs(_preso))}."))
+            if _imp[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: o plano compra {_fd_m(_plan[_pior])}, {_fd_m(abs(_imp[_pior]))} a mais que o ritmo habitual no caixa do mês (considerando o prazo de pagamento). Mês mais leve: {_xs[_melhor]} ({'+' if _imp[_melhor]>=0 else '−'}{_fd_m(abs(_imp[_melhor]))})."))
+            else: _itens.append((2,"Nenhum mês pressiona o caixa",f"Em todos os meses do plano o desembolso fica igual ou abaixo do ritmo habitual. Maior alívio: {_xs[_melhor]} (+{_fd_m(_imp[_melhor])})."))
+            try:
+                _cenx=preparar_cenario_motor(_df_res_fd); _libx=float(_cenx["Excesso"].sum()-_cenx["Falta"].sum())
+                if _libx>0 and _saldo_hoje>0: _itens.append((2,"Estoque liberável (potencial)",f"O estoque em excesso da categoria, descontada a falta, soma {_fd_m(_libx)}, equivalente a {_libx/_saldo_hoje*100:.0f}% do saldo atual de caixa. É potencial simulado, ainda não é caixa."))
+            except Exception: pass
+            _icos2=["🔴","🟠","🟢"]
+            st.markdown("".join(f'<div class="fd-dx" style="--c:{_cores[g]}"><div class="i">{_icos2[g]}</div><div><div class="h">{t}</div><div class="b">{b}</div></div></div>' for g,t,b in _itens).replace("$","&#36;"),unsafe_allow_html=True)
+            st.markdown(f'<div class="fd-q">Escopo: só as categorias rodadas no Motor de Compras (≈ {_cob_motor*100:.0f}% da receita bruta da empresa). O efeito é comparado com o ritmo habitual de compras desse mesmo escopo ({_fd_m(_hab)}/mês, média dos 6 últimos meses do balanço, proporcional à participação do Motor). Verde = melhora o caixa; vermelho = piora. É estimativa para orientar a conversa com o Comercial, não um orçamento.</div>',unsafe_allow_html=True)
  
     # ── 4) DO FATURAMENTO AO LUCRO + CICLO DE CAIXA ──────────────────────
     sec(f"💡 De onde vem o resultado · {_per_txt_fd}")
