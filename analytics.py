@@ -65,6 +65,11 @@ section[data-testid="stSidebar"]{background:linear-gradient(180deg,#0B1A33 0%,#0
 section[data-testid="stSidebar"] div[style*="background:#0F6E56"]{background:#1E3A6E!important;}
 section[data-testid="stSidebar"] div[style*="background:#085041"]{background:#050D1C!important;border-color:#1E3A6E!important;}
 section[data-testid="stSidebar"] div[style*="color:#9FE1CB"]{color:#CFE0FF!important;}
+html body section[data-testid="stSidebar"],html body section[data-testid="stSidebar"]>div,html body div[data-testid="stSidebarContent"]{
+  background:linear-gradient(180deg,#D9E8FF 0%,#EBF3FF 100%)!important;background-color:#D9E8FF!important;}
+html body section[data-testid="stSidebar"] div[style*="background:#0F6E56"]{background:#ADC9FD!important;}
+html body section[data-testid="stSidebar"] div[style*="background:#085041"]{background:#EBF3FF!important;border-color:#ADC9FD!important;}
+html body section[data-testid="stSidebar"] div[style*="color:#9FE1CB"]{color:#112241!important;}
 section[data-testid="stSidebar"] div.stButton>button{
   background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),
     linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%)!important;
@@ -202,6 +207,20 @@ img, iframe{filter:invert(1) hue-rotate(180deg);}
   font-weight:700;font-size:1.05rem;margin:0 auto 12px;border:2px solid rgba(169,118,47,.6);}
 .wc-step-t{font-weight:700;color:#14243B;font-size:.9rem;margin-bottom:3px;}
 .wc-step-s{color:#9CA3AF;font-size:.76rem;}
+html body .wc-hero{background:linear-gradient(135deg,#ABCAFF,#CBDFFF,#ABCAFF)!important;background-size:200% 200%!important;
+  box-shadow:0 0 34px rgba(33,73,138,.35),0 4px 14px rgba(0,0,0,.15)!important;}
+html body .wc-hero h1{color:#000!important;text-shadow:0 0 18px rgba(33,73,138,.55)!important;}
+html body .wc-hero p{color:#1A2F50!important;}
+html body .wc-grid{background-image:linear-gradient(rgba(33,73,138,.38) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(33,73,138,.38) 1px,transparent 1px)!important;}
+html body .wc-ring{border-color:rgba(33,73,138,.55)!important;box-shadow:0 0 16px rgba(33,73,138,.3),inset 0 0 16px rgba(33,73,138,.2)!important;}
+html body .wc-ring.r2{border-color:rgba(217,189,130,.55)!important;}
+html body .wc-hero::after{background:linear-gradient(100deg,transparent,rgba(33,73,138,.25),transparent)!important;}
+html body .wc-back{background:linear-gradient(135deg,#ABCAFF 0%,#CBDFFF 100%)!important;}
+html body .wc-back h2{color:#000!important;}
+html body .wc-back p{color:#1A2F50!important;}
+html body .wc-steps::before{background:#ABCAFF!important;opacity:.5!important;}
+html body .wc-step-n{background:#ABCAFF!important;color:#000!important;}
 .wc-card-exp{background:
     radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),
     linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%);
@@ -22087,7 +22106,7 @@ elif pg=="gestao_estoque":
           <div style="color:#F4E4BC;font-size:.78rem;margin-top:4px;letter-spacing:.02em">Da previsão de demanda ao planejamento de compras.</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;background:rgba(20,12,2,.82);border:1px solid rgba(217,189,130,.45);border-radius:14px;padding:6px 16px">
+      <div style="display:flex;align-items:center;gap:10px;background:rgba(20,12,2,.82);filter:invert(1) hue-rotate(180deg);border:1px solid rgba(217,189,130,.45);border-radius:14px;padding:6px 16px">
         <div style="text-align:right">
           <div style="font-size:.65rem;color:#FFE9A8;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Score NetExame</div>
           <div style="font-size:1.45rem;color:{_sc_v};line-height:1.1">{score_stars}</div>
