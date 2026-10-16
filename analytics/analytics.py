@@ -8754,7 +8754,7 @@ elif pg=="dash_fin":
       </div>
       <div class="fd-score">
         <div><div class="l">Score de Saúde</div><div class="v">{_lbl_sc_fd}</div></div>
-        <div title="Média do Score de Saúde no período: Kanitz, liquidez imediata, EBITDA e ciclo de caixa, 25% cada." style="display:flex;align-items:baseline;gap:3px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);border-radius:14px;padding:6px 18px;cursor:help"><span class="n">{_score_fd:.0f}</span><span class="d">/100</span></div>
+        <div title="Score de Saúde (0–100)&#10;4 indicadores com peso igual de 25% cada:&#10;• Kanitz: normalizado entre -4 e 0&#10;• Liquidez imediata: normalizado entre 0% e 5%&#10;• EBITDA %: normalizado entre 0% e 5%&#10;• Ciclo de caixa: normalizado entre 0 e 120 dias (invertido)&#10;Faixas:&#10;🟢 80–100 Baixo risco&#10;🟡 60–79 Risco moderado&#10;🟠 40–59 Alto risco&#10;🔴 20–39 Risco crítico&#10;⚫ 0–19 Insolvência iminente" style="display:flex;align-items:baseline;gap:3px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);border-radius:14px;padding:6px 18px;cursor:help"><span class="n">{_score_fd:.0f}</span><span class="d">/100</span></div>
       </div></div>''',unsafe_allow_html=True)
  
     # ── 1) INDICADORES-CHAVE ─────────────────────────────────────────────
@@ -9085,7 +9085,7 @@ elif pg=="dash_fin":
                 cl="best" if (v==b and b!=w) else ("worst" if (v==w and b!=w) else "")
                 return f'<td class="{cl}">{txt}</td>'
             _rows="".join("<tr><td><b>"+r["Filial"]+"</b></td>"+_td(r["rl"],"rl",_fd_m(r["rl"]))+_td(r["me"],"me",f"{_fd_num(r['me'])}%")+_td(r["ml"],"ml",f"{_fd_num(r['ml'])}%")+_td(r["ciclo"],"ciclo",f"{r['ciclo']:.0f} d",False)+_td(r["score"],"score",f"{r['score']:.0f}")+"</tr>" for _,r in _dcmp.iterrows())
-            st.markdown(f'<table class="fd-tab"><thead><tr><th>Filial</th><th>Receita líquida</th><th>EBITDA</th><th>Margem líquida</th><th>Ciclo de caixa</th><th>Score</th></tr></thead><tbody>{_rows}</tbody></table>',unsafe_allow_html=True)
+            st.markdown(f'<table class="fd-tab"><thead><tr><th>Filial</th><th>Receita líquida</th><th>EBITDA</th><th>Margem líquida</th><th>Ciclo de caixa</th><th title="Score de Saúde (0–100)&#10;4 indicadores com peso igual de 25% cada:&#10;• Kanitz: normalizado entre -4 e 0&#10;• Liquidez imediata: normalizado entre 0% e 5%&#10;• EBITDA %: normalizado entre 0% e 5%&#10;• Ciclo de caixa: normalizado entre 0 e 120 dias (invertido)&#10;Faixas:&#10;🟢 80–100 Baixo risco&#10;🟡 60–79 Risco moderado&#10;🟠 40–59 Alto risco&#10;🔴 20–39 Risco crítico&#10;⚫ 0–19 Insolvência iminente" style="cursor:help">Score</th></tr></thead><tbody>{_rows}</tbody></table>',unsafe_allow_html=True)
             _me=_dcmp.loc[_dcmp["ml"].idxmax()]; _pi=_dcmp.loc[_dcmp["ml"].idxmin()]
             if _me["Filial"]!=_pi["Filial"] and not pd.isna(_me["ml"]) and not pd.isna(_pi["ml"]):
                 st.markdown(f'<div class="fd-q">💡 <b>{_pi["Filial"]}</b> tem a menor margem líquida ({_fd_num(_pi["ml"])}%), {_fd_num(_me["ml"]-_pi["ml"])} p.p. abaixo de <b>{_me["Filial"]}</b>. Na margem da melhor, o lucro do período seria cerca de <b>{_fd_m((_me["ml"]-_pi["ml"])/100*_pi["rl"])}</b> maior (estimativa simples: diferença de margem × receita líquida).</div>',unsafe_allow_html=True)
