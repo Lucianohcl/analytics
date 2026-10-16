@@ -8613,7 +8613,7 @@ elif pg=="dash_fin":
 .fd-score .v{font-size:.85rem;color:#fff;text-align:right}
 .fd-card{min-height:128px;background:#fff;border:1px solid #E9ECEF;border-top:3px solid var(--ac,#0F6E56);border-radius:12px;padding:12px 14px 10px;box-shadow:0 2px 6px rgba(20,36,59,.05);height:100%}
 .fd-lbl{font-size:.66rem;color:#7A808A;text-transform:uppercase;letter-spacing:.07em;font-weight:700}
-.fd-val{font-family:Georgia,serif;font-size:1.65rem;font-weight:800;color:#14243B;line-height:1.1;margin:5px 0 3px}
+.fd-val{white-space:nowrap;font-family:Georgia,serif;font-size:1.4rem;font-weight:800;color:#14243B;line-height:1.1;margin:5px 0 3px}
 .fd-sub{font-size:.72rem;color:#6B7280;line-height:1.4}
 .fd-chip{display:inline-block;font-size:.66rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:5px}
 .fd-chip.g{background:#E3F6EC;color:#047857}.fd-chip.r{background:#FDE8E8;color:#B91C1C}.fd-chip.n{background:#F1F2F4;color:#6B7280}
@@ -8654,13 +8654,16 @@ elif pg=="dash_fin":
     def _fd_ano(x):
         try: return str(int(float(x)))
         except Exception: return str(x)
-    def _fd_spark(vals,cor_s="#0F6E56",w=120,h=26):
-        v=[float(x) for x in vals if x is not None and not pd.isna(x)]
-        if len(v)<2: return ""
-        mn,mx=min(v),max(v); rg=(mx-mn) or 1.0
-        pts=" ".join(f"{i*(w-4)/(len(v)-1)+2:.1f},{h-3-(x-mn)/rg*(h-6):.1f}" for i,x in enumerate(v))
-        return (f'<svg width="100%" height="{h}" viewBox="0 0 {w} {h}" preserveAspectRatio="none" style="display:block;margin-top:6px">'
-                f'<polyline fill="none" stroke="{cor_s}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="{pts}"/></svg>')
+    def _fd_spark(vals,labs,fn,cor_s="#0F6E56",w=140,h=34):
+        pr=[(float(x),l) for x,l in zip(vals,labs) if x is not None and not pd.isna(x)]
+        if len(pr)<2: return ""
+        v=[a for a,_ in pr]; mn,mx=min(v),max(v); rg=(mx-mn) or 1.0
+        xy=[(i*(w-8)/(len(v)-1)+4,h-5-(x-mn)/rg*(h-10)) for i,x in enumerate(v)]
+        pts=" ".join(f"{x:.1f},{y:.1f}" for x,y in xy)
+        dots="".join(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{3.2 if k==len(xy)-1 else 1.6}" fill="{cor_s}"/><circle cx="{x:.1f}" cy="{y:.1f}" r="5" fill="transparent"><title>{pr[k][1]}: {fn(pr[k][0]).replace("&#36;","R$")}</title></circle>' for k,(x,y) in enumerate(xy))
+        return (f'<svg width="100%" height="{h}" viewBox="0 0 {w} {h}" preserveAspectRatio="none" style="display:block;margin-top:6px;overflow:visible">'
+                f'<polyline fill="none" stroke="{cor_s}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="{pts}"/>{dots}</svg>'
+                f'<div style="display:flex;justify-content:space-between;font-size:.6rem;color:#9AA0A6;margin-top:2px"><span>{pr[0][1]}</span><span>12 meses</span><span>{pr[-1][1]}</span></div>')
     def _fd_chip(delta,good_up=True,unit="%",ref=""):
         if delta is None or pd.isna(delta): return ""
         up=delta>=0
@@ -8710,8 +8713,11 @@ elif pg=="dash_fin":
     _idx_prev_fd=[]; _ref_prev_fd=""
     if ano_sel_fd!="Todos" and ano_sel_fd.isdigit():
         _pa=str(int(ano_sel_fd)-1)
-        _idx_prev_fd=_fd_idx(_ano_l,_mes_l,_pa,mes_sel_fd)
-        if _idx_prev_fd: _ref_prev_fd=f"vs {_pa}"
+        _meses_cur=set(_mes_l[i] for i in _idx_fd)
+        _idx_prev_fd=[i for i in range(len(_ano_l)) if _ano_l[i]==_pa and _mes_l[i] in _meses_cur]
+        if _idx_prev_fd:
+            _ms=[m for m in _MESES_FD if m in _meses_cur]
+            _ref_prev_fd=(f"vs {_pa}" if len(_ms)==12 else (f"vs {_ms[0]}/{_pa}" if len(_ms)==1 else f"vs {_ms[0]}–{_ms[-1]}/{_pa}"))
     _per_txt_fd=(f"{mes_sel_fd}/{ano_sel_fd}" if (ano_sel_fd!="Todos" and mes_sel_fd!="Todos") else (f"Ano {ano_sel_fd}" if ano_sel_fd!="Todos" else (f"{mes_sel_fd} de todos os anos" if mes_sel_fd!="Todos" else "Todo o histórico")))
     _ult_fd=df_fd.iloc[_idx_fd[-1]]
     _ult_cons_fd=df_cons_fd.iloc[min(_idx_fd[-1],len(df_cons_fd)-1)]
@@ -8753,6 +8759,7 @@ elif pg=="dash_fin":
  
     # ── 1) INDICADORES-CHAVE ─────────────────────────────────────────────
     _end=_idx_fd[-1]
+    _lab12=_rot_fd[max(0,_end-11):_end+1]
     def _fd_serie(col,d=None):
         d=df_fd if d is None else d
         return pd.to_numeric(d[col],errors="coerce").iloc[max(0,_end-11):_end+1].tolist() if col in d.columns else []
@@ -8763,15 +8770,15 @@ elif pg=="dash_fin":
     _saida_med3=float(_sai_fd.iloc[max(0,_end-2):_end+1].mean())
     _cob_meses=(_saldo_fim_fd/_saida_med3) if _saida_med3>0 else float("nan")
     _k=st.columns(6)
-    _k[0].markdown(_fd_card("Receita líquida",_fd_m(_R["rl"]),f"bruta {_fd_m(_R['rb'])}",_fd_chip(_fd_dpct(_R["rl"],_Rp["rl"],_n_cur_fd,_n_prev_fd) if _Rp else None,True,"%",_ref_prev_fd),_fd_spark(_fd_serie("receita líquida")),ac="#0F6E56"),unsafe_allow_html=True)
-    _k[1].markdown(_fd_card("EBITDA",_fd_m(_R["eb"]),f"{_fd_num(_R['me'])}% da receita",_fd_chip(_fd_dpct(_R["eb"],_Rp["eb"],_n_cur_fd,_n_prev_fd) if _Rp else None,True,"%",_ref_prev_fd),_fd_spark(_fd_serie("EBITDA"),"#2563EB"),ac="#2563EB"),unsafe_allow_html=True)
-    _k[2].markdown(_fd_card("Margem líquida",f"{_fd_num(_R['ml'])}%",f"lucro {_fd_m(_R['ll'])}",_fd_chip((_R["ml"]-_Rp["ml"]) if _Rp else None,True," p.p.",_ref_prev_fd),_fd_spark(_fd_serie("margem líquida %"),"#7C3AED"),ac="#7C3AED"),unsafe_allow_html=True)
+    _k[0].markdown(_fd_card("Receita líquida",_fd_m(_R["rl"]),f"bruta {_fd_m(_R['rb'])}",_fd_chip(_fd_dpct(_R["rl"],_Rp["rl"],_n_cur_fd,_n_prev_fd) if _Rp else None,True,"%",_ref_prev_fd),_fd_spark(_fd_serie("receita líquida"),_lab12,_fd_m),ac="#0F6E56"),unsafe_allow_html=True)
+    _k[1].markdown(_fd_card("EBITDA",_fd_m(_R["eb"]),f"{_fd_num(_R['me'])}% da receita",_fd_chip(_fd_dpct(_R["eb"],_Rp["eb"],_n_cur_fd,_n_prev_fd) if _Rp else None,True,"%",_ref_prev_fd),_fd_spark(_fd_serie("EBITDA"),_lab12,_fd_m,"#2563EB"),ac="#2563EB"),unsafe_allow_html=True)
+    _k[2].markdown(_fd_card("Margem líquida",f"{_fd_num(_R['ml'])}%",f"lucro {_fd_m(_R['ll'])}",_fd_chip((_R["ml"]-_Rp["ml"]) if _Rp else None,True," p.p.",_ref_prev_fd),_fd_spark(_fd_serie("margem líquida %"),_lab12,lambda x:f"{x:.1f}%","#7C3AED"),ac="#7C3AED"),unsafe_allow_html=True)
     _k[3].markdown(_fd_card("Saldo de caixa",_fd_m(_saldo_fim_fd),f"fim de {_rot_fd[_end]}",
         _fd_chip(((_saldo_fim_fd-float(_saldo_fd.iloc[_idx_prev_fd[-1]]))/float(_saldo_fd.iloc[_idx_prev_fd[-1]])*100) if (_idx_prev_fd and float(_saldo_fd.iloc[_idx_prev_fd[-1]])>0 and _saldo_fim_fd>0) else None,True,"%",_ref_prev_fd),
-        _fd_spark(_saldo_fd.iloc[max(0,_end-11):_end+1].tolist(),"#059669"),"Saldo inicial configurado em Fluxo de Caixa + entradas − saídas acumuladas",ac="#059669"),unsafe_allow_html=True)
+        _fd_spark(_saldo_fd.iloc[max(0,_end-11):_end+1].tolist(),_lab12,_fd_m,"#059669"),"Saldo inicial configurado em Fluxo de Caixa + entradas − saídas acumuladas",ac="#059669"),unsafe_allow_html=True)
     _k[4].markdown(_fd_card("Cobertura de caixa",(f"{_fd_num(_cob_meses)} meses" if (not pd.isna(_cob_meses) and _cob_meses>0) else "Negativo"),"saldo ÷ saídas médias dos 3 últimos meses","","",ac="#0891B2"),unsafe_allow_html=True)
     _k[5].markdown(_fd_card("Ciclo de caixa",f"{_ciclo_fd:.0f} dias","recebimento + estoque − pagamento",
-        _fd_chip((_ciclo_fd-float(df_fd.iloc[_idx_prev_fd[-1]].get("ciclo de caixa",0) or 0)) if _idx_prev_fd else None,False," dias",_ref_prev_fd),_fd_spark(_fd_serie("ciclo de caixa"),"#D97706"),ac="#D97706"),unsafe_allow_html=True)
+        _fd_chip((_ciclo_fd-float(df_fd.iloc[_idx_prev_fd[-1]].get("ciclo de caixa",0) or 0)) if _idx_prev_fd else None,False," dias",_ref_prev_fd),_fd_spark(_fd_serie("ciclo de caixa"),_lab12,lambda x:f"{x:.0f} dias","#D97706"),ac="#D97706"),unsafe_allow_html=True)
     _esc=" · empresa toda" if (filial_sel_fd and filial_sel_fd!="(Todas as filiais)") else ""
     st.markdown(f'''<div class="fd-pills"><div class="fd-pill">Liquidez corrente <b>{_fd_num(_lc_fd,2)}x</b></div><div class="fd-pill">Liquidez imediata <b>{_fd_num(_li_fd,2)}x</b></div>
       <div class="fd-pill">Kanitz <b>{_fd_num(_kz_fd,2)}</b> · {_kz_zona}</div><div class="fd-pill">ROE <b>{_fd_num(_roe_fd)}%</b></div><div class="fd-pill">ICD <b>{_fd_num(_icd_fd)}%</b></div>
