@@ -6584,7 +6584,6 @@ with st.sidebar:
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">MÓDULO FINANCEIRO</div>',unsafe_allow_html=True)
     if st.button("📊 Dashboard Financeiro", key="sb_dash_fin", use_container_width=True): ir("dash_fin")
-    if st.button("📊 Dashboard Financeiro", key="sb_dash_fin", use_container_width=True): ir("dash_fin")
     if st.button("📄 DRE",             key="sb_dre",         use_container_width=True): ir("dre")
     if st.button("🏦 Balanço",         key="sb_balanco",     use_container_width=True): ir("balanco")
     if st.button("💵 Fluxo de Caixa",  key="sb_fluxo",       use_container_width=True): ir("fluxo")
