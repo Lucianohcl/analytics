@@ -8896,7 +8896,7 @@ elif pg=="dash_fin":
     st.markdown("".join(f'<div class="fd-dx" style="--c:{_cores[g]}"><div class="i">{_icos[g]}</div><div><div class="h">{t}</div><div class="b">{b}</div>'+(f'<div class="a">→ {a}</div>' if a else "")+'</div></div>' for g,t,b,a in _dx).replace("$","&#36;"),unsafe_allow_html=True)
  
     # ── 3) HERO: RETROVISOR × PARA-FRENTE ────────────────────────────────
-        sec("🔭 Caixa: linha do tempo do Financeiro")
+    sec("🔭 Caixa: linha do tempo do Financeiro")
     _n_h=min(12,len(df_fd)); _xh=_rot_fd[-_n_h:]; _sh=_saldo_fd.iloc[-_n_h:].tolist()
     _fig_h=go.Figure()
     _fig_h.add_trace(go.Scatter(x=_xh,y=_sh,name="Realizado",mode="lines+markers",line=dict(color="#14243B",width=3.5),marker=dict(size=6,line=dict(color="white",width=2)),fill="tozeroy",fillcolor="rgba(20,36,59,.07)",hovertemplate="<b>Realizado</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
