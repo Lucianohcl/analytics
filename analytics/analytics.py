@@ -8921,19 +8921,41 @@ elif pg=="dash_fin":
         _h2.markdown(_fd_card(f"Saldo projetado em {_xp[-1]}",_fd_m(_sp_fin[-1]),f"{'+' if _sp_fin[-1]>=_saldo_hoje else '−'}{_fd_m(abs(_sp_fin[-1]-_saldo_hoje))} em relação a hoje",ac="#0F6E56"),unsafe_allow_html=True)
         _h3.markdown(_fd_card("Menor saldo projetado",_fd_m(_sp_fin[_im]),f"em {_xp[_im]}",ac="#DC2626" if _sp_fin[_im]<0 else "#059669"),unsafe_allow_html=True)
 
-                # ── Impacto da categoria rodada no Motor de Compras no fluxo geral ──
+                        # ── Impacto da categoria rodada no Motor de Compras no fluxo geral ──
         sec("🎯 Impacto da seleção trabalhada (vendas e compras projetadas) no caixa futuro da empresa")
         if not _tem_cruz:
             st.markdown('<div class="al-i">ℹ️ Rode uma seleção de produtos no <b>Motor de Compras</b> (por categoria, curva, catálogo ou outro filtro) para ver quanto o plano dela vai melhorar ou piorar o caixa futuro da empresa.</div>',unsafe_allow_html=True)
         else:
             _nn=_ult_plano+1; _xs=_xp[:_nn]; _plan=[_plano_map.get(l,0.0) for l in _xs]; _hab=_base_esc
-            _lag=int(round(max(_pmp,0)/30.0))
-            _pagto=[(_plan[i-_lag] if i-_lag>=0 else _hab) for i in range(_nn)]
-            _lagR=int(round(max(_pmr,0)/30.0))
+            # Prazos e encargos configurados na página "Fluxo de Caixa Comercial Projetado"
+            _cfg_ff=None
+            for _fk in (st.session_state.get("ff_filial_sel"),filial_sel_fd,"(Todas as filiais)"):
+                if _fk and st.session_state.cid:
+                    try: _cfg_ff=load_fluxo_financeiro(st.session_state.cid,_fk)
+                    except Exception: _cfg_ff=None
+                    if _cfg_ff: break
+            _parc_pag=st.session_state.get("ff_parcelas_pagar") or (_cfg_ff or {}).get("ff_parcelas_pagar") or []
+            _parc_rec=st.session_state.get("ff_parcelas_receber") or (_cfg_ff or {}).get("ff_parcelas_receber") or []
+            _enc_ff=float(st.session_state.get("ff_encargos_pct") or (_cfg_ff or {}).get("ff_encargos_pct") or 0.0)
+            _cfg_ok=bool(_parc_pag) and bool(_parc_rec)
+            if not _parc_pag: _parc_pag=[{"pct":100,"dias":max(_pmp,0)}]
+            if not _parc_rec: _parc_rec=[{"pct":100,"dias":max(_pmr,0)}]
+            def _soma_p(pc): return sum(float(p["pct"]) for p in pc) or 100.0
+            _pmp_cfg=sum(float(p["pct"])*float(p["dias"]) for p in _parc_pag)/_soma_p(_parc_pag)
+            _pmr_cfg=sum(float(p["pct"])*float(p["dias"]) for p in _parc_rec)/_soma_p(_parc_rec)
+            def _desloca(serie,parc):
+                out=[0.0]*len(serie)
+                for i,v in enumerate(serie):
+                    for p in parc:
+                        m=float(p["dias"])/30.0; a=int(m); f=m-a; pv=v*float(p["pct"])/100.0
+                        if i+a<len(out): out[i+a]+=pv*(1-f)
+                        if i+a+1<len(out): out[i+a+1]+=pv*f
+                return out
+            _lag=int(round(_pmp_cfg/30.0)); _lagR=int(round(_pmr_cfg/30.0))
             _vr_esc=[((_vr[i] if i<len(_vr) else _rb3)*_cob_motor) for i in range(_nn)]
             _rec_pl=_rec_com if _rec_com else (_vr_esc[0] if _vr_esc else 0.0)
-            _drec=[((_rec_pl-_vr_esc[i-_lagR]) if i-_lagR>=0 else 0.0) for i in range(_nn)]
-            _dpag=[_hab-_pagto[i] for i in range(_nn)]
+            _drec=[v*(1-_enc_ff/100.0) for v in _desloca([_rec_pl-_vr_esc[i] for i in range(_nn)],_parc_rec)]
+            _dpag=[-v for v in _desloca([_plan[i]-_hab for i in range(_nn)],_parc_pag)]
             _imp=[_drec[i]+_dpag[i] for i in range(_nn)]
             _cum=list(np.cumsum(_imp))
             _sp_sem=[float(_sp_fin[i]) for i in range(_nn)]
@@ -8943,7 +8965,7 @@ elif pg=="dash_fin":
             _sem_prazo=sum(_hab-_plan[i] for i in range(_nn)); _ef_prazo=sum(_dpag)-_sem_prazo
             _plan_med=_tot_plan/_nn; _preso=(_plan_med-_hab)*max(_ciclo_fd,0)/30.0
             _ef_fim=_cum[-1]; _pos=_ef_fim>=0
-            st.markdown(f'<div class="fd-q" style="margin-top:0"><b>Em palavras simples:</b> o gráfico acima é a previsão de caixa que o Financeiro já faz para a empresa toda. Aqui perguntamos: <i>e se os produtos que você selecionou no Motor de Compras (por categoria, curva, catálogo ou outro filtro) venderem e forem comprados como o Motor planeja, o caixa da empresa fica melhor ou pior?</i><br><b>💰 Entra dinheiro:</b> as vendas que o Motor prevê para a seleção. O cliente paga em média {_pmr:.0f} dias depois, então o dinheiro chega com atraso.<br><b>💸 Sai dinheiro:</b> as compras do plano. Você paga o fornecedor em média {_pmp:.0f} dias depois da compra.<br><b>Resultado:</b> comparamos com o que o Financeiro já previa. Número <b>positivo</b> = sobra mais dinheiro no caixa; <b>negativo</b> = falta dinheiro.</div>'.replace("$","&#36;"),unsafe_allow_html=True)
+            st.markdown(f'<div class="fd-q" style="margin-top:0"><b>Em palavras simples:</b> o gráfico acima é a previsão de caixa que o Financeiro já faz para a empresa toda. Aqui perguntamos: <i>e se os produtos que você selecionou no Motor de Compras (por categoria, curva, catálogo ou outro filtro) venderem e forem comprados como o Motor planeja, o caixa da empresa fica melhor ou pior?</i><br><b>💰 Entra dinheiro:</b> as vendas que o Motor prevê para a seleção, recebidas nos prazos configurados em <b>💰 Fluxo de Caixa Comercial Projetado</b> (média de {_pmr_cfg:.0f} dias).<br><b>💸 Sai dinheiro:</b> as compras do plano, pagas nos prazos configurados nessa mesma página (média de {_pmp_cfg:.0f} dias){' e com os encargos definidos lá' if _enc_ff>0 else ''}.<br><b>Resultado:</b> comparamos com o ritmo habitual da seleção, que o Financeiro já tinha embutido na previsão dele. Número <b>positivo</b> = sobra mais dinheiro no caixa; <b>negativo</b> = falta dinheiro.</div>'.replace("$","&#36;"),unsafe_allow_html=True)
             _v1,_v2,_v3=st.columns(3)
             _v1.markdown(_fd_card(f"1) Caixa em {_xs[-1]} SEM o plano",_fd_m(_sp_sem[-1]),"projeção da empresa com compras no ritmo habitual",ac="#0F6E56"),unsafe_allow_html=True)
             _v2.markdown(_fd_card("2) Efeito da seleção no caixa",("+" if _pos else "−")+_fd_m(abs(_ef_fim)),"entradas − saídas, já com os prazos",ac="#059669" if _pos else "#DC2626"),unsafe_allow_html=True)
@@ -8966,9 +8988,9 @@ elif pg=="dash_fin":
             _c2.plotly_chart(_fig_s,use_container_width=True)
             _itens=[]
             _tot_drec=sum(_drec)
-            _itens.append((2 if _tot_drec>=0 else 1,"Vendas e prazo de recebimento",f"A seleção projeta vendas de {_fd_m(_rec_pl)}/mês no Motor, contra {_fd_m(sum(_vr_esc)/_nn)}/mês na projeção financeira do mesmo escopo. Com prazo médio de recebimento de {_pmr:.0f} dias (≈ {_lagR} mês(es)), isso {'adiciona' if _tot_drec>=0 else 'tira'} {_fd_m(abs(_tot_drec))} de entradas no caixa até {_xs[-1]}."))
+            _itens.append((2 if _tot_drec>=0 else 1,"Vendas e prazo de recebimento",f"A seleção projeta vendas de {_fd_m(_rec_pl)}/mês no Motor, contra {_fd_m(sum(_vr_esc)/_nn)}/mês na projeção financeira do mesmo escopo. Com prazo médio de recebimento configurado de {_pmr_cfg:.0f} dias (≈ {_lagR} mês(es)), isso {'adiciona' if _tot_drec>=0 else 'tira'} {_fd_m(abs(_tot_drec))} de entradas no caixa até {_xs[-1]}."))
             _itens.append((2 if _d_vol>=0 else 1,"Volume de compras",f"Nos próximos {_nn} meses o plano compra {_fd_m(_tot_plan)}, contra {_fd_m(_tot_hab)} no ritmo habitual dela. Isso {'poupa' if _d_vol>=0 else 'consome'} {_fd_m(abs(_d_vol))} de caixa da empresa."))
-            _itens.append((2 if _ef_prazo>=0 else 1,"Prazo de pagamento",f"Com prazo médio de pagamento de {_pmp:.0f} dias (≈ {_lag} mês(es) de defasagem), as saídas do plano caem depois da compra: efeito de {'+' if _ef_prazo>=0 else '−'}{_fd_m(abs(_ef_prazo))} no caixa até {_xs[-1]}.") if _lag>0 else (1,"Prazo de pagamento",f"O prazo médio de pagamento é de {_pmp:.0f} dias, menos de 1 mês de defasagem: as compras do plano saem do caixa praticamente no mês da compra."))
+            _itens.append((2 if _ef_prazo>=0 else 1,"Prazo de pagamento",f"Com prazo médio de pagamento configurado de {_pmp_cfg:.0f} dias (≈ {_lag} mês(es) de defasagem), as saídas do plano caem depois da compra: efeito de {'+' if _ef_prazo>=0 else '−'}{_fd_m(abs(_ef_prazo))} no caixa até {_xs[-1]}.") if _lag>0 else (1,"Prazo de pagamento",f"O prazo médio de pagamento configurado é de {_pmp_cfg:.0f} dias, menos de 1 mês de defasagem: as compras do plano saem do caixa praticamente no mês da compra."))
             _itens.append((2 if _preso<=0 else 1,"Prazo de retorno (capital de giro)",f"O ciclo de caixa da empresa é de {_ciclo_fd:.0f} dias: o dinheiro de cada compra só volta como venda recebida cerca de {_ciclo_fd:.0f} dias depois de pago. Com o plano em {_fd_m(_plan_med)}/mês contra {_fd_m(_hab)}/mês habituais, o capital de giro {'liberado' if _preso<=0 else 'preso a mais'} é de ≈ {_fd_m(abs(_preso))}."))
             if _imp[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: o plano compra {_fd_m(_plan[_pior])}, {_fd_m(abs(_imp[_pior]))} a mais que o ritmo habitual no caixa do mês (considerando o prazo de pagamento). Mês mais leve: {_xs[_melhor]} ({'+' if _imp[_melhor]>=0 else '−'}{_fd_m(abs(_imp[_melhor]))})."))
             else: _itens.append((2,"Nenhum mês pressiona o caixa",f"Em todos os meses do plano o desembolso fica igual ou abaixo do ritmo habitual. Maior alívio: {_xs[_melhor]} (+{_fd_m(_imp[_melhor])})."))
@@ -8978,7 +9000,7 @@ elif pg=="dash_fin":
             except Exception: pass
             _icos2=["🔴","🟠","🟢"]
             st.markdown("".join(f'<div class="fd-dx" style="--c:{_cores[g]}"><div class="i">{_icos2[g]}</div><div><div class="h">{t}</div><div class="b">{b}</div></div></div>' for g,t,b in _itens).replace("$","&#36;"),unsafe_allow_html=True)
-            st.markdown(f'<div class="fd-q">Escopo: só os produtos selecionados no Motor de Compras (categoria, curva, catálogo ou o filtro aplicado; ≈ {_cob_motor*100:.0f}% da receita bruta da empresa), medida contra o ritmo habitual de compras desse mesmo escopo ({_fd_m(_hab)}/mês, média dos 6 últimos meses do balanço). O efeito líquido (recebimentos − pagamentos) é somado ao caixa projetado da empresa inteira. É estimativa para orientar a conversa com o Comercial, não um orçamento.</div>'.replace("$","&#36;"),unsafe_allow_html=True)                
+            st.markdown(f'<div class="fd-q">Escopo: só os produtos selecionados no Motor de Compras (categoria, curva, catálogo ou o filtro aplicado; ≈ {_cob_motor*100:.0f}% da receita bruta da empresa), medida contra o ritmo habitual de compras desse mesmo escopo ({_fd_m(_hab)}/mês, média dos 6 últimos meses do balanço). Prazos e encargos vêm da página Fluxo de Caixa Comercial Projetado{"" if _cfg_ok else " (ainda não configurados lá: usei o PMR/PMP do balanço)"}. O efeito líquido (recebimentos − pagamentos) é somado ao caixa projetado da empresa inteira. É estimativa para orientar a conversa com o Comercial, não um orçamento.</div>'.replace("$","&#36;"),unsafe_allow_html=True)                
  
     # ── 4) DO FATURAMENTO AO LUCRO + CICLO DE CAIXA ──────────────────────
     sec(f"💡 De onde vem o resultado · {_per_txt_fd}")
