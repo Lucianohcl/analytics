@@ -6583,6 +6583,7 @@ with st.sidebar:
     st.markdown('<div style="background:#0F6E56;color:#9FE1CB;font-size:.68rem;font-weight:700;'
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">MÓDULO FINANCEIRO</div>',unsafe_allow_html=True)
+    if st.button("📊 Dashboard Financeiro", key="sb_dash_fin", use_container_width=True): ir("dash_fin")
     if st.button("📄 DRE",             key="sb_dre",         use_container_width=True): ir("dre")
     if st.button("🏦 Balanço",         key="sb_balanco",     use_container_width=True): ir("balanco")
     if st.button("💵 Fluxo de Caixa",  key="sb_fluxo",       use_container_width=True): ir("fluxo")
@@ -8018,6 +8019,10 @@ elif pg=="recebidos":
                         st.markdown('<div class="al-w">⚠️ Escolha um tipo válido acima antes de confirmar.</div>',unsafe_allow_html=True)
 
 # ── DRE ─────────────────────────────────────────────
+elif pg=="dash_fin":
+    hdr("📊 Dashboard Financeiro","Visão executiva da saúde financeira da empresa")
+    st.markdown('<div class="al-i">🚧 Página em construção. Os blocos serão definidos a partir das páginas do Módulo Financeiro.</div>',unsafe_allow_html=True)
+
 elif pg=="dre":
     hdr("📊 DRE","Demonstração do Resultado — Real | AV% | AH%")
 
