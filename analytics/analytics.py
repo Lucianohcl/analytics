@@ -8857,30 +8857,32 @@ elif pg=="dash_fin":
     # ── 2) DIAGNÓSTICOS PRÉVIOS ──────────────────────────────────────────
     _dx=[]
     def _add(g,t,b,a=""): _dx.append((g,t,b,a))
+    _dxc=[]
+    def _add_c(g,t,b,a=""): _dxc.append((g,t,b,a))
     if _n_pr:
-        _lista=_sp_adj if _tem_cruz else _sp_fin
+        _lista=_sp_fin
         _neg=[_x_pr[i] for i,v in enumerate(_lista) if v<0]
         _min_proj=min(_lista)
-        if _neg: _add(0,"Caixa projetado fica negativo",f"O saldo cruza zero em {_neg[0]} e fica negativo em {len(_neg)} mês(es) do horizonte{' (já considerando o plano de compras do comercial)' if _tem_cruz else ''}.","Antecipar recebíveis, renegociar prazos com fornecedores ou reduzir/postergar compras.")
+        if _neg: _add(0,"Caixa projetado fica negativo",f"O saldo cruza zero em {_neg[0]} e fica negativo em {len(_neg)} mês(es) do horizonte.","Antecipar recebíveis, renegociar prazos com fornecedores ou reduzir/postergar compras.")
         elif _saida_med3>0 and _min_proj<_saida_med3:
             _add(1,"Colchão de caixa fino no horizonte",f"O menor saldo projetado ({_fd_m(_min_proj)}) cobre menos de 1 mês de saídas.","Definir um piso de caixa e planejar a captação antes do mês crítico.")
     if _tem_cruz:
         _imp=_sp_adj[-1]-_sp_fin[-1]
         _g=0 if (_sp_adj[-1]<0) else (1 if _imp<-0.1*max(abs(_saldo_hoje),1) else 2)
-        _add(_g,"Plano de compras × caixa",f"Se o plano do comercial for executado, o saldo em {_x_pr[_n_pr-1]} fica {_fd_m(_sp_adj[-1])}, "+("abaixo" if _imp<0 else "acima")+f" da projeção financeira pura ({_fd_m(_sp_fin[-1])}), diferença de {_fd_m(abs(_imp))}. Estimativa: troca o nível habitual de compras do mesmo escopo do Motor ({_fd_m(_base_esc)}/mês, {_cob_motor*100:.0f}% das compras da empresa) pelo plano mês a mês.",("Revisar com o Comercial os meses de pico do plano ou escalonar os pedidos." if _imp<0 else "Há folga: o plano cabe no caixa projetado."))
+        _add_c(_g,"Plano de compras × caixa",f"Se o plano do comercial for executado, o saldo em {_x_pr[_n_pr-1]} fica {_fd_m(_sp_adj[-1])}, "+("abaixo" if _imp<0 else "acima")+f" da projeção financeira pura ({_fd_m(_sp_fin[-1])}), diferença de {_fd_m(abs(_imp))}. Estimativa: troca o nível habitual de compras do mesmo escopo do Motor ({_fd_m(_base_esc)}/mês, {_cob_motor*100:.0f}% das compras da empresa) pelo plano mês a mês.",("Revisar com o Comercial os meses de pico do plano ou escalonar os pedidos." if _imp<0 else "Há folga: o plano cabe no caixa projetado."))
     if _rec_com and _rb3>0 and _cob_motor<0.85:
-        _add(1,"O Motor de Compras cobre só parte da empresa",f"A demanda prevista × preço do Motor dá {_fd_m(_rec_com)}/mês, cerca de {_cob_motor*100:.0f}% da receita bruta realizada da empresa ({_fd_m(_rb3)}/mês, média de 3 meses). Ele só prevê as categorias/produtos que foram rodados; por isso não comparei receita com a projeção financeira (que é da empresa toda) e confrontei o plano de compras apenas com a parcela proporcional das compras habituais ({_fd_m(_base_esc)}/mês).","Rodar o Motor de Compras para todas as categorias para cruzar a empresa inteira.")
+        _add_c(1,"O Motor de Compras cobre só parte da empresa",f"A demanda prevista × preço do Motor dá {_fd_m(_rec_com)}/mês, cerca de {_cob_motor*100:.0f}% da receita bruta realizada da empresa ({_fd_m(_rb3)}/mês, média de 3 meses). Ele só prevê as categorias/produtos que foram rodados; por isso não comparei receita com a projeção financeira (que é da empresa toda) e confrontei o plano de compras apenas com a parcela proporcional das compras habituais ({_fd_m(_base_esc)}/mês).","Rodar o Motor de Compras para todas as categorias para cruzar a empresa inteira.")
     elif _rec_com and _vr:
         _rfin=sum(_vr)/len(_vr); _dv=(_rec_com/_rfin-1)*100 if _rfin else 0
-        if abs(_dv)>=15: _add(1,"Comercial e Financeiro projetam receitas diferentes",f"A demanda prevista × preço no Motor de Compras dá {_fd_m(_rec_com)}/mês; a projeção financeira de receita bruta dá {_fd_m(_rfin)}/mês ({_dv:+.0f}%).","Alinhar as premissas: uma das duas previsões está otimista ou conservadora demais.")
-        else: _add(2,"Comercial e Financeiro alinhados na receita",f"Demanda × preço ({_fd_m(_rec_com)}/mês) e projeção financeira ({_fd_m(_rfin)}/mês) diferem só {_dv:+.0f}%.","")
+        if abs(_dv)>=15: _add_c(1,"Comercial e Financeiro projetam receitas diferentes",f"A demanda prevista × preço no Motor de Compras dá {_fd_m(_rec_com)}/mês; a projeção financeira de receita bruta dá {_fd_m(_rfin)}/mês ({_dv:+.0f}%).","Alinhar as premissas: uma das duas previsões está otimista ou conservadora demais.")
+        else: _add_c(2,"Comercial e Financeiro alinhados na receita",f"Demanda × preço ({_fd_m(_rec_com)}/mês) e projeção financeira ({_fd_m(_rfin)}/mês) diferem só {_dv:+.0f}%.","")
     if _wape_rec is not None and _wape_rec>30: _add(1,"Projeção de receita com baixa confiança",f"O erro histórico (WAPE) da receita é {_wape_rec:.0f}%. Trate a faixa projetada como ordem de grandeza.","Rodar a Validação Estatística de novo ou usar cenários.")
     _dia_rs=(float(pd.to_numeric(df_fd["receita líquida"],errors="coerce").tail(12).mean())*12/365) if len(df_fd) else 0.0
     if _ciclo_fd>60: _add(1 if _ciclo_fd<=90 else 0,"Ciclo de caixa pressiona o capital de giro",f"{_ciclo_fd:.0f} dias (recebimento {_pmr:.0f} + estoque {_pme:.0f} − pagamento {_pmp:.0f}). Cada dia vale cerca de {_fd_m(_dia_rs)}; chegar a 60 dias liberaria ≈ {_fd_m((_ciclo_fd-60)*_dia_rs)}.","Atacar o maior prazo: "+("estoque (giro)." if _pme>=_pmr else "recebimento (prazo de clientes)."))
     if _tem_com:
         try:
             _cen=preparar_cenario_motor(_df_res_fd); _lib=float(_cen["Excesso"].sum()-_cen["Falta"].sum())
-            if _lib>0 and _saldo_hoje>0: _add(2,"Estoque liberável é uma alavanca de caixa",f"O potencial de redução de estoque é {_fd_m(_lib)}, equivalente a {_lib/_saldo_hoje*100:.0f}% do saldo atual de caixa. É potencial simulado, não caixa realizado.","Priorizar a redução do excesso nos itens de maior capital parado.")
+            if _lib>0 and _saldo_hoje>0: _add_c(2,"Estoque liberável é uma alavanca de caixa",f"O potencial de redução de estoque é {_fd_m(_lib)}, equivalente a {_lib/_saldo_hoje*100:.0f}% do saldo atual de caixa. É potencial simulado, não caixa realizado.","Priorizar a redução do excesso nos itens de maior capital parado.")
         except Exception: pass
     if not pd.isna(_R["ml"]):
         if _R["ml"]<0: _add(0,"Prejuízo no período",f"Margem líquida de {_fd_num(_R['ml'])}%.","Revisar CMV, despesas e precificação.")
@@ -8929,6 +8931,8 @@ elif pg=="dash_fin":
         _h3.markdown(_fd_card(f"Saldo em {_xp[-1]}",_fd_m(_fim_a),("com o plano do comercial" if _tem_cruz else "projeção financeira")+(f" · sem plano {_fd_m(_sp_fin[-1])}" if _tem_cruz else ""),"","","",ac="#D97706" if _tem_cruz else "#0F6E56"),unsafe_allow_html=True)
         _lst=_sp_adj if _tem_cruz else _sp_fin; _im=int(np.argmin(_lst))
         _h4.markdown(_fd_card("Menor saldo projetado",_fd_m(_lst[_im]),f"em {_xp[_im]}","","","",ac="#DC2626" if _lst[_im]<0 else "#059669"),unsafe_allow_html=True)
+        if _dxc:
+            st.markdown('<div style="font-weight:700;color:#14243B;font-size:.9rem;margin:10px 0 6px">🔗 Cruzamento com o Comercial (Motor de Compras)</div>'+"".join(f'<div class="fd-dx" style="--c:{_cores[g]}"><div class="i">{_icos[g]}</div><div><div class="h">{t}</div><div class="b">{b}</div>'+(f'<div class="a">→ {a}</div>' if a else "")+'</div></div>' for g,t,b,a in sorted(_dxc,key=lambda x:x[0])).replace("$","&#36;"),unsafe_allow_html=True)
         st.markdown('<div class="fd-q">Como ler: a linha escura é o que já aconteceu; a verde tracejada é a projeção financeira (entradas − saídas, modelos ML). A laranja troca o nível habitual de compras embutido nas saídas pelo plano mês a mês do Motor de Compras. É uma estimativa para conversar com o Comercial, não um orçamento.</div>',unsafe_allow_html=True)
  
     # ── 4) DO FATURAMENTO AO LUCRO + CICLO DE CAIXA ──────────────────────
