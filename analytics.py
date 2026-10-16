@@ -9017,6 +9017,13 @@ elif pg=="dash_fin":
             _itens=[]
             _itens.append((2 if _pos else 1,"Resultado no período",f"Até {_xs[-1]} entram {_fd_m(_ent_t)} e saem {_fd_m(_sai_t)}: a seleção {'gera' if _pos else 'consome'} {_fd_m(abs(_res))} de caixa"+(f" ({_pct_cx:.0f}% do saldo atual da empresa)." if _pct_cx is not None else ".")))
             _itens.append((1 if _gap>0 else 2,"Prazos de pagamento e recebimento",f"Você paga em média {_pmp_cfg:.0f} dias depois da compra e recebe {_pmr_cfg:.0f} dias depois da venda: "+(f"recebe {abs(_gap):.0f} dias DEPOIS de pagar, então o caixa financia a seleção nesse intervalo." if _gap>0 else (f"recebe {abs(_gap):.0f} dias ANTES de pagar, o que ajuda o caixa." if _gap<0 else "recebimento e pagamento no mesmo prazo."))))
+            if abs(_pmr_cfg-_pmr)>=1 or abs(_pmp_cfg-_pmp)>=1:
+                _nn0=len(_vend_x)-_ext
+                _eb=[v*(1-_enc_ff/100.0) for v in _desloca(_vend_x,[{"pct":100,"dias":max(_pmr,0)}])][:_nn0][_i0:]
+                _sb=_desloca(_plan_x,[{"pct":100,"dias":max(_pmp,0)}])[:_nn0][_i0:]
+                _lb=[_eb[i]-_sb[i] for i in range(len(_eb))]; _res_b=sum(_lb); _min_b=min(np.cumsum(_lb)) if _lb else 0.0
+                _min_c=min(_cum) if _cum else 0.0
+                _itens.append((1 if _res_b<_res else 2,"E se os prazos forem os reais do balanço?",f"Com os prazos configurados (recebe em {_pmr_cfg:.0f} dias, paga em {_pmp_cfg:.0f}) o resultado até {_xs[-1]} é {'+' if _res>=0 else '−'}{_fd_m(abs(_res))} e o pior ponto acumulado é {_fd_m(_min_c)}. Com os prazos reais do balanço (recebe em {_pmr:.0f} dias, paga em {_pmp:.0f}) o resultado seria {'+' if _res_b>=0 else '−'}{_fd_m(abs(_res_b))} e o pior ponto, {_fd_m(_min_b)}. Diferença de {_fd_m(abs(_res-_res_b))}: é quanto o resultado depende de os prazos configurados se confirmarem."))
             if _ent_dep>0 or _sai_dep>0: _itens.append((2 if _ent_dep>=_sai_dep else 1,"O que cai depois do período",f"Ainda depois de {_xs[-1]} entram mais {_fd_m(_ent_dep)} (vendas já feitas, recebidas pelos prazos) e saem mais {_fd_m(_sai_dep)} (compras já feitas, pagas pelos prazos). Não estão nos gráficos acima."))
             if _liq[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: entram {_fd_m(_ent[_pior])} e saem {_fd_m(_sai[_pior])}, resultado de −{_fd_m(abs(_liq[_pior]))}. Mês mais leve: {_xs[_melhor]} ({'+' if _liq[_melhor]>=0 else '−'}{_fd_m(abs(_liq[_melhor]))})."))
             else: _itens.append((2,"Nenhum mês consome caixa",f"Em todos os meses entra mais do que sai. Melhor mês: {_xs[_melhor]} (+{_fd_m(_liq[_melhor])})."))
