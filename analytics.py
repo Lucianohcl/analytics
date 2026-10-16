@@ -6584,6 +6584,7 @@ with st.sidebar:
                 'letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;'
                 'display:inline-block;margin-bottom:4px">MÓDULO FINANCEIRO</div>',unsafe_allow_html=True)
     if st.button("📊 Dashboard Financeiro", key="sb_dash_fin", use_container_width=True): ir("dash_fin")
+    if st.button("📊 Dashboard Financeiro", key="sb_dash_fin", use_container_width=True): ir("dash_fin")
     if st.button("📄 DRE",             key="sb_dre",         use_container_width=True): ir("dre")
     if st.button("🏦 Balanço",         key="sb_balanco",     use_container_width=True): ir("balanco")
     if st.button("💵 Fluxo de Caixa",  key="sb_fluxo",       use_container_width=True): ir("fluxo")
@@ -8023,6 +8024,585 @@ elif pg=="dash_fin":
     hdr("📊 Dashboard Financeiro","Visão executiva da saúde financeira da empresa")
     st.markdown('<div class="al-i">🚧 Página em construção. Os blocos serão definidos a partir das páginas do Módulo Financeiro.</div>',unsafe_allow_html=True)
 
+elif pg=="dash_fin":
+    from plotly.subplots import make_subplots
+    st.markdown("""<style>
+.fd-card{background:#fff;border:1px solid #EBEBEB;border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.04);height:100%}
+.fd-lbl{font-size:.7rem;color:#8A8F98;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.fd-val{font-family:Georgia,serif;font-size:1.7rem;font-weight:800;color:#14243B;line-height:1.1;margin:4px 0 2px}
+.fd-sub{font-size:.72rem;color:#6B7280;line-height:1.4}
+.fd-chip{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:4px}
+.fd-chip.g{background:#E6F6EF;color:#047857}.fd-chip.r{background:#FDECEC;color:#B91C1C}.fd-chip.n{background:#F1F2F4;color:#6B7280}
+.fd-sig{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border-radius:8px;font-size:.78rem;line-height:1.4;margin-bottom:6px}
+.fd-sig.d{background:#FDECEC;color:#7F1D1D;border-left:4px solid #DC2626}
+.fd-sig.w{background:#FFF6E5;color:#7A4B00;border-left:4px solid #D97706}
+.fd-sig.s{background:#E8F7F0;color:#065F46;border-left:4px solid #059669}
+.fd-tab{width:100%;border-collapse:collapse;font-size:.8rem}
+.fd-tab th{background:#F8F5EE;color:#666;padding:7px 10px;text-align:right;font-weight:700;border-bottom:2px solid #F0A500;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em}
+.fd-tab th:first-child,.fd-tab td:first-child{text-align:left}
+.fd-tab td{padding:8px 10px;text-align:right;border-bottom:1px solid #F1F1F1;color:#14243B}
+.fd-tab td.best{background:#E6F6EF;color:#047857;font-weight:800}
+.fd-tab td.worst{background:#FDECEC;color:#B91C1C;font-weight:800}
+.st-key-fd_ir_parecer button{min-height:3.4rem!important;background:linear-gradient(135deg,#0F6E56 0%,#085041 100%)!important;border:2px solid #F0A500!important;border-radius:14px!important;box-shadow:0 8px 20px rgba(15,110,86,.32)!important;transition:transform .15s,box-shadow .15s}
+.st-key-fd_ir_parecer button p{color:#fff!important;font-size:1.05rem!important;font-weight:800!important;letter-spacing:.02em}
+.st-key-fd_ir_parecer button:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(15,110,86,.42)!important}
+</style>""",unsafe_allow_html=True)
+ 
+    _hdr_fd=st.empty()
+    _FD_PLOT=dict(plot_bgcolor="white",paper_bgcolor="white",font=dict(color="#6B7280",size=11,family="Inter"),
+        margin=dict(l=8,r=8,t=44,b=36),hovermode="x unified",
+        legend=dict(bgcolor="rgba(0,0,0,0)",orientation="h",y=-0.22,font=dict(size=10)),
+        hoverlabel=dict(bgcolor="white",bordercolor="#E8ECF0",font=dict(color="#111827",size=11)))
+    _FD_TIT=dict(size=14,family="Georgia, serif",color="#14243B")
+    _MESES_FD=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"]
+ 
+    def _fd_zero_align(fig,v1,v2):
+        m1=max([abs(float(x)) for x in v1 if pd.notna(x)]+[1.0])*1.15
+        m2=max([abs(float(x)) for x in v2 if pd.notna(x)]+[1.0])*1.15
+        fig.update_yaxes(range=[-m1,m1],secondary_y=False); fig.update_yaxes(range=[-m2,m2],secondary_y=True)
+    def _fd_m(v):
+        return fmt(v).replace("$","&#36;")
+    def _fd_num(x,d=1):
+        try:
+            if x is None or pd.isna(x): return "—"
+            return f"{float(x):.{d}f}".replace(".",",")
+        except Exception: return "—"
+    def _fd_ano(x):
+        try: return str(int(float(x)))
+        except Exception: return str(x)
+    def _fd_spark(vals,cor_s="#0F6E56",w=120,h=28):
+        v=[float(x) for x in vals if x is not None and not pd.isna(x)]
+        if len(v)<2: return ""
+        mn,mx=min(v),max(v); rg=(mx-mn) or 1.0
+        pts=" ".join(f"{i*(w-4)/(len(v)-1)+2:.1f},{h-3-(x-mn)/rg*(h-6):.1f}" for i,x in enumerate(v))
+        return (f'<svg width="100%" height="{h}" viewBox="0 0 {w} {h}" preserveAspectRatio="none" style="display:block;margin-top:6px">'
+                f'<polyline fill="none" stroke="{cor_s}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="{pts}"/></svg>')
+    def _fd_chip(delta,good_up=True,unit="%",ref=""):
+        if delta is None or pd.isna(delta): return ""
+        up=delta>=0
+        cls="n" if abs(delta)<0.05 else ("g" if (up==good_up) else "r")
+        return f'<span class="fd-chip {cls}">{"▲" if up else "▼"} {abs(delta):.1f}{unit} {ref}</span>'
+    def _fd_card(lbl,val,sub="",chip="",spark="",tip=""):
+        return (f'<div class="fd-card" title="{tip}"><div class="fd-lbl">{lbl}</div><div class="fd-val">{val}</div>'
+                f'<div class="fd-sub">{sub}</div>{chip}{spark}</div>')
+ 
+    # ── DADOS ──────────────────────────────────────────────────────────
+    _df_raw_fd=get_df_raw_bruto()
+    if _df_raw_fd is None:
+        no_data(); st.stop()
+    _col_fil_fd=col_filial(_df_raw_fd)
+    filial_sel_fd=None; _filiais_fd=[]
+    if _col_fil_fd:
+        _filiais_fd=sorted(v for v in _df_raw_fd[_col_fil_fd].dropna().astype(str).unique().tolist() if v!="(Todas as filiais)")
+        _opc_fil_fd=["(Todas as filiais)"]+_filiais_fd
+        def _on_change_filial_fd():
+            st.session_state["fd_filial_sel_backup"]=st.session_state["fd_filial_sel"]
+        if st.session_state.get("fd_filial_sel_backup") not in _opc_fil_fd:
+            st.session_state["fd_filial_sel_backup"]=_opc_fil_fd[0]
+        st.session_state["fd_filial_sel"]=st.session_state["fd_filial_sel_backup"]
+        filial_sel_fd=st.selectbox("🏬 Filial",_opc_fil_fd,key="fd_filial_sel",on_change=_on_change_filial_fd)
+    df_fd=get_df_filial(filial_sel_fd)
+    if df_fd is None or df_fd.empty:
+        no_data(); st.stop()
+    df_fd=df_fd.reset_index(drop=True)
+    _cm_fd=cm_(df_fd); _ca_fd=ca_(df_fd)
+    if not (_cm_fd and _ca_fd):
+        st.markdown('<div class="al-w">⚠️ Os dados não têm as colunas Ano e Mês.</div>',unsafe_allow_html=True); st.stop()
+    _mes3_fd=df_fd[_cm_fd].astype(str).str.strip().str.lower().str[:3]
+    _ano_fd=df_fd[_ca_fd].map(_fd_ano)
+    _rot_fd=[f"{m}/{a[-2:]}" for m,a in zip(_mes3_fd,_ano_fd)]
+    # Balanço corrente e consolidado (Liquidez, Kanitz e ROE usam contas corporativas: só existem na empresa toda)
+    df_cons_fd=get_df_filial("(Todas as filiais)") if _col_fil_fd else df_fd
+    df_cons_fd=df_cons_fd.reset_index(drop=True) if df_cons_fd is not None else df_fd
+ 
+    _anos_fd=sorted(set(_ano_fd))
+    _opc_per_fd=["Último mês"]+[f"Ano {a}" for a in _anos_fd]+["Todo o histórico"]
+    _ix_per_fd=_opc_per_fd.index(f"Ano {_anos_fd[-1]}") if _anos_fd else 0
+    per_sel_fd=st.selectbox("📅 Período",_opc_per_fd,index=_ix_per_fd,key="fd_periodo")
+ 
+    def _fd_idx(d_ano,d_mes3,sel):
+        n=len(d_ano)
+        if sel=="Último mês": return [n-1]
+        if sel.startswith("Ano "): return [i for i in range(n) if d_ano[i]==sel[4:]]
+        return list(range(n))
+    _ano_l=list(_ano_fd); _mes_l=list(_mes3_fd)
+    _idx_fd=_fd_idx(_ano_l,_mes_l,per_sel_fd)
+    if not _idx_fd:
+        st.warning("Sem dados para este período."); st.stop()
+    _idx_prev_fd=[]; _ref_prev_fd=""
+    if per_sel_fd=="Último mês":
+        _i=_idx_fd[0]
+        _yoy=[j for j in range(len(_ano_l)) if _mes_l[j]==_mes_l[_i] and _ano_l[j]==str(int(_ano_l[_i])-1)] if _ano_l[_i].isdigit() else []
+        if _yoy: _idx_prev_fd=_yoy; _ref_prev_fd="vs mesmo mês do ano anterior"
+        elif _i>=1: _idx_prev_fd=[_i-1]; _ref_prev_fd="vs mês anterior"
+    elif per_sel_fd.startswith("Ano ") and per_sel_fd[4:].isdigit():
+        _pa=str(int(per_sel_fd[4:])-1)
+        _idx_prev_fd=[j for j in range(len(_ano_l)) if _ano_l[j]==_pa]
+        if _idx_prev_fd: _ref_prev_fd=f"vs {_pa} (média mensal)"
+    _per_txt_fd=per_sel_fd if per_sel_fd!="Último mês" else f"{_rot_fd[_idx_fd[0]]}"
+    _ult_fd=df_fd.iloc[_idx_fd[-1]]
+    _ult_cons_fd=df_cons_fd.iloc[min(_idx_fd[-1],len(df_cons_fd)-1)]
+ 
+    def _fd_soma(d,idx,col):
+        return float(pd.to_numeric(d.iloc[idx][col],errors="coerce").fillna(0).sum()) if (idx and col in d.columns) else 0.0
+    def _fd_media(d,idx,col):
+        return float(pd.to_numeric(d.iloc[idx][col],errors="coerce").mean()) if (idx and col in d.columns) else float("nan")
+    def _fd_res(d,idx):
+        rl=_fd_soma(d,idx,"receita líquida"); lb=_fd_soma(d,idx,"lucro bruto")
+        ll=_fd_soma(d,idx,"lucro líquido"); eb=_fd_soma(d,idx,"EBITDA")
+        return dict(rl=rl,rb=_fd_soma(d,idx,"receita bruta de vendas"),lb=lb,ll=ll,eb=eb,
+            mb=(lb/rl*100 if rl else float("nan")),ml=(ll/rl*100 if rl else float("nan")),me=(eb/rl*100 if rl else float("nan")))
+    _R=_fd_res(df_fd,_idx_fd)
+    _Rp=_fd_res(df_fd,_idx_prev_fd) if _idx_prev_fd else None
+    def _fd_dpct(cur,prev_total,n_cur,n_prev):
+        try:
+            a=cur/max(n_cur,1); b=prev_total/max(n_prev,1)
+            return (a/b-1)*100 if b else None
+        except Exception: return None
+    _n_cur_fd=len(_idx_fd); _n_prev_fd=len(_idx_prev_fd)
+    _score_fd=float(pd.to_numeric(df_fd.iloc[_idx_fd]["score_risco"],errors="coerce").mean()) if "score_risco" in df_fd.columns else 0.0
+    _lbl_sc_fd,_cls_sc_fd,_cor_sc_fd=score_label(_score_fd)
+ 
+    # Caixa (mesma lógica da página Fluxo de Caixa, mas acumulando desde o início da base)
+    _si_fd=float(st.session_state.get("saldo_ini",0) or 0)
+    _ent_fd=pd.to_numeric(df_fd.get("Disponibilidades entradas",pd.Series(0,index=df_fd.index)),errors="coerce").fillna(0)
+    _sai_fd=pd.to_numeric(df_fd.get("Disponibilidades Saida",pd.Series(0,index=df_fd.index)),errors="coerce").fillna(0)
+    _ev_fd=float(st.session_state.get("entradas_vista",0) or 0)
+    if _ev_fd>0:
+        _ent_fd=_ent_fd+(_ev_fd*22 if st.session_state.get("freq_fluxo","Mensal")=="Diário" else _ev_fd)
+    _saldo_fd=_si_fd+(_ent_fd-_sai_fd).cumsum()
+    _saldo_fim_fd=float(_saldo_fd.iloc[_idx_fd[-1]])
+ 
+    # ── 1) CABEÇALHO COM O SCORE ─────────────────────────────────────────
+    _hdr_fd.markdown(f'''<div style="background:linear-gradient(135deg,#0F6E56 0%,#085041 100%);border-radius:14px;padding:22px 32px;margin-bottom:4px;box-shadow:0 4px 14px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="background:#9FE1CB;border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px">💼</div>
+        <div>
+          <div style="font-family:Georgia,serif;font-size:1.05rem;font-weight:600;color:#fff">DASHBOARD FINANCEIRO | SAÚDE FINANCEIRA DA EMPRESA</div>
+          <div style="color:#9FE1CB;font-size:.78rem;margin-top:4px">{(filial_sel_fd or "(Todas as filiais)")} · {_per_txt_fd}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="text-align:right"><div style="font-size:.65rem;color:#D9BD82;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Score de Saúde</div>
+          <div style="font-size:.8rem;color:#fff">{_lbl_sc_fd}</div></div>
+        <div title="Média do Score de Saúde dos meses do período: Kanitz, liquidez imediata, EBITDA e ciclo de caixa, 25% cada." style="display:flex;align-items:baseline;gap:3px;background:{_cor_sc_fd}33;border:1px solid {_cor_sc_fd}88;border-radius:12px;padding:4px 16px;cursor:help">
+          <div style="font-family:Georgia,serif;font-size:3.2rem;font-weight:800;color:#fff;line-height:1">{_score_fd:.0f}</div>
+          <div style="font-size:1rem;color:#fff;opacity:.85">/100</div></div>
+      </div>
+    </div>''',unsafe_allow_html=True)
+ 
+    # ── 2) OITO CARTÕES ──────────────────────────────────────────────────
+    _n12=min(12,len(df_fd))
+    def _fd_serie(col,d=None):
+        d=df_fd if d is None else d
+        return pd.to_numeric(d[col],errors="coerce").tail(_n12).tolist() if col in d.columns else []
+    _ciclo_fd=float(_ult_fd.get("ciclo de caixa",0) or 0)
+    _lc_fd=float(_ult_cons_fd.get("liquidez corrente",0) or 0)
+    _kz_fd=float(_ult_cons_fd.get("kanitz",0) or 0)
+    _kz_zona=("Zona insolvente" if _kz_fd<-3 else ("Zona de penumbra" if _kz_fd<0 else "Zona solvente"))
+    _kz_cor=("#B91C1C" if _kz_fd<-3 else ("#B45309" if _kz_fd<0 else "#047857"))
+    _escopo_bal=" · empresa toda" if (filial_sel_fd and filial_sel_fd!="(Todas as filiais)") else ""
+    _cards1=st.columns(4)
+    _cards1[0].markdown(_fd_card("Receita líquida",_fd_m(_R["rl"]),f"Receita bruta {_fd_m(_R['rb'])}",
+        _fd_chip(_fd_dpct(_R["rl"],_Rp["rl"],_n_cur_fd,_n_prev_fd) if _Rp else None,True,"%",_ref_prev_fd),_fd_spark(_fd_serie("receita líquida"))),unsafe_allow_html=True)
+    _cards1[1].markdown(_fd_card("Margem bruta",f"{_fd_num(_R['mb'])}%",f"Lucro bruto {_fd_m(_R['lb'])}",
+        _fd_chip((_R["mb"]-_Rp["mb"]) if _Rp else None,True," p.p.",_ref_prev_fd),_fd_spark(_fd_serie("margem bruta %"),"#A9762F")),unsafe_allow_html=True)
+    _cards1[2].markdown(_fd_card("EBITDA",_fd_m(_R["eb"]),f"{_fd_num(_R['me'])}% da receita líquida",
+        _fd_chip(_fd_dpct(_R["eb"],_Rp["eb"],_n_cur_fd,_n_prev_fd) if _Rp else None,True,"%",_ref_prev_fd),_fd_spark(_fd_serie("EBITDA"),"#2563EB")),unsafe_allow_html=True)
+    _cards1[3].markdown(_fd_card("Margem líquida",f"{_fd_num(_R['ml'])}%",f"Lucro líquido {_fd_m(_R['ll'])}",
+        _fd_chip((_R["ml"]-_Rp["ml"]) if _Rp else None,True," p.p.",_ref_prev_fd),_fd_spark(_fd_serie("margem líquida %"),"#7C3AED")),unsafe_allow_html=True)
+    st.markdown("<div style='height:10px'></div>",unsafe_allow_html=True)
+    _cards2=st.columns(4)
+    _cards2[0].markdown(_fd_card("Saldo de caixa",_fd_m(_saldo_fim_fd),f"no fim de {_rot_fd[_idx_fd[-1]]}",
+        _fd_chip(((_saldo_fim_fd-float(_saldo_fd.iloc[_idx_prev_fd[-1]]))/float(_saldo_fd.iloc[_idx_prev_fd[-1]])*100) if (_idx_prev_fd and float(_saldo_fd.iloc[_idx_prev_fd[-1]])>0 and _saldo_fim_fd>0) else None,True,"%",_ref_prev_fd),
+        _fd_spark(_saldo_fd.tail(_n12).tolist(),"#059669"),"Saldo inicial configurado em Fluxo de Caixa + entradas − saídas acumuladas"),unsafe_allow_html=True)
+    _cards2[1].markdown(_fd_card("Ciclo de caixa",f"{_ciclo_fd:.0f} dias","recebimento + estoque − pagamento",
+        _fd_chip((_ciclo_fd-float(df_fd.iloc[_idx_prev_fd[-1]].get("ciclo de caixa",0) or 0)) if _idx_prev_fd else None,False," dias",_ref_prev_fd),_fd_spark(_fd_serie("ciclo de caixa"),"#D97706")),unsafe_allow_html=True)
+    _cards2[2].markdown(_fd_card("Liquidez corrente",f"{_fd_num(_lc_fd,2)}x",f"referência ≥ 1,5x{_escopo_bal}","",_fd_spark(_fd_serie("liquidez corrente",df_cons_fd),"#0891B2")),unsafe_allow_html=True)
+    _cards2[3].markdown(_fd_card("Kanitz",f"{_fd_num(_kz_fd,2)}",f"<b style='color:{_kz_cor}'>{_kz_zona}</b>{_escopo_bal}","",_fd_spark(_fd_serie("kanitz",df_cons_fd),"#14243B")),unsafe_allow_html=True)
+ 
+    # ── 3) SINAIS AUTOMÁTICOS E MAIORES PRESSÕES NO SCORE ───────────────
+    _sig_fd=[]
+    def _sg(t,m,det=""): _sig_fd.append((t,m,det))
+    if not pd.isna(_R["ml"]):
+        if _R["ml"]<0: _sg("d","Prejuízo no período",f"Margem líquida de {_fd_num(_R['ml'])}%: a empresa gastou mais do que faturou.")
+        elif _R["ml"]<5: _sg("w","Margem líquida baixa",f"{_fd_num(_R['ml'])}%. O mínimo recomendado é 5%.")
+    if not pd.isna(_R["mb"]) and _R["mb"]<20: _sg("w","Margem bruta baixa",f"{_fd_num(_R['mb'])}%. Revisar CMV e precificação.")
+    if _lc_fd<1: _sg("d","Liquidez corrente crítica",f"{_fd_num(_lc_fd,2)}x: dívidas de curto prazo maiores que o ativo circulante.")
+    elif _lc_fd<1.5: _sg("w","Liquidez corrente abaixo do ideal",f"{_fd_num(_lc_fd,2)}x. Recomendado ≥ 1,5x.")
+    _li_fd=float(_ult_cons_fd.get("liquidez imediata",0) or 0)
+    if _li_fd<0.3: _sg("d","Liquidez imediata crítica",f"{_fd_num(_li_fd,2)}x: caixa insuficiente para as dívidas imediatas.")
+    elif _li_fd<0.5: _sg("w","Liquidez imediata baixa",f"{_fd_num(_li_fd,2)}x. Recomendado ≥ 0,5x.")
+    if _kz_fd<-3: _sg("d","Kanitz em zona insolvente",f"{_fd_num(_kz_fd,2)}: alto risco de insolvência.")
+    elif _kz_fd<0: _sg("w","Kanitz em zona de penumbra",f"{_fd_num(_kz_fd,2)}: situação financeira incerta.")
+    if _ciclo_fd>90: _sg("d","Ciclo de caixa muito elevado",f"{_ciclo_fd:.0f} dias: capital de giro muito comprometido.")
+    elif _ciclo_fd>60: _sg("w","Ciclo de caixa elevado",f"{_ciclo_fd:.0f} dias. Monitorar o capital de giro.")
+    _roe_fd=float(_ult_cons_fd.get("ROE",0) or 0)
+    if _roe_fd<0: _sg("d","ROE negativo",f"{_fd_num(_roe_fd)}% sobre o patrimônio.")
+    elif _roe_fd<6: _sg("w","ROE baixo",f"{_fd_num(_roe_fd)}%, abaixo da taxa mínima de atratividade.")
+    _neg_fd=[_rot_fd[i] for i in range(len(df_fd)) if float(_saldo_fd.iloc[i])<0 and i in _idx_fd]
+    if _neg_fd: _sg("d","Caixa negativo",f"Em {len(_neg_fd)} mês(es): {', '.join(_neg_fd[:6])}{'…' if len(_neg_fd)>6 else ''}.")
+    if not _sig_fd: _sg("s","Sem sinais de atenção","Todos os indicadores acompanhados estão dentro das faixas de referência.")
+    st.markdown("<div style='height:6px'></div>",unsafe_allow_html=True)
+    _ord_sig={"d":0,"w":1,"s":2}
+    _sig_html="".join(f'<div class="fd-sig {t}"><div>{"🔴" if t=="d" else ("🟠" if t=="w" else "🟢")}</div><div><b>{m}</b>{(" — "+d) if d else ""}</div></div>' for t,m,d in sorted(_sig_fd,key=lambda x:_ord_sig[x[0]])[:6])
+    st.markdown(_sig_html,unsafe_allow_html=True)
+ 
+    def _fd_pilares(d,idx):
+        s=d.iloc[idx]
+        k=pd.to_numeric(s["kanitz"],errors="coerce"); li=pd.to_numeric(s["liquidez imediata"],errors="coerce")*100
+        eb=pd.to_numeric(s["EBITDA %"],errors="coerce").fillna(0); cc=pd.to_numeric(s["ciclo de caixa"],errors="coerce").fillna(0)
+        kn=((k+4)/4).clip(0,1).where(k.notna(),1); ln=(li/5).clip(0,1).where(li.notna(),1)
+        en=(eb/5).clip(0,1).where(eb>0,0); cn_=((120-cc)/120).clip(0,1)
+        return {"kanitz":float(kn.mean()),"liq":float(ln.mean()),"ebitda":float(en.mean()),"ciclo":float(cn_.mean())}
+    try:
+        _pil_fd=_fd_pilares(df_cons_fd if False else df_fd,_idx_fd)
+        _perd_fd={k:25*(1-v) for k,v in _pil_fd.items()}
+        _top_fd=sorted(_perd_fd.items(),key=lambda x:-x[1])
+        _nm_pil={"kanitz":"Kanitz (solvência)","liq":"Liquidez imediata (caixa)","ebitda":"EBITDA (geração de caixa)","ciclo":"Ciclo de caixa (capital de giro)"}
+        _res_top_fd=" · ".join(f"{_nm_pil[k]} (−{v:.0f} pts)" for k,v in _top_fd[:3] if v>=1) or "nenhum pilar perde pontos"
+        with st.expander(f"🎯 Maiores pressões no Score {_score_fd:.0f}/100: {_res_top_fd}. Clique para entender cada pilar.",expanded=False):
+            st.markdown(
+                "**Como ler:** o Score de Saúde (0 a 100) é a média de 4 pilares com o mesmo peso, 25 pontos cada. Cada pilar ganha de 0 a 25 pontos, e a tabela mostra quantos pontos ele **perdeu**.\n\n"
+                f"**1. Kanitz, solvência (perdeu {_perd_fd['kanitz']:.0f} pts)**  \nCombina liquidez, endividamento e rentabilidade numa nota só. Ganha os 25 pontos se for 0 ou mais; perde tudo se for −4 ou menos. Hoje: **{_fd_num(_kz_fd,2)}** ({_kz_zona.lower()}).\n\n"
+                f"**2. Liquidez imediata, caixa (perdeu {_perd_fd['liq']:.0f} pts)**  \nQuanto de caixa a empresa tem para cada R\\$ 1 de dívida de curto prazo. Ganha os 25 pontos com 0,05x ou mais. Hoje: **{_fd_num(_li_fd,2)}x**.\n\n"
+                f"**3. EBITDA, geração de caixa (perdeu {_perd_fd['ebitda']:.0f} pts)**  \nQuanto da receita líquida sobra como geração de caixa operacional. Ganha os 25 pontos com 5% ou mais. Hoje: **{_fd_num(_R['me'])}%**.\n\n"
+                f"**4. Ciclo de caixa, capital de giro (perdeu {_perd_fd['ciclo']:.0f} pts)**  \nDias entre pagar o fornecedor e receber do cliente. Ganha os 25 pontos com 0 dias ou menos; perde tudo com 120 dias ou mais. Hoje: **{_ciclo_fd:.0f} dias**.\n\n"
+                "Liquidez e Kanitz usam contas do Balanço que não são separadas por filial; por isso, ao escolher uma filial, esses dois valores são da empresa toda.")
+    except Exception:
+        pass
+ 
+    # ── 4) COMPARATIVO ENTRE FILIAIS ─────────────────────────────────────
+    if len(_filiais_fd)>=2:
+        sec("🏬 Comparativo entre filiais")
+        _linhas_cmp=[]
+        for _f in _filiais_fd:
+            try:
+                _dff=get_df_filial(_f).reset_index(drop=True)
+                _a=[_fd_ano(x) for x in _dff[_ca_fd]]; _m=_dff[_cm_fd].astype(str).str.strip().str.lower().str[:3].tolist()
+                _ix=_fd_idx(_a,_m,per_sel_fd)
+                if not _ix: continue
+                _r=_fd_res(_dff,_ix)
+                _linhas_cmp.append(dict(Filial=_f,rl=_r["rl"],mb=_r["mb"],me=_r["me"],ml=_r["ml"],ll=_r["ll"],
+                    ciclo=float(_dff.iloc[_ix[-1]].get("ciclo de caixa",0) or 0),
+                    score=float(pd.to_numeric(_dff.iloc[_ix]["score_risco"],errors="coerce").mean())))
+            except Exception:
+                continue
+        if len(_linhas_cmp)>=2:
+            _dcmp=pd.DataFrame(_linhas_cmp)
+            _cA,_cB=st.columns(2)
+            _figA=go.Figure(go.Bar(x=_dcmp["Filial"],y=_dcmp["rl"],text=[fmt(v) for v in _dcmp["rl"]],textposition="outside",
+                marker=dict(color=["#0F6E56","#A9762F","#2563EB","#7C3AED","#0891B2","#6b7280"][:len(_dcmp)],line=dict(color="white",width=1)),
+                hovertemplate="<b>%{x}</b><br>Receita líquida: R$ %{y:,.0f}<extra></extra>"))
+            _figA.update_layout(title=dict(text="Receita líquida por filial",font=_FD_TIT),**{**_FD_PLOT,"hovermode":"closest"},showlegend=False,height=340,yaxis=dict(gridcolor="#F3F4F6"))
+            _cA.plotly_chart(_figA,use_container_width=True)
+            _figB=go.Figure()
+            for _col,_nm,_cr in [("mb","Margem bruta","#0F6E56"),("me","EBITDA","#A9762F"),("ml","Margem líquida","#2563EB")]:
+                _figB.add_trace(go.Bar(x=_dcmp["Filial"],y=_dcmp[_col],name=_nm,marker_color=_cr,text=[f"{v:.1f}%" for v in _dcmp[_col]],textposition="outside",
+                    hovertemplate=f"<b>{_nm}</b><br>%{{x}}: %{{y:.1f}}%<extra></extra>"))
+            _figB.update_layout(title=dict(text="Margens por filial (% da receita líquida)",font=_FD_TIT),barmode="group",**_FD_PLOT,height=340,yaxis=dict(gridcolor="#F3F4F6",ticksuffix="%"))
+            _cB.plotly_chart(_figB,use_container_width=True)
+            def _td(v,col,txt,hi_good=True):
+                vals=_dcmp[col]; best=vals.max() if hi_good else vals.min(); worst=vals.min() if hi_good else vals.max()
+                cl="best" if (v==best and best!=worst) else ("worst" if (v==worst and best!=worst) else "")
+                return f'<td class="{cl}">{txt}</td>'
+            _rows_cmp="".join("<tr><td><b>"+r["Filial"]+"</b></td>"+_td(r["rl"],"rl",_fd_m(r["rl"]))+_td(r["mb"],"mb",f"{_fd_num(r['mb'])}%")+_td(r["me"],"me",f"{_fd_num(r['me'])}%")
+                +_td(r["ml"],"ml",f"{_fd_num(r['ml'])}%")+_td(r["ciclo"],"ciclo",f"{r['ciclo']:.0f} d",False)+_td(r["score"],"score",f"{r['score']:.0f}")+"</tr>" for _,r in _dcmp.iterrows())
+            st.markdown(f'<table class="fd-tab"><thead><tr><th>Filial</th><th>Receita líquida</th><th>Margem bruta</th><th>EBITDA</th><th>Margem líquida</th><th>Ciclo de caixa</th><th>Score</th></tr></thead><tbody>{_rows_cmp}</tbody></table>',unsafe_allow_html=True)
+            _melhor=_dcmp.loc[_dcmp["ml"].idxmax()]; _pior=_dcmp.loc[_dcmp["ml"].idxmin()]
+            if _melhor["Filial"]!=_pior["Filial"] and not pd.isna(_melhor["ml"]) and not pd.isna(_pior["ml"]):
+                _gap=_melhor["ml"]-_pior["ml"]; _ganho=_gap/100*_pior["rl"]
+                st.markdown(f'<div class="al-i">💡 <b>{_pior["Filial"]}</b> tem a menor margem líquida ({_fd_num(_pior["ml"])}%), {_fd_num(_gap)} p.p. abaixo de <b>{_melhor["Filial"]}</b> ({_fd_num(_melhor["ml"])}%). '
+                    f'Se chegasse à margem da melhor, o lucro do período seria cerca de <b>{_fd_m(_ganho)}</b> maior (estimativa simples: diferença de margem × receita líquida da filial).</div>',unsafe_allow_html=True)
+ 
+    # ── 5) CAIXA ─────────────────────────────────────────────────────────
+    sec("💵 Caixa: entradas, saídas e saldo")
+    _x_cx=[_rot_fd[i] for i in _idx_fd]
+    _ent_p=_ent_fd.iloc[_idx_fd]; _sai_p=_sai_fd.iloc[_idx_fd]; _sal_p=_saldo_fd.iloc[_idx_fd]
+    _fig_cx=make_subplots(specs=[[{"secondary_y":True}]])
+    _fig_cx.add_trace(go.Bar(x=_x_cx,y=_ent_p,name="Entradas",marker_color="#059669",opacity=.9,hovertemplate="<b>Entradas</b><br>%{x}<br>R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
+    _fig_cx.add_trace(go.Bar(x=_x_cx,y=-_sai_p,name="Saídas",marker_color="#DC2626",opacity=.9,customdata=_sai_p,hovertemplate="<b>Saídas</b><br>%{x}<br>R$ %{customdata:,.0f}<extra></extra>"),secondary_y=False)
+    _cor_sal="#14243B"
+    _fig_cx.add_trace(go.Scatter(x=_x_cx,y=_sal_p,name="Saldo acumulado",mode="lines+markers",line=dict(color=_cor_sal,width=3),marker=dict(size=6,color=_cor_sal,line=dict(color="white",width=2)),
+        hovertemplate="<b>Saldo</b><br>%{x}<br>R$ %{y:,.0f}<extra></extra>"),secondary_y=True)
+    _fig_cx.add_hline(y=0,line_dash="dot",line_color="#9CA3AF",opacity=.6,secondary_y=True)
+    _fig_cx.update_layout(title=dict(text="Entradas e saídas do mês e saldo acumulado",font=_FD_TIT),barmode="relative",bargap=.28,**_FD_PLOT,height=380)
+    _fig_cx.update_yaxes(gridcolor="#F3F4F6",secondary_y=False); _fig_cx.update_yaxes(showgrid=False,secondary_y=True)
+    _fd_zero_align(_fig_cx,list(_ent_p)+list(-_sai_p),list(_sal_p))
+    st.plotly_chart(_fig_cx,use_container_width=True)
+    _min_i=int(_sal_p.reset_index(drop=True).idxmin()); _min_v=float(_sal_p.iloc[_min_i]); _min_lbl=_x_cx[_min_i]
+    _saida_med3=float(_sai_fd.iloc[max(0,_idx_fd[-1]-2):_idx_fd[-1]+1].mean())
+    _cob_meses=(_saldo_fim_fd/_saida_med3) if _saida_med3>0 else float("nan")
+    _n_neg=int((_sal_p<0).sum())
+    _k4=st.columns(4)
+    _k4[0].markdown(_fd_card("Saldo atual",_fd_m(_saldo_fim_fd),f"fim de {_rot_fd[_idx_fd[-1]]}"),unsafe_allow_html=True)
+    _k4[1].markdown(_fd_card("Menor saldo do período",_fd_m(_min_v),f"em {_min_lbl}"),unsafe_allow_html=True)
+    _k4[2].markdown(_fd_card("Cobertura de caixa",(f"{_fd_num(_cob_meses)} meses" if (not pd.isna(_cob_meses) and _cob_meses>0) else "Sem cobertura"),"saldo ÷ média das saídas dos últimos 3 meses","",""),unsafe_allow_html=True)
+    _k4[3].markdown(_fd_card("Meses com caixa negativo",f"{_n_neg}","no período selecionado"),unsafe_allow_html=True)
+    if _n_neg>0:
+        st.markdown(f'<div class="al-d">🔴 O caixa fica negativo em {_n_neg} mês(es) do período. Ação: negociar prazos com fornecedores ou antecipar recebíveis.</div>',unsafe_allow_html=True)
+    elif not pd.isna(_cob_meses) and _cob_meses<1:
+        st.markdown('<div class="al-w">⚠️ O saldo cobre menos de 1 mês de saídas. Margem de segurança curta.</div>',unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="al-s">✅ Caixa positivo em todos os meses do período.</div>',unsafe_allow_html=True)
+ 
+    # ── 6) CAPITAL DE GIRO ───────────────────────────────────────────────
+    sec("🔄 Capital de giro: quanto tempo o dinheiro fica preso")
+    _pmr=float(_ult_fd.get("PMR",0) or 0); _pme=float(_ult_fd.get("PME",0) or 0); _pmp=float(_ult_fd.get("PMP",0) or 0)
+    _g1,_g2=st.columns(2)
+    _fig_w=go.Figure(go.Waterfall(orientation="v",measure=["relative","relative","relative","total"],
+        x=["Recebimento (PMR)","Estoque (PME)","Pagamento (PMP)","Ciclo de caixa"],
+        y=[_pmr,_pme,-_pmp,0],text=[f"{_pmr:.0f} d",f"{_pme:.0f} d",f"−{_pmp:.0f} d",f"{_ciclo_fd:.0f} d"],textposition="outside",
+        connector=dict(line=dict(color="#CBD5E1")),increasing=dict(marker=dict(color="#D97706")),decreasing=dict(marker=dict(color="#059669")),
+        totals=dict(marker=dict(color="#14243B")),hovertemplate="%{x}<br>%{y:.0f} dias<extra></extra>"))
+    _fig_w.update_layout(title=dict(text="De onde vem o ciclo de caixa (dias)",font=_FD_TIT),**{**_FD_PLOT,"hovermode":"closest"},showlegend=False,height=360,yaxis=dict(gridcolor="#F3F4F6"))
+    _g1.plotly_chart(_fig_w,use_container_width=True)
+    _cic_s=pd.to_numeric(df_fd["ciclo de caixa"],errors="coerce").tail(12)
+    _x_cic=[_rot_fd[i] for i in _cic_s.index]
+    _fig_c=go.Figure()
+    _fig_c.add_hrect(y0=90,y1=max(120,float(_cic_s.max()) if len(_cic_s) else 120),fillcolor="#FDECEC",opacity=.6,line_width=0,layer="below")
+    _fig_c.add_hrect(y0=60,y1=90,fillcolor="#FFF6E5",opacity=.7,line_width=0,layer="below")
+    _fig_c.add_trace(go.Scatter(x=_x_cic,y=_cic_s,mode="lines+markers",name="Ciclo de caixa",line=dict(color="#14243B",width=3),marker=dict(size=6,line=dict(color="white",width=2)),
+        hovertemplate="<b>Ciclo</b><br>%{x}<br>%{y:.0f} dias<extra></extra>"))
+    _fig_c.update_layout(title=dict(text="Evolução do ciclo de caixa (faixas: amarelo > 60 dias, vermelho > 90)",font=_FD_TIT),**_FD_PLOT,showlegend=False,height=360,yaxis=dict(gridcolor="#F3F4F6",ticksuffix=" d"))
+    _g2.plotly_chart(_fig_c,use_container_width=True)
+    _rec_mensal=_fd_media(df_fd,list(range(max(0,len(df_fd)-12),len(df_fd))),"receita líquida")
+    _dia_rs=(_rec_mensal*12/365) if not pd.isna(_rec_mensal) else 0
+    _gc=st.columns(3)
+    _gc[0].markdown(_fd_card("Um dia de ciclo vale",_fd_m(_dia_rs),"receita líquida anual ÷ 365 (ordem de grandeza)"),unsafe_allow_html=True)
+    _gc[1].markdown(_fd_card("Reduzir 10 dias libera",_fd_m(_dia_rs*10),"estimativa de capital de giro que deixaria de ficar preso"),unsafe_allow_html=True)
+    _alvo_cic=60
+    _gc[2].markdown(_fd_card("Distância até 60 dias",f"{max(0,_ciclo_fd-_alvo_cic):.0f} dias",f"≈ {_fd_m(max(0,_ciclo_fd-_alvo_cic)*_dia_rs)} em capital de giro" if _ciclo_fd>_alvo_cic else "ciclo dentro da referência"),unsafe_allow_html=True)
+ 
+    # ── 7) SOLVÊNCIA (EMPRESA TODA) ──────────────────────────────────────
+    sec("🏦 Solvência e estrutura (empresa toda)")
+    def _fd_gauge(titulo,valor,faixa,steps,fmtn=".2f",suf=""):
+        fig=go.Figure(go.Indicator(mode="gauge+number",value=float(valor) if not pd.isna(valor) else 0,number=dict(valueformat=fmtn,suffix=suf,font=dict(size=30,family="Georgia, serif",color="#14243B")),
+            title=dict(text=titulo,font=dict(size=13,color="#14243B")),
+            gauge=dict(axis=dict(range=faixa,tickfont=dict(size=9)),bar=dict(color="#14243B",thickness=.28),bgcolor="white",borderwidth=0,steps=steps)))
+        fig.update_layout(height=210,margin=dict(l=18,r=18,t=48,b=6),paper_bgcolor="white")
+        return fig
+    _roe_g=_roe_fd
+    _gg=st.columns(4)
+    _gg[0].plotly_chart(_fd_gauge("Liquidez corrente",_lc_fd,[0,3],[dict(range=[0,1],color="#FCE1E1"),dict(range=[1,1.5],color="#FFE9C7"),dict(range=[1.5,3],color="#D1F5E4")],".2f","x"),use_container_width=True)
+    _gg[1].plotly_chart(_fd_gauge("Liquidez imediata",_li_fd,[0,1],[dict(range=[0,.3],color="#FCE1E1"),dict(range=[.3,.5],color="#FFE9C7"),dict(range=[.5,1],color="#D1F5E4")],".2f","x"),use_container_width=True)
+    _gg[2].plotly_chart(_fd_gauge("Kanitz",max(-8,min(8,_kz_fd)),[-8,8],[dict(range=[-8,-3],color="#FCE1E1"),dict(range=[-3,0],color="#FFE9C7"),dict(range=[0,8],color="#D1F5E4")],".2f"),use_container_width=True)
+    _gg[3].plotly_chart(_fd_gauge("ROE",max(-20,min(40,_roe_g)),[-20,40],[dict(range=[-20,0],color="#FCE1E1"),dict(range=[0,6],color="#FFE9C7"),dict(range=[6,40],color="#D1F5E4")],".1f","%"),use_container_width=True)
+    _s1,_s2=st.columns([1,1])
+    _comp=[("Disponibilidades",float(pd.to_numeric(_ult_cons_fd.get("disponibilidades saldo",0),errors="coerce") or 0)),
+        ("Contas a receber",float(pd.to_numeric(_ult_cons_fd.get("contas a receber saldo",0),errors="coerce") or 0)),
+        ("Estoque",float(pd.to_numeric(_ult_cons_fd.get("estoque final do mês de mercadorias para revenda saldo",0),errors="coerce") or 0)),
+        ("Outros ativos circulantes",float(pd.to_numeric(_ult_cons_fd.get("Outros AC",0),errors="coerce") or 0)),
+        ("Ativo não circulante",float(pd.to_numeric(_ult_cons_fd.get("Ativo NC",0),errors="coerce") or 0))]
+    _comp=[(n,max(0,v)) for n,v in _comp]
+    if sum(v for _,v in _comp)>0:
+        _fig_d=go.Figure(go.Pie(labels=[n for n,_ in _comp],values=[v for _,v in _comp],hole=.6,sort=False,
+            marker=dict(colors=["#059669","#2563EB","#D97706","#94A3B8","#14243B"],line=dict(color="white",width=2)),textinfo="percent",
+            hovertemplate="<b>%{label}</b><br>R$ %{value:,.0f} (%{percent})<extra></extra>"))
+        _fig_d.update_layout(title=dict(text="Composição do ativo",font=_FD_TIT),height=300,margin=dict(l=8,r=8,t=44,b=8),paper_bgcolor="white",legend=dict(font=dict(size=10)))
+        _s1.plotly_chart(_fig_d,use_container_width=True)
+    _at=float(_ult_cons_fd.get("ativo total",0) or 0); _pt=float(_ult_cons_fd.get("pass total",0) or 0); _pl=float(_ult_cons_fd.get("PL",0) or 0)
+    _icd=_ult_cons_fd.get("ICD",float("nan"))
+    with _s2:
+        _m1,_m2=st.columns(2)
+        _m1.markdown(_fd_card("Ativo total",_fd_m(_at),""),unsafe_allow_html=True)
+        _m2.markdown(_fd_card("Passivo total",_fd_m(_pt),f"{_fd_num(_pt/_at*100 if _at else float('nan'))}% do ativo"),unsafe_allow_html=True)
+        st.markdown("<div style='height:8px'></div>",unsafe_allow_html=True)
+        _m3,_m4=st.columns(2)
+        _m3.markdown(_fd_card("Patrimônio líquido",_fd_m(_pl),f"{_fd_num(_pl/_at*100 if _at else float('nan'))}% do ativo"),unsafe_allow_html=True)
+        _m4.markdown(_fd_card("ICD",f"{_fd_num(_icd)}%","EBITDA ÷ dívida financeira líquida","","","Quanto do EBITDA cobre a dívida financeira líquida: quanto maior, mais folga para pagar dívida com a própria geração de caixa."),unsafe_allow_html=True)
+        st.caption("Estas contas vêm do Balanço, que tem itens corporativos (capital social, empréstimos) sem divisão por filial; por isso valem para a empresa toda, mesmo com uma filial selecionada acima.")
+ 
+    # ── 8) PROJEÇÃO COM CONFIANÇA ────────────────────────────────────────
+    sec("🔮 Projeção com nível de confiança")
+    _projs_fd=load_projecoes_ml(st.session_state.cid,filial_sel_fd) if st.session_state.cid else None
+    if not _projs_fd:
+        st.markdown('<div class="al-i">ℹ️ Ainda não há projeções salvas para esta filial. Gere em <b>🔮 Projeções ML - Financeiro</b> para ver aqui a receita e o caixa projetados com a faixa de erro.</div>',unsafe_allow_html=True)
+    else:
+        _n_pr=max((len(p.get("valores",[])) for p in _projs_fd.values()),default=0)
+        _mn_i=_MESES_FD.index(_mes3_fd.iloc[-1]) if _mes3_fd.iloc[-1] in _MESES_FD else None
+        _x_pr=[]
+        if _mn_i is not None and _ano_fd.iloc[-1].isdigit():
+            _mm=_mn_i+1; _aa=int(_ano_fd.iloc[-1])
+            for _ in range(_n_pr):
+                _mm+=1
+                if _mm>12: _mm=1; _aa+=1
+                _x_pr.append(f"{_MESES_FD[_mm-1]}/{str(_aa)[-2:]}")
+        else:
+            _x_pr=[f"M+{i+1}" for i in range(_n_pr)]
+        def _fd_wape(campo,lbl):
+            _t=[]
+            for _dm in list(DEMONSTRACOES_CAMPOS.keys()):
+                _rv=load_resultado_valfin(st.session_state.cid,f"{filial_sel_fd}__{_dm}") if st.session_state.cid else None
+                if _rv and _rv.get("validacao"):
+                    _dv=pd.DataFrame(_rv["validacao"])
+                    if {"Previsto","Real"}.issubset(_dv.columns):
+                        _sub=_dv[(_dv.get("ContaRaw",pd.Series(dtype=str)).astype(str)==campo)|(_dv.get("Conta",pd.Series(dtype=str)).astype(str).str.strip().str.lower()==str(lbl).strip().lower())]
+                        if len(_sub)>0: _t.append(_sub)
+            if not _t: return None,None
+            _all=pd.concat(_t); _real=pd.to_numeric(_all["Real"],errors="coerce"); _prev=pd.to_numeric(_all["Previsto"],errors="coerce")
+            _den=_real.abs().sum()
+            _w=float((_prev-_real).abs().sum()/_den*100) if _den else None
+            _cf="🟢 Confiável" if (_w is not None and _w<=20) else ("🟡 Moderado" if (_w is not None and _w<=30) else ("🔴 Baixa previsibilidade" if _w is not None else None))
+            return _w,_cf
+        _p1,_p2=st.columns(2)
+        _cr="receita bruta de vendas"
+        if _cr in _projs_fd and _projs_fd[_cr].get("valores"):
+            _v=[float(x) for x in _projs_fd[_cr]["valores"]]
+            _w,_cf=_fd_wape(_cr,_projs_fd[_cr].get("lbl","Receita bruta de vendas"))
+            _h=pd.to_numeric(df_fd[_cr],errors="coerce").tail(12); _xh=[_rot_fd[i] for i in _h.index]
+            _fig_p=go.Figure()
+            if _w is not None:
+                _lo=[x*(1-_w/100) for x in _v]; _hi=[x*(1+_w/100) for x in _v]
+                _fig_p.add_trace(go.Scatter(x=_x_pr[:len(_v)],y=_hi,mode="lines",line=dict(width=0),showlegend=False,hoverinfo="skip"))
+                _fig_p.add_trace(go.Scatter(x=_x_pr[:len(_v)],y=_lo,mode="lines",line=dict(width=0),fill="tonexty",fillcolor="rgba(15,110,86,.15)",name=f"Faixa pelo erro histórico (±{_w:.0f}%)",hoverinfo="skip"))
+            _fig_p.add_trace(go.Scatter(x=_xh,y=_h,name="Histórico",mode="lines+markers",line=dict(color="#14243B",width=3),marker=dict(size=5)))
+            _fig_p.add_trace(go.Scatter(x=[_xh[-1]]+_x_pr[:len(_v)],y=[float(_h.iloc[-1])]+_v,name="Projeção",mode="lines+markers",line=dict(color="#0F6E56",width=3,dash="dash"),marker=dict(size=7,symbol="diamond")))
+            _fig_p.update_layout(title=dict(text="Receita bruta: histórico e projeção",font=_FD_TIT),**_FD_PLOT,height=380,yaxis=dict(gridcolor="#F3F4F6"),xaxis=dict(type="category",categoryorder="array",categoryarray=list(_xh)+list(_x_pr[:len(_v)])))
+            _p1.plotly_chart(_fig_p,use_container_width=True)
+            _txt_cf=(f"{_cf} · erro histórico (WAPE) de {_w:.1f}%".replace(".",",") if _w is not None else "Sem validação salva para esta conta: rode a Validação Estatística para medir a confiança.")
+            _p1.markdown(f'<div class="al-i">🎯 Confiança da projeção de receita: <b>{_txt_cf}</b>. Modelo escolhido: {_projs_fd[_cr].get("modelo","—")}. A faixa mostra o quanto o modelo errou no passado.</div>',unsafe_allow_html=True)
+        else:
+            _p1.markdown('<div class="al-i">ℹ️ A conta Receita bruta não está nas projeções salvas.</div>',unsafe_allow_html=True)
+        _ce,_cs="Disponibilidades entradas","Disponibilidades Saida"
+        if _ce in _projs_fd and _cs in _projs_fd and _projs_fd[_ce].get("valores") and _projs_fd[_cs].get("valores"):
+            _ve=[float(x) for x in _projs_fd[_ce]["valores"]]; _vs=[float(x) for x in _projs_fd[_cs]["valores"]]
+            _nn=min(len(_ve),len(_vs)); _liq=[_ve[i]-_vs[i] for i in range(_nn)]
+            _sp=[]; _acc=float(_saldo_fd.iloc[-1])
+            for _x in _liq: _acc+=_x; _sp.append(_acc)
+            _fig_s=make_subplots(specs=[[{"secondary_y":True}]])
+            _fig_s.add_trace(go.Bar(x=_x_pr[:_nn],y=_liq,name="Entradas − saídas do mês",marker_color=["#059669" if v>=0 else "#DC2626" for v in _liq],opacity=.85),secondary_y=False)
+            _fig_s.add_trace(go.Scatter(x=_x_pr[:_nn],y=_sp,name="Saldo projetado",mode="lines+markers",line=dict(color="#14243B",width=3),marker=dict(size=7)),secondary_y=True)
+            _fig_s.add_hline(y=0,line_dash="dot",line_color="#9CA3AF",opacity=.6,secondary_y=True)
+            _fig_s.update_layout(title=dict(text="Caixa projetado",font=_FD_TIT),**_FD_PLOT,height=380,xaxis=dict(type="category"))
+            _fig_s.update_yaxes(gridcolor="#F3F4F6",secondary_y=False); _fig_s.update_yaxes(showgrid=False,secondary_y=True)
+            _fd_zero_align(_fig_s,_liq,_sp)
+            _p2.plotly_chart(_fig_s,use_container_width=True)
+            _neg_p=[_x_pr[i] for i in range(_nn) if _sp[i]<0]
+            if _neg_p: _p2.markdown(f'<div class="al-d">🔴 O saldo projetado fica negativo em: {", ".join(_neg_p[:6])}. Antecipar recebíveis ou renegociar prazos.</div>',unsafe_allow_html=True)
+            else: _p2.markdown('<div class="al-s">✅ O saldo projetado se mantém positivo em todo o horizonte.</div>',unsafe_allow_html=True)
+        else:
+            _p2.markdown('<div class="al-i">ℹ️ Para ver o caixa projetado, inclua Entradas e Saídas de caixa nas projeções.</div>',unsafe_allow_html=True)
+ 
+    # ── 9) PONTE COMERCIAL ⇄ FINANCEIRO ──────────────────────────────────
+    sec("🔗 Ponte entre o comercial e o financeiro")
+    _df_res_fd=_df_cal_fd=_df_mrt_fd=None
+    if st.session_state.cid:
+        try: _df_res_fd,_df_cal_fd,_df_mrt_fd=load_resultado_compras(st.session_state.cid,filial_sel_fd)
+        except Exception: _df_res_fd=None
+    if _df_res_fd is None or _df_res_fd.empty:
+        st.markdown('<div class="al-w">⚠️ Rode o <b>Motor de Compras</b> para esta filial para ver aqui a ligação entre estoque, plano de compras e caixa.</div>',unsafe_allow_html=True)
+    else:
+        _est_com=float((_df_res_fd["EstoqueAtual"]*_df_res_fd["CustoUnitario"]).sum()) if {"EstoqueAtual","CustoUnitario"}.issubset(_df_res_fd.columns) else 0.0
+        _lib=_exc=_fal=0.0
+        try:
+            _cen_fd=preparar_cenario_motor(_df_res_fd)
+            _exc=float(_cen_fd["Excesso"].sum()); _fal=float(_cen_fd["Falta"].sum()); _lib=_exc-_fal
+        except Exception: pass
+        _parado=float(_df_mrt_fd["CapitalParado"].sum()) if (_df_mrt_fd is not None and not _df_mrt_fd.empty and "CapitalParado" in _df_mrt_fd.columns) else 0.0
+        _plano_tot=0.0; _plano_mes=None
+        if _df_cal_fd is not None and not _df_cal_fd.empty and {"ValorCompra","DataEvento"}.issubset(_df_cal_fd.columns):
+            _dc=_df_cal_fd.copy(); _dc["_dt"]=pd.to_datetime(_dc["DataEvento"],format="%d/%m/%Y",errors="coerce")
+            _dc=_dc.dropna(subset=["_dt"]); _dc["_pm"]=_dc["_dt"].dt.to_period("M")
+            _plano_mes=_dc.groupby("_pm")["ValorCompra"].sum()
+            _plano_tot=float(_plano_mes.sum())
+        _ent_med=float(_ent_fd.tail(6).mean()) if len(_ent_fd) else 0.0
+        _econ=load_resultado_econ_compras(st.session_state.cid)
+        _eco_rs=None
+        if _econ is not None and not _econ.empty and {"custo_total_modelo","custo_total_naive"}.issubset(_econ.columns):
+            try:
+                _mo=max(1,min(18,int(st.session_state.get("compras_econ_meses_olhar",18))))
+            except Exception: _mo=18
+            _eco_rs=(float(_econ["custo_total_naive"].sum())-float(_econ["custo_total_modelo"].sum()))*_mo/18
+        _atv=float(df_cons_fd.iloc[min(_idx_fd[-1],len(df_cons_fd)-1)].get("ativo total",0) or 0)
+        _b1=st.columns(3)
+        _b1[0].markdown(_fd_card("Estoque (Motor de Compras)",_fd_m(_est_com),f"{_fd_num(_est_com/_atv*100 if _atv else float('nan'))}% do ativo total da empresa" if _atv else "ativo total indisponível"),unsafe_allow_html=True)
+        _b1[1].markdown(_fd_card("Estoque liberável (potencial)",_fd_m(_lib),f"excesso {_fd_m(_exc)} − falta {_fd_m(_fal)}"+(f" · {abs(_lib)/max(_saldo_fim_fd,1):.1f}x o saldo de caixa" if _saldo_fim_fd>0 else ""),"","","Potencial calculado pelo Simulador de Cenário. Não é caixa já realizado."),unsafe_allow_html=True)
+        _b1[2].markdown(_fd_card("Capital parado",_fd_m(_parado),f"{_fd_num(_parado/_est_com*100 if _est_com else float('nan'))}% do estoque"),unsafe_allow_html=True)
+        st.markdown("<div style='height:10px'></div>",unsafe_allow_html=True)
+        _b2=st.columns(3)
+        _b2[0].markdown(_fd_card("Plano de compras",_fd_m(_plano_tot),(f"média de {_fd_m(_plano_tot/len(_plano_mes))} por mês · {len(_plano_mes)} meses" if _plano_mes is not None and len(_plano_mes)>0 else "calendário indisponível")),unsafe_allow_html=True)
+        _b2[1].markdown(_fd_card("Impacto de caixa evitado",_fd_m(_eco_rs) if _eco_rs is not None else "—","simulação da Validação Econômica, não resultado realizado" if _eco_rs is not None else "rode a Validação Econômica em Gestão de Compras","","","Impacto da decisão simples (naive) menos o da decisão do modelo, somando venda não realizada e capital imobilizado."),unsafe_allow_html=True)
+        # Conferência PME (balanço) × cobertura (Motor)
+        _giro_c=None
+        try:
+            _dg=_df_res_fd[_df_res_fd["CoberturaDias"].notna()&(_df_res_fd["CoberturaDias"]<999)&(_df_res_fd["CoberturaDias"]>0)]
+            if len(_dg)>0: _giro_c=float((_dg["GiroAtual"]*_dg["EstoqueAtual"]*_dg["CustoUnitario"]).sum()/(_dg["EstoqueAtual"]*_dg["CustoUnitario"]).sum())
+        except Exception: _giro_c=None
+        _cob_c=(365/_giro_c) if _giro_c else None
+        if _cob_c and _pme>0:
+            _dif=abs(_cob_c-_pme)/max(_cob_c,_pme)*100
+            _st_c=("✅ Coerentes" if _dif<=30 else "⚠️ Bases diferentes")
+            _sub_c=f"PME do balanço {_pme:.0f} d × cobertura do Motor {_cob_c:.0f} d (diferença {_dif:.0f}%)"
+            _tip_c="O PME vem do Balanço e do CMV do mês; a cobertura vem do Motor de Compras (estoque atual sobre a demanda prevista). Medem a mesma ideia com bases diferentes, então diferenças grandes pedem conferência dos dados."
+        else:
+            _st_c="—"; _sub_c="sem dados para comparar"; _tip_c=""
+        _b2[2].markdown(_fd_card("Conferência: PME × cobertura",_st_c,_sub_c,"","",_tip_c),unsafe_allow_html=True)
+        if _plano_mes is not None and len(_plano_mes)>0:
+            _xm=[f"{_MESES_FD[p.month-1]}/{str(p.year)[-2:]}" for p in _plano_mes.index]
+            _fig_pc=go.Figure()
+            _fig_pc.add_trace(go.Bar(x=_xm,y=_plano_mes.values,name="Plano de compras do mês",marker_color="#A9762F",text=[fmt(v) for v in _plano_mes.values],textposition="outside",
+                hovertemplate="<b>Compras</b><br>%{x}<br>R$ %{y:,.0f}<extra></extra>"))
+            if _ent_med>0:
+                _fig_pc.add_trace(go.Scatter(x=_xm,y=[_ent_med]*len(_xm),name="Entradas médias de caixa (últimos 6 meses)",mode="lines",line=dict(color="#059669",width=3,dash="dash")))
+            _fig_pc.update_layout(title=dict(text="O plano de compras cabe nas entradas de caixa?",font=_FD_TIT),**_FD_PLOT,height=360,yaxis=dict(gridcolor="#F3F4F6"),xaxis=dict(type="category"))
+            st.plotly_chart(_fig_pc,use_container_width=True)
+            _mx=float(_plano_mes.max())
+            if _ent_med>0:
+                _pct_pl=_mx/_ent_med*100
+                _cls_pl="al-d" if _pct_pl>100 else ("al-w" if _pct_pl>60 else "al-s")
+                st.markdown(f'<div class="{_cls_pl}">O mês de maior compra ({_fd_m(_mx)}) equivale a <b>{_pct_pl:.0f}%</b> das entradas médias de caixa. '
+                    'Comparo com as entradas, e não subtraio do caixa projetado, porque as saídas projetadas já incluem pagamentos de compras passadas.</div>',unsafe_allow_html=True)
+ 
+    # ── 10) QUALIDADE DO DADO ────────────────────────────────────────────
+    sec("🧪 Qualidade do dado: o dashboard é tão bom quanto a importação")
+    _chaves=["receita bruta de vendas","CMV (custo da mercadoria vendida)","despesas administrativas","despesas comerciais","disponibilidades saldo","contas a receber saldo",
+        "estoque final do mês de mercadorias para revenda saldo","contas a pagar de fornecedores saldo","Passivos Financeiros","Disponibilidades entradas","Disponibilidades Saida"]
+    _ult3=df_fd.tail(3)
+    _ok_k=[c for c in _chaves if c in _ult3.columns and pd.to_numeric(_ult3[c],errors="coerce").fillna(0).abs().sum()>0]
+    _falt_k=[c for c in _chaves if c not in _ok_k]
+    _per_all=[(int(a),_MESES_FD.index(m)+1) for a,m in zip(_ano_fd,_mes3_fd) if a.isdigit() and m in _MESES_FD]
+    _gaps=[]
+    if _per_all:
+        _seq=sorted(set(_per_all)); _ii=_seq[0]
+        while _ii<=_seq[-1]:
+            if _ii not in _seq: _gaps.append(f"{_MESES_FD[_ii[1]-1]}/{str(_ii[0])[-2:]}")
+            _ii=(_ii[0],_ii[1]+1) if _ii[1]<12 else (_ii[0]+1,1)
+    _alertas_dado=[]
+    if _falt_k: _alertas_dado.append(("w",f"{len(_falt_k)} conta(s)-chave sem valor nos últimos 3 meses",", ".join(_falt_k[:5])+("…" if len(_falt_k)>5 else "")))
+    if _gaps: _alertas_dado.append(("w",f"{len(_gaps)} mês(es) faltando na sequência",", ".join(_gaps[:8])))
+    _rb=pd.to_numeric(df_fd.get("receita bruta de vendas",pd.Series(dtype=float)),errors="coerce").tail(4)
+    if len(_rb)==4 and _rb.nunique()==1 and float(_rb.iloc[0])!=0: _alertas_dado.append(("w","Receita idêntica nos últimos 4 meses","Pode indicar dado repetido ou desatualizado."))
+    if len(_filiais_fd)>=2:
+        try:
+            _pmes=[]
+            for _f in _filiais_fd:
+                _dff=get_df_filial(_f); _pmes.append(round(float(_dff.iloc[-1].get("PME",0) or 0),1))
+            if len(set(_pmes))<len(_pmes) and any(v!=0 for v in _pmes): _alertas_dado.append(("w","PME igual entre filiais",f"Valores: {', '.join(str(v) for v in _pmes)} dias. Vale conferir com a operação se é coincidência ou dado repetido."))
+        except Exception: pass
+    _d1,_d2,_d3=st.columns(3)
+    _d1.markdown(_fd_card("Meses com dado",f"{len(set(_per_all))}",f"de {_rot_fd[0]} a {_rot_fd[-1]}" + (f" · {len(_gaps)} lacuna(s)" if _gaps else " · sem lacunas")),unsafe_allow_html=True)
+    _d2.markdown(_fd_card("Contas-chave preenchidas",f"{len(_ok_k)} de {len(_chaves)}","com valor nos últimos 3 meses"),unsafe_allow_html=True)
+    _ts_txt="—"
+    try:
+        _p_csv=os.path.join(PASTA,f"{gid(st.session_state.cid)}_dados.csv")
+        if os.path.exists(_p_csv): _ts_txt=datetime.fromtimestamp(os.path.getmtime(_p_csv)).strftime("%d/%m/%Y %H:%M")
+    except Exception: pass
+    _d3.markdown(_fd_card("Última importação",_ts_txt,"data do arquivo de dados salvo"),unsafe_allow_html=True)
+    st.markdown("<div style='height:6px'></div>",unsafe_allow_html=True)
+    if _alertas_dado:
+        st.markdown("".join(f'<div class="fd-sig w"><div>🟠</div><div><b>{m}</b>{(" — "+d) if d else ""}</div></div>' for _,m,d in _alertas_dado),unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="fd-sig s"><div>🟢</div><div><b>Nenhum sinal de inconsistência nos dados</b> — meses completos e contas-chave preenchidas.</div></div>',unsafe_allow_html=True)
+ 
+    # ── ATALHO FINAL PARA O PARECER ──────────────────────────────────────
+    st.markdown("<div style='height:8px'></div>",unsafe_allow_html=True)
+    _bf1,_bf2,_bf3=st.columns([1,2,1])
+    with _bf2:
+        st.markdown('<div style="text-align:center;font-size:.8rem;color:#6B7280;margin-bottom:6px">Quer a leitura executiva destes números?</div>',unsafe_allow_html=True)
+        if st.button("🧭 Ver o Parecer Financeiro da IA  ➜",key="fd_ir_parecer",use_container_width=True,help="Abre o Parecer Consolidado com IA; o parecer financeiro fica na segunda parte da página."): ir("parecer_ia")
+    st.markdown('<div style="background:#F8F5EE;border-top:1px solid #EBEBEB;padding:5px 16px;border-radius:0 0 10px 10px;font-size:.60rem;color:#bbb;margin-top:10px">ℹ️ Valores calculados a partir da DRE, do Balanço e do Fluxo de Caixa importados. Projeções e simulações são estimativas, não resultados realizados.</div>',unsafe_allow_html=True)
+ 
 elif pg=="dre":
     hdr("📊 DRE","Demonstração do Resultado — Real | AV% | AH%")
 
