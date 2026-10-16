@@ -8921,16 +8921,29 @@ elif pg=="dash_fin":
         _h2.markdown(_fd_card(f"Saldo projetado em {_xp[-1]}",_fd_m(_sp_fin[-1]),f"{'+' if _sp_fin[-1]>=_saldo_hoje else '−'}{_fd_m(abs(_sp_fin[-1]-_saldo_hoje))} em relação a hoje",ac="#0F6E56"),unsafe_allow_html=True)
         _h3.markdown(_fd_card("Menor saldo projetado",_fd_m(_sp_fin[_im]),f"em {_xp[_im]}",ac="#DC2626" if _sp_fin[_im]<0 else "#059669"),unsafe_allow_html=True)
 
-        # ── Impacto da categoria rodada no Motor de Compras no fluxo geral ──
-        sec("🎯 Impacto da categoria do Motor de Compras no caixa da empresa")
+            # ── Impacto da categoria rodada no Motor de Compras no fluxo geral ──
+        sec("🎯 Impacto da categoria trabalhada (projeção e compras) no caixa futuro da empresa")
         if not _tem_cruz:
-            st.markdown('<div class="al-i">ℹ️ Rode o <b>Motor de Compras</b> para ver o impacto do plano de compras da categoria no caixa projetado.</div>',unsafe_allow_html=True)
+            st.markdown('<div class="al-i">ℹ️ Rode a categoria no <b>Motor de Compras</b> para ver quanto o plano de compras dela vai melhorar ou piorar o caixa futuro da empresa.</div>',unsafe_allow_html=True)
         else:
             _nn=_ult_plano+1; _xs=_xp[:_nn]; _plan=[_plano_map.get(l,0.0) for l in _xs]; _hab=_base_esc
             _lag=int(round(max(_pmp,0)/30.0))
             _pagto=[(_plan[i-_lag] if i-_lag>=0 else _hab) for i in range(_nn)]
             _imp=[_hab-_pagto[i] for i in range(_nn)]
             _cum=list(np.cumsum(_imp))
+            _sp_sem=[float(_sp_fin[i]) for i in range(_nn)]
+            _sp_com=[_sp_sem[i]+_cum[i] for i in range(_nn)]
+            _tot_plan=sum(_plan); _tot_hab=_hab*_nn; _d_vol=_tot_hab-_tot_plan
+            _pior=int(np.argmin(_imp)); _melhor=int(np.argmax(_imp))
+            _sem_prazo=sum(_hab-_plan[i] for i in range(_nn)); _ef_prazo=_cum[-1]-_sem_prazo
+            _plan_med=_tot_plan/_nn; _preso=(_plan_med-_hab)*max(_ciclo_fd,0)/30.0
+            _ef_fim=_cum[-1]; _pos=_ef_fim>=0
+            st.markdown(f'<div class="fd-q" style="margin-top:0"><b>Como ler:</b> a projeção de caixa da empresa (gráfico acima) já supõe que a categoria continua comprando no <b>ritmo habitual</b> ({_fd_m(_hab)}/mês). Aqui trocamos esse ritmo habitual pelo <b>plano de compras que você simulou no Motor de Compras</b> e medimos a diferença no caixa de toda a empresa. <b>Verde</b> = o plano deixa mais dinheiro no caixa do que o ritmo habitual deixaria. <b>Vermelho</b> = o plano tira dinheiro do caixa (compra mais, ou paga antes de receber). O pagamento das compras é deslocado pelo prazo médio de pagamento ({_pmp:.0f} dias).</div>'.replace("$","&#36;"),unsafe_allow_html=True)
+            _v1,_v2,_v3=st.columns(3)
+            _v1.markdown(_fd_card(f"Efeito do plano até {_xs[-1]}",("+" if _pos else "−")+_fd_m(abs(_ef_fim)),"melhora o caixa da empresa" if _pos else "piora o caixa da empresa",ac="#059669" if _pos else "#DC2626"),unsafe_allow_html=True)
+            _v2.markdown(_fd_card(f"Saldo da empresa em {_xs[-1]}",_fd_m(_sp_com[-1]),f"sem o plano (ritmo habitual): {_fd_m(_sp_sem[-1])}",ac="#14243B"),unsafe_allow_html=True)
+            _v3.markdown(_fd_card("Mês mais pesado para o caixa",_xs[_pior] if _imp[_pior]<0 else "nenhum",(f"−{_fd_m(abs(_imp[_pior]))} no mês" if _imp[_pior]<0 else "nenhum mês pressiona o caixa"),ac="#DC2626" if _imp[_pior]<0 else "#059669"),unsafe_allow_html=True)
+            _c1,_c2=st.columns(2)
             _fig_i=make_subplots(specs=[[{"secondary_y":True}]])
             _fig_i.add_trace(go.Bar(x=_xs,y=_imp,name="Efeito no caixa do mês",marker_color=["#059669" if v>=0 else "#DC2626" for v in _imp],opacity=.9,
                 text=[("+" if v>=0 else "−")+fmt(abs(v)) for v in _imp],textposition="outside",hovertemplate="<b>%{x}</b><br>Efeito no caixa: R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
@@ -8938,16 +8951,18 @@ elif pg=="dash_fin":
             _m1=max([abs(v) for v in _imp]+[1.0])*1.35; _m2=max([abs(v) for v in _cum]+[1.0])*1.2
             _fig_i.update_yaxes(range=[-_m1,_m1],gridcolor="#F3F4F6",secondary_y=False); _fig_i.update_yaxes(range=[-_m2,_m2],showgrid=False,secondary_y=True)
             _fig_i.add_hline(y=0,line_color="#9CA3AF",line_width=1)
-            _fig_i.update_layout(title=dict(text="Mês a mês: o plano de compras da categoria melhora (verde) ou piora (vermelho) o caixa?",font=_FD_TIT),**_FD_PLOT,height=360,xaxis=dict(type="category"))
-            st.plotly_chart(_fig_i,use_container_width=True)
-            _tot_plan=sum(_plan); _tot_hab=_hab*_nn; _d_vol=_tot_hab-_tot_plan
-            _pior=int(np.argmin(_imp)); _melhor=int(np.argmax(_imp))
-            _sem_prazo=sum(_hab-_plan[i] for i in range(_nn)); _ef_prazo=_cum[-1]-_sem_prazo
-            _plan_med=_tot_plan/_nn; _preso=(_plan_med-_hab)*max(_ciclo_fd,0)/30.0
+            _fig_i.update_layout(title=dict(text="Quanto a categoria melhora (verde) ou piora (vermelho) o caixa, mês a mês",font=_FD_TIT),**_FD_PLOT,height=360,xaxis=dict(type="category"))
+            _c1.plotly_chart(_fig_i,use_container_width=True)
+            _fig_s=go.Figure()
+            _fig_s.add_trace(go.Scatter(x=_xs,y=_sp_sem,name="Sem o plano (ritmo habitual)",mode="lines+markers",line=dict(color="#0F6E56",width=3,dash="dash"),marker=dict(size=6),hovertemplate="<b>Sem o plano</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
+            _fig_s.add_trace(go.Scatter(x=_xs,y=_sp_com,name="Com o plano da categoria",mode="lines+markers",line=dict(color="#14243B",width=3),marker=dict(size=6),fill="tonexty",fillcolor="rgba(20,36,59,0.08)",hovertemplate="<b>Com o plano</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
+            _fig_s.add_hline(y=0,line_color="#9CA3AF",line_width=1)
+            _fig_s.update_layout(title=dict(text="Saldo de caixa da empresa: com × sem o plano da categoria",font=_FD_TIT),**_FD_PLOT,height=360,xaxis=dict(type="category"),yaxis=dict(gridcolor="#F3F4F6"))
+            _c2.plotly_chart(_fig_s,use_container_width=True)
             _itens=[]
-            _itens.append((2 if _d_vol>=0 else 1,"Volume de compras",f"Nos próximos {_nn} meses o plano compra {_fd_m(_tot_plan)}, contra {_fd_m(_tot_hab)} no ritmo habitual da categoria. Isso {'poupa' if _d_vol>=0 else 'consome'} {_fd_m(abs(_d_vol))} de caixa."))
+            _itens.append((2 if _d_vol>=0 else 1,"Volume de compras",f"Nos próximos {_nn} meses o plano compra {_fd_m(_tot_plan)}, contra {_fd_m(_tot_hab)} no ritmo habitual da categoria. Isso {'poupa' if _d_vol>=0 else 'consome'} {_fd_m(abs(_d_vol))} de caixa da empresa."))
             _itens.append((2 if _ef_prazo>=0 else 1,"Prazo de pagamento",f"Com prazo médio de pagamento de {_pmp:.0f} dias (≈ {_lag} mês(es) de defasagem), as saídas do plano caem depois da compra: efeito de {'+' if _ef_prazo>=0 else '−'}{_fd_m(abs(_ef_prazo))} no caixa até {_xs[-1]}.") if _lag>0 else (1,"Prazo de pagamento",f"O prazo médio de pagamento é de {_pmp:.0f} dias, menos de 1 mês de defasagem: as compras do plano saem do caixa praticamente no mês da compra."))
-            _itens.append((2 if _preso<=0 else 1,"Prazo de retorno (capital de giro)",f"O ciclo de caixa é de {_ciclo_fd:.0f} dias: o dinheiro de cada compra só volta como venda recebida cerca de {_ciclo_fd:.0f} dias depois de pago. Com o plano em {_fd_m(_plan_med)}/mês contra {_fd_m(_hab)}/mês habituais, o capital de giro {'liberado' if _preso<=0 else 'preso a mais'} é de ≈ {_fd_m(abs(_preso))}."))
+            _itens.append((2 if _preso<=0 else 1,"Prazo de retorno (capital de giro)",f"O ciclo de caixa da empresa é de {_ciclo_fd:.0f} dias: o dinheiro de cada compra só volta como venda recebida cerca de {_ciclo_fd:.0f} dias depois de pago. Com o plano em {_fd_m(_plan_med)}/mês contra {_fd_m(_hab)}/mês habituais, o capital de giro {'liberado' if _preso<=0 else 'preso a mais'} é de ≈ {_fd_m(abs(_preso))}."))
             if _imp[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: o plano compra {_fd_m(_plan[_pior])}, {_fd_m(abs(_imp[_pior]))} a mais que o ritmo habitual no caixa do mês (considerando o prazo de pagamento). Mês mais leve: {_xs[_melhor]} ({'+' if _imp[_melhor]>=0 else '−'}{_fd_m(abs(_imp[_melhor]))})."))
             else: _itens.append((2,"Nenhum mês pressiona o caixa",f"Em todos os meses do plano o desembolso fica igual ou abaixo do ritmo habitual. Maior alívio: {_xs[_melhor]} (+{_fd_m(_imp[_melhor])})."))
             try:
@@ -8956,7 +8971,7 @@ elif pg=="dash_fin":
             except Exception: pass
             _icos2=["🔴","🟠","🟢"]
             st.markdown("".join(f'<div class="fd-dx" style="--c:{_cores[g]}"><div class="i">{_icos2[g]}</div><div><div class="h">{t}</div><div class="b">{b}</div></div></div>' for g,t,b in _itens).replace("$","&#36;"),unsafe_allow_html=True)
-            st.markdown(f'<div class="fd-q">Escopo: só as categorias rodadas no Motor de Compras (≈ {_cob_motor*100:.0f}% da receita bruta da empresa). O efeito é comparado com o ritmo habitual de compras desse mesmo escopo ({_fd_m(_hab)}/mês, média dos 6 últimos meses do balanço, proporcional à participação do Motor). Verde = melhora o caixa; vermelho = piora. É estimativa para orientar a conversa com o Comercial, não um orçamento.</div>',unsafe_allow_html=True)
+            st.markdown(f'<div class="fd-q">Escopo: só a(s) categoria(s) rodada(s) no Motor de Compras (≈ {_cob_motor*100:.0f}% da receita bruta da empresa), medida contra o ritmo habitual de compras desse mesmo escopo ({_fd_m(_hab)}/mês, média dos 6 últimos meses do balanço). O efeito é somado ao caixa projetado da empresa inteira. É estimativa para orientar a conversa com o Comercial, não um orçamento.</div>'.replace("$","&#36;"),unsafe_allow_html=True)    
  
     # ── 4) DO FATURAMENTO AO LUCRO + CICLO DE CAIXA ──────────────────────
     sec(f"💡 De onde vem o resultado · {_per_txt_fd}")
