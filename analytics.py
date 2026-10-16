@@ -60,8 +60,11 @@ st.set_page_config(
 
 st.markdown("""<style>
 .stApp{background:#FFFCF7;}
-section[data-testid="stSidebar"]{background:linear-gradient(180deg,#0F6E56 0%,#085041 100%)!important;
+section[data-testid="stSidebar"]{background:linear-gradient(180deg,#14284B 0%,#0A1930 100%)!important;
   border-right:1px solid #A9762F!important;box-shadow:1px 0 4px rgba(169,118,47,.18)!important;}
+section[data-testid="stSidebar"] div[style*="background:#0F6E56"]{background:#2A4A85!important;}
+section[data-testid="stSidebar"] div[style*="background:#085041"]{background:#0A1930!important;border-color:#2A4A85!important;}
+section[data-testid="stSidebar"] div[style*="color:#9FE1CB"]{color:#CFE0FF!important;}
 section[data-testid="stSidebar"] div.stButton>button{
   background:radial-gradient(120% 140% at 15% 0%,rgba(249,224,167,.35) 0%,rgba(249,224,167,0) 45%),
     linear-gradient(150deg,#7A5A1E 0%,#4A3510 55%,#7A5A1E 100%)!important;
