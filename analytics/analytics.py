@@ -8211,7 +8211,7 @@ elif pg=="dash_fin_antigo":
     st.markdown("<div style='height:10px'></div>",unsafe_allow_html=True)
     _cards2=st.columns(4)
     _cards2[0].markdown(_fd_card("Saldo de caixa",_fd_m(_saldo_fim_fd),f"no fim de {_rot_fd[_idx_fd[-1]]}",
-        _fd_chip(((_saldo_fim_fd-float(_saldo_fd.iloc[_idx_prev_fd[-1]]))/float(_saldo_fd.iloc[_idx_prev_fd[-1]])*100) if (_idx_prev_fd and float(_saldo_fd.iloc[_idx_prev_fd[-1]])>0 and _saldo_fim_fd>0) else None,True,"%",_ref_prev_fd),
+        _fd_chip(((_saldo_fim_fd-float(_saldo_fd.iloc[_idx_prev_fd[-1]]))/float(_saldo_fd.iloc[_idx_prev_fd[-1]])*100) if (_idx_prev_fd and float(_saldo_fd.iloc[_idx_prev_fd[-1]])>0 and _saldo_fim_fd>0) else None,True,"%",(f"vs fim de {_rot_fd[_idx_prev_fd[-1]]}" if _idx_prev_fd else "")),
         _fd_spark(_saldo_fd.tail(_n12).tolist(),"#059669"),"Saldo inicial configurado em Fluxo de Caixa + entradas − saídas acumuladas"),unsafe_allow_html=True)
     _cards2[1].markdown(_fd_card("Ciclo de caixa",f"{_ciclo_fd:.0f} dias","recebimento + estoque − pagamento",
         _fd_chip((_ciclo_fd-float(df_fd.iloc[_idx_prev_fd[-1]].get("ciclo de caixa",0) or 0)) if _idx_prev_fd else None,False," dias",_ref_prev_fd),_fd_spark(_fd_serie("ciclo de caixa"),"#D97706")),unsafe_allow_html=True)
@@ -8781,7 +8781,7 @@ elif pg=="dash_fin":
         _fd_chip((_ciclo_fd-float(df_fd.iloc[_idx_prev_fd[-1]].get("ciclo de caixa",0) or 0)) if _idx_prev_fd else None,False," dias",_ref_prev_fd),_fd_spark(_fd_serie("ciclo de caixa"),_lab12,lambda x:f"{x:.0f} dias","#D97706"),ac="#D97706"),unsafe_allow_html=True)
     _esc=" · empresa toda" if (filial_sel_fd and filial_sel_fd!="(Todas as filiais)") else ""
     st.markdown(f'''<div class="fd-pills"><div class="fd-pill">Liquidez corrente <b>{_fd_num(_lc_fd,2)}x</b></div><div class="fd-pill">Liquidez imediata <b>{_fd_num(_li_fd,2)}x</b></div>
-      <div class="fd-pill">Kanitz <b>{_fd_num(_kz_fd,2)}</b> · {_kz_zona}</div><div class="fd-pill">ROE <b>{_fd_num(_roe_fd)}%</b></div><div class="fd-pill">ICD <b>{_fd_num(_icd_fd)}%</b></div>
+      <div class="fd-pill">Kanitz <b>{_fd_num(_kz_fd,2)}</b> · {_kz_zona}</div><div class="fd-pill" title="Lucro líquido do último mês ÷ patrimônio líquido. Entre parênteses, a mesma taxa projetada para 12 meses.">ROE <b>{_fd_num(_roe_fd)}%</b> no mês (≈ {_fd_num(((1+max(_roe_fd,-99)/100)**12-1)*100,1)}% a.a.)</div><div class="fd-pill" title="EBITDA ÷ dívida financeira líquida. Quando o caixa é maior que a dívida financeira, não há dívida líquida e o indicador não se aplica.">ICD <b>{("sem dívida líquida" if (_icd_fd==_icd_fd and _icd_fd<0 and float(_ult_cons_fd.get("EBITDA",0) or 0)>0) else _fd_num(_icd_fd)+"%")}</b></div>
       <div class="fd-pill" style="background:#fff;color:#9AA0A6">Do Balanço{_esc}</div></div>''',unsafe_allow_html=True)
  
     # ── DADOS DO COMERCIAL E DA PROJEÇÃO (cruzamento e diagnósticos) ─────
@@ -8996,10 +8996,12 @@ elif pg=="dash_fin":
             _pct_cx=(abs(_res)/_saldo_hoje*100) if _saldo_hoje>0 else None
             st.markdown(f'<div class="fd-q" style="margin-top:0"><b>Em palavras simples:</b> aqui está só o dinheiro que entra e sai por causa dos produtos que você selecionou no Motor de Compras (por categoria, curva, catálogo ou outro filtro). É o mesmo fluxo da página <b>💰 Fluxo de Caixa Comercial Projetado</b>, agrupado por mês.<br><b>💰 Entra:</b> vendas previstas da seleção, recebidas {_pmr_cfg:.0f} dias depois da venda (em média).<br><b>💸 Sai:</b> compras do plano, pagas {_pmp_cfg:.0f} dias depois da compra (em média){" e com os encargos definidos lá" if _enc_ff>0 else ""}.<br><b>Resultado = Entra − Sai.</b> Se der <b>negativo</b>, a seleção consome caixa no período (você paga antes de receber). Se der <b>positivo</b>, ela gera caixa.</div>'.replace("$","&#36;"),unsafe_allow_html=True)
             st.markdown(f'<div class="fd-q">📅 <b>Períodos diferentes?</b> O saldo da empresa (Financeiro) vai de {_xp[0]} a {_xp[-1]}. Esta seleção vai de {_xs[0]} a {_xs[-1]}, que é até onde vai o plano de compras do Motor. São duas projeções geradas separadamente, por isso os períodos podem não coincidir.</div>',unsafe_allow_html=True)
-            _v1,_v2,_v3=st.columns(3)
+            _v1,_v2,_v3,_v4=st.columns(4)
             _v1.markdown(_fd_card(f"💰 Entra até {_xs[-1]}",_fd_m(_ent_t),"vendas da seleção, já recebidas no período",ac="#0F6E56"),unsafe_allow_html=True)
             _v2.markdown(_fd_card(f"💸 Sai até {_xs[-1]}",_fd_m(_sai_t),"compras do plano, já pagas no período",ac="#D97706"),unsafe_allow_html=True)
             _v3.markdown(_fd_card("Resultado (entra − sai)",("+" if _pos else "−")+_fd_m(abs(_res)),(("gera" if _pos else "consome")+" caixa"+(f" · {_pct_cx:.0f}% do saldo atual" if _pct_cx is not None else "")),ac="#059669" if _pos else "#DC2626"),unsafe_allow_html=True)
+            _res_full=_res+_ent_dep-_sai_dep
+            _v4.markdown(_fd_card("Resultado completo",("+" if _res_full>=0 else "−")+_fd_m(abs(_res_full)),f"inclui o que ainda entra ({_fd_m(_ent_dep)}) e sai ({_fd_m(_sai_dep)}) depois de {_xs[-1]}",ac="#059669" if _res_full>=0 else "#DC2626"),unsafe_allow_html=True)
             _c1,_c2=st.columns(2)
             _fig_i=go.Figure()
             _fig_i.add_trace(go.Bar(x=_xs,y=_ent,name="Entra (vendas recebidas)",marker_color="#0F6E56",opacity=.9,hovertemplate="<b>%{x}</b><br>Entra: R$ %{y:,.0f}<extra></extra>"))
