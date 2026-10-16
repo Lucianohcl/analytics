@@ -8928,15 +8928,17 @@ elif pg=="dash_fin":
         else:
             _nn=_ult_plano+1; _xs=_xp[:_nn]; _plan=[_plano_map.get(l,0.0) for l in _xs]; _hab=_base_esc
             # Prazos e encargos configurados na página "Fluxo de Caixa Comercial Projetado"
-            _cfg_ff=None
-            for _fk in (st.session_state.get("ff_filial_sel"),filial_sel_fd,"(Todas as filiais)"):
-                if _fk and st.session_state.cid:
+            _fil_cfg=filial_sel_fd or "(Todas as filiais)"
+            _ss_ok=(st.session_state.get("ff_filial_sel")==_fil_cfg)
+            _cfg_ff=None; _cfg_de=_fil_cfg
+            for _fk in (_fil_cfg,"(Todas as filiais)"):
+                if st.session_state.cid:
                     try: _cfg_ff=load_fluxo_financeiro(st.session_state.cid,_fk)
                     except Exception: _cfg_ff=None
-                    if _cfg_ff: break
-            _parc_pag=st.session_state.get("ff_parcelas_pagar") or (_cfg_ff or {}).get("ff_parcelas_pagar") or []
-            _parc_rec=st.session_state.get("ff_parcelas_receber") or (_cfg_ff or {}).get("ff_parcelas_receber") or []
-            _enc_ff=float(st.session_state.get("ff_encargos_pct") or (_cfg_ff or {}).get("ff_encargos_pct") or 0.0)
+                    if _cfg_ff: _cfg_de=_fk; break
+            _parc_pag=(st.session_state.get("ff_parcelas_pagar") if _ss_ok else None) or (_cfg_ff or {}).get("ff_parcelas_pagar") or []
+            _parc_rec=(st.session_state.get("ff_parcelas_receber") if _ss_ok else None) or (_cfg_ff or {}).get("ff_parcelas_receber") or []
+            _enc_ff=float((st.session_state.get("ff_encargos_pct") if _ss_ok else None) or (_cfg_ff or {}).get("ff_encargos_pct") or 0.0)
             _cfg_ok=bool(_parc_pag) and bool(_parc_rec)
             if not _parc_pag: _parc_pag=[{"pct":100,"dias":max(_pmp,0)}]
             if not _parc_rec: _parc_rec=[{"pct":100,"dias":max(_pmr,0)}]
@@ -8996,12 +8998,11 @@ elif pg=="dash_fin":
             _pct_cx=(abs(_res)/_saldo_hoje*100) if _saldo_hoje>0 else None
             st.markdown(f'<div class="fd-q" style="margin-top:0"><b>Em palavras simples:</b> aqui está só o dinheiro que entra e sai por causa dos produtos que você selecionou no Motor de Compras (por categoria, curva, catálogo ou outro filtro). É o mesmo fluxo da página <b>💰 Fluxo de Caixa Comercial Projetado</b>, agrupado por mês.<br><b>💰 Entra:</b> vendas previstas da seleção, recebidas {_pmr_cfg:.0f} dias depois da venda (em média).<br><b>💸 Sai:</b> compras do plano, pagas {_pmp_cfg:.0f} dias depois da compra (em média){" e com os encargos definidos lá" if _enc_ff>0 else ""}.<br><b>Resultado = Entra − Sai.</b> Se der <b>negativo</b>, a seleção consome caixa no período (você paga antes de receber). Se der <b>positivo</b>, ela gera caixa.</div>'.replace("$","&#36;"),unsafe_allow_html=True)
             st.markdown(f'<div class="fd-q">📅 <b>Períodos diferentes?</b> O saldo da empresa (Financeiro) vai de {_xp[0]} a {_xp[-1]}. Esta seleção vai de {_xs[0]} a {_xs[-1]}, que é até onde vai o plano de compras do Motor. São duas projeções geradas separadamente, por isso os períodos podem não coincidir.</div>',unsafe_allow_html=True)
-            _v1,_v2,_v3,_v4=st.columns(4)
+            _v1,_v2,_v3=st.columns(3)
             _v1.markdown(_fd_card(f"💰 Entra até {_xs[-1]}",_fd_m(_ent_t),"vendas da seleção, já recebidas no período",ac="#0F6E56"),unsafe_allow_html=True)
             _v2.markdown(_fd_card(f"💸 Sai até {_xs[-1]}",_fd_m(_sai_t),"compras do plano, já pagas no período",ac="#D97706"),unsafe_allow_html=True)
             _v3.markdown(_fd_card("Resultado (entra − sai)",("+" if _pos else "−")+_fd_m(abs(_res)),(("gera" if _pos else "consome")+" caixa"+(f" · {_pct_cx:.0f}% do saldo atual" if _pct_cx is not None else "")),ac="#059669" if _pos else "#DC2626"),unsafe_allow_html=True)
-            _res_full=_res+_ent_dep-_sai_dep
-            _v4.markdown(_fd_card("Resultado completo",("+" if _res_full>=0 else "−")+_fd_m(abs(_res_full)),f"inclui o que ainda entra ({_fd_m(_ent_dep)}) e sai ({_fd_m(_sai_dep)}) depois de {_xs[-1]}",ac="#059669" if _res_full>=0 else "#DC2626"),unsafe_allow_html=True)
+
             _c1,_c2=st.columns(2)
             _fig_i=go.Figure()
             _fig_i.add_trace(go.Bar(x=_xs,y=_ent,name="Entra (vendas recebidas)",marker_color="#0F6E56",opacity=.9,hovertemplate="<b>%{x}</b><br>Entra: R$ %{y:,.0f}<extra></extra>"))
@@ -9027,7 +9028,7 @@ elif pg=="dash_fin":
                 _min_c=min(_cum) if _cum else 0.0
                 _dif_b=_res_b-_res
                 _itens.append((1 if _res_b<_res else 2,"E se os prazos reais forem diferentes dos configurados?",f"Os prazos que você configurou no Fluxo de Caixa Comercial Projetado (recebe em {_pmr_cfg:.0f} dias, paga em {_pmp_cfg:.0f}) são uma <b>premissa</b>. O balanço mostra o que a empresa pratica de fato (recebe em {_pmr:.0f} dias, paga em {_pmp:.0f}).<br>• <b>Com os prazos configurados:</b> resultado de {'+' if _res>=0 else '−'}{_fd_m(abs(_res))} até {_xs[-1]}; pior ponto do acumulado, {_fd_m(_min_c)}.<br>• <b>Com os prazos do balanço:</b> resultado de {'+' if _res_b>=0 else '−'}{_fd_m(abs(_res_b))}; pior ponto, {_fd_m(_min_b)}. Isso acontece porque você {'paga '+str(int(round(abs(_pmp_cfg-_pmp))))+' dias '+('mais cedo' if _pmp<_pmp_cfg else 'mais tarde') if abs(_pmp_cfg-_pmp)>=1 else 'paga no mesmo prazo'} e {'recebe '+str(int(round(abs(_pmr_cfg-_pmr))))+' dias '+('mais tarde' if _pmr>_pmr_cfg else 'mais cedo') if abs(_pmr_cfg-_pmr)>=1 else 'recebe no mesmo prazo'}.<br><b>Em resumo:</b> se os prazos reais seguirem o histórico, a seleção {'pressiona o caixa em' if _dif_b<0 else 'alivia o caixa em'} {_fd_m(abs(_dif_b))} {'a mais' if _dif_b<0 else 'a mais do que o previsto'}. Esse valor só se evita se os prazos configurados forem realmente negociados com fornecedores e clientes."))
-            if _ent_dep>0 or _sai_dep>0: _itens.append((2 if _ent_dep>=_sai_dep else 1,"O que cai depois do período",f"Ainda depois de {_xs[-1]} entram mais {_fd_m(_ent_dep)} (vendas já feitas, recebidas pelos prazos) e saem mais {_fd_m(_sai_dep)} (compras já feitas, pagas pelos prazos). Não estão nos gráficos acima."))
+
             if _liq[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: entram {_fd_m(_ent[_pior])} e saem {_fd_m(_sai[_pior])}, resultado de −{_fd_m(abs(_liq[_pior]))}. Mês mais leve: {_xs[_melhor]} ({'+' if _liq[_melhor]>=0 else '−'}{_fd_m(abs(_liq[_melhor]))})."))
             else: _itens.append((2,"Nenhum mês consome caixa",f"Em todos os meses entra mais do que sai. Melhor mês: {_xs[_melhor]} (+{_fd_m(_liq[_melhor])})."))
             _vr_med=sum((_vr[i] if i<len(_vr) else _rb3)*_cob_motor for i in range(_i0,_i0+_nn))/_nn
@@ -9041,7 +9042,7 @@ elif pg=="dash_fin":
             except Exception: pass
             _icos2=["🔴","🟠","🟢"]
             st.markdown("".join(f'<div class="fd-dx" style="--c:{_cores[g]}"><div class="i">{_icos2[g]}</div><div><div class="h">{t}</div><div class="b">{b}</div></div></div>' for g,t,b in _itens).replace("$","&#36;"),unsafe_allow_html=True)
-            st.markdown(f'<div class="fd-q">Escopo: só os produtos selecionados no Motor de Compras (categoria, curva, catálogo ou o filtro aplicado). Vendas: {_fonte_v}. Compras: calendário do Motor de Compras. Prazos e encargos: página Fluxo de Caixa Comercial Projetado{"" if _cfg_ok else " (ainda não configurados lá: usei o PMR/PMP do balanço)"}. Distribuição aproximada por mês, então pode diferir um pouco dos valores semanais daquela página. Atenção: este bloco é só fluxo de caixa (quando entra e quando sai dinheiro). Ele não inclui o ganho ou a perda de estoque contra o método NAIVE, que aparece no dashboard Comercial. É estimativa para orientar a conversa com o Comercial, não um orçamento.</div>'.replace("$","&#36;"),unsafe_allow_html=True)                
+            st.markdown(f'<div class="fd-q">Escopo: só os produtos selecionados no Motor de Compras (categoria, curva, catálogo ou o filtro aplicado). Vendas: {_fonte_v}. Compras: calendário do Motor de Compras. Prazos e encargos: página Fluxo de Caixa Comercial Projetado (configuração: {_cfg_de}){"" if _cfg_ok else " (ainda não configurados lá: usei o PMR/PMP do balanço)"}. Distribuição aproximada por mês, então pode diferir um pouco dos valores semanais daquela página. Atenção: este bloco é só fluxo de caixa (quando entra e quando sai dinheiro). Ele não inclui o ganho ou a perda de estoque contra o método NAIVE, que aparece no dashboard Comercial. É estimativa para orientar a conversa com o Comercial, não um orçamento.</div>'.replace("$","&#36;"),unsafe_allow_html=True)                
  
     # ── 4) DO FATURAMENTO AO LUCRO + CICLO DE CAIXA ──────────────────────
     sec(f"💡 De onde vem o resultado · {_per_txt_fd}")
