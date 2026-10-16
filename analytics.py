@@ -8988,6 +8988,9 @@ elif pg=="dash_fin":
             _liq=[_ent[i]-_sai[i] for i in range(_nn)]; _cum=list(np.cumsum(_liq))
             _ent_t=sum(_ent); _sai_t=sum(_sai); _res=_ent_t-_sai_t; _pos=_res>=0
             _ent_dep=sum(_ent_x[_nn:]); _sai_dep=sum(_sai_x[_nn:])
+            _i0=next((i for i in range(_nn) if abs(_ent[i])+abs(_sai[i])>0),0)
+            _xs=_xs[_i0:]; _ent=_ent[_i0:]; _sai=_sai[_i0:]; _vend=_vend[_i0:]; _nn=len(_xs)
+            _liq=[_ent[i]-_sai[i] for i in range(_nn)]; _cum=list(np.cumsum(_liq))
             _pior=int(np.argmin(_liq)); _melhor=int(np.argmax(_liq))
             _gap=_pmr_cfg-_pmp_cfg
             _pct_cx=(abs(_res)/_saldo_hoje*100) if _saldo_hoje>0 else None
@@ -9017,7 +9020,7 @@ elif pg=="dash_fin":
             if _ent_dep>0 or _sai_dep>0: _itens.append((2 if _ent_dep>=_sai_dep else 1,"O que cai depois do período",f"Ainda depois de {_xs[-1]} entram mais {_fd_m(_ent_dep)} (vendas já feitas, recebidas pelos prazos) e saem mais {_fd_m(_sai_dep)} (compras já feitas, pagas pelos prazos). Não estão nos gráficos acima."))
             if _liq[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: entram {_fd_m(_ent[_pior])} e saem {_fd_m(_sai[_pior])}, resultado de −{_fd_m(abs(_liq[_pior]))}. Mês mais leve: {_xs[_melhor]} ({'+' if _liq[_melhor]>=0 else '−'}{_fd_m(abs(_liq[_melhor]))})."))
             else: _itens.append((2,"Nenhum mês consome caixa",f"Em todos os meses entra mais do que sai. Melhor mês: {_xs[_melhor]} (+{_fd_m(_liq[_melhor])})."))
-            _vr_med=sum((_vr[i] if i<len(_vr) else _rb3)*_cob_motor for i in range(_nn))/_nn
+            _vr_med=sum((_vr[i] if i<len(_vr) else _rb3)*_cob_motor for i in range(_i0,_i0+_nn))/_nn
             _vc_med=sum(_vend)/_nn
             if _vr_med>0 and _vc_med>0:
                 _dv2=(_vc_med/_vr_med-1)*100
