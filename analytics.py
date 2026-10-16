@@ -8921,10 +8921,10 @@ elif pg=="dash_fin":
         _h2.markdown(_fd_card(f"Saldo projetado em {_xp[-1]}",_fd_m(_sp_fin[-1]),f"{'+' if _sp_fin[-1]>=_saldo_hoje else '−'}{_fd_m(abs(_sp_fin[-1]-_saldo_hoje))} em relação a hoje",ac="#0F6E56"),unsafe_allow_html=True)
         _h3.markdown(_fd_card("Menor saldo projetado",_fd_m(_sp_fin[_im]),f"em {_xp[_im]}",ac="#DC2626" if _sp_fin[_im]<0 else "#059669"),unsafe_allow_html=True)
 
-                        # ── Impacto da categoria rodada no Motor de Compras no fluxo geral ──
+                                # ── Impacto da categoria rodada no Motor de Compras no fluxo geral ──
         sec("🎯 Impacto da seleção trabalhada (vendas e compras projetadas) no caixa futuro da empresa")
         if not _tem_cruz:
-            st.markdown('<div class="al-i">ℹ️ Rode uma seleção de produtos no <b>Motor de Compras</b> (por categoria, curva, catálogo ou outro filtro) para ver quanto o plano dela vai melhorar ou piorar o caixa futuro da empresa.</div>',unsafe_allow_html=True)
+            st.markdown('<div class="al-i">ℹ️ Rode uma seleção de produtos no <b>Motor de Compras</b> (por categoria, curva, catálogo ou outro filtro) para ver quanto o plano dela vai gerar ou consumir de caixa.</div>',unsafe_allow_html=True)
         else:
             _nn=_ult_plano+1; _xs=_xp[:_nn]; _plan=[_plano_map.get(l,0.0) for l in _xs]; _hab=_base_esc
             # Prazos e encargos configurados na página "Fluxo de Caixa Comercial Projetado"
@@ -8951,56 +8951,83 @@ elif pg=="dash_fin":
                         if i+a<len(out): out[i+a]+=pv*(1-f)
                         if i+a+1<len(out): out[i+a+1]+=pv*f
                 return out
-            _lag=int(round(_pmp_cfg/30.0)); _lagR=int(round(_pmr_cfg/30.0))
-            _vr_esc=[((_vr[i] if i<len(_vr) else _rb3)*_cob_motor) for i in range(_nn)]
-            _rec_pl=_rec_com if _rec_com else (_vr_esc[0] if _vr_esc else 0.0)
-            _drec=[v*(1-_enc_ff/100.0) for v in _desloca([_rec_pl-_vr_esc[i] for i in range(_nn)],_parc_rec)]
-            _dpag=[-v for v in _desloca([_plan[i]-_hab for i in range(_nn)],_parc_pag)]
-            _imp=[_drec[i]+_dpag[i] for i in range(_nn)]
-            _cum=list(np.cumsum(_imp))
-            _sp_sem=[float(_sp_fin[i]) for i in range(_nn)]
-            _sp_com=[_sp_sem[i]+_cum[i] for i in range(_nn)]
-            _tot_plan=sum(_plan); _tot_hab=_hab*_nn; _d_vol=_tot_hab-_tot_plan
-            _pior=int(np.argmin(_imp)); _melhor=int(np.argmax(_imp))
-            _sem_prazo=sum(_hab-_plan[i] for i in range(_nn)); _ef_prazo=sum(_dpag)-_sem_prazo
-            _plan_med=_tot_plan/_nn; _preso=(_plan_med-_hab)*max(_ciclo_fd,0)/30.0
-            _ef_fim=_cum[-1]; _pos=_ef_fim>=0
-            st.markdown(f'<div class="fd-q" style="margin-top:0"><b>Em palavras simples:</b> o gráfico acima é a previsão de caixa que o Financeiro já faz para a empresa toda. Aqui perguntamos: <i>e se os produtos que você selecionou no Motor de Compras (por categoria, curva, catálogo ou outro filtro) venderem e forem comprados como o Motor planeja, o caixa da empresa fica melhor ou pior?</i><br><b>💰 Entra dinheiro:</b> as vendas que o Motor prevê para a seleção, recebidas nos prazos configurados em <b>💰 Fluxo de Caixa Comercial Projetado</b> (média de {_pmr_cfg:.0f} dias).<br><b>💸 Sai dinheiro:</b> as compras do plano, pagas nos prazos configurados nessa mesma página (média de {_pmp_cfg:.0f} dias){' e com os encargos definidos lá' if _enc_ff>0 else ''}.<br><b>Resultado:</b> comparamos com o ritmo habitual da seleção, que o Financeiro já tinha embutido na previsão dele. Número <b>positivo</b> = sobra mais dinheiro no caixa; <b>negativo</b> = falta dinheiro.</div>'.replace("$","&#36;"),unsafe_allow_html=True)
+            # Vendas previstas: as MESMAS do Fluxo de Caixa Comercial Projetado (Motor de Previsão, só produtos programados)
+            def _vendas_com(_fil):
+                _o={}
+                try:
+                    _pm=load_cfgml_resultado(st.session_state.cid,_fil); _,_cal,_=load_resultado_compras(st.session_state.cid,_fil)
+                except Exception: return _o
+                if _pm is None or _pm.empty or "previsao" not in _pm.columns: return _o
+                _lim=None; _prog=set()
+                if _cal is not None and not _cal.empty:
+                    _lim=pd.to_datetime(_cal["DataEvento"],format="%d/%m/%Y",errors="coerce").max(); _prog=set(_cal["Produto"].unique())
+                _cp="_ProdutoUnico" if "_ProdutoUnico" in _pm.columns else None
+                _bs=pd.Timestamp.now().to_period("M").to_timestamp()
+                for _,_rw in _pm.iterrows():
+                    if _rw.get("status")!="ok": continue
+                    if _cp and _rw.get(_cp) not in _prog: continue
+                    _pv=_rw.get("previsao")
+                    if not _pv: continue
+                    for _i,_v in enumerate(_pv):
+                        _mc=_bs+pd.DateOffset(months=_i+1)
+                        if _lim is not None and _mc>_lim: continue
+                        _lb=f"{_MESES_FD[_mc.month-1]}/{str(_mc.year)[-2:]}"
+                        _o[_lb]=_o.get(_lb,0.0)+max(0.0,float(_v))
+                return _o
+            _vm={}
+            for _ff_ in (_filiais_fd if (not filial_sel_fd or filial_sel_fd=="(Todas as filiais)") else [filial_sel_fd]):
+                for _k_,_v_ in _vendas_com(_ff_).items(): _vm[_k_]=_vm.get(_k_,0.0)+_v_
+            _vend=[_vm.get(l,0.0) for l in _xs]
+            _fonte_v="Motor de Previsão (a mesma do Fluxo de Caixa Comercial Projetado)"
+            if sum(_vend)<=0 and _rec_com:
+                _vend=[_rec_com]*_nn; _fonte_v="demanda × preço do Motor de Compras (média mensal)"
+            _ext=int(np.ceil(max(max(float(p["dias"]) for p in _parc_pag),max(float(p["dias"]) for p in _parc_rec))/30.0))+2
+            _vend_x=_vend+[0.0]*_ext; _plan_x=_plan+[0.0]*_ext
+            _ent_x=[v*(1-_enc_ff/100.0) for v in _desloca(_vend_x,_parc_rec)]; _sai_x=_desloca(_plan_x,_parc_pag)
+            _ent=_ent_x[:_nn]; _sai=_sai_x[:_nn]
+            _liq=[_ent[i]-_sai[i] for i in range(_nn)]; _cum=list(np.cumsum(_liq))
+            _ent_t=sum(_ent); _sai_t=sum(_sai); _res=_ent_t-_sai_t; _pos=_res>=0
+            _ent_dep=sum(_ent_x[_nn:]); _sai_dep=sum(_sai_x[_nn:])
+            _pior=int(np.argmin(_liq)); _melhor=int(np.argmax(_liq))
+            _gap=_pmr_cfg-_pmp_cfg
+            _pct_cx=(abs(_res)/_saldo_hoje*100) if _saldo_hoje>0 else None
+            st.markdown(f'<div class="fd-q" style="margin-top:0"><b>Em palavras simples:</b> aqui está só o dinheiro que entra e sai por causa dos produtos que você selecionou no Motor de Compras (por categoria, curva, catálogo ou outro filtro). É o mesmo fluxo da página <b>💰 Fluxo de Caixa Comercial Projetado</b>, agrupado por mês.<br><b>💰 Entra:</b> vendas previstas da seleção, recebidas {_pmr_cfg:.0f} dias depois da venda (em média).<br><b>💸 Sai:</b> compras do plano, pagas {_pmp_cfg:.0f} dias depois da compra (em média){" e com os encargos definidos lá" if _enc_ff>0 else ""}.<br><b>Resultado = Entra − Sai.</b> Se der <b>negativo</b>, a seleção consome caixa no período (você paga antes de receber). Se der <b>positivo</b>, ela gera caixa.</div>'.replace("$","&#36;"),unsafe_allow_html=True)
             _v1,_v2,_v3=st.columns(3)
-            _v1.markdown(_fd_card(f"1) Caixa em {_xs[-1]} SEM o plano",_fd_m(_sp_sem[-1]),"projeção da empresa com compras no ritmo habitual",ac="#0F6E56"),unsafe_allow_html=True)
-            _v2.markdown(_fd_card("2) Efeito da seleção no caixa",("+" if _pos else "−")+_fd_m(abs(_ef_fim)),"entradas − saídas, já com os prazos",ac="#059669" if _pos else "#DC2626"),unsafe_allow_html=True)
-            _v3.markdown(_fd_card(f"1 {'+' if _pos else '−'} 2) Caixa em {_xs[-1]} COM o plano",_fd_m(_sp_com[-1]),"resultado final para a empresa",ac="#14243B"),unsafe_allow_html=True)
+            _v1.markdown(_fd_card(f"💰 Entra até {_xs[-1]}",_fd_m(_ent_t),"vendas da seleção, já recebidas no período",ac="#0F6E56"),unsafe_allow_html=True)
+            _v2.markdown(_fd_card(f"💸 Sai até {_xs[-1]}",_fd_m(_sai_t),"compras do plano, já pagas no período",ac="#D97706"),unsafe_allow_html=True)
+            _v3.markdown(_fd_card("Resultado (entra − sai)",("+" if _pos else "−")+_fd_m(abs(_res)),(("gera" if _pos else "consome")+" caixa"+(f" · {_pct_cx:.0f}% do saldo atual" if _pct_cx is not None else "")),ac="#059669" if _pos else "#DC2626"),unsafe_allow_html=True)
             _c1,_c2=st.columns(2)
-            _fig_i=make_subplots(specs=[[{"secondary_y":True}]])
-            _fig_i.add_trace(go.Bar(x=_xs,y=_drec,name="Entra: vendas recebidas (após o prazo de recebimento)",marker_color="#0F6E56",opacity=.9,hovertemplate="<b>%{x}</b><br>Recebimentos: R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
-            _fig_i.add_trace(go.Bar(x=_xs,y=_dpag,name="Sai: compras pagas (após o prazo de pagamento)",marker_color="#D97706",opacity=.9,hovertemplate="<b>%{x}</b><br>Pagamentos: R$ %{y:,.0f}<extra></extra>"),secondary_y=False)
-            _fig_i.add_trace(go.Scatter(x=_xs,y=_cum,name="Efeito líquido acumulado",mode="lines+markers",line=dict(color="#14243B",width=3),marker=dict(size=6),hovertemplate="<b>Acumulado</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"),secondary_y=True)
-            _m1=max([abs(v) for v in _imp+_drec+_dpag]+[1.0])*1.35; _m2=max([abs(v) for v in _cum]+[1.0])*1.2
-            _fig_i.update_yaxes(range=[-_m1,_m1],gridcolor="#F3F4F6",secondary_y=False); _fig_i.update_yaxes(range=[-_m2,_m2],showgrid=False,secondary_y=True)
+            _fig_i=go.Figure()
+            _fig_i.add_trace(go.Bar(x=_xs,y=_ent,name="Entra (vendas recebidas)",marker_color="#0F6E56",opacity=.9,hovertemplate="<b>%{x}</b><br>Entra: R$ %{y:,.0f}<extra></extra>"))
+            _fig_i.add_trace(go.Bar(x=_xs,y=_sai,name="Sai (compras pagas)",marker_color="#D97706",opacity=.9,hovertemplate="<b>%{x}</b><br>Sai: R$ %{y:,.0f}<extra></extra>"))
+            _fig_i.add_trace(go.Scatter(x=_xs,y=_cum,name="Resultado acumulado (entra − sai)",mode="lines+markers",line=dict(color="#14243B",width=3),marker=dict(size=6),hovertemplate="<b>Acumulado</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
             _fig_i.add_hline(y=0,line_color="#9CA3AF",line_width=1)
-            _fig_i.update_layout(title=dict(text="Efeito da seleção no caixa: entra × sai",font=_FD_TIT),**_FD_PLOT,height=360,barmode="relative",xaxis=dict(type="category"))
+            _fig_i.update_layout(title=dict(text="Quanto entra × quanto sai, por mês",font=_FD_TIT),**_FD_PLOT,height=360,barmode="group",xaxis=dict(type="category"),yaxis=dict(gridcolor="#F3F4F6"))
             _c1.plotly_chart(_fig_i,use_container_width=True)
             _fig_s=go.Figure()
-            _fig_s.add_trace(go.Scatter(x=_xs,y=_sp_sem,name="Sem a seleção (previsão atual do Financeiro)",mode="lines+markers",line=dict(color="#0F6E56",width=3,dash="dash"),marker=dict(size=6),hovertemplate="<b>Sem o plano</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
-            _fig_s.add_trace(go.Scatter(x=_xs,y=_sp_com,name="Com a seleção",mode="lines+markers",line=dict(color="#14243B",width=3),marker=dict(size=6),fill="tonexty",fillcolor="rgba(20,36,59,0.08)",hovertemplate="<b>Com o plano</b><br>%{x}: R$ %{y:,.0f}<extra></extra>"))
+            _fig_s.add_trace(go.Bar(x=_xs,y=_liq,name="Resultado do mês",marker_color=["#059669" if v>=0 else "#DC2626" for v in _liq],opacity=.9,
+                text=[("+" if v>=0 else "−")+fmt(abs(v)) for v in _liq],textposition="outside",hovertemplate="<b>%{x}</b><br>Entra − sai: R$ %{y:,.0f}<extra></extra>"))
             _fig_s.add_hline(y=0,line_color="#9CA3AF",line_width=1)
-            _fig_s.update_layout(title=dict(text="Saldo de caixa da empresa: com × sem a seleção",font=_FD_TIT),**_FD_PLOT,height=360,xaxis=dict(type="category"),yaxis=dict(gridcolor="#F3F4F6"))
+            _fig_s.update_layout(title=dict(text="Resultado de cada mês: verde gera caixa, vermelho consome",font=_FD_TIT),**_FD_PLOT,height=360,showlegend=False,xaxis=dict(type="category"),yaxis=dict(gridcolor="#F3F4F6"))
             _c2.plotly_chart(_fig_s,use_container_width=True)
             _itens=[]
-            _tot_drec=sum(_drec)
-            _itens.append((2 if _tot_drec>=0 else 1,"Vendas e prazo de recebimento",f"A seleção projeta vendas de {_fd_m(_rec_pl)}/mês no Motor, contra {_fd_m(sum(_vr_esc)/_nn)}/mês na projeção financeira do mesmo escopo. Com prazo médio de recebimento configurado de {_pmr_cfg:.0f} dias (≈ {_lagR} mês(es)), isso {'adiciona' if _tot_drec>=0 else 'tira'} {_fd_m(abs(_tot_drec))} de entradas no caixa até {_xs[-1]}."))
-            _itens.append((2 if _d_vol>=0 else 1,"Volume de compras",f"Nos próximos {_nn} meses o plano compra {_fd_m(_tot_plan)}, contra {_fd_m(_tot_hab)} no ritmo habitual dela. Isso {'poupa' if _d_vol>=0 else 'consome'} {_fd_m(abs(_d_vol))} de caixa da empresa."))
-            _itens.append((2 if _ef_prazo>=0 else 1,"Prazo de pagamento",f"Com prazo médio de pagamento configurado de {_pmp_cfg:.0f} dias (≈ {_lag} mês(es) de defasagem), as saídas do plano caem depois da compra: efeito de {'+' if _ef_prazo>=0 else '−'}{_fd_m(abs(_ef_prazo))} no caixa até {_xs[-1]}.") if _lag>0 else (1,"Prazo de pagamento",f"O prazo médio de pagamento configurado é de {_pmp_cfg:.0f} dias, menos de 1 mês de defasagem: as compras do plano saem do caixa praticamente no mês da compra."))
-            _itens.append((2 if _preso<=0 else 1,"Prazo de retorno (capital de giro)",f"O ciclo de caixa da empresa é de {_ciclo_fd:.0f} dias: o dinheiro de cada compra só volta como venda recebida cerca de {_ciclo_fd:.0f} dias depois de pago. Com o plano em {_fd_m(_plan_med)}/mês contra {_fd_m(_hab)}/mês habituais, o capital de giro {'liberado' if _preso<=0 else 'preso a mais'} é de ≈ {_fd_m(abs(_preso))}."))
-            if _imp[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: o plano compra {_fd_m(_plan[_pior])}, {_fd_m(abs(_imp[_pior]))} a mais que o ritmo habitual no caixa do mês (considerando o prazo de pagamento). Mês mais leve: {_xs[_melhor]} ({'+' if _imp[_melhor]>=0 else '−'}{_fd_m(abs(_imp[_melhor]))})."))
-            else: _itens.append((2,"Nenhum mês pressiona o caixa",f"Em todos os meses do plano o desembolso fica igual ou abaixo do ritmo habitual. Maior alívio: {_xs[_melhor]} (+{_fd_m(_imp[_melhor])})."))
+            _itens.append((2 if _pos else 1,"Resultado no período",f"Até {_xs[-1]} entram {_fd_m(_ent_t)} e saem {_fd_m(_sai_t)}: a seleção {'gera' if _pos else 'consome'} {_fd_m(abs(_res))} de caixa"+(f" ({_pct_cx:.0f}% do saldo atual da empresa)." if _pct_cx is not None else ".")))
+            _itens.append((1 if _gap>0 else 2,"Prazos de pagamento e recebimento",f"Você paga em média {_pmp_cfg:.0f} dias depois da compra e recebe {_pmr_cfg:.0f} dias depois da venda: "+(f"recebe {abs(_gap):.0f} dias DEPOIS de pagar, então o caixa financia a seleção nesse intervalo." if _gap>0 else (f"recebe {abs(_gap):.0f} dias ANTES de pagar, o que ajuda o caixa." if _gap<0 else "recebimento e pagamento no mesmo prazo."))))
+            if _ent_dep>0 or _sai_dep>0: _itens.append((2 if _ent_dep>=_sai_dep else 1,"O que cai depois do período",f"Ainda depois de {_xs[-1]} entram mais {_fd_m(_ent_dep)} (vendas já feitas, recebidas pelos prazos) e saem mais {_fd_m(_sai_dep)} (compras já feitas, pagas pelos prazos). Não estão nos gráficos acima."))
+            if _liq[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: entram {_fd_m(_ent[_pior])} e saem {_fd_m(_sai[_pior])}, resultado de −{_fd_m(abs(_liq[_pior]))}. Mês mais leve: {_xs[_melhor]} ({'+' if _liq[_melhor]>=0 else '−'}{_fd_m(abs(_liq[_melhor]))})."))
+            else: _itens.append((2,"Nenhum mês consome caixa",f"Em todos os meses entra mais do que sai. Melhor mês: {_xs[_melhor]} (+{_fd_m(_liq[_melhor])})."))
+            _vr_med=sum((_vr[i] if i<len(_vr) else _rb3)*_cob_motor for i in range(_nn))/_nn
+            _vc_med=sum(_vend)/_nn
+            if _vr_med>0 and _vc_med>0:
+                _dv2=(_vc_med/_vr_med-1)*100
+                _itens.append((1 if abs(_dv2)>=15 else 2,"Projeção comercial × financeira",f"Para o mesmo escopo, o Comercial projeta vendas de {_fd_m(_vc_med)}/mês e o Financeiro, de ≈ {_fd_m(_vr_med)}/mês ({_dv2:+.0f}%). Os dois modelos são rodados separadamente; este bloco usa só a projeção do Comercial, igual à página Fluxo de Caixa Comercial Projetado."))
             try:
                 _cenx=preparar_cenario_motor(_df_res_fd); _libx=float(_cenx["Excesso"].sum()-_cenx["Falta"].sum())
                 if _libx>0 and _saldo_hoje>0: _itens.append((2,"Estoque liberável (potencial)",f"O estoque em excesso da seleção, descontada a falta, soma {_fd_m(_libx)}, equivalente a {_libx/_saldo_hoje*100:.0f}% do saldo atual de caixa. É potencial simulado, ainda não é caixa."))
             except Exception: pass
             _icos2=["🔴","🟠","🟢"]
             st.markdown("".join(f'<div class="fd-dx" style="--c:{_cores[g]}"><div class="i">{_icos2[g]}</div><div><div class="h">{t}</div><div class="b">{b}</div></div></div>' for g,t,b in _itens).replace("$","&#36;"),unsafe_allow_html=True)
-            st.markdown(f'<div class="fd-q">Escopo: só os produtos selecionados no Motor de Compras (categoria, curva, catálogo ou o filtro aplicado; ≈ {_cob_motor*100:.0f}% da receita bruta da empresa), medida contra o ritmo habitual de compras desse mesmo escopo ({_fd_m(_hab)}/mês, média dos 6 últimos meses do balanço). Prazos e encargos vêm da página Fluxo de Caixa Comercial Projetado{"" if _cfg_ok else " (ainda não configurados lá: usei o PMR/PMP do balanço)"}. O efeito líquido (recebimentos − pagamentos) é somado ao caixa projetado da empresa inteira. É estimativa para orientar a conversa com o Comercial, não um orçamento.</div>'.replace("$","&#36;"),unsafe_allow_html=True)                
+            st.markdown(f'<div class="fd-q">Escopo: só os produtos selecionados no Motor de Compras (categoria, curva, catálogo ou o filtro aplicado). Vendas: {_fonte_v}. Compras: calendário do Motor de Compras. Prazos e encargos: página Fluxo de Caixa Comercial Projetado{"" if _cfg_ok else " (ainda não configurados lá: usei o PMR/PMP do balanço)"}. Distribuição aproximada por mês, então pode diferir um pouco dos valores semanais daquela página. É estimativa para orientar a conversa com o Comercial, não um orçamento.</div>'.replace("$","&#36;"),unsafe_allow_html=True)                
  
     # ── 4) DO FATURAMENTO AO LUCRO + CICLO DE CAIXA ──────────────────────
     sec(f"💡 De onde vem o resultado · {_per_txt_fd}")
