@@ -1,0 +1,15 @@
+mlf_corte = "2026-02"
+mlf_crescimento__DRE = null
+mlf_crescimento_meses__DRE = []
+mlf_crescimento_por_conta = {"Lucro Líquido": 0.89}
+mlf_demo_sel = "DRE"
+mlf_intensidade_pico__DRE = 100
+mlf_intensidade_promo__DRE = 100
+mlf_janelas_descoberta = [12, 18, 24]
+mlf_meses_pico__DRE = []
+mlf_meses_promo__DRE = []
+mlf_n_valid = 4
+mlf_outliers__DRE = []
+mlf_reajustes__DRE = []
+mlf_vies_janelas_escolha = [12, 18, 24]
+mlf_vies_marcar_🟢 Confiável = false

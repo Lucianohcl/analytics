@@ -1,0 +1,325 @@
+﻿Conta;Demonstracao;Mes_Alvo;Valor_Previsto;Modelo;Data_Rodada
+EBITDA;DRE;2026-08;1622794,92;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2026-09;1669915,99;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2026-10;1679164,17;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2026-11;2343271,29;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2026-12;2692200,35;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2027-01;1759241,24;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2027-02;1793346,87;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2027-03;1778722,97;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2027-04;1803670,21;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2027-05;1728650,94;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2027-06;1773163,27;ExponentialSmoothing;2026-10-01
+EBITDA;DRE;2027-07;1730933,29;ExponentialSmoothing;2026-10-01
+Lucro Bruto;DRE;2026-08;4548811,71;Prophet;2026-10-01
+Lucro Bruto;DRE;2026-09;4478740,79;Prophet;2026-10-01
+Lucro Bruto;DRE;2026-10;4491330,1;Prophet;2026-10-01
+Lucro Bruto;DRE;2026-11;6221726,39;Prophet;2026-10-01
+Lucro Bruto;DRE;2026-12;7572271,89;Prophet;2026-10-01
+Lucro Bruto;DRE;2027-01;5177725,21;Prophet;2026-10-01
+Lucro Bruto;DRE;2027-02;5304781,08;Prophet;2026-10-01
+Lucro Bruto;DRE;2027-03;5442634,41;Prophet;2026-10-01
+Lucro Bruto;DRE;2027-04;5468538,54;Prophet;2026-10-01
+Lucro Bruto;DRE;2027-05;5414215,37;Prophet;2026-10-01
+Lucro Bruto;DRE;2027-06;5328795,35;Prophet;2026-10-01
+Lucro Bruto;DRE;2027-07;5265195,01;Prophet;2026-10-01
+Lucro Líquido;DRE;2026-08;757850,01;ARIMA;2026-10-01
+Lucro Líquido;DRE;2026-09;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2026-10;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2026-11;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2026-12;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2027-01;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2027-02;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2027-03;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2027-04;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2027-05;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2027-06;683949,19;ARIMA;2026-10-01
+Lucro Líquido;DRE;2027-07;683949,19;ARIMA;2026-10-01
+Lucro Operacional;DRE;2026-08;1303264,27;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2026-09;1351889,7;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2026-10;1359990,58;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2026-11;1917375,01;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2026-12;2195513,34;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2027-01;1395794,59;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2027-02;1425946,47;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2027-03;1399233,65;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2027-04;1437132,76;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2027-05;1372392,39;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2027-06;1429502,29;ExponentialSmoothing;2026-10-01
+Lucro Operacional;DRE;2027-07;1406785,45;ExponentialSmoothing;2026-10-01
+Receita Líquida;DRE;2026-08;16415895,45;SARIMAX;2026-10-01
+Receita Líquida;DRE;2026-09;16543920,23;SARIMAX;2026-10-01
+Receita Líquida;DRE;2026-10;16599379,25;SARIMAX;2026-10-01
+Receita Líquida;DRE;2026-11;16018014,55;SARIMAX;2026-10-01
+Receita Líquida;DRE;2026-12;15590880,01;SARIMAX;2026-10-01
+Receita Líquida;DRE;2027-01;16449070,44;SARIMAX;2026-10-01
+Receita Líquida;DRE;2027-02;16392490,76;SARIMAX;2026-10-01
+Receita Líquida;DRE;2027-03;16353041,85;SARIMAX;2026-10-01
+Receita Líquida;DRE;2027-04;16361531,55;SARIMAX;2026-10-01
+Receita Líquida;DRE;2027-05;16384627,83;SARIMAX;2026-10-01
+Receita Líquida;DRE;2027-06;16453544,68;SARIMAX;2026-10-01
+Receita Líquida;DRE;2027-07;16519722,94;SARIMAX;2026-10-01
+despesas administrativas;DRE;2026-08;1493498,32;ARIMA;2026-10-01
+despesas administrativas;DRE;2026-09;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2026-10;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2026-11;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2026-12;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2027-01;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2027-02;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2027-03;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2027-04;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2027-05;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2027-06;1519045,16;ARIMA;2026-10-01
+despesas administrativas;DRE;2027-07;1519045,16;ARIMA;2026-10-01
+despesas com depreciações e amortizações;DRE;2026-08;152751,93;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2026-09;157818,48;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2026-10;155750,59;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2026-11;210641,35;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2026-12;254746,33;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2027-01;168017,4;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2027-02;181014,81;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2027-03;189458,05;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2027-04;189856,0;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2027-05;191947,48;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2027-06;179907,02;Prophet;2026-10-01
+despesas com depreciações e amortizações;DRE;2027-07;164687,62;Prophet;2026-10-01
+despesas comerciais;DRE;2026-08;1400535,68;ARIMA;2026-10-01
+despesas comerciais;DRE;2026-09;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2026-10;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2026-11;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2026-12;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2027-01;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2027-02;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2027-03;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2027-04;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2027-05;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2027-06;1424041,24;ARIMA;2026-10-01
+despesas comerciais;DRE;2027-07;1424041,24;ARIMA;2026-10-01
+despesas financeiras líquidas;DRE;2026-08;99318,34;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2026-09;102719,87;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2026-10;101357,37;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2026-11;137061,07;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2026-12;165646,43;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2027-01;109320,94;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2027-02;117906,95;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2027-03;123247,46;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2027-04;123594,53;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2027-05;124937,78;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2027-06;117064,96;Prophet;2026-10-01
+despesas financeiras líquidas;DRE;2027-07;107269,24;Prophet;2026-10-01
+despesas não operacionais;DRE;2026-08;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2026-09;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2026-10;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2026-11;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2026-12;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2027-01;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2027-02;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2027-03;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2027-04;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2027-05;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2027-06;0,0;Média Móvel;2026-10-01
+despesas não operacionais;DRE;2027-07;0,0;Média Móvel;2026-10-01
+devoluções de vendas;DRE;2026-08;152982,3;Prophet;2026-10-01
+devoluções de vendas;DRE;2026-09;157968,74;Prophet;2026-10-01
+devoluções de vendas;DRE;2026-10;155340,91;Prophet;2026-10-01
+devoluções de vendas;DRE;2026-11;210346,34;Prophet;2026-10-01
+devoluções de vendas;DRE;2026-12;255269,5;Prophet;2026-10-01
+devoluções de vendas;DRE;2027-01;168047,19;Prophet;2026-10-01
+devoluções de vendas;DRE;2027-02;181337,34;Prophet;2026-10-01
+devoluções de vendas;DRE;2027-03;189390,45;Prophet;2026-10-01
+devoluções de vendas;DRE;2027-04;190066,44;Prophet;2026-10-01
+devoluções de vendas;DRE;2027-05;192155,66;Prophet;2026-10-01
+devoluções de vendas;DRE;2027-06;179925,06;Prophet;2026-10-01
+devoluções de vendas;DRE;2027-07;165044,02;Prophet;2026-10-01
+impostos sobre vendas;DRE;2026-08;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2026-09;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2026-10;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2026-11;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2026-12;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2027-01;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2027-02;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2027-03;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2027-04;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2027-05;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2027-06;0,0;Média Móvel;2026-10-01
+impostos sobre vendas;DRE;2027-07;0,0;Média Móvel;2026-10-01
+provisão para contribuição social;DRE;2026-08;152749,85;Prophet;2026-10-01
+provisão para contribuição social;DRE;2026-09;158114,17;Prophet;2026-10-01
+provisão para contribuição social;DRE;2026-10;155677,97;Prophet;2026-10-01
+provisão para contribuição social;DRE;2026-11;210625,9;Prophet;2026-10-01
+provisão para contribuição social;DRE;2026-12;254620,35;Prophet;2026-10-01
+provisão para contribuição social;DRE;2027-01;168182,99;Prophet;2026-10-01
+provisão para contribuição social;DRE;2027-02;181123,08;Prophet;2026-10-01
+provisão para contribuição social;DRE;2027-03;189660,51;Prophet;2026-10-01
+provisão para contribuição social;DRE;2027-04;189922,7;Prophet;2026-10-01
+provisão para contribuição social;DRE;2027-05;192009,93;Prophet;2026-10-01
+provisão para contribuição social;DRE;2027-06;179777,73;Prophet;2026-10-01
+provisão para contribuição social;DRE;2027-07;164798,03;Prophet;2026-10-01
+provisão para imposto de renda;DRE;2026-08;466674,88;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2026-09;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2026-10;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2026-11;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2026-12;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2027-01;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2027-02;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2027-03;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2027-04;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2027-05;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2027-06;474667,18;ARIMA;2026-10-01
+provisão para imposto de renda;DRE;2027-07;474667,18;ARIMA;2026-10-01
+pró-labore/distribuição de lucro;DRE;2026-08;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2026-09;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2026-10;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2026-11;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2026-12;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2027-01;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2027-02;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2027-03;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2027-04;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2027-05;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2027-06;0,0;Média Móvel;2026-10-01
+pró-labore/distribuição de lucro;DRE;2027-07;0,0;Média Móvel;2026-10-01
+receita bruta de vendas;DRE;2026-08;16575947,02;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2026-09;16705758,32;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2026-10;16762180,48;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2026-11;16174801,33;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2026-12;15743072,44;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2027-01;16610965,67;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2027-02;16553565,8;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2027-03;16513478,38;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2027-04;16522114,06;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2027-05;16545200,27;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2027-06;16615290,84;SARIMAX;2026-10-01
+receita bruta de vendas;DRE;2027-07;16682787,3;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2026-08;66340,82;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2026-09;66853,93;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2026-10;67095,38;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2026-11;64912,09;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2026-12;63319,23;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2027-01;66554,28;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2027-02;66341,54;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2027-03;66196,76;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2027-04;66226,57;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2027-05;66309,18;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2027-06;66580,0;SARIMAX;2026-10-01
+receitas não operacionais;DRE;2027-07;66823,07;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2026-08;82,32;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2026-09;79,49;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2026-10;79,64;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2026-11;80,1;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2026-12;79,37;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2027-01;80,71;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2027-02;79,69;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2027-03;78,97;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2027-04;79,72;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2027-05;78,63;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2027-06;79,97;SARIMAX;2026-10-01
+Ciclo de Caixa;Indicadores;2027-07;80,88;SARIMAX;2026-10-01
+EBITDA %;Indicadores;2026-08;10,75;ARIMA;2026-10-01
+EBITDA %;Indicadores;2026-09;10,79;ARIMA;2026-10-01
+EBITDA %;Indicadores;2026-10;10,84;ARIMA;2026-10-01
+EBITDA %;Indicadores;2026-11;10,88;ARIMA;2026-10-01
+EBITDA %;Indicadores;2026-12;10,92;ARIMA;2026-10-01
+EBITDA %;Indicadores;2027-01;10,96;ARIMA;2026-10-01
+EBITDA %;Indicadores;2027-02;11,0;ARIMA;2026-10-01
+EBITDA %;Indicadores;2027-03;11,05;ARIMA;2026-10-01
+EBITDA %;Indicadores;2027-04;11,09;ARIMA;2026-10-01
+EBITDA %;Indicadores;2027-05;11,13;ARIMA;2026-10-01
+EBITDA %;Indicadores;2027-06;11,17;ARIMA;2026-10-01
+EBITDA %;Indicadores;2027-07;11,21;ARIMA;2026-10-01
+Giro de Estoque;Indicadores;2026-08;1,11;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2026-09;1,14;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2026-10;1,14;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2026-11;1,13;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2026-12;1,14;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2027-01;1,12;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2027-02;1,13;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2027-03;1,14;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2027-04;1,14;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2027-05;1,16;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2027-06;1,14;SARIMAX;2026-10-01
+Giro de Estoque;Indicadores;2027-07;1,12;SARIMAX;2026-10-01
+ICD;Indicadores;2026-08;-6,02;Holt;2026-10-01
+ICD;Indicadores;2026-09;-6,02;Holt;2026-10-01
+ICD;Indicadores;2026-10;-6,02;Holt;2026-10-01
+ICD;Indicadores;2026-11;-6,02;Holt;2026-10-01
+ICD;Indicadores;2026-12;-6,02;Holt;2026-10-01
+ICD;Indicadores;2027-01;-6,02;Holt;2026-10-01
+ICD;Indicadores;2027-02;-6,02;Holt;2026-10-01
+ICD;Indicadores;2027-03;-6,02;Holt;2026-10-01
+ICD;Indicadores;2027-04;-6,02;Holt;2026-10-01
+ICD;Indicadores;2027-05;-6,02;Holt;2026-10-01
+ICD;Indicadores;2027-06;-6,02;Holt;2026-10-01
+ICD;Indicadores;2027-07;-6,02;Holt;2026-10-01
+Kanitz;Indicadores;2026-08;6,12;ARIMA;2026-10-01
+Kanitz;Indicadores;2026-09;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2026-10;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2026-11;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2026-12;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2027-01;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2027-02;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2027-03;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2027-04;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2027-05;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2027-06;6,1;ARIMA;2026-10-01
+Kanitz;Indicadores;2027-07;6,1;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2026-08;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2026-09;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2026-10;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2026-11;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2026-12;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2027-01;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2027-02;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2027-03;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2027-04;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2027-05;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2027-06;1,85;ARIMA;2026-10-01
+Liquidez Corrente;Indicadores;2027-07;1,85;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2026-08;0,74;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2026-09;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2026-10;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2026-11;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2026-12;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2027-01;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2027-02;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2027-03;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2027-04;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2027-05;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2027-06;0,73;ARIMA;2026-10-01
+Liquidez Imediata;Indicadores;2027-07;0,73;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2026-08;28,38;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2026-09;28,4;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2026-10;28,42;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2026-11;28,44;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2026-12;28,46;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2027-01;28,48;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2027-02;28,5;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2027-03;28,52;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2027-04;28,54;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2027-05;28,55;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2027-06;28,57;ARIMA;2026-10-01
+Margem Bruta %;Indicadores;2027-07;28,59;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2026-08;5,28;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2026-09;5,33;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2026-10;5,37;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2026-11;5,42;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2026-12;5,47;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2027-01;5,52;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2027-02;5,57;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2027-03;5,62;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2027-04;5,67;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2027-05;5,72;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2027-06;5,77;ARIMA;2026-10-01
+Margem Líquida %;Indicadores;2027-07;5,82;ARIMA;2026-10-01
+ROE;Indicadores;2026-08;0,8;ARIMA;2026-10-01
+ROE;Indicadores;2026-09;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2026-10;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2026-11;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2026-12;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2027-01;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2027-02;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2027-03;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2027-04;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2027-05;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2027-06;0,69;ARIMA;2026-10-01
+ROE;Indicadores;2027-07;0,69;ARIMA;2026-10-01

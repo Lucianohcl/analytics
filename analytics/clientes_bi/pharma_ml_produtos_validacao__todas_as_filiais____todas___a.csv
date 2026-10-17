@@ -1,0 +1,997 @@
+﻿Produto;Mes;Modelo;Previsto;Real;Erro %;Bias;MediaHistorica;Confiabilidade
+Ionclotide;2019-12-01 00:00:00;ExponentialSmoothing;13879913,31;64469270,0;78,5;-50589356,69;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-01-01 00:00:00;ExponentialSmoothing;42348034,64;8979130,0;371,6;33368904,64;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-02-01 00:00:00;ExponentialSmoothing;16423589,04;145130,0;11216,5;16278459,04;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-03-01 00:00:00;ExponentialSmoothing;22053277,21;9559650,0;130,7;12493627,21;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-04-01 00:00:00;ExponentialSmoothing;20820789,03;-4928110,0;522,5;25748899,03;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-05-01 00:00:00;ExponentialSmoothing;13844897,71;13673770,0;1,3;171127,71;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-06-01 00:00:00;ExponentialSmoothing;23114276,41;2448280,0;844,1;20665996,41;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-07-01 00:00:00;ExponentialSmoothing;28744768,83;28256180,0;1,7;488588,83;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-08-01 00:00:00;ExponentialSmoothing;592233884,77;13579120,0;4261,4;578654764,77;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-09-01 00:00:00;ExponentialSmoothing;22368849,56;11957450,0;87,1;10411399,56;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-10-01 00:00:00;ExponentialSmoothing;24818667,27;7609860,0;226,1;17208807,27;43036183,14;🔴 Baixa previsibilidade
+Ionclotide;2020-11-01 00:00:00;ExponentialSmoothing;25043174,61;11376930,0;120,1;13666244,61;43036183,14;🔴 Baixa previsibilidade
+Betanem;2019-12-01 00:00:00;ExponentialSmoothing;14988725,06;1466400,0;922,1;13522325,06;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-01-01 00:00:00;ExponentialSmoothing;42121647,87;22099870,0;90,6;20021777,87;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-02-01 00:00:00;ExponentialSmoothing;12580202,7;3916510,0;221,2;8663692,7;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-03-01 00:00:00;ExponentialSmoothing;11385339,38;3623230,0;214,2;7762109,38;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-04-01 00:00:00;ExponentialSmoothing;6831716,3;8627320,0;20,8;-1795603,7;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-05-01 00:00:00;ExponentialSmoothing;13465302,06;4619160,0;191,5;8846142,06;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-06-01 00:00:00;ExponentialSmoothing;15723743,93;17664010,0;11,0;-1940266,07;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-07-01 00:00:00;ExponentialSmoothing;34400672,32;4411420,0;679,8;29989252,32;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-08-01 00:00:00;ExponentialSmoothing;111348889,61;9598810,0;1060,0;101750079,61;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-09-01 00:00:00;ExponentialSmoothing;14970509,74;4148690,0;260,8;10821819,74;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-10-01 00:00:00;ExponentialSmoothing;18987080,13;12629370,0;50,3;6357710,13;27073235,43;🔴 Baixa previsibilidade
+Betanem;2020-11-01 00:00:00;ExponentialSmoothing;13509861,33;13399230,0;0,8;110631,33;27073235,43;🔴 Baixa previsibilidade
+Ketastadil;2019-12-01 00:00:00;ExponentialSmoothing;16459637,41;5959030,0;176,2;10500607,41;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-01-01 00:00:00;ExponentialSmoothing;22819011,19;3235120,0;605,4;19583891,19;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-02-01 00:00:00;ExponentialSmoothing;15639399,27;5691980,0;174,8;9947419,27;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-03-01 00:00:00;ExponentialSmoothing;42696474,6;6035330,0;607,4;36661144,6;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-04-01 00:00:00;ExponentialSmoothing;25720039,01;11155060,0;130,6;14564979,01;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-05-01 00:00:00;ExponentialSmoothing;27992066,06;2609460,0;972,7;25382606,06;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-06-01 00:00:00;ExponentialSmoothing;23706151,99;16885190,0;40,4;6820961,99;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-07-01 00:00:00;ExponentialSmoothing;10327229,83;23019710,0;55,1;-12692480,17;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-08-01 00:00:00;ExponentialSmoothing;17920930,91;12330080,0;45,3;5590850,91;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-09-01 00:00:00;ExponentialSmoothing;6054442,01;11651010,0;48,0;-5596567,99;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-10-01 00:00:00;ExponentialSmoothing;16639289,48;4318580,0;285,3;12320709,48;23246430,0;🔴 Baixa previsibilidade
+Ketastadil;2020-11-01 00:00:00;ExponentialSmoothing;9128127,57;29909600,0;69,5;-20781472,43;23246430,0;🔴 Baixa previsibilidade
+Nevanide Actozide;2019-12-01 00:00:00;ExponentialSmoothing;17311582,27;29520870,0;41,4;-12209287,73;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-01-01 00:00:00;ExponentialSmoothing;22059117,19;9020910,0;144,5;13038207,19;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-02-01 00:00:00;ExponentialSmoothing;24508324,53;27967140,0;12,4;-3458815,47;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-03-01 00:00:00;ExponentialSmoothing;19167073,67;30262950,0;36,7;-11095876,33;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-04-01 00:00:00;ExponentialSmoothing;18093694,53;7011110,0;158,1;11082584,53;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-05-01 00:00:00;ExponentialSmoothing;16261305,83;5573330,0;191,8;10687975,83;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-06-01 00:00:00;ExponentialSmoothing;21741444,03;28191310,0;22,9;-6449865,97;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-07-01 00:00:00;ExponentialSmoothing;16951590,59;6941540,0;144,2;10010050,59;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-08-01 00:00:00;ExponentialSmoothing;11009233,97;16580850,0;33,6;-5571616,03;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-09-01 00:00:00;ExponentialSmoothing;21706501,35;26722610,0;18,8;-5016108,65;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-10-01 00:00:00;ExponentialSmoothing;20624143,76;8147420,0;153,1;12476723,76;21064691,71;🔴 Baixa previsibilidade
+Nevanide Actozide;2020-11-01 00:00:00;ExponentialSmoothing;42290471,62;5604250,0;654,6;36686221,62;21064691,71;🔴 Baixa previsibilidade
+Sumanazole;2019-12-01 00:00:00;ExponentialSmoothing;19590191,16;79286520,0;75,3;-59696328,84;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-01-01 00:00:00;ExponentialSmoothing;25672268,58;5475150,0;368,9;20197118,58;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-02-01 00:00:00;ExponentialSmoothing;17718232,69;4337800,0;308,5;13380432,69;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-03-01 00:00:00;ExponentialSmoothing;13579404,9;3904020,0;247,8;9675384,9;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-04-01 00:00:00;ExponentialSmoothing;11641891,16;2920080,0;298,7;8721811,16;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-05-01 00:00:00;ExponentialSmoothing;9573019,34;3068200,0;212,0;6504819,34;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-06-01 00:00:00;ExponentialSmoothing;16253374,88;23519340,0;30,9;-7265965,12;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-07-01 00:00:00;ExponentialSmoothing;7171300,32;7966740,0;10,0;-795439,68;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-08-01 00:00:00;ExponentialSmoothing;17432116,0;8278850,0;110,6;9153266,0;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-09-01 00:00:00;ExponentialSmoothing;22751635,04;16377840,0;38,9;6373795,04;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-10-01 00:00:00;ExponentialSmoothing;7075588,28;2221800,0;218,5;4853788,28;20661682,0;🔴 Baixa previsibilidade
+Sumanazole;2020-11-01 00:00:00;ExponentialSmoothing;9016787,11;3560170,0;153,3;5456617,11;20661682,0;🔴 Baixa previsibilidade
+Amavirase;2019-12-01 00:00:00;ExponentialSmoothing;20070123,83;5960880,0;236,7;14109243,83;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-01-01 00:00:00;ExponentialSmoothing;22632311,67;10285440,0;120,0;12346871,67;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-02-01 00:00:00;ExponentialSmoothing;37589295,61;3048620,0;1133,0;34540675,61;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-03-01 00:00:00;ExponentialSmoothing;23657040,98;16592090,0;42,6;7064950,98;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-04-01 00:00:00;ExponentialSmoothing;61139462,76;5050190,0;1110,6;56089272,76;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-05-01 00:00:00;ExponentialSmoothing;19500294,92;10071160,0;93,6;9429134,92;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-06-01 00:00:00;ExponentialSmoothing;19900101,18;23449050,0;15,1;-3548948,82;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-07-01 00:00:00;ExponentialSmoothing;49445183,95;6345610,0;679,2;43099573,95;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-08-01 00:00:00;ExponentialSmoothing;261505921,72;8634510,0;2928,6;252871411,72;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-09-01 00:00:00;ExponentialSmoothing;22912824,33;5766080,0;297,4;17146744,33;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-10-01 00:00:00;ExponentialSmoothing;10887391,33;26921360,0;59,6;-16033968,67;20358130,57;🔴 Baixa previsibilidade
+Amavirase;2020-11-01 00:00:00;ExponentialSmoothing;27780476,81;12847060,0;116,2;14933416,81;20358130,57;🔴 Baixa previsibilidade
+Antaparin Varizyme;2019-12-01 00:00:00;ExponentialSmoothing;16750284,55;21504960,0;22,1;-4754675,45;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-01-01 00:00:00;ExponentialSmoothing;23220929,14;14564070,0;59,4;8656859,14;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-02-01 00:00:00;ExponentialSmoothing;20339857,37;11655360,0;74,5;8684497,37;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-03-01 00:00:00;ExponentialSmoothing;19490537,7;6397110,0;204,7;13093427,7;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-04-01 00:00:00;ExponentialSmoothing;13019008,91;1774980,0;633,5;11244028,91;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-05-01 00:00:00;ExponentialSmoothing;30607449,44;9936810,0;208,0;20670639,44;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-06-01 00:00:00;ExponentialSmoothing;12696558,37;4791420,0;165,0;7905138,37;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-07-01 00:00:00;ExponentialSmoothing;28787573,93;14158800,0;103,3;14628773,93;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-08-01 00:00:00;ExponentialSmoothing;321816770,84;8520930,0;3676,8;313295840,84;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-09-01 00:00:00;ExponentialSmoothing;19319926,06;11203920,0;72,4;8116006,06;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-10-01 00:00:00;ExponentialSmoothing;11757304,56;18621900,0;36,9;-6864595,44;20293986,86;🔴 Baixa previsibilidade
+Antaparin Varizyme;2020-11-01 00:00:00;ExponentialSmoothing;36256838,84;4909410,0;638,5;31347428,84;20293986,86;🔴 Baixa previsibilidade
+Flutacerol;2019-12-01 00:00:00;Holt;23075505,69;10973850,0;110,3;12101655,69;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-01-01 00:00:00;Holt;22994826,97;31103750,0;26,1;-8108923,03;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-02-01 00:00:00;Holt;22924505,42;6511300,0;252,1;16413205,42;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-03-01 00:00:00;Holt;22863211,45;29673350,0;23,0;-6810138,55;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-04-01 00:00:00;Holt;22809786,13;14698850,0;55,2;8110936,13;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-05-01 00:00:00;Holt;22763219,32;16926400,0;34,5;5836819,32;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-06-01 00:00:00;Holt;22722630,55;14855300,0;53,0;7867330,55;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-07-01 00:00:00;Holt;22687252,38;8656900,0;162,1;14030352,38;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-08-01 00:00:00;Holt;22656415,92;10616250,0;113,4;12040165,92;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-09-01 00:00:00;Holt;22629538,1;13156700,0;72,0;9472838,1;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-10-01 00:00:00;Holt;22606110,73;12627750,0;79,0;9978360,73;20218874,29;🔴 Baixa previsibilidade
+Flutacerol;2020-11-01 00:00:00;Holt;22585690,87;17798050,0;26,9;4787640,87;20218874,29;🔴 Baixa previsibilidade
+Symbitrim;2019-12-01 00:00:00;ExponentialSmoothing;13292177,4;5301040,0;150,7;7991137,4;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-01-01 00:00:00;ExponentialSmoothing;22308730,04;12713920,0;75,5;9594810,04;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-02-01 00:00:00;ExponentialSmoothing;31123813,4;3189200,0;875,9;27934613,4;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-03-01 00:00:00;ExponentialSmoothing;20466387,38;4813280,0;325,2;15653107,38;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-04-01 00:00:00;ExponentialSmoothing;17350980,06;2508480,0;591,7;14842500,06;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-05-01 00:00:00;ExponentialSmoothing;18571768,54;21343520,0;13,0;-2771751,46;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-06-01 00:00:00;ExponentialSmoothing;28061535,3;9170960,0;206,0;18890575,3;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-07-01 00:00:00;ExponentialSmoothing;24301637,9;5756640,0;322,1;18544997,9;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-08-01 00:00:00;ExponentialSmoothing;101064540,93;19312080,0;423,3;81752460,93;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-09-01 00:00:00;ExponentialSmoothing;23815477,93;11706240,0;103,4;12109237,93;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-10-01 00:00:00;ExponentialSmoothing;46631836,11;4389840,0;962,3;42241996,11;20069830,86;🔴 Baixa previsibilidade
+Symbitrim;2020-11-01 00:00:00;ExponentialSmoothing;31094871,72;14193280,0;119,1;16901591,72;20069830,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2019-12-01 00:00:00;Holt;8832671,27;7841840,0;12,6;990831,27;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-01-01 00:00:00;Holt;8677072,93;2549760,0;240,3;6127312,93;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-02-01 00:00:00;Holt;8552594,26;29189440,0;70,7;-20636845,74;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-03-01 00:00:00;Holt;8453011,32;32283680,0;73,8;-23830668,68;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-04-01 00:00:00;Holt;8373344,97;278880,0;2902,5;8094464,97;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-05-01 00:00:00;Holt;8309611,89;45437520,0;81,7;-37127908,11;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-06-01 00:00:00;Holt;8258625,43;3439520,0;140,1;4819105,43;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-07-01 00:00:00;Holt;8217836,26;9588160,0;14,3;-1370323,74;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-08-01 00:00:00;Holt;8185204,92;7430160,0;10,2;755044,92;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-09-01 00:00:00;Holt;8159099,85;5424880,0;50,4;2734219,85;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-10-01 00:00:00;Holt;8138215,79;3525840,0;130,8;4612375,79;20005750,86;🔴 Baixa previsibilidade
+Antilamin Clinbital;2020-11-01 00:00:00;Holt;8121508,55;5039760,0;61,1;3081748,55;20005750,86;🔴 Baixa previsibilidade
+Neuropogen Empibax;2019-12-01 00:00:00;LightGBM (pooled);0,0;2619650,0;100,0;-2619650,0;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-01-01 00:00:00;LightGBM (pooled);11894801,93;6037900,0;97,0;5856901,93;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-02-01 00:00:00;LightGBM (pooled);13985231,7;17333250,0;19,3;-3348018,3;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-03-01 00:00:00;LightGBM (pooled);9338593,8;4458850,0;109,4;4879743,8;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-04-01 00:00:00;LightGBM (pooled);10618559,06;580800,0;1728,3;10037759,06;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-05-01 00:00:00;LightGBM (pooled);13535216,37;26922500,0;49,7;-13387283,63;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-06-01 00:00:00;LightGBM (pooled);19817290,81;14985850,0;32,2;4831440,81;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-07-01 00:00:00;LightGBM (pooled);17814219,89;54843250,0;67,5;-37029030,11;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-08-01 00:00:00;LightGBM (pooled);18749805,26;4761350,0;293,8;13988455,26;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-09-01 00:00:00;LightGBM (pooled);52255091,62;20152550,0;159,3;32102541,62;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-10-01 00:00:00;LightGBM (pooled);20186764,0;6074200,0;232,3;14112564,0;19468900,0;🔴 Baixa previsibilidade
+Neuropogen Empibax;2020-11-01 00:00:00;LightGBM (pooled);12531219,96;47873650,0;73,8;-35342430,04;19468900,0;🔴 Baixa previsibilidade
+Docstryl Rivacin;2019-12-01 00:00:00;Holt;20995277,77;22178790,0;5,3;-1183512,23;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-01-01 00:00:00;Holt;24318373,25;9941400,0;144,6;14376973,25;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-02-01 00:00:00;Holt;26976849,64;58338660,0;53,8;-31361810,36;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-03-01 00:00:00;Holt;29103630,75;42716460,0;31,9;-13612829,25;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-04-01 00:00:00;Holt;30805055,64;2390670,0;1188,6;28414385,64;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-05-01 00:00:00;Holt;32166195,55;16348080,0;96,8;15818115,55;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-06-01 00:00:00;Holt;33255107,48;8292390,0;301,0;24962717,48;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-07-01 00:00:00;Holt;34126237,02;4142250,0;723,9;29983987,02;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-08-01 00:00:00;Holt;34823140,66;10099200,0;244,8;24723940,66;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-09-01 00:00:00;Holt;35380663,57;87460650,0;59,5;-52079986,43;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-10-01 00:00:00;Holt;35826681,89;12505650,0;186,5;23321031,89;19452456,86;🔴 Baixa previsibilidade
+Docstryl Rivacin;2020-11-01 00:00:00;Holt;36183496,55;21318780,0;69,7;14864716,55;19452456,86;🔴 Baixa previsibilidade
+Alarudin Azarolac;2019-12-01 00:00:00;LightGBM (pooled);12231077,22;10858050,0;12,6;1373027,22;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-01-01 00:00:00;LightGBM (pooled);18321724,15;4864860,0;276,6;13456864,15;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-02-01 00:00:00;LightGBM (pooled);20420750,46;1927800,0;959,3;18492950,46;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-03-01 00:00:00;LightGBM (pooled);17540522,31;18036270,0;2,7;-495747,69;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-04-01 00:00:00;LightGBM (pooled);15761147,55;7524090,0;109,5;8237057,55;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-05-01 00:00:00;LightGBM (pooled);19206324,99;10625580,0;80,8;8580744,99;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-06-01 00:00:00;LightGBM (pooled);19055723,4;6356070,0;199,8;12699653,4;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-07-01 00:00:00;LightGBM (pooled);20877617,76;11357010,0;83,8;9520607,76;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-08-01 00:00:00;LightGBM (pooled);24548554,81;19005840,0;29,2;5542714,81;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-09-01 00:00:00;LightGBM (pooled);16713577,74;19102230,0;12,5;-2388652,26;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-10-01 00:00:00;LightGBM (pooled);19220526,21;13324500,0;44,2;5896026,21;19343610,0;🔴 Baixa previsibilidade
+Alarudin Azarolac;2020-11-01 00:00:00;LightGBM (pooled);16027713,09;20236230,0;20,8;-4208516,91;19343610,0;🔴 Baixa previsibilidade
+Travoloride;2019-12-01 00:00:00;ARIMA;20079010,95;13761050,0;45,9;6317960,95;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-01-01 00:00:00;ARIMA;20079010,95;27137450,0;26,0;-7058439,05;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-02-01 00:00:00;ARIMA;20079010,95;8423050,0;138,4;11655960,95;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-03-01 00:00:00;ARIMA;20079010,95;15590100,0;28,8;4488910,95;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-04-01 00:00:00;ARIMA;20079010,95;3689500,0;444,2;16389510,95;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-05-01 00:00:00;ARIMA;20079010,95;62062100,0;67,6;-41983089,05;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-06-01 00:00:00;ARIMA;20079010,95;43143600,0;53,5;-23064589,05;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-07-01 00:00:00;ARIMA;20079010,95;48465900,0;58,6;-28386889,05;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-08-01 00:00:00;ARIMA;20079010,95;12850450,0;56,3;7228560,95;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-09-01 00:00:00;ARIMA;20079010,95;44085600,0;54,5;-24006589,05;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-10-01 00:00:00;ARIMA;20079010,95;2017450,0;895,3;18061560,95;19283412,86;🔴 Baixa previsibilidade
+Travoloride;2020-11-01 00:00:00;ARIMA;20079010,95;28848750,0;30,4;-8769739,05;19283412,86;🔴 Baixa previsibilidade
+Trazozaprine;2019-12-01 00:00:00;LightGBM (pooled);0,0;2095680,0;100,0;-2095680,0;19095569,14;—
+Trazozaprine;2020-01-01 00:00:00;LightGBM (pooled);12584560,86;21176280,0;40,6;-8591719,14;19095569,14;—
+Trazozaprine;2020-02-01 00:00:00;LightGBM (pooled);25316504,0;17700000,0;43,0;7616504,0;19095569,14;—
+Trazozaprine;2020-03-01 00:00:00;LightGBM (pooled);12833985,09;11441280,0;12,2;1392705,09;19095569,14;—
+Trazozaprine;2020-04-01 00:00:00;LightGBM (pooled);16814388,09;36646080,0;54,1;-19831691,91;19095569,14;—
+Trazozaprine;2020-05-01 00:00:00;LightGBM (pooled);18196259,41;7788000,0;133,6;10408259,41;19095569,14;—
+Trazozaprine;2020-06-01 00:00:00;LightGBM (pooled);17368916,27;5253360,0;230,6;12115556,27;19095569,14;—
+Trazozaprine;2020-07-01 00:00:00;LightGBM (pooled);21671952,34;18379680,0;17,9;3292272,34;19095569,14;—
+Trazozaprine;2020-08-01 00:00:00;LightGBM (pooled);19849263,69;5798520,0;242,3;14050743,69;19095569,14;—
+Trazozaprine;2020-09-01 00:00:00;LightGBM (pooled);18358541,51;8418120,0;118,1;9940421,51;19095569,14;—
+Trazozaprine;2020-10-01 00:00:00;LightGBM (pooled);17093600,78;6619800,0;158,2;10473800,78;19095569,14;—
+Trazozaprine;2020-11-01 00:00:00;LightGBM (pooled);17164740,75;26380080,0;34,9;-9215339,25;19095569,14;—
+Halcifergen Nevazone;2019-12-01 00:00:00;LightGBM (pooled);16611004,85;2903900,0;472,0;13707104,85;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-01-01 00:00:00;LightGBM (pooled);18441654,9;14917100,0;23,6;3524554,9;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-02-01 00:00:00;LightGBM (pooled);17502467,92;11764700,0;48,8;5737767,92;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-03-01 00:00:00;LightGBM (pooled);18465038,61;20866900,0;11,5;-2401861,39;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-04-01 00:00:00;LightGBM (pooled);15925140,96;11814400,0;34,8;4110740,96;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-05-01 00:00:00;LightGBM (pooled);15648030,49;4565300,0;242,8;11082730,49;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-06-01 00:00:00;LightGBM (pooled);18604967,7;2974900,0;525,4;15630067,7;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-07-01 00:00:00;LightGBM (pooled);19151991,17;39965900,0;52,1;-20813908,83;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-08-01 00:00:00;LightGBM (pooled);18749805,26;10515100,0;78,3;8234705,26;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-09-01 00:00:00;LightGBM (pooled);18358541,51;14618900,0;25,6;3739641,51;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-10-01 00:00:00;LightGBM (pooled);16786643,73;4607900,0;264,3;12178743,73;19032057,14;🔴 Baixa previsibilidade
+Halcifergen Nevazone;2020-11-01 00:00:00;LightGBM (pooled);17534733,79;16635300,0;5,4;899433,79;19032057,14;🔴 Baixa previsibilidade
+Kinenadryl;2019-12-01 00:00:00;LightGBM (pooled);19077174,23;2674440,0;613,3;16402734,23;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-01-01 00:00:00;LightGBM (pooled);14209495,62;13473860,0;5,5;735635,62;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-02-01 00:00:00;LightGBM (pooled);17623676,8;14662500,0;20,2;2961176,8;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-03-01 00:00:00;LightGBM (pooled);18459586,53;35581000,0;48,1;-17121413,47;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-04-01 00:00:00;LightGBM (pooled);14815803,61;1305940,0;1034,5;13509863,61;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-05-01 00:00:00;LightGBM (pooled);2245413,35;2572780,0;12,7;-327366,65;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-06-01 00:00:00;LightGBM (pooled);14319728,48;18470840,0;22,5;-4151111,52;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-07-01 00:00:00;LightGBM (pooled);15556766,5;5560020,0;179,8;9996746,5;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-08-01 00:00:00;LightGBM (pooled);16998152,29;18009460,0;5,6;-1011307,71;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-09-01 00:00:00;LightGBM (pooled);17774976,64;10408420,0;70,8;7366556,64;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-10-01 00:00:00;LightGBM (pooled);16621459,4;6553160,0;153,6;10068299,4;18780735,43;🔴 Baixa previsibilidade
+Kinenadryl;2020-11-01 00:00:00;LightGBM (pooled);17486048,71;21270400,0;17,8;-3784351,29;18780735,43;🔴 Baixa previsibilidade
+Insozyme;2019-12-01 00:00:00;ARIMA;21672955,2;1755400,0;1134,6;19917555,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-01-01 00:00:00;ARIMA;21672955,2;2901650,0;646,9;18771305,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-02-01 00:00:00;ARIMA;21672955,2;25957650,0;16,5;-4284694,8;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-03-01 00:00:00;ARIMA;21672955,2;6661350,0;225,4;15011605,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-04-01 00:00:00;ARIMA;21672955,2;5508550,0;293,4;16164405,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-05-01 00:00:00;ARIMA;21672955,2;7886200,0;174,8;13786755,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-06-01 00:00:00;ARIMA;21672955,2;4381950,0;394,6;17291005,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-07-01 00:00:00;ARIMA;21672955,2;9988750,0;117,0;11684205,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-08-01 00:00:00;ARIMA;21672955,2;12445000,0;74,1;9227955,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-09-01 00:00:00;ARIMA;21672955,2;7742100,0;179,9;13930855,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-10-01 00:00:00;ARIMA;21672955,2;5004200,0;333,1;16668755,2;18709981,43;🔴 Baixa previsibilidade
+Insozyme;2020-11-01 00:00:00;ARIMA;21672955,2;4768400,0;354,5;16904555,2;18709981,43;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2019-12-01 00:00:00;Holt;6265931,5;6982220,0;10,3;-716288,5;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-01-01 00:00:00;Holt;5666165,69;9824080,0;42,3;-4157914,31;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-02-01 00:00:00;Holt;5186353,05;24545360,0;78,9;-19359006,95;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-03-01 00:00:00;Holt;4802502,93;17036320,0;71,8;-12233817,07;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-04-01 00:00:00;Holt;4495422,83;8406860,0;46,5;-3911437,17;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-05-01 00:00:00;Holt;4249758,76;10721900,0;60,4;-6472141,24;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-06-01 00:00:00;Holt;4053227,5;4029060,0;0,6;24167,5;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-07-01 00:00:00;Holt;3896002,49;9779560,0;60,2;-5883557,51;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-08-01 00:00:00;Holt;3770222,48;15863960,0;76,2;-12093737,52;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-09-01 00:00:00;Holt;3669598,48;22274840,0;83,5;-18605241,52;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-10-01 00:00:00;Holt;3589099,27;17214400,0;79,2;-13625300,73;18474528,0;🔴 Baixa previsibilidade
+Morphizolid Tianalin;2020-11-01 00:00:00;Holt;3524699,91;21221200,0;83,4;-17696500,09;18474528,0;🔴 Baixa previsibilidade
+Victomine;2019-12-01 00:00:00;LightGBM (pooled);20882461,26;32916450,0;36,6;-12033988,74;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-01-01 00:00:00;LightGBM (pooled);25330557,25;11829900,0;114,1;13500657,25;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-02-01 00:00:00;LightGBM (pooled);15875163,22;12690000,0;25,1;3185163,22;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-03-01 00:00:00;LightGBM (pooled);23250902,64;18795300,0;23,7;4455602,64;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-04-01 00:00:00;LightGBM (pooled);16664843,56;7543500,0;120,9;9121343,56;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-05-01 00:00:00;LightGBM (pooled);15995564,0;11547900,0;38,5;4447664,0;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-06-01 00:00:00;LightGBM (pooled);20372753,16;14656950,0;39,0;5715803,16;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-07-01 00:00:00;LightGBM (pooled);18761295,11;13606500,0;37,9;5154795,11;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-08-01 00:00:00;LightGBM (pooled);22637508,2;683850,0;3210,3;21953658,2;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-09-01 00:00:00;LightGBM (pooled);18842907,19;4131300,0;356,1;14711607,19;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-10-01 00:00:00;LightGBM (pooled);16786643,73;2580300,0;550,6;14206343,73;18453274,29;🔴 Baixa previsibilidade
+Victomine;2020-11-01 00:00:00;LightGBM (pooled);18059654,99;24223800,0;25,4;-6164145,01;18453274,29;🔴 Baixa previsibilidade
+Alimmethate Insudase;2019-12-01 00:00:00;LightGBM (pooled);7990099,23;18676320,0;57,2;-10686220,77;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-01-01 00:00:00;LightGBM (pooled);7945272,95;8867040,0;10,4;-921767,05;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-02-01 00:00:00;LightGBM (pooled);23861036,83;18720000,0;27,5;5141036,83;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-03-01 00:00:00;LightGBM (pooled);19341833,12;17010240,0;13,7;2331593,12;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-04-01 00:00:00;LightGBM (pooled);18390020,05;40460160,0;54,5;-22070139,95;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-05-01 00:00:00;LightGBM (pooled);18730126,07;6739200,0;177,9;11990926,07;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-06-01 00:00:00;LightGBM (pooled);19371886,96;15587520,0;24,3;3784366,96;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-07-01 00:00:00;LightGBM (pooled);19055723,4;17216160,0;10,7;1839563,4;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-08-01 00:00:00;LightGBM (pooled);19699347,56;5466240,0;260,4;14233107,56;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-09-01 00:00:00;LightGBM (pooled);17791112,21;11032320,0;61,3;6758792,21;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-10-01 00:00:00;LightGBM (pooled);17571001,71;3968640,0;342,7;13602361,71;18363606,86;🔴 Baixa previsibilidade
+Alimmethate Insudase;2020-11-01 00:00:00;LightGBM (pooled);17246653,33;37096800,0;53,5;-19850146,67;18363606,86;🔴 Baixa previsibilidade
+Trazobalamin;2019-12-01 00:00:00;Holt;17288988,33;18112740,0;4,5;-823751,67;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-01-01 00:00:00;Holt;17292034,86;12611100,0;37,1;4680934,86;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-02-01 00:00:00;Holt;17294472,08;4930140,0;250,8;12364332,08;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-03-01 00:00:00;Holt;17296421,86;6172200,0;180,2;11124221,86;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-04-01 00:00:00;Holt;17297981,68;12115800,0;42,8;5182181,68;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-05-01 00:00:00;Holt;17299229,54;20627340,0;16,1;-3328110,46;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-06-01 00:00:00;Holt;17300227,83;9212580,0;87,8;8087647,83;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-07-01 00:00:00;Holt;17301026,45;15963900,0;8,4;1337126,45;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-08-01 00:00:00;Holt;17301665,36;11117580,0;55,6;6184085,36;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-09-01 00:00:00;Holt;17302176,48;36255960,0;52,3;-18953783,52;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-10-01 00:00:00;Holt;17302585,38;6012180,0;187,8;11290405,38;18271040,17;🔴 Baixa previsibilidade
+Trazobalamin;2020-11-01 00:00:00;Holt;17302912,5;13022580,0;32,9;4280332,5;18271040,17;🔴 Baixa previsibilidade
+Arivac;2019-12-01 00:00:00;ARIMA;17693889,44;623700,0;2736,9;17070189,44;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-01-01 00:00:00;ARIMA;17550210,87;9559620,0;83,6;7990590,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-02-01 00:00:00;ARIMA;17550210,87;9531270,0;84,1;8018940,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-03-01 00:00:00;ARIMA;17550210,87;3033450,0;478,6;14516760,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-04-01 00:00:00;ARIMA;17550210,87;1253070,0;1300,6;16297140,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-05-01 00:00:00;ARIMA;17550210,87;5329800,0;229,3;12220410,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-06-01 00:00:00;ARIMA;17550210,87;7223580,0;143,0;10326630,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-07-01 00:00:00;ARIMA;17550210,87;14254380,0;23,1;3295830,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-08-01 00:00:00;ARIMA;17550210,87;5403510,0;224,8;12146700,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-09-01 00:00:00;ARIMA;17550210,87;12627090,0;39,0;4923120,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-10-01 00:00:00;ARIMA;17550210,87;2715930,0;546,2;14834280,87;18065430,0;🔴 Baixa previsibilidade
+Arivac;2020-11-01 00:00:00;ARIMA;17550210,87;27284040,0;35,7;-9733829,13;18065430,0;🔴 Baixa previsibilidade
+Menogine;2019-12-01 00:00:00;ExponentialSmoothing;8017615,67;6514760,0;23,1;1502855,67;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-01-01 00:00:00;ExponentialSmoothing;12518048,79;7946820,0;57,5;4571228,79;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-02-01 00:00:00;ExponentialSmoothing;34282922,77;27075580,0;26,6;7207342,77;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-03-01 00:00:00;ExponentialSmoothing;39345000,92;58877700,0;33,2;-19532699,08;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-04-01 00:00:00;ExponentialSmoothing;22238940,28;10603180,0;109,7;11635760,28;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-05-01 00:00:00;ExponentialSmoothing;22508919,39;31839220,0;29,3;-9330300,61;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-06-01 00:00:00;ExponentialSmoothing;32486528,85;12250420,0;165,2;20236108,85;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-07-01 00:00:00;ExponentialSmoothing;13697537,67;6611220,0;107,2;7086317,67;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-08-01 00:00:00;ExponentialSmoothing;15590807,97;18520320,0;15,8;-2929512,03;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-09-01 00:00:00;ExponentialSmoothing;33399110,39;44141580,0;24,3;-10742469,61;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-10-01 00:00:00;ExponentialSmoothing;12052428,05;35489860,0;66,0;-23437431,95;18062612,0;🔴 Baixa previsibilidade
+Menogine;2020-11-01 00:00:00;ExponentialSmoothing;10088608,76;14209300,0;29,0;-4120691,24;18062612,0;🔴 Baixa previsibilidade
+Pentastrin;2019-12-01 00:00:00;ExponentialSmoothing;29115570,37;4796050,0;507,1;24319520,37;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-01-01 00:00:00;ExponentialSmoothing;29596075,41;6585250,0;349,4;23010825,41;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-02-01 00:00:00;ExponentialSmoothing;41828371,38;16763810,0;149,5;25064561,38;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-03-01 00:00:00;ExponentialSmoothing;128733761,92;1988000,0;6375,5;126745761,92;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-04-01 00:00:00;ExponentialSmoothing;27696700,01;1863750,0;1386,1;25832950,01;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-05-01 00:00:00;ExponentialSmoothing;29221368,81;17310510,0;68,8;11910858,81;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-06-01 00:00:00;ExponentialSmoothing;33645793,38;6093220,0;452,2;27552573,38;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-07-01 00:00:00;ExponentialSmoothing;31972791,5;5044550,0;533,8;26928241,5;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-08-01 00:00:00;ExponentialSmoothing;177930231,44;3652950,0;4770,9;174277281,44;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-09-01 00:00:00;ExponentialSmoothing;112565791,3;8314810,0;1253,8;104250981,3;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-10-01 00:00:00;ExponentialSmoothing;20290589,1;36340640,0;44,2;-16050050,9;17929346,0;🔴 Baixa previsibilidade
+Pentastrin;2020-11-01 00:00:00;ExponentialSmoothing;50340304,26;7415240,0;578,9;42925064,26;17929346,0;🔴 Baixa previsibilidade
+Symdocet;2019-12-01 00:00:00;Holt;4985157,65;22104100,0;77,4;-17118942,35;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-01-01 00:00:00;Holt;4997401,6;6918400,0;27,8;-1920998,4;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-02-01 00:00:00;Holt;5007196,76;5578900,0;10,2;-571703,24;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-03-01 00:00:00;Holt;5015032,88;2166700,0;131,5;2848332,88;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-04-01 00:00:00;Holt;5021301,78;1170300,0;329,1;3851001,78;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-05-01 00:00:00;Holt;5026316,9;3891600,0;29,2;1134716,9;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-06-01 00:00:00;Holt;5030329,0;10452800,0;51,9;-5422471,0;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-07-01 00:00:00;Holt;5033538,67;194688100,0;97,4;-189654561,33;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-08-01 00:00:00;Holt;5036106,42;5856200,0;14,0;-820093,58;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-09-01 00:00:00;Holt;5038160,61;2721300,0;85,1;2316860,61;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-10-01 00:00:00;Holt;5039803,96;4977300,0;1,3;62503,96;17611705,71;🔴 Baixa previsibilidade
+Symdocet;2020-11-01 00:00:00;Holt;5041118,65;26376400,0;80,9;-21335281,35;17611705,71;🔴 Baixa previsibilidade
+Abtasol;2019-12-01 00:00:00;LightGBM (pooled);37756874,38;3687060,0;924,0;34069814,38;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-01-01 00:00:00;LightGBM (pooled);19085971,46;7479680,0;155,2;11606291,46;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-02-01 00:00:00;LightGBM (pooled);15178240,16;12373140,0;22,7;2805100,16;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-03-01 00:00:00;LightGBM (pooled);21827214,78;11543740,0;89,1;10283474,78;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-04-01 00:00:00;LightGBM (pooled);14786705,75;10314720,0;43,4;4471985,75;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-05-01 00:00:00;LightGBM (pooled);14904237,39;23803780,0;37,4;-8899542,61;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-06-01 00:00:00;LightGBM (pooled);18375238,99;8557900,0;114,7;9817338,99;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-07-01 00:00:00;LightGBM (pooled);18261388,82;49756460,0;63,3;-31495071,18;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-08-01 00:00:00;LightGBM (pooled);18749805,26;15954640,0;17,5;2795165,26;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-09-01 00:00:00;LightGBM (pooled);17791112,21;13051740,0;36,3;4739372,21;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-10-01 00:00:00;LightGBM (pooled);17686310,04;21948940,0;19,4;-4262629,96;17551396,57;🔴 Baixa previsibilidade
+Abtasol;2020-11-01 00:00:00;LightGBM (pooled);17486048,71;12780300,0;36,8;4705748,71;17551396,57;🔴 Baixa previsibilidade
+Pulmofine;2019-12-01 00:00:00;ExponentialSmoothing;16735000,27;12308320,0;36,0;4426680,27;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-01-01 00:00:00;ExponentialSmoothing;20252202,8;9920960,0;104,1;10331242,8;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-02-01 00:00:00;ExponentialSmoothing;32110664,5;6769920,0;374,3;25340744,5;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-03-01 00:00:00;ExponentialSmoothing;25906162,34;28572640,0;9,3;-2666477,66;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-04-01 00:00:00;ExponentialSmoothing;23665454,89;14289760,0;65,6;9375694,89;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-05-01 00:00:00;ExponentialSmoothing;26061378,3;42250080,0;38,3;-16188701,7;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-06-01 00:00:00;ExponentialSmoothing;27718797,81;11482720,0;141,4;16236077,81;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-07-01 00:00:00;ExponentialSmoothing;22138084,84;22683360,0;2,4;-545275,16;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-08-01 00:00:00;ExponentialSmoothing;44470796,04;10216800,0;335,3;34253996,04;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-09-01 00:00:00;ExponentialSmoothing;29934368,55;8950880,0;234,4;20983488,55;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-10-01 00:00:00;ExponentialSmoothing;23191748,91;11028640,0;110,3;12163108,91;17354898,29;🔴 Baixa previsibilidade
+Pulmofine;2020-11-01 00:00:00;ExponentialSmoothing;30284395,35;7932640,0;281,8;22351755,35;17354898,29;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2019-12-01 00:00:00;Holt;10465806,89;17003100,0;38,4;-6537293,11;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-01-01 00:00:00;Holt;10332727,31;4902380,0;110,8;5430347,31;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-02-01 00:00:00;Holt;10226263,64;16237780,0;37,0;-6011516,36;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-03-01 00:00:00;Holt;10141092,71;16021180,0;36,7;-5880087,29;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-04-01 00:00:00;Holt;10072955,96;1046900,0;862,2;9026055,96;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-05-01 00:00:00;Holt;10018446,56;5711020,0;75,4;4307426,56;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-06-01 00:00:00;Holt;9974839,04;11826360,0;15,7;-1851520,96;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-07-01 00:00:00;Holt;9939953,03;21075180,0;52,8;-11135226,97;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-08-01 00:00:00;Holt;9912044,22;-3841040,0;358,1;13753084,22;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-09-01 00:00:00;Holt;9889717,17;5631600,0;75,6;4258117,17;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-10-01 00:00:00;Holt;9871855,53;13169280,0;25,0;-3297424,47;17312116,0;🔴 Baixa previsibilidade
+Kiovax Tercorolac;2020-11-01 00:00:00;Holt;9857566,22;10526760,0;6,4;-669193,78;17312116,0;🔴 Baixa previsibilidade
+Androporin;2019-12-01 00:00:00;ARIMA;16753480,39;8230910,0;103,5;8522570,39;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-01-01 00:00:00;ARIMA;16753480,39;4613000,0;263,2;12140480,39;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-02-01 00:00:00;ARIMA;16753480,39;20429000,0;18,0;-3675519,61;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-03-01 00:00:00;ARIMA;16753480,39;27117850,0;38,2;-10364369,61;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-04-01 00:00:00;ARIMA;16753480,39;10128830,0;65,4;6624650,39;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-05-01 00:00:00;ARIMA;16753480,39;5311540,0;215,4;11441940,39;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-06-01 00:00:00;ARIMA;16753480,39;12659390,0;32,3;4094090,39;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-07-01 00:00:00;ARIMA;16753480,39;4975450,0;236,7;11778030,39;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-08-01 00:00:00;ARIMA;16753480,39;6280270,0;166,8;10473210,39;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-09-01 00:00:00;ARIMA;16753480,39;15690790,0;6,8;1062690,39;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-10-01 00:00:00;ARIMA;16753480,39;17219670,0;2,7;-466189,61;17308164,29;🔴 Baixa previsibilidade
+Androporin;2020-11-01 00:00:00;ARIMA;16753480,39;24231430,0;30,9;-7477949,61;17308164,29;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2019-12-01 00:00:00;ARIMA;16502811,83;13489960,0;22,3;3012851,83;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-01-01 00:00:00;ARIMA;16502811,83;6233480,0;164,7;10269331,83;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-02-01 00:00:00;ARIMA;16502811,83;18079820,0;8,7;-1577008,17;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-03-01 00:00:00;ARIMA;16502811,83;4583040,0;260,1;11919771,83;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-04-01 00:00:00;ARIMA;16502811,83;18645880,0;11,5;-2143068,17;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-05-01 00:00:00;ARIMA;16502811,83;3198580,0;415,9;13304231,83;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-06-01 00:00:00;ARIMA;16502811,83;10605100,0;55,6;5897711,83;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-07-01 00:00:00;ARIMA;16502811,83;3785100,0;336,0;12717711,83;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-08-01 00:00:00;ARIMA;16502811,83;9282020,0;77,8;7220791,83;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-09-01 00:00:00;ARIMA;16502811,83;2387000,0;591,4;14115811,83;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-10-01 00:00:00;ARIMA;16502811,83;28787220,0;42,7;-12284408,17;17252651,43;🔴 Baixa previsibilidade
+Angioparin Brimosumab;2020-11-01 00:00:00;ARIMA;16502811,83;24538360,0;32,7;-8035548,17;17252651,43;🔴 Baixa previsibilidade
+Cyclovital;2019-12-01 00:00:00;ExponentialSmoothing;6025175,89;43896680,0;86,3;-37871504,11;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-01-01 00:00:00;ExponentialSmoothing;16177356,95;2247640,0;619,7;13929716,95;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-02-01 00:00:00;ExponentialSmoothing;8946543,89;3527170,0;153,6;5419373,89;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-03-01 00:00:00;ExponentialSmoothing;59758280,27;8902550,0;571,2;50855730,27;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-04-01 00:00:00;ExponentialSmoothing;4516679,63;10642440,0;57,6;-6125760,37;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-05-01 00:00:00;ExponentialSmoothing;20252636,77;4265100,0;374,8;15987536,77;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-06-01 00:00:00;ExponentialSmoothing;10221172,15;16464640,0;37,9;-6243467,85;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-07-01 00:00:00;ExponentialSmoothing;14070576,31;214575150,0;93,4;-200504573,69;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-08-01 00:00:00;ExponentialSmoothing;12113191,27;1882060,0;543,6;10231131,27;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-09-01 00:00:00;ExponentialSmoothing;22264480,77;7223590,0;208,2;15040890,77;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-10-01 00:00:00;ExponentialSmoothing;13497283,63;3791200,0;256,0;9706083,63;17204207,49;🔴 Baixa previsibilidade
+Cyclovital;2020-11-01 00:00:00;ExponentialSmoothing;28062876,3;26491010,0;5,9;1571866,3;17204207,49;🔴 Baixa previsibilidade
+Cogxone Levanide;2019-12-01 00:00:00;ARIMA;16672615,61;30184000,0;44,8;-13511384,39;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-01-01 00:00:00;ARIMA;16672615,61;4870600,0;242,3;11802015,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-02-01 00:00:00;ARIMA;16672615,61;4061120,0;310,5;12611495,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-03-01 00:00:00;ARIMA;16672615,61;4314940,0;286,4;12357675,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-04-01 00:00:00;ARIMA;16672615,61;2243220,0;643,2;14429395,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-05-01 00:00:00;ARIMA;16672615,61;11222960,0;48,6;5449655,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-06-01 00:00:00;ARIMA;16672615,61;13143760,0;26,8;3528855,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-07-01 00:00:00;ARIMA;16672615,61;2846900,0;485,6;13825715,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-08-01 00:00:00;ARIMA;16672615,61;12217660,0;36,5;4454955,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-09-01 00:00:00;ARIMA;16672615,61;-2181480,0;864,3;18854095,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-10-01 00:00:00;ARIMA;16672615,61;3032120,0;449,9;13640495,61;17171364,0;🔴 Baixa previsibilidade
+Cogxone Levanide;2020-11-01 00:00:00;ARIMA;16672615,61;2449020,0;580,8;14223595,61;17171364,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2019-12-01 00:00:00;ARIMA;16077389,63;2784600,0;477,4;13292789,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-01-01 00:00:00;ARIMA;16077389,63;9591400,0;67,6;6485989,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-02-01 00:00:00;ARIMA;16077389,63;6241550,0;157,6;9835839,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-03-01 00:00:00;ARIMA;16077389,63;3236800,0;396,7;12840589,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-04-01 00:00:00;ARIMA;16077389,63;12179650,0;32,0;3897739,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-05-01 00:00:00;ARIMA;16077389,63;9710400,0;65,6;6366989,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-06-01 00:00:00;ARIMA;16077389,63;-2350250,0;784,1;18427639,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-07-01 00:00:00;ARIMA;16077389,63;13095950,0;22,8;2981439,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-08-01 00:00:00;ARIMA;16077389,63;5890500,0;172,9;10186889,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-09-01 00:00:00;ARIMA;16077389,63;6455750,0;149,0;9621639,63;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-10-01 00:00:00;ARIMA;16077389,63;23823800,0;32,5;-7746410,37;16339720,0;🔴 Baixa previsibilidade
+Ceftatana Serolamide;2020-11-01 00:00:00;ARIMA;16077389,63;13560050,0;18,6;2517339,63;16339720,0;🔴 Baixa previsibilidade
+Aprerase;2019-12-01 00:00:00;ARIMA;28002842,09;9154860,0;205,9;18847982,09;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-01-01 00:00:00;ARIMA;33893458,13;10251120,0;230,6;23642338,13;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-02-01 00:00:00;ARIMA;42268246,49;32183580,0;31,3;10084666,49;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-03-01 00:00:00;ARIMA;32212030,1;2700720,0;1092,7;29511310,1;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-04-01 00:00:00;ARIMA;37176279,15;8799120,0;322,5;28377159,15;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-05-01 00:00:00;ARIMA;37451665,03;2381280,0;1472,8;35070385,03;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-06-01 00:00:00;ARIMA;34925034,41;1771440,0;1871,6;33153594,41;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-07-01 00:00:00;ARIMA;37014121,92;10497960,0;252,6;26516161,92;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-08-01 00:00:00;ARIMA;36345040,53;12871980,0;182,4;23473060,53;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-09-01 00:00:00;ARIMA;35970186,02;12538020,0;186,9;23432166,02;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-10-01 00:00:00;ARIMA;36606921,03;12908280,0;183,6;23698641,03;16303678,29;🔴 Baixa previsibilidade
+Aprerase;2020-11-01 00:00:00;ARIMA;36221056,36;29729700,0;21,8;6491356,36;16303678,29;🔴 Baixa previsibilidade
+Liomulin;2019-12-01 00:00:00;ARIMA;14427554,69;6335700,0;127,7;8091854,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-01-01 00:00:00;ARIMA;14427554,69;5047000,0;185,9;9380554,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-02-01 00:00:00;ARIMA;14427554,69;4821600,0;199,2;9605954,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-03-01 00:00:00;ARIMA;14427554,69;29914500,0;51,8;-15486945,31;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-04-01 00:00:00;ARIMA;14427554,69;10995600,0;31,2;3431954,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-05-01 00:00:00;ARIMA;14427554,69;9270800,0;55,6;5156754,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-06-01 00:00:00;ARIMA;14427554,69;8873900,0;62,6;5553654,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-07-01 00:00:00;ARIMA;14427554,69;10608500,0;36,0;3819054,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-08-01 00:00:00;ARIMA;14427554,69;3283000,0;339,5;11144554,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-09-01 00:00:00;ARIMA;14427554,69;3185000,0;353,0;11242554,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-10-01 00:00:00;ARIMA;14427554,69;4664800,0;209,3;9762754,69;16192820,0;🔴 Baixa previsibilidade
+Liomulin;2020-11-01 00:00:00;ARIMA;14427554,69;32501700,0;55,6;-18074145,31;16192820,0;🔴 Baixa previsibilidade
+Spiroderall;2019-12-01 00:00:00;ARIMA;10653521,42;20830700,0;48,9;-10177178,58;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-01-01 00:00:00;ARIMA;10653521,42;822780,0;1194,8;9830741,42;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-02-01 00:00:00;ARIMA;10653521,42;12883690,0;17,3;-2230168,58;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-03-01 00:00:00;ARIMA;10653521,42;15051650,0;29,2;-4398128,58;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-04-01 00:00:00;ARIMA;10653521,42;868490,0;1126,7;9785031,42;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-05-01 00:00:00;ARIMA;10653521,42;30018410,0;64,5;-19364888,58;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-06-01 00:00:00;ARIMA;10653521,42;8077610,0;31,9;2575911,42;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-07-01 00:00:00;ARIMA;10653521,42;4401220,0;142,1;6252301,42;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-08-01 00:00:00;ARIMA;10653521,42;13556280,0;21,4;-2902758,58;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-09-01 00:00:00;ARIMA;10653521,42;9644810,0;10,5;1008711,42;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-10-01 00:00:00;ARIMA;10653521,42;5543970,0;92,2;5109551,42;15758755,71;🔴 Baixa previsibilidade
+Spiroderall;2020-11-01 00:00:00;ARIMA;10653521,42;9762350,0;9,1;891171,42;15758755,71;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2019-12-01 00:00:00;ARIMA;11851842,76;9646500,0;22,9;2205342,76;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-01-01 00:00:00;ARIMA;11851842,76;1899800,0;523,8;9952042,76;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-02-01 00:00:00;ARIMA;11851842,76;7534300,0;57,3;4317542,76;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-03-01 00:00:00;ARIMA;11851842,76;37423700,0;68,3;-25571857,24;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-04-01 00:00:00;ARIMA;11851842,76;831900,0;1324,7;11019942,76;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-05-01 00:00:00;ARIMA;11851842,76;13404800,0;11,6;-1552957,24;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-06-01 00:00:00;ARIMA;11851842,76;21098400,0;43,8;-9246557,24;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-07-01 00:00:00;ARIMA;11851842,76;6619800,0;79,0;5232042,76;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-08-01 00:00:00;ARIMA;11851842,76;10071300,0;17,7;1780542,76;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-09-01 00:00:00;ARIMA;11851842,76;13918100,0;14,8;-2066257,24;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-10-01 00:00:00;ARIMA;11851842,76;3982500,0;197,6;7869342,76;15668393,23;🔴 Baixa previsibilidade
+Decidenu Galantrigine;2020-11-01 00:00:00;ARIMA;11851842,76;12201200,0;2,9;-349357,24;15668393,23;🔴 Baixa previsibilidade
+Diprolimus;2019-12-01 00:00:00;ARIMA;14897476,31;14645400,0;1,7;252076,31;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-01-01 00:00:00;ARIMA;14897476,31;27255660,0;45,3;-12358183,69;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-02-01 00:00:00;ARIMA;14897476,31;8222980,0;81,2;6674496,31;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-03-01 00:00:00;ARIMA;14897476,31;1844940,0;707,5;13052536,31;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-04-01 00:00:00;ARIMA;14897476,31;4146360,0;259,3;10751116,31;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-05-01 00:00:00;ARIMA;14897476,31;5312920,0;180,4;9584556,31;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-06-01 00:00:00;ARIMA;14897476,31;12204500,0;22,1;2692976,31;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-07-01 00:00:00;ARIMA;14897476,31;4380940,0;240,1;10516536,31;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-08-01 00:00:00;ARIMA;14897476,31;48703880,0;69,4;-33806403,69;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-09-01 00:00:00;ARIMA;14897476,31;23426300,0;36,4;-8528823,69;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-10-01 00:00:00;ARIMA;14897476,31;2022460,0;636,6;12875016,31;15613701,46;🔴 Baixa previsibilidade
+Diprolimus;2020-11-01 00:00:00;ARIMA;14897476,31;6745760,0;120,8;8151716,31;15613701,46;🔴 Baixa previsibilidade
+Lansostral Acgestin;2019-12-01 00:00:00;ARIMA;8313336,42;152103930,0;94,5;-143790593,58;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-01-01 00:00:00;ARIMA;13089602,68;15700080,0;16,6;-2610477,32;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-02-01 00:00:00;ARIMA;11102614,36;3780810,0;193,7;7321804,36;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-03-01 00:00:00;ARIMA;11929227,11;8094570,0;47,4;3834657,11;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-04-01 00:00:00;ARIMA;11585345,55;14884980,0;22,2;-3299634,45;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-05-01 00:00:00;ARIMA;11728404,71;19098420,0;38,6;-7370015,29;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-06-01 00:00:00;ARIMA;11668890,26;22503030,0;48,1;-10834139,74;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-07-01 00:00:00;ARIMA;11693649,04;6257460,0;86,9;5436189,04;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-08-01 00:00:00;ARIMA;11683349,07;10966230,0;6,5;717119,07;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-09-01 00:00:00;ARIMA;11687633,99;27036240,0;56,8;-15348606,01;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-10-01 00:00:00;ARIMA;11685851,4;11894190,0;1,8;-208338,6;15483675,43;🔴 Baixa previsibilidade
+Lansostral Acgestin;2020-11-01 00:00:00;ARIMA;11686592,98;14747040,0;20,8;-3060447,02;15483675,43;🔴 Baixa previsibilidade
+Amamadin;2019-12-01 00:00:00;ARIMA;15523845,26;38915540,0;60,1;-23391694,74;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-01-01 00:00:00;ARIMA;17276119,44;33040420,0;47,7;-15764300,56;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-02-01 00:00:00;ARIMA;17794577,13;18951540,0;6,1;-1156962,87;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-03-01 00:00:00;ARIMA;16771131,94;2253080,0;644,4;14518051,94;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-04-01 00:00:00;ARIMA;15994667,67;1832410,0;772,9;14162257,67;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-05-01 00:00:00;ARIMA;16401795,72;135056460,0;87,9;-118654664,28;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-06-01 00:00:00;ARIMA;17111625,21;4434860,0;285,8;12676765,21;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-07-01 00:00:00;ARIMA;17111041,63;16441780,0;4,1;669261,63;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-08-01 00:00:00;ARIMA;16611690,26;7436590,0;123,4;9175100,26;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-09-01 00:00:00;ARIMA;16411124,29;3607780,0;354,9;12803344,29;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-10-01 00:00:00;ARIMA;16681520,39;1982140,0;741,6;14699380,39;15477600,29;🔴 Baixa previsibilidade
+Amamadin;2020-11-01 00:00:00;ARIMA;16931375,92;38338010,0;55,8;-21406634,08;15477600,29;🔴 Baixa previsibilidade
+Araxetine;2019-12-01 00:00:00;ARIMA;12223622,59;6381000,0;91,6;5842622,59;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-01-01 00:00:00;ARIMA;12223622,59;7407000,0;65,0;4816622,59;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-02-01 00:00:00;ARIMA;12223622,59;5085000,0;140,4;7138622,59;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-03-01 00:00:00;ARIMA;12223622,59;12280500,0;0,5;-56877,41;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-04-01 00:00:00;ARIMA;12223622,59;6174000,0;98,0;6049622,59;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-05-01 00:00:00;ARIMA;12223622,59;3276000,0;273,1;8947622,59;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-06-01 00:00:00;ARIMA;12223622,59;2196000,0;456,6;10027622,59;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-07-01 00:00:00;ARIMA;12223622,59;11569500,0;5,7;654122,59;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-08-01 00:00:00;ARIMA;12223622,59;13671000,0;10,6;-1447377,41;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-09-01 00:00:00;ARIMA;12223622,59;2182500,0;460,1;10041122,59;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-10-01 00:00:00;ARIMA;12223622,59;7933500,0;54,1;4290122,59;15436210,97;🔴 Baixa previsibilidade
+Araxetine;2020-11-01 00:00:00;ARIMA;12223622,59;13491000,0;9,4;-1267377,41;15436210,97;🔴 Baixa previsibilidade
+Atomorelin;2019-12-01 00:00:00;Holt;15456818,82;2186700,0;606,9;13270118,82;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-01-01 00:00:00;Holt;15438429,5;1687200,0;815,0;13751229,5;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-02-01 00:00:00;Holt;15423718,04;3452100,0;346,8;11971618,04;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-03-01 00:00:00;Holt;15411948,87;2658450,0;479,7;12753498,87;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-04-01 00:00:00;Holt;15402533,53;577200,0;2568,5;14825333,53;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-05-01 00:00:00;Holt;15395001,27;34465500,0;55,3;-19070498,73;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-06-01 00:00:00;Holt;15388975,45;6898650,0;123,1;8490325,45;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-07-01 00:00:00;Holt;15384154,8;19314000,0;20,3;-3929845,2;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-08-01 00:00:00;Holt;15380298,28;9079800,0;69,4;6300498,28;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-09-01 00:00:00;Holt;15377213,06;21678300,0;29,1;-6301086,94;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-10-01 00:00:00;Holt;15374744,89;35858550,0;57,1;-20483805,11;15422657,14;🔴 Baixa previsibilidade
+Atomorelin;2020-11-01 00:00:00;Holt;15372770,35;59962200,0;74,4;-44589429,65;15422657,14;🔴 Baixa previsibilidade
+Acycnafine Microvate;2019-12-01 00:00:00;ExponentialSmoothing;8050447,45;5573260,0;44,4;2477187,45;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-01-01 00:00:00;ExponentialSmoothing;18266172,84;3480820,0;424,8;14785352,84;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-02-01 00:00:00;ExponentialSmoothing;24423742,94;6573420,0;271,6;17850322,94;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-03-01 00:00:00;ExponentialSmoothing;34605956,29;8053920,0;329,7;26552036,29;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-04-01 00:00:00;ExponentialSmoothing;14874764,99;18838540,0;21,0;-3963775,01;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-05-01 00:00:00;ExponentialSmoothing;8455435,9;20378260,0;58,5;-11922824,1;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-06-01 00:00:00;ExponentialSmoothing;24866980,06;29840300,0;16,7;-4973319,94;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-07-01 00:00:00;ExponentialSmoothing;19428451,93;45276980,0;57,1;-25848528,07;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-08-01 00:00:00;ExponentialSmoothing;25750003,83;10528000,0;144,6;15222003,83;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-09-01 00:00:00;ExponentialSmoothing;19559151,55;16765840,0;16,7;2793311,55;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-10-01 00:00:00;ExponentialSmoothing;31731306,73;21891660,0;44,9;9839646,73;15219728,0;🔴 Baixa previsibilidade
+Acycnafine Microvate;2020-11-01 00:00:00;ExponentialSmoothing;14173202,03;204453760,0;93,1;-190280557,97;15219728,0;🔴 Baixa previsibilidade
+Adalatamine;2019-12-01 00:00:00;ARIMA;14250060,09;2262900,0;529,7;11987160,09;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-01-01 00:00:00;ARIMA;14250060,09;17102760,0;16,7;-2852699,91;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-02-01 00:00:00;ARIMA;14250060,09;8122620,0;75,4;6127440,09;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-03-01 00:00:00;ARIMA;14250060,09;9075420,0;57,0;5174640,09;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-04-01 00:00:00;ARIMA;14250060,09;1722980,0;727,1;12527080,09;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-05-01 00:00:00;ARIMA;14250060,09;16769280,0;15,0;-2519219,91;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-06-01 00:00:00;ARIMA;14250060,09;9218340,0;54,6;5031720,09;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-07-01 00:00:00;ARIMA;14250060,09;6788700,0;109,9;7461360,09;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-08-01 00:00:00;ARIMA;14250060,09;5740620,0;148,2;8509440,09;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-09-01 00:00:00;ARIMA;14250060,09;10846040,0;31,4;3404020,09;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-10-01 00:00:00;ARIMA;14250060,09;1214820,0;1073,0;13035240,09;15111634,86;🔴 Baixa previsibilidade
+Adalatamine;2020-11-01 00:00:00;ARIMA;14250060,09;32395200,0;56,0;-18145139,91;15111634,86;🔴 Baixa previsibilidade
+Victomax;2019-12-01 00:00:00;ARIMA;22646208,76;5644380,0;301,2;17001828,76;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-01-01 00:00:00;ARIMA;18388382,56;5974570,0;207,8;12413812,56;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-02-01 00:00:00;ARIMA;18388382,56;5158440,0;256,5;13229942,56;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-03-01 00:00:00;ARIMA;18388382,56;10391640,0;77,0;7996742,56;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-04-01 00:00:00;ARIMA;18388382,56;5158440,0;256,5;13229942,56;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-05-01 00:00:00;ARIMA;18388382,56;5837510,0;215,0;12550872,56;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-06-01 00:00:00;ARIMA;18388382,56;16509500,0;11,4;1878882,56;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-07-01 00:00:00;ARIMA;18388382,56;20459320,0;10,1;-2070937,44;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-08-01 00:00:00;ARIMA;18388382,56;46469570,0;60,4;-28081187,44;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-09-01 00:00:00;ARIMA;18388382,56;25966640,0;29,2;-7578257,44;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-10-01 00:00:00;ARIMA;18388382,56;7868490,0;133,7;10519892,56;14591728,0;🔴 Baixa previsibilidade
+Victomax;2020-11-01 00:00:00;ARIMA;18388382,56;17437770,0;5,5;950612,56;14591728,0;🔴 Baixa previsibilidade
+Eproline;2019-12-01 00:00:00;LightGBM (pooled);14807886,41;16286400,0;9,1;-1478513,59;14561485,71;—
+Eproline;2020-01-01 00:00:00;LightGBM (pooled);15501442,85;19359600,0;19,9;-3858157,15;14561485,71;—
+Eproline;2020-02-01 00:00:00;LightGBM (pooled);17829540,96;5405400,0;229,8;12424140,96;14561485,71;—
+Eproline;2020-03-01 00:00:00;LightGBM (pooled);20400618,7;12994800,0;57,0;7405818,7;14561485,71;—
+Eproline;2020-04-01 00:00:00;LightGBM (pooled);14972131,03;12690600,0;18,0;2281531,03;14561485,71;—
+Eproline;2020-05-01 00:00:00;LightGBM (pooled);15918760,0;19164600,0;16,9;-3245840,0;14561485,71;—
+Eproline;2020-06-01 00:00:00;LightGBM (pooled);18671938,77;37408800,0;50,1;-18736861,23;14561485,71;—
+Eproline;2020-07-01 00:00:00;LightGBM (pooled);18425382,23;4336800,0;324,9;14088582,23;14561485,71;—
+Eproline;2020-08-01 00:00:00;LightGBM (pooled);20094200,89;13798200,0;45,6;6296000,89;14561485,71;—
+Eproline;2020-09-01 00:00:00;LightGBM (pooled);18514868,92;8899800,0;108,0;9615068,92;14561485,71;—
+Eproline;2020-10-01 00:00:00;LightGBM (pooled);16527188,94;3993600,0;313,8;12533588,94;14561485,71;—
+Eproline;2020-11-01 00:00:00;LightGBM (pooled);18052460,56;20826000,0;13,3;-2773539,44;14561485,71;—
+Testant;2019-12-01 00:00:00;ARIMA;13810312,12;3503840,0;294,1;10306472,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-01-01 00:00:00;ARIMA;13810312,12;3908880,0;253,3;9901432,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-02-01 00:00:00;ARIMA;13810312,12;5006880,0;175,8;8803432,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-03-01 00:00:00;ARIMA;13810312,12;3201280,0;331,4;10609032,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-04-01 00:00:00;ARIMA;13810312,12;4636000,0;197,9;9174312,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-05-01 00:00:00;ARIMA;13810312,12;7285840,0;89,6;6524472,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-06-01 00:00:00;ARIMA;13810312,12;5568080,0;148,0;8242232,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-07-01 00:00:00;ARIMA;13810312,12;17870560,0;22,7;-4060247,88;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-08-01 00:00:00;ARIMA;13810312,12;7432240,0;85,8;6378072,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-09-01 00:00:00;ARIMA;13810312,12;4733600,0;191,8;9076712,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-10-01 00:00:00;ARIMA;13810312,12;7998320,0;72,7;5811992,12;14452189,71;🔴 Baixa previsibilidade
+Testant;2020-11-01 00:00:00;ARIMA;13810312,12;17748560,0;22,2;-3938247,88;14452189,71;🔴 Baixa previsibilidade
+Thalilamide;2019-12-01 00:00:00;Holt;5909330,1;30780750,0;80,8;-24871419,9;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-01-01 00:00:00;Holt;5904355,0;7115550,0;17,0;-1211195,0;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-02-01 00:00:00;Holt;5900374,92;4889250,0;20,7;1011124,92;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-03-01 00:00:00;Holt;5897190,85;2496900,0;136,2;3400290,85;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-04-01 00:00:00;Holt;5894643,6;32385900,0;81,8;-26491256,4;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-05-01 00:00:00;Holt;5892605,8;8327100,0;29,2;-2434494,2;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-06-01 00:00:00;Holt;5890975,55;47225850,0;87,5;-41334874,45;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-07-01 00:00:00;Holt;5889671,36;11697300,0;49,6;-5807628,64;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-08-01 00:00:00;Holt;5888628,01;4169700,0;41,2;1718928,01;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-09-01 00:00:00;Holt;5887793,32;30116550,0;80,4;-24228756,68;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-10-01 00:00:00;Holt;5887125,57;4797000,0;22,7;1090125,57;14426976,6;🔴 Baixa previsibilidade
+Thalilamide;2020-11-01 00:00:00;Holt;5886591,38;14224950,0;58,6;-8338358,62;14426976,6;🔴 Baixa previsibilidade
+Lovepion;2019-12-01 00:00:00;ARIMA;18270746,29;3579520,0;410,4;14691226,29;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-01-01 00:00:00;ARIMA;18270746,29;2268480,0;705,4;16002266,29;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-02-01 00:00:00;ARIMA;18270746,29;13360640,0;36,8;4910106,29;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-03-01 00:00:00;ARIMA;18270746,29;33064320,0;44,7;-14793573,71;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-04-01 00:00:00;ARIMA;18270746,29;9258880,0;97,3;9011866,29;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-05-01 00:00:00;ARIMA;18270746,29;5907840,0;209,3;12362906,29;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-06-01 00:00:00;ARIMA;18270746,29;6925120,0;163,8;11345626,29;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-07-01 00:00:00;ARIMA;18270746,29;20715520,0;11,8;-2444773,71;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-08-01 00:00:00;ARIMA;18270746,29;9846400,0;85,6;8424346,29;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-09-01 00:00:00;ARIMA;18270746,29;18474240,0;1,1;-203493,71;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-10-01 00:00:00;ARIMA;18270746,29;2627520,0;595,4;15643226,29;14190628,57;🔴 Baixa previsibilidade
+Lovepion;2020-11-01 00:00:00;ARIMA;18270746,29;8083840,0;126,0;10186906,29;14190628,57;🔴 Baixa previsibilidade
+Epzipitant;2019-12-01 00:00:00;LightGBM (pooled);12944384,85;4481280,0;188,9;8463104,85;13742814,29;—
+Epzipitant;2020-01-01 00:00:00;LightGBM (pooled);17552480,9;8954780,0;96,0;8597700,9;13742814,29;—
+Epzipitant;2020-02-01 00:00:00;LightGBM (pooled);12664806,16;47263500,0;73,2;-34598693,84;13742814,29;—
+Epzipitant;2020-03-01 00:00:00;LightGBM (pooled);16627555,45;8736940,0;90,3;7890615,45;13742814,29;—
+Epzipitant;2020-04-01 00:00:00;LightGBM (pooled);16210649,54;10005080,0;62,0;6205569,54;13742814,29;—
+Epzipitant;2020-05-01 00:00:00;LightGBM (pooled);14979408,35;4419040,0;239,0;10560368,35;13742814,29;—
+Epzipitant;2020-06-01 00:00:00;LightGBM (pooled);18759023,62;7243180,0;159,0;11515843,62;13742814,29;—
+Epzipitant;2020-07-01 00:00:00;LightGBM (pooled);19219716,81;30380900,0;36,7;-11161183,19;13742814,29;—
+Epzipitant;2020-08-01 00:00:00;LightGBM (pooled);18749805,26;18710900,0;0,2;38905,26;13742814,29;—
+Epzipitant;2020-09-01 00:00:00;LightGBM (pooled);18309856,43;33166140,0;44,8;-14856283,57;13742814,29;—
+Epzipitant;2020-10-01 00:00:00;LightGBM (pooled);16527188,94;27393380,0;39,7;-10866191,06;13742814,29;—
+Epzipitant;2020-11-01 00:00:00;LightGBM (pooled);16132961,86;10783080,0;49,6;5349881,86;13742814,29;—
+Darlofen;2019-12-01 00:00:00;ExponentialSmoothing;-42611,51;7685640,0;100,6;-7728251,51;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-01-01 00:00:00;ExponentialSmoothing;16786542,99;10697580,0;56,9;6088962,99;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-02-01 00:00:00;ExponentialSmoothing;5333275,71;2648430,0;101,4;2684845,71;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-03-01 00:00:00;ExponentialSmoothing;9570175,2;7195190,0;33,0;2374985,2;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-04-01 00:00:00;ExponentialSmoothing;11907535,94;11857350,0;0,4;50185,94;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-05-01 00:00:00;ExponentialSmoothing;6922394,0;2065660,0;235,1;4856734,0;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-06-01 00:00:00;ExponentialSmoothing;11093002,2;6075810,0;82,6;5017192,2;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-07-01 00:00:00;ExponentialSmoothing;30095889,16;8395350,0;258,5;21700539,16;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-08-01 00:00:00;ExponentialSmoothing;6048047,47;13571040,0;55,4;-7522992,53;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-09-01 00:00:00;ExponentialSmoothing;1679652,54;3773580,0;55,5;-2093927,46;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-10-01 00:00:00;ExponentialSmoothing;3523964,49;10836060,0;67,5;-7312095,51;13624948,29;🔴 Baixa previsibilidade
+Darlofen;2020-11-01 00:00:00;ExponentialSmoothing;1134704,98;74813820,0;98,5;-73679115,02;13624948,29;🔴 Baixa previsibilidade
+Topitaine;2019-12-01 00:00:00;LightGBM (pooled);11062301,53;11089650,0;0,2;-27348,47;13563125,71;—
+Topitaine;2020-01-01 00:00:00;LightGBM (pooled);14822074,09;-4182530,0;454,4;19004604,09;13563125,71;—
+Topitaine;2020-02-01 00:00:00;LightGBM (pooled);21446775,46;12015080,0;78,5;9431695,46;13563125,71;—
+Topitaine;2020-03-01 00:00:00;LightGBM (pooled);16368493,07;18973900,0;13,7;-2605406,93;13563125,71;—
+Topitaine;2020-04-01 00:00:00;LightGBM (pooled);14815803,61;33263780,0;55,5;-18447976,39;13563125,71;—
+Topitaine;2020-05-01 00:00:00;LightGBM (pooled);15624050,99;3153700,0;395,4;12470350,99;13563125,71;—
+Topitaine;2020-06-01 00:00:00;LightGBM (pooled);19219716,81;17309160,0;11,0;1910556,81;13563125,71;—
+Topitaine;2020-07-01 00:00:00;LightGBM (pooled);17655425,4;10314150,0;71,2;7341275,4;13563125,71;—
+Topitaine;2020-08-01 00:00:00;LightGBM (pooled);19519762,09;21812230,0;10,5;-2292467,91;13563125,71;—
+Topitaine;2020-09-01 00:00:00;LightGBM (pooled);18358541,51;8613220,0;113,1;9745321,51;13563125,71;—
+Topitaine;2020-10-01 00:00:00;LightGBM (pooled);16527188,94;5645640,0;192,7;10881548,94;13563125,71;—
+Topitaine;2020-11-01 00:00:00;LightGBM (pooled);17097769,68;12190860,0;40,3;4906909,68;13563125,71;—
+Kinerinex;2019-12-01 00:00:00;ExponentialSmoothing;8273475,52;10837250,0;23,7;-2563774,48;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-01-01 00:00:00;ExponentialSmoothing;5946323,66;5434800,0;9,4;511523,66;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-02-01 00:00:00;ExponentialSmoothing;11053978,83;16013250,0;31,0;-4959271,17;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-03-01 00:00:00;ExponentialSmoothing;8852515,77;14589850,0;39,3;-5737334,23;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-04-01 00:00:00;ExponentialSmoothing;3773669,62;6347070,0;40,5;-2573400,38;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-05-01 00:00:00;ExponentialSmoothing;5361109,32;8139260,0;34,1;-2778150,68;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-06-01 00:00:00;ExponentialSmoothing;16161157,43;7615190,0;112,2;8545967,43;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-07-01 00:00:00;ExponentialSmoothing;10525425,32;14214590,0;26,0;-3689164,68;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-08-01 00:00:00;ExponentialSmoothing;12136793,42;20807520,0;41,7;-8670726,58;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-09-01 00:00:00;ExponentialSmoothing;5920729,93;8740970,0;32,3;-2820240,07;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-10-01 00:00:00;ExponentialSmoothing;43656356,69;15120390,0;188,7;28535966,69;13550213,43;🔴 Baixa previsibilidade
+Kinerinex;2020-11-01 00:00:00;ExponentialSmoothing;13273789,26;4794270,0;176,9;8479519,26;13550213,43;🔴 Baixa previsibilidade
+Lovephilus;2019-12-01 00:00:00;LightGBM (pooled);13035676,55;4021620,0;224,1;9014056,55;13493753,14;—
+Lovephilus;2020-01-01 00:00:00;LightGBM (pooled);17174226,0;4964460,0;245,9;12209766,0;13493753,14;—
+Lovephilus;2020-02-01 00:00:00;LightGBM (pooled);19946938,16;10004580,0;99,4;9942358,16;13493753,14;—
+Lovephilus;2020-03-01 00:00:00;LightGBM (pooled);16778231,48;13653720,0;22,9;3124511,48;13493753,14;—
+Lovephilus;2020-04-01 00:00:00;LightGBM (pooled);15765345,92;4184580,0;276,7;11580765,92;13493753,14;—
+Lovephilus;2020-05-01 00:00:00;LightGBM (pooled);16282430,85;3876120,0;320,1;12406310,85;13493753,14;—
+Lovephilus;2020-06-01 00:00:00;LightGBM (pooled);18604967,7;89959740,0;79,3;-71354772,3;13493753,14;—
+Lovephilus;2020-07-01 00:00:00;LightGBM (pooled);18261388,82;13659540,0;33,7;4601848,82;13493753,14;—
+Lovephilus;2020-08-01 00:00:00;LightGBM (pooled);20150103,26;13182300,0;52,9;6967803,26;13493753,14;—
+Lovephilus;2020-09-01 00:00:00;LightGBM (pooled);18630177,26;27889440,0;33,2;-9259262,74;13493753,14;—
+Lovephilus;2020-10-01 00:00:00;LightGBM (pooled);16575874,01;7723140,0;114,6;8852734,01;13493753,14;—
+Lovephilus;2020-11-01 00:00:00;LightGBM (pooled);17869183,34;7664940,0;133,1;10204243,34;13493753,14;—
+Alpharolac;2019-12-01 00:00:00;LightGBM (pooled);19239550,36;13058500,0;47,3;6181050,36;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-01-01 00:00:00;LightGBM (pooled);15198502,94;19267950,0;21,1;-4069447,06;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-02-01 00:00:00;LightGBM (pooled);17842175,12;17183920,0;3,8;658255,12;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-03-01 00:00:00;LightGBM (pooled);18014282,91;7238140,0;148,9;10776142,91;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-04-01 00:00:00;LightGBM (pooled);14248374,32;2787590,0;411,1;11460784,32;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-05-01 00:00:00;LightGBM (pooled);15557079,91;1652300,0;841,5;13904779,91;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-06-01 00:00:00;LightGBM (pooled);19364298,17;13250380,0;46,1;6113918,17;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-07-01 00:00:00;LightGBM (pooled);18425382,23;30738110,0;40,1;-12312727,77;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-08-01 00:00:00;LightGBM (pooled);19519762,09;3437850,0;467,8;16081912,09;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-09-01 00:00:00;LightGBM (pooled);19440548,53;7765810,0;150,3;11674738,53;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-10-01 00:00:00;LightGBM (pooled);16575874,01;6001580,0;176,2;10574294,01;13470280,57;🔴 Baixa previsibilidade
+Alpharolac;2020-11-01 00:00:00;LightGBM (pooled);17534733,79;8991710,0;95,0;8543023,79;13470280,57;🔴 Baixa previsibilidade
+Acubulin;2019-12-01 00:00:00;ARIMA;13162903,94;2601900,0;405,9;10561003,94;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-01-01 00:00:00;ARIMA;7121885,27;3116400,0;128,5;4005485,27;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-02-01 00:00:00;ARIMA;12156071,9;4189500,0;190,2;7966571,9;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-03-01 00:00:00;ARIMA;12508763,17;15229200,0;17,9;-2720436,83;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-04-01 00:00:00;ARIMA;9122801,2;4429600,0;106,0;4693201,2;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-05-01 00:00:00;ARIMA;11204475,28;7511700,0;49,2;3692775,28;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-06-01 00:00:00;ARIMA;11905253,05;18120200,0;34,3;-6214946,95;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-07-01 00:00:00;ARIMA;10127834,23;8526000,0;18,8;1601834,23;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-08-01 00:00:00;ARIMA;10898330,41;9378600,0;16,2;1519730,41;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-09-01 00:00:00;ARIMA;11485292,54;14014000,0;18,0;-2528707,46;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-10-01 00:00:00;ARIMA;10604691,06;3483900,0;204,4;7120791,06;13462120,0;🔴 Baixa previsibilidade
+Acubulin;2020-11-01 00:00:00;ARIMA;10836577,61;5728100,0;89,2;5108477,61;13462120,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2019-12-01 00:00:00;ARIMA;12542142,86;5214240,0;140,5;7327902,86;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-01-01 00:00:00;ARIMA;12542142,86;4479840,0;180,0;8062302,86;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-02-01 00:00:00;ARIMA;12542142,86;19504440,0;35,7;-6962297,14;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-03-01 00:00:00;ARIMA;12542142,86;3684240,0;240,4;8857902,86;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-04-01 00:00:00;ARIMA;12542142,86;5789520,0;116,6;6752622,86;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-05-01 00:00:00;ARIMA;12542142,86;16132320,0;22,3;-3590177,14;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-06-01 00:00:00;ARIMA;12542142,86;7154280,0;75,3;5387862,86;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-07-01 00:00:00;ARIMA;12542142,86;1554480,0;706,8;10987662,86;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-08-01 00:00:00;ARIMA;12542142,86;3506760,0;257,7;9035382,86;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-09-01 00:00:00;ARIMA;12542142,86;6970680,0;79,9;5571462,86;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-10-01 00:00:00;ARIMA;12542142,86;3072240,0;308,2;9469902,86;13422384,0;🔴 Baixa previsibilidade
+Effidomide Evofribrate;2020-11-01 00:00:00;ARIMA;12542142,86;6964560,0;80,1;5577582,86;13422384,0;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2019-12-01 00:00:00;ExponentialSmoothing;31672115,54;16185390,0;95,7;15486725,54;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-01-01 00:00:00;ExponentialSmoothing;-35858,57;6433830,0;100,6;-6469688,57;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-02-01 00:00:00;ExponentialSmoothing;15465143,89;17053010,0;9,3;-1587866,11;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-03-01 00:00:00;ExponentialSmoothing;49171177,08;5902260,0;733,1;43268917,08;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-04-01 00:00:00;ExponentialSmoothing;8824247,3;1869660,0;372,0;6954587,3;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-05-01 00:00:00;ExponentialSmoothing;1648762,45;1668030,0;1,2;-19267,55;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-06-01 00:00:00;ExponentialSmoothing;7521401,19;14596790,0;48,5;-7075388,81;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-07-01 00:00:00;ExponentialSmoothing;7949504,34;20645690,0;61,5;-12696185,66;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-08-01 00:00:00;ExponentialSmoothing;6519355,98;10515310,0;38,0;-3995954,02;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-09-01 00:00:00;ExponentialSmoothing;9779584,62;26334100,0;62,9;-16554515,38;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-10-01 00:00:00;ExponentialSmoothing;15362005,17;3073330,0;399,8;12288675,17;13032280,86;🔴 Baixa previsibilidade
+Algluconium Dorzofoxin;2020-11-01 00:00:00;ExponentialSmoothing;4759405,42;3103880,0;53,3;1655525,42;13032280,86;🔴 Baixa previsibilidade
+Quiniprosyn;2019-12-01 00:00:00;ExponentialSmoothing;6776965,99;11494350,0;41,0;-4717384,01;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-01-01 00:00:00;ExponentialSmoothing;14637624,75;8299250,0;76,4;6338374,75;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-02-01 00:00:00;ExponentialSmoothing;10504628,62;2816850,0;272,9;7687778,62;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-03-01 00:00:00;ExponentialSmoothing;14923112,43;4930600,0;202,7;9992512,43;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-04-01 00:00:00;ExponentialSmoothing;16615271,03;2727850,0;509,1;13887421,03;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-05-01 00:00:00;ExponentialSmoothing;7737184,39;8548450,0;9,5;-811265,61;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-06-01 00:00:00;ExponentialSmoothing;3056233,45;1486300,0;105,6;1569933,45;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-07-01 00:00:00;ExponentialSmoothing;3841747,22;19486550,0;80,3;-15644802,78;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-08-01 00:00:00;ExponentialSmoothing;10983143,55;5331100,0;106,0;5652043,55;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-09-01 00:00:00;ExponentialSmoothing;23069944,73;10092600,0;128,6;12977344,73;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-10-01 00:00:00;ExponentialSmoothing;17455292,52;8094550,0;115,6;9360742,52;12955221,43;🔴 Baixa previsibilidade
+Quiniprosyn;2020-11-01 00:00:00;ExponentialSmoothing;6311970,96;4183000,0;50,9;2128970,96;12955221,43;🔴 Baixa previsibilidade
+Lactubucil;2019-12-01 00:00:00;Holt;14689627,06;19544850,0;24,8;-4855222,94;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-01-01 00:00:00;Holt;14691231,59;9541350,0;54,0;5149881,59;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-02-01 00:00:00;Holt;14692557,67;4960800,0;196,2;9731757,67;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-03-01 00:00:00;Holt;14693653,61;9950850,0;47,7;4742803,61;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-04-01 00:00:00;Holt;14694559,36;23253750,0;36,8;-8559190,64;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-05-01 00:00:00;Holt;14695307,92;6043050,0;143,2;8652257,92;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-06-01 00:00:00;Holt;14695926,58;2211300,0;564,6;12484626,58;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-07-01 00:00:00;Holt;14696437,87;11021400,0;33,3;3675037,87;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-08-01 00:00:00;Holt;14696860,43;17813250,0;17,5;-3116389,57;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-09-01 00:00:00;Holt;14697209,65;21972600,0;33,1;-7275390,35;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-10-01 00:00:00;Holt;14697498,27;8277750,0;77,6;6419748,27;12952902,86;🔴 Baixa previsibilidade
+Lactubucil;2020-11-01 00:00:00;Holt;14697736,8;26401050,0;44,3;-11703313,2;12952902,86;🔴 Baixa previsibilidade
+Methiclotide;2019-12-01 00:00:00;LightGBM (pooled);19698693,2;2436560,0;708,5;17262133,2;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-01-01 00:00:00;LightGBM (pooled);13566622,33;2445720,0;454,7;11120902,33;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-02-01 00:00:00;LightGBM (pooled);17478057,66;27044900,0;35,4;-9566842,34;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-03-01 00:00:00;LightGBM (pooled);18609619,97;5005940,0;271,8;13603679,97;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-04-01 00:00:00;LightGBM (pooled);14248374,32;5656300,0;151,9;8592074,32;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-05-01 00:00:00;LightGBM (pooled);15552881,55;3641100,0;327,1;11911781,55;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-06-01 00:00:00;LightGBM (pooled);19050271,32;9755400,0;95,3;9294871,32;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-07-01 00:00:00;LightGBM (pooled);15365344,55;5143340,0;198,7;10222004,55;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-08-01 00:00:00;LightGBM (pooled);22282465,6;641200,0;3375,1;21641265,6;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-09-01 00:00:00;LightGBM (pooled);18508457,64;38430780,0;51,8;-19922322,36;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-10-01 00:00:00;LightGBM (pooled);15626331,71;3673160,0;325,4;11953171,71;12635173,14;🔴 Baixa previsibilidade
+Methiclotide;2020-11-01 00:00:00;LightGBM (pooled);16949568,31;5958580,0;184,5;10990988,31;12635173,14;🔴 Baixa previsibilidade
+Panpion;2019-12-01 00:00:00;ARIMA;16108589,81;1550080,0;939,2;14558509,81;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-01-01 00:00:00;ARIMA;12103455,47;5356080,0;126,0;6747375,47;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-02-01 00:00:00;ARIMA;12103455,47;6117280,0;97,9;5986175,47;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-03-01 00:00:00;ARIMA;12103455,47;6989200,0;73,2;5114255,47;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-04-01 00:00:00;ARIMA;12103455,47;6926920,0;74,7;5176535,47;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-05-01 00:00:00;ARIMA;12103455,47;6490960,0;86,5;5612495,47;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-06-01 00:00:00;ARIMA;12103455,47;10698320,0;13,1;1405135,47;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-07-01 00:00:00;ARIMA;12103455,47;23576440,0;48,7;-11472984,53;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-08-01 00:00:00;ARIMA;12103455,47;8968320,0;35,0;3135135,47;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-09-01 00:00:00;ARIMA;12103455,47;18794720,0;35,6;-6691264,53;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-10-01 00:00:00;ARIMA;12103455,47;6311040,0;91,8;5792415,47;12250476,0;🔴 Baixa previsibilidade
+Panpion;2020-11-01 00:00:00;ARIMA;12103455,47;22960560,0;47,3;-10857104,53;12250476,0;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2019-12-01 00:00:00;ExponentialSmoothing;11966732,71;2449760,0;388,5;9516972,71;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-01-01 00:00:00;ExponentialSmoothing;21842496,93;3378460,0;546,5;18464036,93;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-02-01 00:00:00;ExponentialSmoothing;6891222,58;19332020,0;64,4;-12440797,42;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-03-01 00:00:00;ExponentialSmoothing;14381866,25;9743820,0;47,6;4638046,25;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-04-01 00:00:00;ExponentialSmoothing;6074307,16;2223860,0;173,1;3850447,16;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-05-01 00:00:00;ExponentialSmoothing;8089784,3;5893480,0;37,3;2196304,3;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-06-01 00:00:00;ExponentialSmoothing;6225971,34;4422620,0;40,8;1803351,34;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-07-01 00:00:00;ExponentialSmoothing;8824087,68;9989800,0;11,7;-1165712,32;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-08-01 00:00:00;ExponentialSmoothing;8072883,47;8754880,0;7,8;-681996,53;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-09-01 00:00:00;ExponentialSmoothing;2632303,67;20501680,0;87,2;-17869376,33;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-10-01 00:00:00;ExponentialSmoothing;9397995,95;6390460,0;47,1;3007535,95;12072669,71;🔴 Baixa previsibilidade
+Malaxolol Aeroprosyn;2020-11-01 00:00:00;ExponentialSmoothing;16922790,32;25100000,0;32,6;-8177209,68;12072669,71;🔴 Baixa previsibilidade
+Tetratanyl;2019-12-01 00:00:00;ARIMA;12697589,47;261657550,0;95,1;-248959960,53;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-01-01 00:00:00;ARIMA;12697589,47;3980690,0;219,0;8716899,47;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-02-01 00:00:00;ARIMA;12697589,47;12708570,0;0,1;-10980,53;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-03-01 00:00:00;ARIMA;12697589,47;14885430,0;14,7;-2187840,53;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-04-01 00:00:00;ARIMA;12697589,47;2646980,0;379,7;10050609,47;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-05-01 00:00:00;ARIMA;12697589,47;5038460,0;152,0;7659129,47;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-06-01 00:00:00;ARIMA;12697589,47;26372710,0;51,9;-13675120,53;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-07-01 00:00:00;ARIMA;12697589,47;1016890,0;1148,7;11680699,47;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-08-01 00:00:00;ARIMA;12697589,47;4706310,0;169,8;7991279,47;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-09-01 00:00:00;ARIMA;12697589,47;11211340,0;13,3;1486249,47;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-10-01 00:00:00;ARIMA;12697589,47;472531920,0;97,3;-459834330,53;11941048,0;🔴 Baixa previsibilidade
+Tetratanyl;2020-11-01 00:00:00;ARIMA;12697589,47;7777420,0;63,3;4920169,47;11941048,0;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2019-12-01 00:00:00;Holt;2437244,12;4071600,0;40,1;-1634355,88;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-01-01 00:00:00;Holt;1765019,73;1653600,0;6,7;111419,73;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-02-01 00:00:00;Holt;1227240,22;20662200,0;94,1;-19434959,78;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-03-01 00:00:00;Holt;797016,61;3042000,0;73,8;-2244983,39;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-04-01 00:00:00;Holt;452837,73;2468700,0;81,7;-2015862,27;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-05-01 00:00:00;Holt;177494,62;4964700,0;96,4;-4787205,38;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-06-01 00:00:00;Holt;-42779,87;6045000,0;100,7;-6087779,87;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-07-01 00:00:00;Holt;-218999,46;3287700,0;106,7;-3506699,46;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-08-01 00:00:00;Holt;-359975,13;6481800,0;105,6;-6841775,13;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-09-01 00:00:00;Holt;-472755,67;10814700,0;104,4;-11287455,67;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-10-01 00:00:00;Holt;-562980,1;2410200,0;123,4;-2973180,1;11928094,29;🔴 Baixa previsibilidade
+Imiderm Vibranovate;2020-11-01 00:00:00;Holt;-635159,64;7608900,0;108,3;-8244059,64;11928094,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2019-12-01 00:00:00;ExponentialSmoothing;1444841,94;3352560,0;56,9;-1907718,06;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-01-01 00:00:00;ExponentialSmoothing;5380320,05;7831800,0;31,3;-2451479,95;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-02-01 00:00:00;ExponentialSmoothing;6755050,97;14601040,0;53,7;-7845989,03;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-03-01 00:00:00;ExponentialSmoothing;49917303,16;5615080,0;789,0;44302223,16;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-04-01 00:00:00;ExponentialSmoothing;10000058,97;2482360,0;302,8;7517698,97;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-05-01 00:00:00;ExponentialSmoothing;6923557,22;10946200,0;36,7;-4022642,78;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-06-01 00:00:00;ExponentialSmoothing;7578959,96;1103780,0;586,6;6475179,96;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-07-01 00:00:00;ExponentialSmoothing;9417060,02;819820,0;1048,7;8597240,02;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-08-01 00:00:00;ExponentialSmoothing;10953159,27;2285420,0;379,3;8667739,27;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-09-01 00:00:00;ExponentialSmoothing;8411362,89;8170720,0;2,9;240642,89;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-10-01 00:00:00;ExponentialSmoothing;16794019,25;6842520,0;145,4;9951499,25;11791864,29;🔴 Baixa previsibilidade
+Fentatrol Rapatelase;2020-11-01 00:00:00;ExponentialSmoothing;11339428,03;29312000,0;61,3;-17972571,97;11791864,29;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2019-12-01 00:00:00;ARIMA;11552827,0;6098400,0;89,4;5454427,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-01-01 00:00:00;ARIMA;11552827,0;8167500,0;41,4;3385327,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-02-01 00:00:00;ARIMA;11552827,0;6376700,0;81,2;5176127,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-03-01 00:00:00;ARIMA;11552827,0;18047150,0;36,0;-6494323,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-04-01 00:00:00;ARIMA;11552827,0;2916100,0;296,2;8636727,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-05-01 00:00:00;ARIMA;11552827,0;2728550,0;323,4;8824277,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-06-01 00:00:00;ARIMA;11552827,0;7489900,0;54,2;4062927,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-07-01 00:00:00;ARIMA;11552827,0;10690350,0;8,1;862477,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-08-01 00:00:00;ARIMA;11552827,0;18204450,0;36,5;-6651623,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-09-01 00:00:00;ARIMA;11552827,0;5717250,0;102,1;5835577,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-10-01 00:00:00;ARIMA;11552827,0;-9819150,0;217,7;21371977,0;11751387,03;🔴 Baixa previsibilidade
+Pulmodiol Adalaxime;2020-11-01 00:00:00;ARIMA;11552827,0;135344550,0;91,5;-123791723,0;11751387,03;🔴 Baixa previsibilidade
+Travosoline Capolac;2019-12-01 00:00:00;LightGBM (pooled);11259058,8;30195000,0;62,7;-18935941,2;11407697,14;—
+Travosoline Capolac;2020-01-01 00:00:00;LightGBM (pooled);10301919,2;8485100,0;21,4;1816819,2;11407697,14;—
+Travosoline Capolac;2020-02-01 00:00:00;LightGBM (pooled);16407678,92;5569300,0;194,6;10838378,92;11407697,14;—
+Travosoline Capolac;2020-03-01 00:00:00;LightGBM (pooled);16830461,07;6197600,0;171,6;10632861,07;11407697,14;—
+Travosoline Capolac;2020-04-01 00:00:00;LightGBM (pooled);14529294,48;15006000,0;3,2;-476705,52;11407697,14;—
+Travosoline Capolac;2020-05-01 00:00:00;LightGBM (pooled);15557079,91;33342600,0;53,3;-17785520,09;11407697,14;—
+Travosoline Capolac;2020-06-01 00:00:00;LightGBM (pooled);19364298,17;4221200,0;358,7;15143098,17;11407697,14;—
+Travosoline Capolac;2020-07-01 00:00:00;LightGBM (pooled);17087996,1;36593900,0;53,3;-19505903,9;11407697,14;—
+Travosoline Capolac;2020-08-01 00:00:00;LightGBM (pooled);19355768,68;13633500,0;42,0;5722268,68;11407697,14;—
+Travosoline Capolac;2020-09-01 00:00:00;LightGBM (pooled);18309856,43;33251100,0;44,9;-14941243,57;11407697,14;—
+Travosoline Capolac;2020-10-01 00:00:00;LightGBM (pooled);16575874,01;-1061400,0;1661,7;17637274,01;11407697,14;—
+Travosoline Capolac;2020-11-01 00:00:00;LightGBM (pooled);17985489,49;28480900,0;36,9;-10495410,51;11407697,14;—
+Dantolac Pazocor;2019-12-01 00:00:00;ExponentialSmoothing;5255489,96;3410200,0;54,1;1845289,96;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-01-01 00:00:00;ExponentialSmoothing;-5221,0;2115480,0;100,2;-2120701,0;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-02-01 00:00:00;ExponentialSmoothing;2673986,18;5519900,0;51,6;-2845913,82;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-03-01 00:00:00;ExponentialSmoothing;20533102,81;6658560,0;208,4;13874542,81;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-04-01 00:00:00;ExponentialSmoothing;5595366,73;7063160,0;20,8;-1467793,27;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-05-01 00:00:00;ExponentialSmoothing;4170192,31;1936300,0;115,4;2233892,31;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-06-01 00:00:00;ExponentialSmoothing;5791429,7;3190560,0;81,5;2600869,7;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-07-01 00:00:00;ExponentialSmoothing;3842891,5;22403280,0;82,8;-18560388,5;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-08-01 00:00:00;ExponentialSmoothing;754491,36;4155820,0;81,8;-3401328,64;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-09-01 00:00:00;ExponentialSmoothing;8157067,71;7433080,0;9,7;723987,71;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-10-01 00:00:00;ExponentialSmoothing;19791127,62;2572100,0;669,5;17219027,62;11320542,86;🔴 Baixa previsibilidade
+Dantolac Pazocor;2020-11-01 00:00:00;ExponentialSmoothing;-1124161,83;14022280,0;108,0;-15146441,83;11320542,86;🔴 Baixa previsibilidade
+Argalazine Abostryl;2019-12-01 00:00:00;ExponentialSmoothing;6159411,23;9233170,0;33,3;-3073758,77;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-01-01 00:00:00;ExponentialSmoothing;29286885,3;11994800,0;144,2;17292085,3;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-02-01 00:00:00;ExponentialSmoothing;5166270,56;-270040,0;2013,2;5436310,56;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-03-01 00:00:00;ExponentialSmoothing;6666686,1;12811200,0;48,0;-6144513,9;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-04-01 00:00:00;ExponentialSmoothing;6518454,69;2731800,0;138,6;3786654,69;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-05-01 00:00:00;ExponentialSmoothing;12494227,86;7234560,0;72,7;5259667,86;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-06-01 00:00:00;ExponentialSmoothing;8516064,8;6506080,0;30,9;2009984,8;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-07-01 00:00:00;ExponentialSmoothing;12630522,09;12830040,0;1,6;-199517,91;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-08-01 00:00:00;ExponentialSmoothing;12245335,06;7146640,0;71,3;5098695,06;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-09-01 00:00:00;ExponentialSmoothing;9758571,63;7812320,0;24,9;1946251,63;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-10-01 00:00:00;ExponentialSmoothing;23684877,97;6794960,0;248,6;16889917,97;11278341,71;🔴 Baixa previsibilidade
+Argalazine Abostryl;2020-11-01 00:00:00;ExponentialSmoothing;9837017,76;9784240,0;0,5;52777,76;11278341,71;🔴 Baixa previsibilidade
+Aspinavir Silovance;2019-12-01 00:00:00;ExponentialSmoothing;16238231,14;22816440,0;28,8;-6578208,86;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-01-01 00:00:00;ExponentialSmoothing;17419485,98;3222630,0;440,5;14196855,98;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-02-01 00:00:00;ExponentialSmoothing;17225690,87;22942710,0;24,9;-5717019,13;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-03-01 00:00:00;ExponentialSmoothing;9764552,63;30019320,0;67,5;-20254767,37;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-04-01 00:00:00;ExponentialSmoothing;9273018,83;6176250,0;50,1;3096768,83;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-05-01 00:00:00;ExponentialSmoothing;5370423,06;12347010,0;56,5;-6976586,94;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-06-01 00:00:00;ExponentialSmoothing;13208571,7;21608640,0;38,9;-8400068,3;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-07-01 00:00:00;ExponentialSmoothing;16619216,96;3299490,0;403,7;13319726,96;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-08-01 00:00:00;ExponentialSmoothing;7386305,07;1092510,0;576,1;6293795,07;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-09-01 00:00:00;ExponentialSmoothing;14240179,1;15794730,0;9,8;-1554550,9;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-10-01 00:00:00;ExponentialSmoothing;4872732,22;2624220,0;85,7;2248512,22;11194110,0;🔴 Baixa previsibilidade
+Aspinavir Silovance;2020-11-01 00:00:00;ExponentialSmoothing;8936138,93;212600250,0;95,8;-203664111,07;11194110,0;🔴 Baixa previsibilidade
+Albudazole Erobloc;2019-12-01 00:00:00;ARIMA;10443008,1;20588910,0;49,3;-10145901,9;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-01-01 00:00:00;ARIMA;10443008,1;8670200,0;20,4;1772808,1;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-02-01 00:00:00;ARIMA;10443008,1;28538470,0;63,4;-18095461,9;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-03-01 00:00:00;ARIMA;10443008,1;4869950,0;114,4;5573058,1;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-04-01 00:00:00;ARIMA;10443008,1;8236690,0;26,8;2206318,1;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-05-01 00:00:00;ARIMA;10443008,1;16940670,0;38,4;-6497661,9;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-06-01 00:00:00;ARIMA;10443008,1;9571000,0;9,1;872008,1;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-07-01 00:00:00;ARIMA;10443008,1;1807230,0;477,8;8635778,1;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-08-01 00:00:00;ARIMA;10443008,1;4318210,0;141,8;6124798,1;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-09-01 00:00:00;ARIMA;10443008,1;7825700,0;33,4;2617308,1;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-10-01 00:00:00;ARIMA;10443008,1;11614690,0;10,1;-1171681,9;10795605,43;🔴 Baixa previsibilidade
+Albudazole Erobloc;2020-11-01 00:00:00;ARIMA;10443008,1;28352680,0;63,2;-17909671,9;10795605,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2019-12-01 00:00:00;ARIMA;9271664,48;4324680,0;114,4;4946984,48;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-01-01 00:00:00;ARIMA;9271664,48;9264360,0;0,1;7304,48;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-02-01 00:00:00;ARIMA;9271664,48;25377360,0;63,5;-16105695,52;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-03-01 00:00:00;ARIMA;9271664,48;2681400,0;245,8;6590264,48;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-04-01 00:00:00;ARIMA;9271664,48;2932320,0;216,2;6339344,48;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-05-01 00:00:00;ARIMA;9271664,48;8152440,0;13,7;1119224,48;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-06-01 00:00:00;ARIMA;9271664,48;12078600,0;23,2;-2806935,52;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-07-01 00:00:00;ARIMA;9271664,48;16919880,0;45,2;-7648215,52;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-08-01 00:00:00;ARIMA;9271664,48;3448920,0;168,8;5822744,48;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-09-01 00:00:00;ARIMA;9271664,48;8831400,0;5,0;440264,48;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-10-01 00:00:00;ARIMA;9271664,48;13962960,0;33,6;-4691295,52;9734571,43;🔴 Baixa previsibilidade
+Lansopril Acribax;2020-11-01 00:00:00;ARIMA;9271664,48;12747720,0;27,3;-3476055,52;9734571,43;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2019-12-01 00:00:00;ExponentialSmoothing;7021960,93;11779800,0;40,4;-4757839,07;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-01-01 00:00:00;ExponentialSmoothing;6800877,94;8904450,0;23,6;-2103572,06;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-02-01 00:00:00;ExponentialSmoothing;12425569,87;7960500,0;56,1;4465069,87;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-03-01 00:00:00;ExponentialSmoothing;20453823,81;3797550,0;438,6;16656273,81;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-04-01 00:00:00;ExponentialSmoothing;10633486,4;2127150,0;399,9;8506336,4;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-05-01 00:00:00;ExponentialSmoothing;5795376,11;1357200,0;327,0;4438176,11;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-06-01 00:00:00;ExponentialSmoothing;16774899,46;27374550,0;38,7;-10599650,54;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-07-01 00:00:00;ExponentialSmoothing;12409526,8;19918650,0;37,7;-7509123,2;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-08-01 00:00:00;ExponentialSmoothing;9549169,9;5202600,0;83,5;4346569,9;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-09-01 00:00:00;ExponentialSmoothing;9917824,57;20906100,0;52,6;-10988275,43;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-10-01 00:00:00;ExponentialSmoothing;8391168,87;7199250,0;16,6;1191918,87;9439997,14;🔴 Baixa previsibilidade
+Lioletine Refliruvax;2020-11-01 00:00:00;ExponentialSmoothing;7236898,33;11240400,0;35,6;-4003501,67;9439997,14;🔴 Baixa previsibilidade
+Tesnorphine Silotamine;2019-12-01 00:00:00;LightGBM (pooled);11744341,27;2290420,0;412,8;9453921,27;9312612,57;—
+Tesnorphine Silotamine;2020-01-01 00:00:00;LightGBM (pooled);11885699,19;7885680,0;50,7;4000019,19;9312612,57;—
+Tesnorphine Silotamine;2020-02-01 00:00:00;LightGBM (pooled);14332060,05;12696200,0;12,9;1635860,05;9312612,57;—
+Tesnorphine Silotamine;2020-03-01 00:00:00;LightGBM (pooled);18059727,74;1371700,0;1216,6;16688027,74;9312612,57;—
+Tesnorphine Silotamine;2020-04-01 00:00:00;LightGBM (pooled);14407168,81;1263240,0;1040,5;13143928,81;9312612,57;—
+Tesnorphine Silotamine;2020-05-01 00:00:00;LightGBM (pooled);14904237,39;3639790,0;309,5;11264447,39;9312612,57;—
+Tesnorphine Silotamine;2020-06-01 00:00:00;LightGBM (pooled);19616873,1;8061130,0;143,4;11555743,1;9312612,57;—
+Tesnorphine Silotamine;2020-07-01 00:00:00;LightGBM (pooled);17655425,4;5981250,0;195,2;11674175,4;9312612,57;—
+Tesnorphine Silotamine;2020-08-01 00:00:00;LightGBM (pooled);19355768,68;13681910,0;41,5;5673858,68;9312612,57;—
+Tesnorphine Silotamine;2020-09-01 00:00:00;LightGBM (pooled);18358541,51;2918850,0;529,0;15439691,51;9312612,57;—
+Tesnorphine Silotamine;2020-10-01 00:00:00;LightGBM (pooled);16575874,01;93141620,0;82,2;-76565745,99;9312612,57;—
+Tesnorphine Silotamine;2020-11-01 00:00:00;LightGBM (pooled);17650042,12;8456690,0;108,7;9193352,12;9312612,57;—
+Metapatch;2019-12-01 00:00:00;ExponentialSmoothing;10184439,95;1554900,0;555,0;8629539,95;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-01-01 00:00:00;ExponentialSmoothing;5309672,76;7682520,0;30,9;-2372847,24;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-02-01 00:00:00;ExponentialSmoothing;23423057,86;-1506720,0;1654,6;24929777,86;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-03-01 00:00:00;ExponentialSmoothing;9607395,25;4550820,0;111,1;5056575,25;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-04-01 00:00:00;ExponentialSmoothing;5392511,35;3552180,0;51,8;1840331,35;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-05-01 00:00:00;ExponentialSmoothing;11464564,3;8689920,0;31,9;2774644,3;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-06-01 00:00:00;ExponentialSmoothing;4585222,7;11239080,0;59,2;-6653857,3;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-07-01 00:00:00;ExponentialSmoothing;8113844,91;20647320,0;60,7;-12533475,09;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-08-01 00:00:00;ExponentialSmoothing;7343763,03;3390120,0;116,6;3953643,03;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-09-01 00:00:00;ExponentialSmoothing;3437585,99;6044400,0;43,1;-2606814,01;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-10-01 00:00:00;ExponentialSmoothing;3148807,27;113608440,0;97,2;-110459632,73;8620841,14;🔴 Baixa previsibilidade
+Metapatch;2020-11-01 00:00:00;ExponentialSmoothing;17705276,45;39866760,0;55,6;-22161483,55;8620841,14;🔴 Baixa previsibilidade
+Robapril;2019-12-01 00:00:00;ARIMA;7806759,86;5032830,0;55,1;2773929,86;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-01-01 00:00:00;ARIMA;7806759,86;1875420,0;316,3;5931339,86;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-02-01 00:00:00;ARIMA;7806759,86;2586630,0;201,8;5220129,86;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-03-01 00:00:00;ARIMA;7806759,86;7524330,0;3,8;282429,86;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-04-01 00:00:00;ARIMA;7806759,86;2591160,0;201,3;5215599,86;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-05-01 00:00:00;ARIMA;7806759,86;30219630,0;74,2;-22412870,14;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-06-01 00:00:00;ARIMA;7806759,86;7021500,0;11,2;785259,86;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-07-01 00:00:00;ARIMA;7806759,86;11519790,0;32,2;-3713030,14;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-08-01 00:00:00;ARIMA;7806759,86;13888980,0;43,8;-6082220,14;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-09-01 00:00:00;ARIMA;7806759,86;8149470,0;4,2;-342710,14;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-10-01 00:00:00;ARIMA;7806759,86;3402030,0;129,5;4404729,86;8031690,0;🔴 Baixa previsibilidade
+Robapril;2020-11-01 00:00:00;ARIMA;7806759,86;7963740,0;2,0;-156980,14;8031690,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2019-12-01 00:00:00;ExponentialSmoothing;22658607,08;2023111,0;1020,0;20635496,08;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-01-01 00:00:00;ExponentialSmoothing;3030134,76;3697210,0;18,0;-667075,24;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-02-01 00:00:00;ExponentialSmoothing;7270142,95;10759870,0;32,4;-3489727,05;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-03-01 00:00:00;ExponentialSmoothing;4250306,96;5505940,0;22,8;-1255633,04;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-04-01 00:00:00;ExponentialSmoothing;3669862,42;3333550,0;10,1;336312,42;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-05-01 00:00:00;ExponentialSmoothing;5812230,98;11340450,0;48,7;-5528219,02;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-06-01 00:00:00;ExponentialSmoothing;3483872,35;12252790,0;71,6;-8768917,65;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-07-01 00:00:00;ExponentialSmoothing;6805464,88;9337130,0;27,1;-2531665,12;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-08-01 00:00:00;ExponentialSmoothing;5141457,1;17774680,0;71,1;-12633222,9;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-09-01 00:00:00;ExponentialSmoothing;4221823,96;8195110,0;48,5;-3973286,04;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-10-01 00:00:00;ExponentialSmoothing;4410608,42;34911360,0;87,4;-30500751,58;7713791,0;🔴 Baixa previsibilidade
+Amcibax Amcikeran;2020-11-01 00:00:00;ExponentialSmoothing;13466388,23;15825590,0;14,9;-2359201,77;7713791,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2019-12-01 00:00:00;ARIMA;4942332,39;867300,0;469,9;4075032,39;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-01-01 00:00:00;ARIMA;4942332,39;12385800,0;60,1;-7443467,61;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-02-01 00:00:00;ARIMA;4942332,39;1955100,0;152,8;2987232,39;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-03-01 00:00:00;ARIMA;4942332,39;1604400,0;208,0;3337932,39;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-04-01 00:00:00;ARIMA;4942332,39;216300,0;2184,9;4726032,39;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-05-01 00:00:00;ARIMA;4942332,39;2463300,0;100,6;2479032,39;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-06-01 00:00:00;ARIMA;4942332,39;6711600,0;26,4;-1769267,61;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-07-01 00:00:00;ARIMA;4942332,39;3189900,0;54,9;1752432,39;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-08-01 00:00:00;ARIMA;4942332,39;2448600,0;101,8;2493732,39;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-09-01 00:00:00;ARIMA;4942332,39;2824500,0;75,0;2117832,39;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-10-01 00:00:00;ARIMA;4942332,39;493500,0;901,5;4448832,39;5898840,0;🔴 Baixa previsibilidade
+Hemavate Spirolinum;2020-11-01 00:00:00;ARIMA;4942332,39;63411600,0;92,2;-58469267,61;5898840,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2019-12-01 00:00:00;ARIMA;4444592,39;17958440,0;75,3;-13513847,61;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-01-01 00:00:00;ARIMA;4444592,39;3943540,0;12,7;501052,39;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-02-01 00:00:00;ARIMA;4444592,39;2119720,0;109,7;2324872,39;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-03-01 00:00:00;ARIMA;4444592,39;3749860,0;18,5;694732,39;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-04-01 00:00:00;ARIMA;4444592,39;5393450,0;17,6;-948857,61;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-05-01 00:00:00;ARIMA;4444592,39;10396850,0;57,3;-5952257,61;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-06-01 00:00:00;ARIMA;4444592,39;3502380,0;26,9;942212,39;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-07-01 00:00:00;ARIMA;4444592,39;3669160,0;21,1;775432,39;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-08-01 00:00:00;ARIMA;4444592,39;4379320,0;1,5;65272,39;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-09-01 00:00:00;ARIMA;4444592,39;3300630,0;34,7;1143962,39;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-10-01 00:00:00;ARIMA;4444592,39;12920070,0;65,6;-8475477,61;4635946,0;🔴 Baixa previsibilidade
+Ultrimax Ultriset;2020-11-01 00:00:00;ARIMA;4444592,39;5417660,0;18,0;-973067,61;4635946,0;🔴 Baixa previsibilidade
+Presetron;2019-12-01 00:00:00;ExponentialSmoothing;947779,54;13487657,0;93,0;-12539877,46;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-01-01 00:00:00;ExponentialSmoothing;1322374,88;7402320,0;82,1;-6079945,12;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-02-01 00:00:00;ExponentialSmoothing;7946465,68;22353840,0;64,5;-14407374,32;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-03-01 00:00:00;ExponentialSmoothing;2850874,78;2376000,0;20,0;474874,78;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-04-01 00:00:00;ExponentialSmoothing;1848846,96;2421360,0;23,6;-572513,04;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-05-01 00:00:00;ExponentialSmoothing;741405,75;3408480,0;78,2;-2667074,25;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-06-01 00:00:00;ExponentialSmoothing;2040620,69;624240,0;226,9;1416380,69;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-07-01 00:00:00;ExponentialSmoothing;2859471,6;5406480,0;47,1;-2547008,4;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-08-01 00:00:00;ExponentialSmoothing;2365081,65;1179360,0;100,5;1185721,65;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-09-01 00:00:00;ExponentialSmoothing;4681282,93;10998720,0;57,4;-6317437,07;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-10-01 00:00:00;ExponentialSmoothing;2123417,88;94525920,0;97,8;-92402502,12;4443613,71;🔴 Baixa previsibilidade
+Presetron;2020-11-01 00:00:00;ExponentialSmoothing;432931,93;6078240,0;92,9;-5645308,07;4443613,71;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2019-12-01 00:00:00;ExponentialSmoothing;5036217,61;1981120,0;154,2;3055097,61;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-01-01 00:00:00;ExponentialSmoothing;4139846,66;836400,0;395,0;3303446,66;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-02-01 00:00:00;ExponentialSmoothing;3491920,78;836400,0;317,5;2655520,78;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-03-01 00:00:00;ExponentialSmoothing;2989281,25;1707240,0;75,1;1282041,25;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-04-01 00:00:00;ExponentialSmoothing;5483952,33;1166040,0;370,3;4317912,33;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-05-01 00:00:00;ExponentialSmoothing;4837262,12;1070920,0;351,7;3766342,12;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-06-01 00:00:00;ExponentialSmoothing;6771531,34;1264440,0;435,5;5507091,34;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-07-01 00:00:00;ExponentialSmoothing;8638217,39;706840,0;1122,1;7931377,39;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-08-01 00:00:00;ExponentialSmoothing;5219189,58;1023360,0;410,0;4195829,58;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-09-01 00:00:00;ExponentialSmoothing;6205116,33;2671560,0;132,3;3533556,33;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-10-01 00:00:00;ExponentialSmoothing;5411657,4;1589160,0;240,5;3822497,4;3554067,43;🔴 Baixa previsibilidade
+Dorzovorin Pentadarone;2020-11-01 00:00:00;ExponentialSmoothing;4150346,49;91551360,0;95,5;-87401013,51;3554067,43;🔴 Baixa previsibilidade

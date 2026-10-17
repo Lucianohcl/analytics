@@ -1,0 +1,59 @@
+﻿Produto;Mes;Modelo;Previsto;Real;Erro %;Bias;MediaHistorica
+Global Troy Executive Leather Low-Back Tilter;2012-07-01 00:00:00;ARIMA;19986,17;5056,89;295,2;14929,28;18094,55
+Global Troy Executive Leather Low-Back Tilter;2012-12-01 00:00:00;ARIMA;19759,21;17560,95;12,5;2198,26;18094,55
+Canon PC940 Copier;2012-10-01 00:00:00;ExponentialSmoothing;16135,82;7370,84;118,9;8764,98;13569,32
+Hewlett Packard LaserJet 3310 Copier;2012-07-01 00:00:00;Média Móvel;20378,86;9695,84;110,2;10683,02;20576,06
+Riverside Palais Royal Lawyers Bookcase, Royale Cherry Finish;2012-12-01 00:00:00;Média Móvel;16604,53;24391,16;31,9;-7786,63;20233,66
+GBC DocuBind 200 Manual Binding Machine;2012-08-01 00:00:00;Média Móvel;11522,59;9062,44;27,1;2460,15;9273,36
+Hewlett-Packard Deskjet 1220Cse Color Inkjet Printer;2012-08-01 00:00:00;Média Móvel;19292,13;10994,74;75,5;8297,39;14488,92
+Bretford CR4500 Series Slim Rectangular Table;2012-09-01 00:00:00;Média Móvel;10799,3;13244,04;18,5;-2444,74;8164,73
+Hon 94000 Series Round Tables;2012-08-01 00:00:00;Média Móvel;6375,84;6067,76;5,1;308,08;7379,85
+Canon PC1060 Personal Laser Copier;2012-08-01 00:00:00;Média Móvel;8488,36;2136,93;297,2;6351,43;10932,22
+Canon PC1060 Personal Laser Copier;2012-09-01 00:00:00;Média Móvel;8488,36;6420,87;32,2;2067,49;10932,22
+Canon PC1060 Personal Laser Copier;2012-12-01 00:00:00;Média Móvel;8488,36;16743,76;49,3;-8255,4;10932,22
+Polycom ViewStation Adapter H323 Videoconferencing Unit;2012-10-01 00:00:00;Média Móvel;14035,66;1946,55;621,1;12089,11;12332,39
+BoxOffice By Design Rectangular and Half-Moon Meeting Room Tables;2012-07-01 00:00:00;ExponentialSmoothing;6181,4;6139,34;0,7;42,06;5386,47
+BoxOffice By Design Rectangular and Half-Moon Meeting Room Tables;2012-09-01 00:00:00;ExponentialSmoothing;6220,76;1339,02;364,6;4881,74;5386,47
+BoxOffice By Design Rectangular and Half-Moon Meeting Room Tables;2012-12-01 00:00:00;ExponentialSmoothing;6255,71;10821,28;42,2;-4565,57;5386,47
+Chromcraft Bull-Nose Wood Oval Conference Tables & Bases;2012-09-01 00:00:00;Média Móvel;15374,55;3877,88;296,5;11496,67;13851,09
+Global High-Back Leather Tilter, Burgundy;2012-12-01 00:00:00;ARIMA;3814,72;4852,05;21,4;-1037,33;4327,79
+Hewlett-Packard cp1700 [D, PS] Series Color Inkjet Printers;2012-09-01 00:00:00;Média Móvel;10320,79;5158,09;100,1;5162,7;12924,69
+Hewlett-Packard cp1700 [D, PS] Series Color Inkjet Printers;2012-10-01 00:00:00;Média Móvel;10320,79;23472,92;56,0;-13152,13;12924,69
+Hewlett-Packard cp1700 [D, PS] Series Color Inkjet Printers;2012-11-01 00:00:00;Média Móvel;10320,79;21921,28;52,9;-11600,49;12924,69
+Hon 2090 Pillow Soft Series Mid Back Swivel/Tilt Chairs;2012-11-01 00:00:00;Média Móvel;7983,14;1770,7;350,8;6212,44;8728,42
+Hon 2090 Pillow Soft Series Mid Back Swivel/Tilt Chairs;2012-12-01 00:00:00;Média Móvel;7983,14;1424,95;460,2;6558,19;8728,42
+Okidata ML184 Turbo Dot Matrix Printers;2012-07-01 00:00:00;Média Móvel;14513,87;8718,46;66,5;5795,41;11547,58
+Hoover WindTunnel Plus Canister Vacuum;2012-12-01 00:00:00;Média Móvel;4260,26;16002,29;73,4;-11742,03;6857,33
+Bevis 36 x 72 Conference Tables;2012-07-01 00:00:00;Média Móvel;5170,45;1137,62;354,5;4032,83;5059,06
+Bevis 36 x 72 Conference Tables;2012-08-01 00:00:00;Média Móvel;5170,45;4051,8;27,6;1118,65;5059,06
+Bevis 36 x 72 Conference Tables;2012-09-01 00:00:00;Média Móvel;5170,45;2506,38;106,3;2664,07;5059,06
+Bevis 36 x 72 Conference Tables;2012-10-01 00:00:00;Média Móvel;5170,45;902,02;473,2;4268,43;5059,06
+Global Adaptabilities Conference Tables;2012-09-01 00:00:00;Média Móvel;2321,29;8684,23;73,3;-6362,94;6423,47
+Ibico Hi-Tech Manual Binding System;2012-07-01 00:00:00;Média Móvel;9742,68;12270,3;20,6;-2527,62;9963,54
+Ibico Hi-Tech Manual Binding System;2012-10-01 00:00:00;Média Móvel;9742,68;4002,14;143,4;5740,54;9963,54
+Gyration Ultra Professional Cordless Optical Suite;2012-12-01 00:00:00;Média Móvel;7244,43;8635,61;16,1;-1391,18;7234,58
+Fellowes Staxonsteel® Drawer Files;2012-12-01 00:00:00;Média Móvel;3878,85;1184,11;227,6;2694,74;6420,55
+Office Star - Mid Back Dual function Ergonomic High Back Chair with 2-Way Adjustable Arms;2012-07-01 00:00:00;ARIMA;3812,76;6152,52;38,0;-2339,76;3821,06
+Office Star - Mid Back Dual function Ergonomic High Back Chair with 2-Way Adjustable Arms;2012-09-01 00:00:00;ARIMA;3662,15;6147,24;40,4;-2485,09;3821,06
+Office Star - Mid Back Dual function Ergonomic High Back Chair with 2-Way Adjustable Arms;2012-11-01 00:00:00;ARIMA;3575,04;4000,35;10,6;-425,31;3821,06
+Panasonic KX-P1150 Dot Matrix Printer;2012-10-01 00:00:00;Média Móvel;3958,67;2151,08;84,0;1807,59;4287,2
+Panasonic KX-P1150 Dot Matrix Printer;2012-12-01 00:00:00;Média Móvel;3958,67;2312,96;71,2;1645,71;4287,2
+Canon MP41DH Printing Calculator;2012-12-01 00:00:00;ARIMA;4778,86;1043,12;358,1;3735,74;3690,86
+Tennsco Snap-Together Open Shelving Units, Starter Sets and Add-On Units;2012-09-01 00:00:00;Média Móvel;10926,34;6995,56;56,2;3930,78;6684,7
+Bush Advantage Collection® Round Conference Table;2012-07-01 00:00:00;Média Móvel;2582,58;8532,15;69,7;-5949,57;5913,37
+Epson LQ-570e Dot Matrix Printer;2012-09-01 00:00:00;Média Móvel;5761,1;5062,18;13,8;698,92;7572,19
+2160i;2012-11-01 00:00:00;Média Móvel;4032,11;1278,65;215,3;2753,46;5300,43
+Adesso Programmable 142-Key Keyboard;2012-09-01 00:00:00;Média Móvel;3754,96;6768,16;44,5;-3013,2;3957,95
+Adesso Programmable 142-Key Keyboard;2012-10-01 00:00:00;Média Móvel;3754,96;6943,94;45,9;-3188,98;3957,95
+Adesso Programmable 142-Key Keyboard;2012-11-01 00:00:00;Média Móvel;3754,96;8503,26;55,8;-4748,3;3957,95
+Bevis Round Conference Table Top, X-Base;2012-08-01 00:00:00;Média Móvel;8835,22;6116,11;44,5;2719,11;5031,25
+TimeportP7382;2012-10-01 00:00:00;Média Móvel;4466,77;5518,53;19,1;-1051,76;4145,47
+TimeportP7382;2012-11-01 00:00:00;Média Móvel;4466,77;2218,89;101,3;2247,88;4145,47
+"Bevis Round Bullnose 29"" High Table Top";2012-12-01 00:00:00;Média Móvel;4753,28;6878,55;30,9;-2125,27;6150,3
+O'Sullivan Elevations Bookcase, Cherry Finish;2012-09-01 00:00:00;Média Móvel;4528,6;4581,54;1,2;-52,94;4450,76
+Office Star - Contemporary Task Swivel chair with 2-way adjustable arms, Plum;2012-08-01 00:00:00;Média Móvel;5396,64;3316,08;62,7;2080,56;5196,43
+5165;2012-09-01 00:00:00;Média Móvel;6751,1;6111,17;10,5;639,93;6529,2
+Sauder Forest Hills Library, Woodland Oak Finish;2012-09-01 00:00:00;Média Móvel;3662,91;3050,81;20,1;612,1;3541,83
+Timeport L7089;2012-08-01 00:00:00;ARIMA;2695,85;1991,9;35,3;703,95;2825,0
+Timeport L7089;2012-10-01 00:00:00;ARIMA;2730,26;2750,11;0,7;-19,85;2825,0
+Hewlett-Packard 2600DN Business Color Inkjet Printer;2012-08-01 00:00:00;Média Móvel;4142,65;2013,8;105,7;2128,85;3754,79

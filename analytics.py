@@ -22963,7 +22963,9 @@ elif pg=="gestao_estoque":
         _snp_up["alertas_fornecedor"]=[re.sub(r"<[^>]+>","",str(_a)) for _a in (globals().get("_alertas_forn") or [])][:6]
         st.session_state["painel_snapshot"]=_snp_up
         if st.session_state.cid: save_snap(st.session_state.cid,"painel",_snp_up,filial=filial_sel_ge)
-    except Exception: pass
+        st.caption(f"✅ Pilares do Score gravados para o Parecer IA ({filial_sel_ge or '(Todas as filiais)'}).")
+    except Exception as _e_snp:
+        st.caption(f"⚠️ Não consegui gravar os pilares do Score para o Parecer IA: {type(_e_snp).__name__}: {_e_snp}")
 
     # ── Atalho final para o Parecer Comercial da IA ──
     st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)

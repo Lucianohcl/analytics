@@ -1,0 +1,301 @@
+﻿Produto;Mes;Modelo;Previsto;Real;Erro %;Bias;MediaHistorica
+Health Beauty - Health Beauty;2018-03-01 00:00:00;Holt;82330,87;84488,57;2,6;-2157,7;39586,84
+Health Beauty - Health Beauty;2018-04-01 00:00:00;Holt;87746,16;91058,45;3,6;-3312,29;39586,84
+Health Beauty - Health Beauty;2018-05-01 00:00:00;Holt;93134,37;94534,38;1,5;-1400,01;39586,84
+Health Beauty - Health Beauty;2018-06-01 00:00:00;Holt;98495,64;106745,72;7,7;-8250,08;39586,84
+Health Beauty - Health Beauty;2018-07-01 00:00:00;Holt;103830,11;103524,22;0,3;305,89;39586,84
+Health Beauty - Health Beauty;2018-08-01 00:00:00;Holt;109137,9;119391,01;8,6;-10253,11;39586,84
+Bed Bath Table - Bed Bath Table;2018-03-01 00:00:00;ARIMA;79088,02;67786,35;16,7;11301,67;41790,02
+Bed Bath Table - Bed Bath Table;2018-04-01 00:00:00;ARIMA;61555,91;71379,61;13,8;-9823,7;41790,02
+Bed Bath Table - Bed Bath Table;2018-05-01 00:00:00;ARIMA;77973,99;71265,07;9,4;6708,92;41790,02
+Bed Bath Table - Bed Bath Table;2018-06-01 00:00:00;ARIMA;62599,16;70857,08;11,7;-8257,92;41790,02
+Bed Bath Table - Bed Bath Table;2018-07-01 00:00:00;ARIMA;76997,03;54405,23;41,5;22591,8;41790,02
+Bed Bath Table - Bed Bath Table;2018-08-01 00:00:00;ARIMA;63514,04;60891,09;4,3;2622,95;41790,02
+Watches Gifts - Watches Gifts;2018-03-01 00:00:00;Prophet;82265,14;95661,18;14,0;-13396,04;40837,89
+Watches Gifts - Watches Gifts;2018-04-01 00:00:00;Prophet;87481,59;88623,07;1,3;-1141,48;40837,89
+Watches Gifts - Watches Gifts;2018-05-01 00:00:00;Prophet;92529,76;119364,98;22,5;-26835,22;40837,89
+Watches Gifts - Watches Gifts;2018-06-01 00:00:00;Prophet;97746,21;85027,57;15,0;12718,64;40837,89
+Watches Gifts - Watches Gifts;2018-07-01 00:00:00;Prophet;102794,38;95164,79;8,0;7629,59;40837,89
+Watches Gifts - Watches Gifts;2018-08-01 00:00:00;Prophet;108010,82;69767,06;54,8;38243,76;40837,89
+Sports Leisure - Sports Leisure;2018-03-01 00:00:00;ARIMA;85934,32;81656,96;5,2;4277,36;39893,34
+Sports Leisure - Sports Leisure;2018-04-01 00:00:00;ARIMA;74542,01;65793,52;13,3;8748,49;39893,34
+Sports Leisure - Sports Leisure;2018-05-01 00:00:00;ARIMA;85933,26;59209,92;45,1;26723,34;39893,34
+Sports Leisure - Sports Leisure;2018-06-01 00:00:00;ARIMA;74543,07;44916,01;66,0;29627,06;39893,34
+Sports Leisure - Sports Leisure;2018-07-01 00:00:00;ARIMA;85932,2;54015,89;59,1;31916,31;39893,34
+Sports Leisure - Sports Leisure;2018-08-01 00:00:00;ARIMA;74544,12;50860,18;46,6;23683,94;39893,34
+Computers Accessories - Computers Accessories;2018-03-01 00:00:00;Prophet;79652,46;84708,39;6,0;-5055,93;38206,08
+Computers Accessories - Computers Accessories;2018-04-01 00:00:00;Prophet;84917,94;57370,9;48,0;27547,04;38206,08
+Computers Accessories - Computers Accessories;2018-05-01 00:00:00;Prophet;90013,57;50631,83;77,8;39381,74;38206,08
+Computers Accessories - Computers Accessories;2018-06-01 00:00:00;Prophet;95279,06;41806,37;127,9;53472,69;38206,08
+Computers Accessories - Computers Accessories;2018-07-01 00:00:00;Prophet;100374,69;41063,31;144,4;59311,38;38206,08
+Computers Accessories - Computers Accessories;2018-08-01 00:00:00;Prophet;105640,17;40052,64;163,8;65587,53;38206,08
+Cool Stuff - Cool Stuff;2018-03-01 00:00:00;Holt;30845,16;37791,24;18,4;-6946,08;30078,34
+Cool Stuff - Cool Stuff;2018-04-01 00:00:00;Holt;29590,38;35025,41;15,5;-5435,03;30078,34
+Cool Stuff - Cool Stuff;2018-05-01 00:00:00;Holt;28586,56;29949,12;4,5;-1362,56;30078,34
+Cool Stuff - Cool Stuff;2018-06-01 00:00:00;Holt;27783,51;19316,37;43,8;8467,14;30078,34
+Cool Stuff - Cool Stuff;2018-07-01 00:00:00;Holt;27141,06;21152,01;28,3;5989,05;30078,34
+Cool Stuff - Cool Stuff;2018-08-01 00:00:00;Holt;26627,1;15794,89;68,6;10832,21;30078,34
+Furniture Decor - Furniture Decor;2018-03-01 00:00:00;Ensemble;48625,79;51319,97;5,2;-2694,18;28138,62
+Furniture Decor - Furniture Decor;2018-04-01 00:00:00;Ensemble;47513,46;56217,62;15,5;-8704,16;28138,62
+Furniture Decor - Furniture Decor;2018-05-01 00:00:00;Ensemble;50894,84;53706,45;5,2;-2811,61;28138,62
+Furniture Decor - Furniture Decor;2018-06-01 00:00:00;Ensemble;51220,05;42042,22;21,8;9177,83;28138,62
+Furniture Decor - Furniture Decor;2018-07-01 00:00:00;Ensemble;53610,18;45393,59;18,1;8216,59;28138,62
+Furniture Decor - Furniture Decor;2018-08-01 00:00:00;Ensemble;54596,94;41168,55;32,6;13428,39;28138,62
+Toys - Toys;2018-03-01 00:00:00;Prophet;41142,61;22817,55;80,3;18325,06;22583,29
+Toys - Toys;2018-04-01 00:00:00;Prophet;43476,92;23140,41;87,9;20336,51;22583,29
+Toys - Toys;2018-05-01 00:00:00;Prophet;45735,94;31538,41;45,0;14197,53;22583,29
+Toys - Toys;2018-06-01 00:00:00;Prophet;48070,25;21094,95;127,9;26975,3;22583,29
+Toys - Toys;2018-07-01 00:00:00;Prophet;50329,27;17022,0;195,7;33307,27;22583,29
+Toys - Toys;2018-08-01 00:00:00;Prophet;52663,58;16923,75;211,2;35739,83;22583,29
+Auto - Auto;2018-03-01 00:00:00;Prophet;39623,17;44081,96;10,1;-4458,79;20838,79
+Auto - Auto;2018-04-01 00:00:00;Prophet;41990,55;47989,41;12,5;-5998,86;20838,79
+Auto - Auto;2018-05-01 00:00:00;Prophet;44281,55;40851,44;8,4;3430,11;20838,79
+Auto - Auto;2018-06-01 00:00:00;Prophet;46648,93;44962,59;3,8;1686,34;20838,79
+Auto - Auto;2018-07-01 00:00:00;Prophet;48939,93;43466,79;12,6;5473,14;20838,79
+Auto - Auto;2018-08-01 00:00:00;Prophet;51307,3;45032,58;13,9;6274,72;20838,79
+Garden Tools - Garden Tools;2018-03-01 00:00:00;Ensemble;31608,22;26773,88;18,1;4834,34;20772,75
+Garden Tools - Garden Tools;2018-04-01 00:00:00;Ensemble;32568,23;34526,04;5,7;-1957,81;20772,75
+Garden Tools - Garden Tools;2018-05-01 00:00:00;Ensemble;33477,7;37700,79;11,2;-4223,09;20772,75
+Garden Tools - Garden Tools;2018-06-01 00:00:00;Ensemble;34379,24;17948,72;91,5;16430,52;20772,75
+Garden Tools - Garden Tools;2018-07-01 00:00:00;Ensemble;35236,61;25639,88;37,4;9596,73;20772,75
+Garden Tools - Garden Tools;2018-08-01 00:00:00;Ensemble;36091,57;16314,7;121,2;19776,87;20772,75
+Housewares - Housewares;2018-03-01 00:00:00;Holt;36104,67;35052,12;3,0;1052,55;19741,96
+Housewares - Housewares;2018-04-01 00:00:00;Holt;38154,18;44363,29;14,0;-6209,11;19741,96
+Housewares - Housewares;2018-05-01 00:00:00;Holt;40193,45;62824,57;36,0;-22631,12;19741,96
+Housewares - Housewares;2018-06-01 00:00:00;Holt;42222,52;55912,61;24,5;-13690,09;19741,96
+Housewares - Housewares;2018-07-01 00:00:00;Holt;44241,44;62583,3;29,3;-18341,86;19741,96
+Housewares - Housewares;2018-08-01 00:00:00;Holt;46250,27;58763,36;21,3;-12513,09;19741,96
+Perfumery - Perfumery;2018-03-01 00:00:00;Prophet;25539,93;20081,88;27,2;5458,05;17046,67
+Perfumery - Perfumery;2018-04-01 00:00:00;Prophet;26611,65;17430,41;52,7;9181,24;17046,67
+Perfumery - Perfumery;2018-05-01 00:00:00;Prophet;27648,8;24482,7;12,9;3166,1;17046,67
+Perfumery - Perfumery;2018-06-01 00:00:00;Prophet;28720,52;26963,93;6,5;1756,59;17046,67
+Perfumery - Perfumery;2018-07-01 00:00:00;Prophet;29757,67;20645,97;44,1;9111,7;17046,67
+Perfumery - Perfumery;2018-08-01 00:00:00;Prophet;30829,39;24839,74;24,1;5989,65;17046,67
+Baby - Baby;2018-03-01 00:00:00;Ensemble;29131,17;40818,75;28,6;-11687,58;13699,81
+Baby - Baby;2018-04-01 00:00:00;Ensemble;29135,24;47201,22;38,3;-18065,98;13699,81
+Baby - Baby;2018-05-01 00:00:00;Ensemble;31591,53;33253,65;5,0;-1662,12;13699,81
+Baby - Baby;2018-06-01 00:00:00;Ensemble;31593,27;30550,32;3,4;1042,95;13699,81
+Baby - Baby;2018-07-01 00:00:00;Ensemble;34032,24;21834,12;55,9;12198,12;13699,81
+Baby - Baby;2018-08-01 00:00:00;Ensemble;34031,75;21266,57;60,0;12765,18;13699,81
+Office Furniture - Office Furniture;2018-03-01 00:00:00;Ensemble;17606,13;30861,64;43,0;-13255,51;10956,62
+Office Furniture - Office Furniture;2018-04-01 00:00:00;Ensemble;18326,95;19997,8;8,4;-1670,85;10956,62
+Office Furniture - Office Furniture;2018-05-01 00:00:00;Ensemble;19018,98;20835,87;8,7;-1816,89;10956,62
+Office Furniture - Office Furniture;2018-06-01 00:00:00;Ensemble;19702,17;12125,58;62,5;7576,59;10956,62
+Office Furniture - Office Furniture;2018-07-01 00:00:00;Ensemble;20358,31;13225,28;53,9;7133,03;10956,62
+Office Furniture - Office Furniture;2018-08-01 00:00:00;Ensemble;21007,27;6758,87;210,8;14248,4;10956,62
+Telephony - Telephony;2018-03-01 00:00:00;Prophet;20341,44;24759,43;17,8;-4417,99;10940,6
+Telephony - Telephony;2018-04-01 00:00:00;Prophet;21527,73;16312,06;32,0;5215,67;10940,6
+Telephony - Telephony;2018-05-01 00:00:00;Prophet;22675,76;18944,28;19,7;3731,48;10940,6
+Telephony - Telephony;2018-06-01 00:00:00;Prophet;23862,06;22669,86;5,3;1192,2;10940,6
+Telephony - Telephony;2018-07-01 00:00:00;Prophet;25010,08;26492,68;5,6;-1482,6;10940,6
+Telephony - Telephony;2018-08-01 00:00:00;Prophet;26196,38;36572,91;28,4;-10376,53;10940,6
+Stationery - Stationery;2018-03-01 00:00:00;Prophet;23106,2;12993,74;77,8;10112,46;10077,59
+Stationery - Stationery;2018-04-01 00:00:00;Prophet;24873,62;11263,45;120,8;13610,17;10077,59
+Stationery - Stationery;2018-05-01 00:00:00;Prophet;26584,02;12923,39;105,7;13660,63;10077,59
+Stationery - Stationery;2018-06-01 00:00:00;Prophet;28351,43;12859,08;120,5;15492,35;10077,59
+Stationery - Stationery;2018-07-01 00:00:00;Prophet;30061,83;17217,19;74,6;12844,64;10077,59
+Stationery - Stationery;2018-08-01 00:00:00;Prophet;31829,24;15445,65;106,1;16383,59;10077,59
+Outros - Outros;2018-03-01 00:00:00;Prophet;16661,98;16625,22;0,2;36,76;8921,22
+Outros - Outros;2018-04-01 00:00:00;Prophet;17639,57;7987,9;120,8;9651,67;8921,22
+Outros - Outros;2018-05-01 00:00:00;Prophet;18585,63;3097,04;500,1;15488,59;8921,22
+Outros - Outros;2018-06-01 00:00:00;Prophet;19563,21;2387,13;719,5;17176,08;8921,22
+Outros - Outros;2018-07-01 00:00:00;Prophet;20509,27;4612,0;344,7;15897,27;8921,22
+Outros - Outros;2018-08-01 00:00:00;Prophet;21486,86;2199,05;877,1;19287,81;8921,22
+Small Appliances - Small Appliances;2018-03-01 00:00:00;Prophet;8058,66;13952,18;42,2;-5893,52;8310,58
+Small Appliances - Small Appliances;2018-04-01 00:00:00;Prophet;8024,72;12071,76;33,5;-4047,04;8310,58
+Small Appliances - Small Appliances;2018-05-01 00:00:00;Prophet;7991,86;10620,99;24,8;-2629,13;8310,58
+Small Appliances - Small Appliances;2018-06-01 00:00:00;Prophet;7957,92;15431,63;48,4;-7473,71;8310,58
+Small Appliances - Small Appliances;2018-07-01 00:00:00;Prophet;7925,06;8161,35;2,9;-236,29;8310,58
+Small Appliances - Small Appliances;2018-08-01 00:00:00;Prophet;7891,11;6168,06;27,9;1723,05;8310,58
+Consoles Games - Consoles Games;2018-03-01 00:00:00;Prophet;10823,75;11826,22;8,5;-1002,47;7038,89
+Consoles Games - Consoles Games;2018-04-01 00:00:00;Prophet;11298,28;5511,05;105,0;5787,23;7038,89
+Consoles Games - Consoles Games;2018-05-01 00:00:00;Prophet;11757,5;5279,27;122,7;6478,23;7038,89
+Consoles Games - Consoles Games;2018-06-01 00:00:00;Prophet;12232,03;6903,01;77,2;5329,02;7038,89
+Consoles Games - Consoles Games;2018-07-01 00:00:00;Prophet;12691,24;8519,11;49,0;4172,13;7038,89
+Consoles Games - Consoles Games;2018-08-01 00:00:00;Prophet;13165,77;4381,31;200,5;8784,46;7038,89
+Pet Shop - Pet Shop;2018-03-01 00:00:00;ExponentialSmoothing;10072,44;13400,21;24,8;-3327,77;6990,69
+Pet Shop - Pet Shop;2018-04-01 00:00:00;ExponentialSmoothing;10224,98;18282,97;44,1;-8057,99;6990,69
+Pet Shop - Pet Shop;2018-05-01 00:00:00;ExponentialSmoothing;10358,49;11708,46;11,5;-1349,97;6990,69
+Pet Shop - Pet Shop;2018-06-01 00:00:00;ExponentialSmoothing;10475,36;19491,78;46,3;-9016,42;6990,69
+Pet Shop - Pet Shop;2018-07-01 00:00:00;ExponentialSmoothing;10577,66;19343,85;45,3;-8766,19;6990,69
+Pet Shop - Pet Shop;2018-08-01 00:00:00;ExponentialSmoothing;10667,2;24608,07;56,7;-13940,87;6990,69
+Musical Instruments - Musical Instruments;2018-03-01 00:00:00;ExponentialSmoothing;13484,19;8931,4;51,0;4552,79;7334,48
+Musical Instruments - Musical Instruments;2018-04-01 00:00:00;ExponentialSmoothing;14204,06;19375,31;26,7;-5171,25;7334,48
+Musical Instruments - Musical Instruments;2018-05-01 00:00:00;ExponentialSmoothing;14910,19;18757,07;20,5;-3846,88;7334,48
+Musical Instruments - Musical Instruments;2018-06-01 00:00:00;ExponentialSmoothing;15602,85;16177,92;3,6;-575,07;7334,48
+Musical Instruments - Musical Instruments;2018-07-01 00:00:00;ExponentialSmoothing;16282,28;7871,93;106,8;8410,35;7334,48
+Musical Instruments - Musical Instruments;2018-08-01 00:00:00;ExponentialSmoothing;16948,75;10519,34;61,1;6429,41;7334,48
+Luggage Accessories - Luggage Accessories;2018-03-01 00:00:00;ARIMA;17184,61;5851,77;193,7;11332,84;7147,04
+Luggage Accessories - Luggage Accessories;2018-04-01 00:00:00;ARIMA;7191,17;8680,48;17,2;-1489,31;7147,04
+Luggage Accessories - Luggage Accessories;2018-05-01 00:00:00;ARIMA;16471,74;6618,46;148,9;9853,28;7147,04
+Luggage Accessories - Luggage Accessories;2018-06-01 00:00:00;ARIMA;7853,19;5070,88;54,9;2782,31;7147,04
+Luggage Accessories - Luggage Accessories;2018-07-01 00:00:00;ARIMA;15856,95;5821,72;172,4;10035,23;7147,04
+Luggage Accessories - Luggage Accessories;2018-08-01 00:00:00;ARIMA;8424,12;6599,75;27,6;1824,37;7147,04
+Fashion Bags Accessories - Fashion Bags Accessories;2018-03-01 00:00:00;Prophet;11968,32;10096,51;18,5;1871,81;6090,96
+Fashion Bags Accessories - Fashion Bags Accessories;2018-04-01 00:00:00;Prophet;12677,86;8218,85;54,3;4459,01;6090,96
+Fashion Bags Accessories - Fashion Bags Accessories;2018-05-01 00:00:00;Prophet;13364,5;11490,17;16,3;1874,33;6090,96
+Fashion Bags Accessories - Fashion Bags Accessories;2018-06-01 00:00:00;Prophet;14074,04;7869,95;78,8;6204,09;6090,96
+Fashion Bags Accessories - Fashion Bags Accessories;2018-07-01 00:00:00;Prophet;14760,69;6071,07;143,1;8689,62;6090,96
+Fashion Bags Accessories - Fashion Bags Accessories;2018-08-01 00:00:00;Prophet;15470,23;8127,53;90,3;7342,7;6090,96
+Electronics - Electronics;2018-03-01 00:00:00;Prophet;12445,32;12394,51;0,4;50,81;5730,49
+Electronics - Electronics;2018-04-01 00:00:00;Prophet;13291,0;10840,23;22,6;2450,77;5730,49
+Electronics - Electronics;2018-05-01 00:00:00;Prophet;14109,4;16176,79;12,8;-2067,39;5730,49
+Electronics - Electronics;2018-06-01 00:00:00;Prophet;14955,07;9664,57;54,7;5290,5;5730,49
+Electronics - Electronics;2018-07-01 00:00:00;Prophet;15773,47;9270,95;70,1;6502,52;5730,49
+Electronics - Electronics;2018-08-01 00:00:00;Prophet;16619,15;10739,57;54,7;5879,58;5730,49
+Home Confort - Home Confort;2018-03-01 00:00:00;Média Móvel;2763,57;2522,38;9,6;241,19;3331,06
+Home Confort - Home Confort;2018-04-01 00:00:00;Média Móvel;2763,57;1939,4;42,5;824,17;3331,06
+Home Confort - Home Confort;2018-05-01 00:00:00;Média Móvel;2763,57;2708,7;2,0;54,87;3331,06
+Home Confort - Home Confort;2018-06-01 00:00:00;Média Móvel;2763,57;2386,49;15,8;377,08;3331,06
+Home Confort - Home Confort;2018-07-01 00:00:00;Média Móvel;2763,57;2906,48;4,9;-142,91;3331,06
+Home Confort - Home Confort;2018-08-01 00:00:00;Média Móvel;2763,57;2241,28;23,3;522,29;3331,06
+Agro Industry And Commerce - Agro Industry And Commerce;2018-03-01 00:00:00;Média Móvel;6176,81;5161,0;19,7;1015,81;3262,92
+Agro Industry And Commerce - Agro Industry And Commerce;2018-04-01 00:00:00;Média Móvel;6176,81;4500,7;37,2;1676,11;3262,92
+Agro Industry And Commerce - Agro Industry And Commerce;2018-05-01 00:00:00;Média Móvel;6176,81;3279,75;88,3;2897,06;3262,92
+Agro Industry And Commerce - Agro Industry And Commerce;2018-06-01 00:00:00;Média Móvel;6176,81;3515,8;75,7;2661,01;3262,92
+Agro Industry And Commerce - Agro Industry And Commerce;2018-07-01 00:00:00;Média Móvel;6176,81;6669,82;7,4;-493,01;3262,92
+Agro Industry And Commerce - Agro Industry And Commerce;2018-08-01 00:00:00;Média Móvel;6176,81;5021,09;23,0;1155,72;3262,92
+Furniture Living Room - Furniture Living Room;2018-03-01 00:00:00;Ensemble;3088,86;3521,87;12,3;-433,01;2899,59
+Furniture Living Room - Furniture Living Room;2018-04-01 00:00:00;Ensemble;3278,46;5041,83;35,0;-1763,37;2899,59
+Furniture Living Room - Furniture Living Room;2018-05-01 00:00:00;Ensemble;3292,36;2721,08;21,0;571,28;2899,59
+Furniture Living Room - Furniture Living Room;2018-06-01 00:00:00;Ensemble;3345,44;3541,62;5,5;-196,18;2899,59
+Furniture Living Room - Furniture Living Room;2018-07-01 00:00:00;Ensemble;3389,15;6706,64;49,5;-3317,49;2899,59
+Furniture Living Room - Furniture Living Room;2018-08-01 00:00:00;Ensemble;3435,39;5223,34;34,2;-1787,95;2899,59
+Home Appliances 2 - Home Appliances 2;2018-03-01 00:00:00;Holt;9352,77;5648,2;65,6;3704,57;2762,86
+Home Appliances 2 - Home Appliances 2;2018-04-01 00:00:00;Holt;10409,21;20741,69;49,8;-10332,48;2762,86
+Home Appliances 2 - Home Appliances 2;2018-05-01 00:00:00;Holt;11254,37;14441,24;22,1;-3186,87;2762,86
+Home Appliances 2 - Home Appliances 2;2018-06-01 00:00:00;Holt;11930,49;8312,72;43,5;3617,77;2762,86
+Home Appliances 2 - Home Appliances 2;2018-07-01 00:00:00;Holt;12471,39;12597,32;1,0;-125,93;2762,86
+Home Appliances 2 - Home Appliances 2;2018-08-01 00:00:00;Holt;12904,11;7532,76;71,3;5371,35;2762,86
+Construction Tools Construction - Construction Tools Construction;2018-03-01 00:00:00;Média Móvel;8161,87;9446,58;13,6;-1284,71;3156,43
+Construction Tools Construction - Construction Tools Construction;2018-04-01 00:00:00;Média Móvel;8161,87;12933,83;36,9;-4771,96;3156,43
+Construction Tools Construction - Construction Tools Construction;2018-05-01 00:00:00;Média Móvel;8161,87;20748,6;60,7;-12586,73;3156,43
+Construction Tools Construction - Construction Tools Construction;2018-06-01 00:00:00;Média Móvel;8161,87;22947,72;64,4;-14785,85;3156,43
+Construction Tools Construction - Construction Tools Construction;2018-07-01 00:00:00;Média Móvel;8161,87;15237,47;46,4;-7075,6;3156,43
+Construction Tools Construction - Construction Tools Construction;2018-08-01 00:00:00;Média Móvel;8161,87;22917,16;64,4;-14755,29;3156,43
+Air Conditioning - Air Conditioning;2018-03-01 00:00:00;Ensemble;3060,79;2507,68;22,1;553,11;2394,68
+Air Conditioning - Air Conditioning;2018-04-01 00:00:00;Ensemble;3100,36;3261,79;4,9;-161,43;2394,68
+Air Conditioning - Air Conditioning;2018-05-01 00:00:00;Ensemble;3166,53;1851,3;71,0;1315,23;2394,68
+Air Conditioning - Air Conditioning;2018-06-01 00:00:00;Ensemble;3225,21;3567,9;9,6;-342,69;2394,68
+Air Conditioning - Air Conditioning;2018-07-01 00:00:00;Ensemble;3284,68;2657,86;23,6;626,82;2394,68
+Air Conditioning - Air Conditioning;2018-08-01 00:00:00;Ensemble;3344,13;3556,9;6,0;-212,77;2394,68
+Fixed Telephony - Fixed Telephony;2018-03-01 00:00:00;ExponentialSmoothing;3874,69;1930,59;100,7;1944,1;2366,17
+Fixed Telephony - Fixed Telephony;2018-04-01 00:00:00;ExponentialSmoothing;3926,72;1921,94;104,3;2004,78;2366,17
+Fixed Telephony - Fixed Telephony;2018-05-01 00:00:00;ExponentialSmoothing;3969,7;1846,2;115,0;2123,5;2366,17
+Fixed Telephony - Fixed Telephony;2018-06-01 00:00:00;ExponentialSmoothing;4005,2;2080,32;92,5;1924,88;2366,17
+Fixed Telephony - Fixed Telephony;2018-07-01 00:00:00;ExponentialSmoothing;4034,53;9319,39;56,7;-5284,86;2366,17
+Fixed Telephony - Fixed Telephony;2018-08-01 00:00:00;ExponentialSmoothing;4058,75;2724,17;49,0;1334,58;2366,17
+Home Construction - Home Construction;2018-03-01 00:00:00;Média Móvel;5832,99;5250,51;11,1;582,48;2670,47
+Home Construction - Home Construction;2018-04-01 00:00:00;Média Móvel;5832,99;9204,65;36,6;-3371,66;2670,47
+Home Construction - Home Construction;2018-05-01 00:00:00;Média Móvel;5832,99;10155,28;42,6;-4322,29;2670,47
+Home Construction - Home Construction;2018-06-01 00:00:00;Média Móvel;5832,99;9094,59;35,9;-3261,6;2670,47
+Home Construction - Home Construction;2018-07-01 00:00:00;Média Móvel;5832,99;6700,25;12,9;-867,26;2670,47
+Home Construction - Home Construction;2018-08-01 00:00:00;Média Móvel;5832,99;6286,16;7,2;-453,17;2670,47
+Home Appliances - Home Appliances;2018-03-01 00:00:00;Média Móvel;2866,2;9876,59;71,0;-7010,39;2333,79
+Home Appliances - Home Appliances;2018-04-01 00:00:00;Média Móvel;2866,2;15019,63;80,9;-12153,43;2333,79
+Home Appliances - Home Appliances;2018-05-01 00:00:00;Média Móvel;2866,2;6149,67;53,4;-3283,47;2333,79
+Home Appliances - Home Appliances;2018-06-01 00:00:00;Média Móvel;2866,2;5830,38;50,8;-2964,18;2333,79
+Home Appliances - Home Appliances;2018-07-01 00:00:00;Média Móvel;2866,2;5173,03;44,6;-2306,83;2333,79
+Home Appliances - Home Appliances;2018-08-01 00:00:00;Média Móvel;2866,2;6443,85;55,5;-3577,65;2333,79
+Kitchen Dining Laundry Garden Furniture - Kitchen Dining Laundry Garden Furniture;2018-03-01 00:00:00;Prophet;5043,04;2842,66;77,4;2200,38;1998,7
+Kitchen Dining Laundry Garden Furniture - Kitchen Dining Laundry Garden Furniture;2018-04-01 00:00:00;Prophet;5460,05;3110,57;75,5;2349,48;1998,7
+Kitchen Dining Laundry Garden Furniture - Kitchen Dining Laundry Garden Furniture;2018-05-01 00:00:00;Prophet;5863,6;2310,09;153,8;3553,51;1998,7
+Kitchen Dining Laundry Garden Furniture - Kitchen Dining Laundry Garden Furniture;2018-06-01 00:00:00;Prophet;6280,61;3538,43;77,5;2742,18;1998,7
+Kitchen Dining Laundry Garden Furniture - Kitchen Dining Laundry Garden Furniture;2018-07-01 00:00:00;Prophet;6684,17;3736,95;78,9;2947,22;1998,7
+Kitchen Dining Laundry Garden Furniture - Kitchen Dining Laundry Garden Furniture;2018-08-01 00:00:00;Prophet;7101,18;2011,47;253,0;5089,71;1998,7
+Audio - Audio;2018-03-01 00:00:00;Prophet;3363,16;10606,69;68,3;-7243,53;1732,75
+Audio - Audio;2018-04-01 00:00:00;Prophet;3580,12;7045,07;49,2;-3464,95;1732,75
+Audio - Audio;2018-05-01 00:00:00;Prophet;3790,09;2697,68;40,5;1092,41;1732,75
+Audio - Audio;2018-06-01 00:00:00;Prophet;4007,05;1830,69;118,9;2176,36;1732,75
+Audio - Audio;2018-07-01 00:00:00;Prophet;4217,01;2062,64;104,4;2154,37;1732,75
+Audio - Audio;2018-08-01 00:00:00;Prophet;4433,98;2069,4;114,3;2364,58;1732,75
+Market Place - Market Place;2018-03-01 00:00:00;ARIMA;1684,88;1548,74;8,8;136,14;1531,32
+Market Place - Market Place;2018-04-01 00:00:00;ARIMA;1570,43;627,23;150,4;943,2;1531,32
+Market Place - Market Place;2018-05-01 00:00:00;ARIMA;1514,93;957,45;58,2;557,48;1531,32
+Market Place - Market Place;2018-06-01 00:00:00;ARIMA;1488,02;556,46;167,4;931,56;1531,32
+Market Place - Market Place;2018-07-01 00:00:00;ARIMA;1474,96;186,78;689,7;1288,18;1531,32
+Market Place - Market Place;2018-08-01 00:00:00;ARIMA;1468,64;949,27;54,7;519,37;1531,32
+Books General Interest - Books General Interest;2018-03-01 00:00:00;ARIMA;1923,09;1691,94;13,7;231,15;1606,63
+Books General Interest - Books General Interest;2018-04-01 00:00:00;ARIMA;1923,03;6274,51;69,4;-4351,48;1606,63
+Books General Interest - Books General Interest;2018-05-01 00:00:00;ARIMA;1923,03;5925,13;67,5;-4002,1;1606,63
+Books General Interest - Books General Interest;2018-06-01 00:00:00;ARIMA;1923,03;3275,49;41,3;-1352,46;1606,63
+Books General Interest - Books General Interest;2018-07-01 00:00:00;ARIMA;1923,03;4077,45;52,8;-2154,42;1606,63
+Books General Interest - Books General Interest;2018-08-01 00:00:00;ARIMA;1923,03;1564,78;22,9;358,25;1606,63
+Industry Commerce And Business - Industry Commerce And Business;2018-03-01 00:00:00;Média Móvel;3081,73;2922,45;5,5;159,28;1264,07
+Industry Commerce And Business - Industry Commerce And Business;2018-04-01 00:00:00;Média Móvel;3081,73;5690,61;45,8;-2608,88;1264,07
+Industry Commerce And Business - Industry Commerce And Business;2018-05-01 00:00:00;Média Móvel;3081,73;3780,99;18,5;-699,26;1264,07
+Industry Commerce And Business - Industry Commerce And Business;2018-06-01 00:00:00;Média Móvel;3081,73;2609,9;18,1;471,83;1264,07
+Industry Commerce And Business - Industry Commerce And Business;2018-07-01 00:00:00;Média Móvel;3081,73;4697,21;34,4;-1615,48;1264,07
+Industry Commerce And Business - Industry Commerce And Business;2018-08-01 00:00:00;Média Móvel;3081,73;2364,69;30,3;717,04;1264,07
+Fashion Shoes - Fashion Shoes;2018-03-01 00:00:00;ARIMA;1004,93;1053,1;4,6;-48,17;1093,66
+Fashion Shoes - Fashion Shoes;2018-04-01 00:00:00;ARIMA;981,87;1438,7;31,8;-456,83;1093,66
+Fashion Shoes - Fashion Shoes;2018-05-01 00:00:00;ARIMA;963,39;1582,7;39,1;-619,31;1093,66
+Fashion Shoes - Fashion Shoes;2018-06-01 00:00:00;ARIMA;948,58;1230,58;22,9;-282,0;1093,66
+Fashion Shoes - Fashion Shoes;2018-07-01 00:00:00;ARIMA;936,71;820,19;14,2;116,52;1093,66
+Fashion Shoes - Fashion Shoes;2018-08-01 00:00:00;ARIMA;927,2;471,3;96,7;455,9;1093,66
+Costruction Tools Garden - Costruction Tools Garden;2018-03-01 00:00:00;Média Móvel;2131,71;2087,23;2,1;44,48;1183,18
+Costruction Tools Garden - Costruction Tools Garden;2018-04-01 00:00:00;Média Móvel;2131,71;1326,79;60,7;804,92;1183,18
+Costruction Tools Garden - Costruction Tools Garden;2018-05-01 00:00:00;Média Móvel;2131,71;1073,28;98,6;1058,43;1183,18
+Costruction Tools Garden - Costruction Tools Garden;2018-06-01 00:00:00;Média Móvel;2131,71;799,44;166,7;1332,27;1183,18
+Costruction Tools Garden - Costruction Tools Garden;2018-07-01 00:00:00;Média Móvel;2131,71;1922,66;10,9;209,05;1183,18
+Costruction Tools Garden - Costruction Tools Garden;2018-08-01 00:00:00;Média Móvel;2131,71;3688,76;42,2;-1557,05;1183,18
+Art - Art;2018-03-01 00:00:00;Média Móvel;1290,91;461,5;179,7;829,41;1061,57
+Art - Art;2018-04-01 00:00:00;Média Móvel;1290,91;2140,28;39,7;-849,37;1061,57
+Art - Art;2018-05-01 00:00:00;Média Móvel;1290,91;2491,97;48,2;-1201,06;1061,57
+Art - Art;2018-06-01 00:00:00;Média Móvel;1290,91;2500,14;48,4;-1209,23;1061,57
+Art - Art;2018-07-01 00:00:00;Média Móvel;1290,91;1843,2;30,0;-552,29;1061,57
+Art - Art;2018-08-01 00:00:00;Média Móvel;1290,91;1481,39;12,9;-190,48;1061,57
+Food - Food;2018-03-01 00:00:00;ExponentialSmoothing;1091,34;1559,9;30,0;-468,56;735,96
+Food - Food;2018-04-01 00:00:00;ExponentialSmoothing;1134,51;1665,43;31,9;-530,92;735,96
+Food - Food;2018-05-01 00:00:00;ExponentialSmoothing;1177,46;1542,93;23,7;-365,47;735,96
+Food - Food;2018-06-01 00:00:00;ExponentialSmoothing;1220,2;1371,18;11,0;-150,98;735,96
+Food - Food;2018-07-01 00:00:00;ExponentialSmoothing;1262,73;3378,17;62,6;-2115,44;735,96
+Food - Food;2018-08-01 00:00:00;ExponentialSmoothing;1305,04;8174,18;84,0;-6869,14;735,96
+Furniture Bedroom - Furniture Bedroom;2018-03-01 00:00:00;Média Móvel;665,2;1071,8;37,9;-406,6;773,02
+Furniture Bedroom - Furniture Bedroom;2018-04-01 00:00:00;Média Móvel;665,2;1301,9;48,9;-636,7;773,02
+Furniture Bedroom - Furniture Bedroom;2018-05-01 00:00:00;Média Móvel;665,2;1484,98;55,2;-819,78;773,02
+Furniture Bedroom - Furniture Bedroom;2018-06-01 00:00:00;Média Móvel;665,2;1559,99;57,4;-894,79;773,02
+Furniture Bedroom - Furniture Bedroom;2018-07-01 00:00:00;Média Móvel;665,2;1386,9;52,0;-721,7;773,02
+Furniture Bedroom - Furniture Bedroom;2018-08-01 00:00:00;Média Móvel;665,2;2197,0;69,7;-1531,8;773,02
+Fashion Male Clothing - Fashion Male Clothing;2018-04-01 00:00:00;ARIMA;378,34;195,0;94,0;183,34;605,94
+Fashion Male Clothing - Fashion Male Clothing;2018-05-01 00:00:00;ARIMA;378,05;129,99;190,8;248,06;605,94
+Fashion Male Clothing - Fashion Male Clothing;2018-06-01 00:00:00;ARIMA;378,04;447,8;15,6;-69,76;605,94
+Fashion Male Clothing - Fashion Male Clothing;2018-07-01 00:00:00;ARIMA;378,04;208,7;81,1;169,34;605,94
+Fashion Male Clothing - Fashion Male Clothing;2018-08-01 00:00:00;ARIMA;378,04;381,69;1,0;-3,65;605,94
+Food Drink - Food Drink;2018-03-01 00:00:00;Média Móvel;797,72;2350,77;66,1;-1553,05;720,53
+Food Drink - Food Drink;2018-04-01 00:00:00;Média Móvel;797,72;605,07;31,8;192,65;720,53
+Food Drink - Food Drink;2018-05-01 00:00:00;Média Móvel;797,72;1239,44;35,6;-441,72;720,53
+Food Drink - Food Drink;2018-06-01 00:00:00;Média Móvel;797,72;293,85;171,5;503,87;720,53
+Food Drink - Food Drink;2018-07-01 00:00:00;Média Móvel;797,72;778,73;2,4;18,99;720,53
+Food Drink - Food Drink;2018-08-01 00:00:00;Média Móvel;797,72;1028,61;22,4;-230,89;720,53
+Books Technical - Books Technical;2018-03-01 00:00:00;Média Móvel;1086,15;913,47;18,9;172,68;642,31
+Books Technical - Books Technical;2018-04-01 00:00:00;Média Móvel;1086,15;1172,1;7,3;-85,95;642,31
+Books Technical - Books Technical;2018-05-01 00:00:00;Média Móvel;1086,15;3040,53;64,3;-1954,38;642,31
+Books Technical - Books Technical;2018-06-01 00:00:00;Média Móvel;1086,15;1747,43;37,8;-661,28;642,31
+Books Technical - Books Technical;2018-07-01 00:00:00;Média Móvel;1086,15;1994,93;45,6;-908,78;642,31
+Books Technical - Books Technical;2018-08-01 00:00:00;Média Móvel;1086,15;1483,79;26,8;-397,64;642,31
+Fashion Underwear Beach - Fashion Underwear Beach;2018-03-01 00:00:00;ARIMA;669,72;289,4;131,4;380,32;575,05
+Fashion Underwear Beach - Fashion Underwear Beach;2018-04-01 00:00:00;ARIMA;704,57;359,4;96,0;345,17;575,05
+Fashion Underwear Beach - Fashion Underwear Beach;2018-05-01 00:00:00;ARIMA;709,06;207,4;241,9;501,66;575,05
+Fashion Underwear Beach - Fashion Underwear Beach;2018-06-01 00:00:00;ARIMA;709,64;129,3;448,8;580,34;575,05
+Fashion Underwear Beach - Fashion Underwear Beach;2018-07-01 00:00:00;ARIMA;709,71;109,8;546,4;599,91;575,05
+Fashion Underwear Beach - Fashion Underwear Beach;2018-08-01 00:00:00;ARIMA;709,72;160,0;343,6;549,72;575,05
+Tablets Printing Image - Tablets Printing Image;2018-03-01 00:00:00;Média Móvel;425,39;259,29;64,1;166,1;547,48
+Tablets Printing Image - Tablets Printing Image;2018-04-01 00:00:00;Média Móvel;425,39;52,0;718,1;373,39;547,48
+Tablets Printing Image - Tablets Printing Image;2018-05-01 00:00:00;Média Móvel;425,39;49,9;752,5;375,49;547,48
+Tablets Printing Image - Tablets Printing Image;2018-06-01 00:00:00;Média Móvel;425,39;50,0;750,8;375,39;547,48
+Signaling And Security - Signaling And Security;2018-03-01 00:00:00;Média Móvel;844,86;921,9;8,4;-77,04;501,12
+Signaling And Security - Signaling And Security;2018-04-01 00:00:00;Média Móvel;844,86;2222,3;62,0;-1377,44;501,12
+Signaling And Security - Signaling And Security;2018-05-01 00:00:00;Média Móvel;844,86;683,5;23,6;161,36;501,12
+Signaling And Security - Signaling And Security;2018-06-01 00:00:00;Média Móvel;844,86;5863,18;85,6;-5018,32;501,12
+Signaling And Security - Signaling And Security;2018-07-01 00:00:00;Média Móvel;844,86;3785,19;77,7;-2940,33;501,12
+Signaling And Security - Signaling And Security;2018-08-01 00:00:00;Média Móvel;844,86;1825,59;53,7;-980,73;501,12
+Dvds Blu Ray - Dvds Blu Ray;2018-03-01 00:00:00;Holt;67,49;49,8;35,5;17,69;248,9
+Dvds Blu Ray - Dvds Blu Ray;2018-04-01 00:00:00;Holt;53,74;92,5;41,9;-38,76;248,9
+Dvds Blu Ray - Dvds Blu Ray;2018-05-01 00:00:00;Holt;40,06;439,94;90,9;-399,88;248,9
+Dvds Blu Ray - Dvds Blu Ray;2018-06-01 00:00:00;Holt;26,44;382,88;93,1;-356,44;248,9
+Dvds Blu Ray - Dvds Blu Ray;2018-07-01 00:00:00;Holt;12,9;83,99;84,6;-71,09;248,9
+Dvds Blu Ray - Dvds Blu Ray;2018-08-01 00:00:00;Holt;-0,58;8,9;106,6;-9,48;248,9
+Fashio Female Clothing - Fashio Female Clothing;2018-03-01 00:00:00;Média Móvel;83,92;119,96;30,0;-36,04;170,0
+Fashio Female Clothing - Fashio Female Clothing;2018-04-01 00:00:00;Média Móvel;83,92;174,95;52,0;-91,03;170,0
+Fashio Female Clothing - Fashio Female Clothing;2018-08-01 00:00:00;Média Móvel;83,92;129,97;35,4;-46,05;170,0
