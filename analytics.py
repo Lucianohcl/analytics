@@ -5406,6 +5406,177 @@ def path_parecer_ia(cid,tipo="comercial"):
     if tipo=="comercial": return os.path.join(PASTA,f"{gid(cid)}_parecer_ia_historico.json")
     return os.path.join(PASTA,f"{gid(cid)}_parecer_ia_historico__{tipo}.json")
 
+# ═══════ Parecer IA: régua única de Score + fichas numéricas calculadas em código (a IA só narra) ═══════
+_REGUA_SCORE_COM="≥85 Excelente | 70-84 Bom | 55-69 Regular | 40-54 Atenção | <40 Crítico"
+_REGUA_SCORE_FIN="≥80 Baixo Risco | 60-79 Risco Moderado | 40-59 Alto Risco | 20-39 Risco Crítico | <20 Insolvência Iminente"
+
+def _num_ok(v):
+    try:
+        v=float(v)
+        return None if (pd.isna(v) or np.isinf(v)) else v
+    except Exception: return None
+
+def _roe_anualizado(roe_mes):
+    v=_num_ok(roe_mes)
+    if v is None or v<=-100: return None
+    return ((1+v/100.0)**12-1)*100
+
+def _faixa_score_com(v):
+    v=_num_ok(v)
+    if v is None: return "—"
+    return "Excelente" if v>=85 else ("Bom" if v>=70 else ("Regular" if v>=55 else ("Atenção" if v>=40 else "Crítico")))
+
+def _evolucao_painel_txt(cid,fil):
+    try:
+        h=load_hist_painel(cid,fil)
+        if h is None or len(h)<2: return "sem histórico suficiente (menos de 2 registros diferentes guardados)"
+        p=h.iloc[0]; u=h.iloc[-1]; partes=[]
+        for rot,col,f in [("Score","score_final","{:.0f}"),("Ruptura (%)","pct_ruptura","{:.1f}"),("Estoque","val_estoque",None),
+                          ("Giro (x/ano)","giro_ano","{:.1f}"),("Cobertura (dias)","cob_media","{:.0f}"),("Capital parado","cap_parado",None),("WAPE (%)","mape_ml","{:.1f}")]:
+            a=_num_ok(p.get(col)); b=_num_ok(u.get(col))
+            if a is None or b is None: continue
+            partes.append(f"{rot} {fmt(a)} → {fmt(b)}" if f is None else f"{rot} {f.format(a)} → {f.format(b)}")
+        if not partes: return "sem dado comparável"
+        return f"desde {str(p.get('gerado_em',''))[:10]} ({len(h)} registros): "+" | ".join(partes)
+    except Exception: return "indisponível"
+
+def _economia_motor(cid):
+    try:
+        d=load_resultado_econ_compras(cid)
+        if d is None or d.empty or not {"custo_total_modelo","custo_total_naive"}.issubset(d.columns): return None
+        meses=st.session_state.get("compras_econ_meses_olhar",18)
+        try: meses=max(1,min(18,int(meses)))
+        except Exception: meses=18
+        f=meses/18.0
+        def S(c): return float(d[c].sum())*f if c in d.columns else None
+        r={"meses":meses,"modelo":S("custo_total_modelo"),"naive":S("custo_total_naive"),
+           "rp_modelo":S("receita_perdida_modelo"),"rp_naive":S("receita_perdida_naive"),
+           "cp_modelo":S("capital_parado_modelo"),"cp_naive":S("capital_parado_naive"),
+           "n_prod":int(d["Produto"].nunique()) if "Produto" in d.columns else 0,
+           "escopo":str(d["_escopo"].iloc[0]) if "_escopo" in d.columns and len(d)>0 else ""}
+        r["economia"]=r["naive"]-r["modelo"]
+        r["pct"]=(r["economia"]/r["naive"]*100) if r["naive"]>0 else 0.0
+        return r
+    except Exception: return None
+
+def _valor_motor_txt(cid):
+    r=_economia_motor(cid)
+    if not r: return "Validação Econômica ainda não rodada (Gestão de Compras › Validação Econômica) — sem estimativa do valor entregue pelo motor."
+    t=(f"Simulação contra o método simples (naive), janela de {r['meses']} meses, amostra de {r['n_prod']} produtos testados"
+       +(f" (escopo: {r['escopo'].replace('|',' · ')})" if r["escopo"] else "")+": "
+       f"impacto do naive {fmt(r['naive'])} contra impacto do modelo {fmt(r['modelo'])} → "
+       +(f"o modelo EVITA {fmt(r['economia'])} ({r['pct']:.1f}% a menos que o naive)" if r["economia"]>0 else f"o naive teria sido melhor em {fmt(abs(r['economia']))} ({abs(r['pct']):.1f}% a mais)")+".")
+    if None not in (r["rp_naive"],r["rp_modelo"],r["cp_naive"],r["cp_modelo"]):
+        t+=(f" Decomposição: venda não realizada por ruptura — naive {fmt(r['rp_naive'])} contra modelo {fmt(r['rp_modelo'])}; "
+            f"capital imobilizado em excesso — naive {fmt(r['cp_naive'])} contra modelo {fmt(r['cp_modelo'])}.")
+    return t+" É estimativa em simulação, não resultado realizado, e vale só para os produtos testados."
+
+def _validacao_txt(cid,fil):
+    partes=[]
+    try:
+        a=load_snap(cid,"acuracia",fil)
+        if a:
+            partes.append(f"previsões já confirmadas: WAPE {a.get('wape',0):.1f}% em {a.get('n_conf',0)} de {a.get('n_total',0)} previsões congeladas; viés: {a.get('direcao','—')} (viés médio {a.get('vies_pct',0):+.1f}%)"
+                          +(f"; erro por antecedência da previsão: {a['por_horizonte']}" if a.get("por_horizonte") else ""))
+        else: partes.append("acurácia das previsões já confirmadas ainda não calculada (abra Validação › Acurácia das Previsões Passadas nesta filial)")
+    except Exception: partes.append("acurácia indisponível")
+    try:
+        f=load_snap(cid,"fva",fil)
+        if f:
+            _v=f.get("fva_pp",0)
+            partes.append(f"FVA do Ajuste de Consenso: WAPE do modelo puro {f.get('wape_modelo',0):.1f}% contra {f.get('wape_ajustado',0):.1f}% com o ajuste ({_v:+.1f} pp: "
+                          +("o julgamento humano ajudou" if _v>0.05 else ("o modelo sozinho acertou mais" if _v<-0.05 else "efeito neutro"))+f"; {f.get('n_prod',0)} produto(s))")
+        else: partes.append("FVA: ainda sem Ajuste de Consenso com mês confirmado")
+    except Exception: pass
+    return " | ".join(partes)
+
+def _pilares_txt(sp):
+    try:
+        pil=sp.get("pilares") or []
+        if not pil: return "não disponível (reabra o Dashboard Comercial desta filial para registrar)"
+        t=" | ".join(f"{p['nome']} nota {('—' if p.get('nota') is None else format(p['nota'],'.0f'))}/100 (peso {p['peso']}%)" for p in pil)
+        pr=sp.get("pressoes") or []
+        if pr: t+=" || MAIORES PRESSÕES NO SCORE (pontos perdidos): "+"; ".join(f"{x['nome']} (nota {x['nota']:.0f}, −{x['pontos_perdidos']:.0f} pts)" for x in pr)
+        fa=sp.get("score_faixa_pesos_alt")
+        if fa: t+=f" || com pesos alternativos o Score fica entre {fa[0]} e {fa[1]}"
+        return t
+    except Exception: return "indisponível"
+
+def _tendencia_txt(d):
+    try:
+        tr=d.get("tendencia") or []
+        if not tr: return "sem série suficiente"
+        out=[]
+        for x in tr:
+            u=x.get("unid",""); f=(lambda v: fmt(v)) if u=="R$" else (lambda v: f"{v:.1f}{'%' if u=='%' else ' d'}")
+            seg=f"{x['rotulo']}: atual {f(x['atual'])}"
+            if x.get("media_3m_ant") is not None: seg+=f", média dos 3 meses anteriores {f(x['media_3m_ant'])}"
+            if x.get("mesmo_mes_ano_ant") is not None: seg+=f", mesmo mês do ano anterior {f(x['mesmo_mes_ano_ant'])}"
+            out.append(seg)
+        return " | ".join(out)+" (referência: último mês da base)"
+    except Exception: return "indisponível"
+
+def _dashfin_txt(cid,fil):
+    try:
+        d=load_snap(cid,"dashfin",fil or "(Todas as filiais)")
+        if not d: return "não disponível (abra o 💼 Dashboard Financeiro com esta filial selecionada)"
+        t=f"período {d.get('periodo','—')}; Score de Saúde {d.get('score_saude',0):.0f}/100 ({d.get('score_rotulo','—')})"
+        if d.get("sel_horizonte"):
+            t+=(f". IMPACTO DE CAIXA da seleção trabalhada no Motor de Compras (somente fluxo de caixa, não mede ganho de estoque), {d['sel_horizonte']}: "
+                f"entra {fmt(d.get('sel_entra',0))}, sai {fmt(d.get('sel_sai',0))}, resultado {fmt(d.get('sel_resultado',0))}; "
+                f"mês mais pesado {d.get('sel_pior_mes','—')} ({fmt(d.get('sel_pior_mes_liq',0))}), mais leve {d.get('sel_melhor_mes','—')} ({fmt(d.get('sel_melhor_mes_liq',0))}); "
+                f"menor resultado acumulado {fmt(d.get('sel_acum_minimo',0))}. Prazos configurados no Fluxo Comercial (config: {d.get('cfg_de','—')}): recebe em {d.get('pmr_cfg',0):.0f} dias, paga em {d.get('pmp_cfg',0):.0f} dias")
+            if d.get("sens_resultado_bal") is not None:
+                t+=(f". SENSIBILIDADE: se os prazos reais forem os do balanço (recebe {d.get('sens_pmr_bal',0):.0f} d, paga {d.get('sens_pmp_bal',0):.0f} d), o resultado muda {fmt(d.get('sens_dif',0))} "
+                    f"(para {fmt(d.get('sens_resultado_bal',0))}) e o menor acumulado passa de {fmt(d.get('sens_acum_min_cfg',0))} para {fmt(d.get('sens_acum_min_bal',0))}")
+        return t
+    except Exception: return "indisponível"
+
+def _ficha_cruzada_txt(cid,fil_com,fil_fin,fin_cons):
+    L=[]
+    try:
+        pn={f:(load_snap(cid,"painel",f) or {}) for f in fil_com}
+        fl={f:(load_snap(cid,"fluxo",f) or {}) for f in fil_com}
+        fn={f:(load_snap(cid,"financeiro",f) or {}) for f in fil_fin}
+        est=sum(float(pn[f].get("val_estoque",0) or 0) for f in fil_com)
+        par=sum(float(pn[f].get("cap_parado",0) or 0) for f in fil_com)
+        lib=sum(float(pn[f].get("cap_liberavel",0) or 0) for f in fil_com)
+        if est>0:
+            L.append(f"ESTOQUE (soma das filiais): {fmt(est)} | capital parado {fmt(par)} ({par/est*100:.1f}% do estoque) | capital liberável {fmt(lib)} ({lib/est*100:.1f}% do estoque)")
+        if fin_cons:
+            ativo=float(fin_cons.get("ativo_total",0) or 0); pl=float(fin_cons.get("patrimonio_liquido",0) or 0)
+            if ativo>0 and est>0: L.append(f"PESO DO ESTOQUE NO BALANÇO: estoque ÷ ativo total = {est/ativo*100:.1f}%")
+            if pl>0:
+                L.append(f"CAPITAL PARADO ÷ PATRIMÔNIO LÍQUIDO = {par/pl*100:.1f}% | CAPITAL LIBERÁVEL ÷ PATRIMÔNIO LÍQUIDO = {lib/pl*100:.1f}%")
+        deficits=[]
+        for f in fil_com:
+            ms=fl[f].get("menor_saldo")
+            if ms is not None and float(ms)<0:
+                libf=float(pn[f].get("cap_liberavel",0) or 0)
+                deficits.append(f"{f}: menor saldo acumulado projetado {fmt(float(ms))} (semana {fl[f].get('semana_critica','—')}); capital liberável da mesma filial {fmt(libf)} ({(libf/abs(float(ms))*100 if float(ms)!=0 else 0):.0f}% do déficit)")
+        L.append("CAIXA COMERCIAL × ESTOQUE LIBERÁVEL: "+("; ".join(deficits) if deficits else "nenhuma filial com saldo acumulado negativo no horizonte projetado"))
+        eco=_economia_motor(cid)
+        if eco and eco.get("economia") is not None:
+            L.append(f"VALOR DO MOTOR: economia simulada de {fmt(eco['economia'])} em {eco['meses']} meses (≈ {fmt(eco['economia']/eco['meses'])} por mês, estimativa) contra o método simples"
+                     +(f"; EBITDA consolidado do período {fin_cons.get('periodo','—')}: {fmt(fin_cons.get('ebitda_rs',0))} — só compare ordem de grandeza se o período for mensal" if fin_cons else ""))
+        for f in fil_com:
+            sp=pn[f]; sf=fn.get(f) or {}
+            if not sp: continue
+            sc=sp.get("score_final"); linha=(f"{f}: Score comercial {sc} ({_faixa_score_com(sc)}) | ruptura {float(sp.get('pct_ruptura',0) or 0):.1f}% | cobertura {float(sp.get('cob_media',0) or 0):.0f} dias")
+            if sf:
+                _sfv=_num_ok(sf.get("score_saude"))
+                linha+=(f" || financeiro: Score de Saúde {(_sfv if _sfv is not None else 0):.0f} ({score_label(_sfv)[0] if _sfv is not None else '—'}) | margem líquida {float(sf.get('margem_liquida_pct',0) or 0):.1f}% | "
+                        f"EBITDA {float(sf.get('ebitda_pct',0) or 0):.1f}% | ciclo de caixa {float(sf.get('ciclo_caixa',0) or 0):.0f} d | PME do balanço {float(sf.get('pme',0) or 0):.0f} d "
+                        f"(a cobertura comercial e o PME do balanço têm bases diferentes: não trate a diferença como erro)")
+            L.append("FILIAL "+linha)
+        for f in ["(Todas as filiais)"]+list(fil_com):
+            dd=load_snap(cid,"dashfin",f)
+            if dd and dd.get("sel_horizonte"):
+                L.append(f"IMPACTO DE CAIXA DA SELEÇÃO TRABALHADA — {f}: entra {fmt(dd.get('sel_entra',0))}, sai {fmt(dd.get('sel_sai',0))}, resultado {fmt(dd.get('sel_resultado',0))} ({dd['sel_horizonte']}); pior mês {dd.get('sel_pior_mes','—')} {fmt(dd.get('sel_pior_mes_liq',0))}")
+    except Exception as _e_fc:
+        L.append(f"(ficha parcial: {_e_fc})")
+    return "\n".join(L) if L else "ficha indisponível"
+
 def save_parecer_ia(cid,parecer_dict,tipo="comercial"):
     hist=load_parecer_ia_historico(cid,tipo)
     hist.insert(0,parecer_dict)
@@ -9023,6 +9194,16 @@ elif pg=="dash_fin":
             _pior=int(np.argmin(_liq)); _melhor=int(np.argmax(_liq))
             _gap=_pmr_cfg-_pmp_cfg
             _pct_cx=(abs(_res)/_saldo_hoje*100) if _saldo_hoje>0 else None
+            try:
+                if st.session_state.cid: save_snap(st.session_state.cid,"dashfin",{
+                    "periodo":_per_txt_fd,"score_saude":round(float(_score_fd),1),"score_rotulo":_lbl_sc_fd,
+                    "saldo_hoje":(None if not _saldo_hoje else float(_saldo_hoje)),
+                    "sel_entra":float(_ent_t),"sel_sai":float(_sai_t),"sel_resultado":float(_res),
+                    "sel_horizonte":f"{_xs[0]} a {_xs[-1]}","sel_pior_mes":str(_xs[_pior]),"sel_pior_mes_liq":float(_liq[_pior]),
+                    "sel_melhor_mes":str(_xs[_melhor]),"sel_melhor_mes_liq":float(_liq[_melhor]),"sel_acum_minimo":(float(min(_cum)) if len(_cum)>0 else 0.0),
+                    "pmr_cfg":float(_pmr_cfg),"pmp_cfg":float(_pmp_cfg),"cfg_de":str(_cfg_de),"encargos_pct":float(_enc_ff),
+                    "gerado_em":datetime.now().strftime("%Y-%m-%d %H:%M")},filial=(filial_sel_fd or "(Todas as filiais)"))
+            except Exception: pass
             st.markdown(f'<div class="fd-q" style="margin-top:0"><b>Em palavras simples:</b> aqui está só o dinheiro que entra e sai por causa dos produtos que você selecionou no Motor de Compras (por categoria, curva, catálogo ou outro filtro). É o mesmo fluxo da página <b>💰 Fluxo de Caixa Comercial Projetado</b>, agrupado por mês.<br><b>💰 Entra:</b> vendas previstas da seleção, recebidas {_pmr_cfg:.0f} dias depois da venda (em média).<br><b>💸 Sai:</b> compras do plano, pagas {_pmp_cfg:.0f} dias depois da compra (em média){" e com os encargos definidos lá" if _enc_ff>0 else ""}.<br><b>Resultado = Entra − Sai.</b> Se der <b>negativo</b>, a seleção consome caixa no período (você paga antes de receber). Se der <b>positivo</b>, ela gera caixa.</div>'.replace("$","&#36;"),unsafe_allow_html=True)
             st.markdown(f'<div class="fd-q">📅 <b>Períodos diferentes?</b> O saldo da empresa (Financeiro) vai de {_xp[0]} a {_xp[-1]}. Esta seleção vai de {_xs[0]} a {_xs[-1]}, que é até onde vai o plano de compras do Motor. São duas projeções geradas separadamente, por isso os períodos podem não coincidir.</div>',unsafe_allow_html=True)
             _v1,_v2,_v3=st.columns(3)
@@ -9054,6 +9235,13 @@ elif pg=="dash_fin":
                 _lb=[_eb[i]-_sb[i] for i in range(len(_eb))]; _res_b=sum(_lb); _min_b=min(np.cumsum(_lb)) if _lb else 0.0
                 _min_c=min(_cum) if _cum else 0.0
                 _dif_b=_res_b-_res
+                try:
+                    if st.session_state.cid:
+                        _dfs=load_snap(st.session_state.cid,"dashfin",filial=(filial_sel_fd or "(Todas as filiais)")) or {}
+                        _dfs.update({"sens_pmr_bal":float(_pmr),"sens_pmp_bal":float(_pmp),"sens_resultado_bal":float(_res_b),"sens_dif":float(_dif_b),
+                                     "sens_acum_min_bal":float(_min_b),"sens_acum_min_cfg":float(_min_c)})
+                        save_snap(st.session_state.cid,"dashfin",_dfs,filial=(filial_sel_fd or "(Todas as filiais)"))
+                except Exception: pass
                 _itens.append((1 if _res_b<_res else 2,"E se os prazos reais forem diferentes dos configurados?",f"Os prazos que você configurou no Fluxo de Caixa Comercial Projetado (recebe em {_pmr_cfg:.0f} dias, paga em {_pmp_cfg:.0f}) são uma <b>premissa</b>. O balanço mostra o que a empresa pratica de fato (recebe em {_pmr:.0f} dias, paga em {_pmp:.0f}).<br>• <b>Com os prazos configurados:</b> resultado de {'+' if _res>=0 else '−'}{_fd_m(abs(_res))} até {_xs[-1]}; pior ponto do acumulado, {_fd_m(_min_c)}.<br>• <b>Com os prazos do balanço:</b> resultado de {'+' if _res_b>=0 else '−'}{_fd_m(abs(_res_b))}; pior ponto, {_fd_m(_min_b)}. Isso acontece porque você {'paga '+str(int(round(abs(_pmp_cfg-_pmp))))+' dias '+('mais cedo' if _pmp<_pmp_cfg else 'mais tarde') if abs(_pmp_cfg-_pmp)>=1 else 'paga no mesmo prazo'} e {'recebe '+str(int(round(abs(_pmr_cfg-_pmr))))+' dias '+('mais tarde' if _pmr>_pmr_cfg else 'mais cedo') if abs(_pmr_cfg-_pmr)>=1 else 'recebe no mesmo prazo'}.<br><b>Em resumo:</b> se os prazos reais seguirem o histórico, a seleção {'pressiona o caixa em' if _dif_b<0 else 'alivia o caixa em'} {_fd_m(abs(_dif_b))} {'a mais' if _dif_b<0 else 'a mais do que o previsto'}. Esse valor só se evita se os prazos configurados forem realmente negociados com fornecedores e clientes."))
 
             if _liq[_pior]<0: _itens.append((0,"Mês mais pesado",f"{_xs[_pior]}: entram {_fd_m(_ent[_pior])} e saem {_fd_m(_sai[_pior])}, resultado de −{_fd_m(abs(_liq[_pior]))}. Mês mais leve: {_xs[_melhor]} ({'+' if _liq[_melhor]>=0 else '−'}{_fd_m(abs(_liq[_melhor]))})."))
@@ -10346,12 +10534,21 @@ elif pg=="indicadores":
             else: _chk_ind("s","✅ Ciclo de Caixa adequado",f"{_cc_ind:.0f} dias")
         except: pass
         try:
-            _roe_ind=float(ul.get("ROE",0))
-            if _roe_ind<0: _chk_ind("d","💸 ROE negativo",f"{_roe_ind:.1f}% — retorno negativo sobre patrimônio")
-            elif _roe_ind<6: _chk_ind("w","⚠️ ROE baixo",f"{_roe_ind:.1f}% — abaixo da taxa mínima de atratividade")
-            else: _chk_ind("s","✅ ROE adequado",f"{_roe_ind:.1f}%")
+            _roe_ind=float(ul.get("ROE",0)); _roe_aa_ind=_roe_anualizado(_roe_ind)
+            _roe_txt_ind=f"{_roe_ind:.1f}% no mês"+(f" (≈ {_roe_aa_ind:.1f}% a.a.)" if _roe_aa_ind is not None else "")
+            if _roe_ind<0: _chk_ind("d","💸 ROE negativo",f"{_roe_txt_ind} — retorno negativo sobre patrimônio")
+            elif _roe_aa_ind is not None and _roe_aa_ind<6: _chk_ind("w","⚠️ ROE baixo",f"{_roe_txt_ind} — abaixo da taxa mínima de atratividade (comparada em base anual)")
+            else: _chk_ind("s","✅ ROE adequado",_roe_txt_ind)
         except: pass
 
+        try:
+            _tend_ind=[]; _dfT=df.reset_index(drop=True); _nT=len(_dfT)
+            for _rotT,_colT,_unT in [("Receita líquida","receita líquida","R$"),("Margem líquida","margem líquida %","%"),("EBITDA %","EBITDA %","%"),("Ciclo de caixa","ciclo de caixa","d")]:
+                if _colT in _dfT.columns and _nT>=2:
+                    _sT=pd.to_numeric(_dfT[_colT],errors="coerce")
+                    _at=_num_ok(_sT.iloc[-1]); _m3=_num_ok(_sT.iloc[max(0,_nT-4):_nT-1].mean()); _a12=_num_ok(_sT.iloc[_nT-13]) if _nT>=13 else None
+                    if _at is not None: _tend_ind.append({"rotulo":_rotT,"atual":_at,"media_3m_ant":_m3,"mesmo_mes_ano_ant":_a12,"unid":_unT})
+        except Exception: _tend_ind=[]
         _periodo_snap_ind=f"{mes_i}/{ano_i}" if mes_i!="Todos" else (f"Ano {ano_i}" if ano_i!="Todos" else f"{ul.get(cm,'')}/{ul.get(ca,'')}")
         _financeiro_snapshot={
             "periodo":_periodo_snap_ind,
@@ -10371,11 +10568,13 @@ elif pg=="indicadores":
             "liquidez_imediata":float(ul.get("liquidez imediata",0) or 0),
             "kanitz":float(ul.get("kanitz",0) or 0),
             "roe":float(ul.get("ROE",0) or 0),
+            "roe_aa":_roe_anualizado(ul.get("ROE",0) or 0),
             "icd":float(ul.get("ICD",0) or 0),
             "ativo_total":float(ul.get("ativo total",0) or 0),
             "passivo_total":float(ul.get("pass total",0) or 0),
             "patrimonio_liquido":float(ul.get("PL",0) or 0),
             "score_saude":float(df_i["score_risco"].mean()) if "score_risco" in df_i.columns else 0.0,
+            "tendencia":_tend_ind,
             "alertas":_alertas_ind,
             "gerado_em":datetime.now().strftime("%Y-%m-%d %H:%M"),
         }
@@ -16745,6 +16944,23 @@ elif pg=="ml_produtos":
             _vieses_mlp=((_confirmados_mlp["Valor_Previsto"]-_confirmados_mlp["Valor_Real"])/_confirmados_mlp["Valor_Real"].abs()*100)
             _direcao_mlp="📈 tendendo a prever acima do real" if _vieses_mlp.mean()>5 else ("📉 tendendo a prever abaixo do real" if _vieses_mlp.mean()<-5 else "⚖️ sem viés sistemático aparente")
             mc(_c3_snap,"Viés médio (direção do erro)",_direcao_mlp)
+            try:
+                _por_h={}
+                if {"Data_Rodada","Mes_Alvo"}.issubset(_confirmados_mlp.columns):
+                    _dh=_confirmados_mlp.copy()
+                    _ma=pd.to_datetime(_dh["Mes_Alvo"].astype(str).str[:7]+"-01",errors="coerce"); _mr=pd.to_datetime(_dh["Data_Rodada"].astype(str).str[:7]+"-01",errors="coerce")
+                    _dh["_ant"]=(_ma.dt.year*12+_ma.dt.month)-(_mr.dt.year*12+_mr.dt.month)
+                    for _rot_h,_lo_h,_hi_h in [("até 1 mês",0,1),("2-3 meses",2,3),("4+ meses",4,99)]:
+                        _g_h=_dh[(_dh["_ant"]>=_lo_h)&(_dh["_ant"]<=_hi_h)]
+                        if len(_g_h)>0 and _g_h["Valor_Real"].abs().sum()>0:
+                            _por_h[_rot_h]=round(float((_g_h["Valor_Previsto"]-_g_h["Valor_Real"]).abs().sum()/_g_h["Valor_Real"].abs().sum()*100),1)
+                _vm=_vieses_mlp.replace([np.inf,-np.inf],np.nan).mean()
+                if st.session_state.cid: save_snap(st.session_state.cid,"acuracia",{
+                    "wape":float(_wape_confirmado_mlp),"vies_pct":(0.0 if pd.isna(_vm) else float(_vm)),"direcao":_direcao_mlp.split(" ",1)[-1] if " " in _direcao_mlp else _direcao_mlp,
+                    "n_conf":int(len(_confirmados_mlp)),"n_total":int(len(_cruz_snap_mlp)),
+                    "por_horizonte":" | ".join(f"{k}: {v:.1f}%" for k,v in _por_h.items()),
+                    "gerado_em":datetime.now().strftime("%Y-%m-%d %H:%M")},filial=filial_sel_mlp)
+            except Exception: pass
         else:
             mc(_c2_snap,"WAPE das previsões confirmadas","—")
             mc(_c3_snap,"Viés médio (direção do erro)","—")
@@ -16788,6 +17004,10 @@ elif pg=="ml_produtos":
                 mc(_f2,"WAPE do modelo puro",f"{_w_mod_fva:.1f}%")
                 mc(_f3,"WAPE com o ajuste",f"{_w_aj_fva:.1f}%","g" if _w_aj_fva<_w_mod_fva else ("r" if _w_aj_fva>_w_mod_fva else ""))
                 mc(_f4,"FVA (pontos de WAPE)",f"{_fva_pp:+.1f} pp","g" if _fva_pp>0 else ("r" if _fva_pp<0 else ""))
+                try:
+                    if st.session_state.cid: save_snap(st.session_state.cid,"fva",{"wape_modelo":float(_w_mod_fva),"wape_ajustado":float(_w_aj_fva),"fva_pp":float(_fva_pp),
+                        "n_prod":int(_d_fva["Produto"].nunique()),"n_meses":int(len(_d_fva)),"gerado_em":datetime.now().strftime("%Y-%m-%d %H:%M")},filial=filial_sel_mlp)
+                except Exception: pass
                 if _fva_pp>0.05:
                     st.markdown(f'<div class="al-s">✅ O ajuste manual <b>reduziu</b> o erro em {_fva_pp:.1f} pontos de WAPE: o julgamento de negócio agregou valor nos meses confirmados.</div>',unsafe_allow_html=True)
                 elif _fva_pp<-0.05:
@@ -21028,12 +21248,21 @@ elif pg=="parecer_ia":
         _ok_classe="✅" if dados_par[_fil_p]["classe"] else "⚪ opcional"
         _ok_mlconfig="✅" if dados_par[_fil_p]["mlconfig"] else "⚪ opcional"
         linhas_check.append({"Filial":_fil_p,"Painel de Indicadores":_ok_painel,"Fluxo Comercial Projetado":_ok_fluxo,
-                              "Simulador de Cenário":_ok_classe,"Config. ML":_ok_mlconfig})
+                              "Simulador de Cenário":_ok_classe,"Config. ML":_ok_mlconfig,
+                              "Painel atualizado em":str((dados_par[_fil_p]["painel"] or {}).get("gerado_em","—"))[:16],"Fluxo atualizado em":str((dados_par[_fil_p]["fluxo"] or {}).get("gerado_em","—"))[:16]})
         if not dados_par[_fil_p]["painel"]:
             faltando_par.append(f"{_fil_p}: abra o 📊 Dashboard Executivo")
         if not dados_par[_fil_p]["fluxo"]:
             faltando_par.append(f"{_fil_p}: abra o 💰 Fluxo de Caixa Comercial Projetado")
     st.dataframe(pd.DataFrame(linhas_check),use_container_width=True,hide_index=True)
+    try:
+        _vel=[]
+        for _fil_p in FILIAIS_PARECER:
+            for _k,_rot in (("painel","Painel"),("fluxo","Fluxo")):
+                _g=(dados_par[_fil_p][_k] or {}).get("gerado_em")
+                if _g and (datetime.now()-pd.to_datetime(str(_g)[:16])).days>7: _vel.append(f"{_fil_p} · {_rot} ({str(_g)[:10]})")
+        if _vel: st.markdown('<div class="al-w">🕒 Dados salvos há mais de 7 dias: '+"; ".join(_vel)+'. O parecer usa o que está salvo — reabra a página correspondente se os dados mudaram.</div>',unsafe_allow_html=True)
+    except Exception: pass
 
     if faltando_par:
         st.markdown('<div class="al-w">⚠️ Ainda falta dado obrigatório pra gerar o parecer:<br>'+"<br>".join(faltando_par)+'</div>',unsafe_allow_html=True)
@@ -21151,6 +21380,10 @@ elif pg=="parecer_ia":
                         except Exception:
                             pass
 
+                        _alertas_forn_p=" || ".join(_sp.get("alertas_fornecedor") or []) or "nenhum alerta registrado (ou reabra o Dashboard Comercial desta filial para registrar)"
+                        _pilares_p=_pilares_txt(_sp)
+                        _validacao_p=_validacao_txt(st.session_state.cid,_fil_p)
+                        _evolucao_p=_evolucao_painel_txt(st.session_state.cid,_fil_p)
                         blocos_filiais.append(f"""
 === FILIAL: {_fil_p} ===
 Score Executivo: {_sp['score_final']}/100 ({_sp['score_lbl']})
@@ -21163,6 +21396,10 @@ Giro e Capital por Classe ABC/D/E (contagens em posições produto×filial; a Cu
 Configuração do modelo de ML usado: {_mlconfig_txt}
 Fluxo de Caixa Comercial Projetado: saldo final {fmt(_sf['saldo_final_real']) if _sf else '—'} em {_sf.get('periodo_fim','—') if _sf else '—'}; {_caixa_txt}
 Fornecedores desta filial (participação e capital parado, calculado das compras sugeridas): {_forn_txt_p}
+Alertas de fornecedor do painel (peso nas compras × estabilidade de entrega): {_alertas_forn_p}
+Pilares do Score: {_pilares_p}
+Validação da previsão ao longo do tempo: {_validacao_p}
+Evolução numérica dos indicadores desta filial (primeiro registro guardado → atual): {_evolucao_p}
 """)
 
                     bloco_todas_filiais="\n".join(blocos_filiais)
@@ -21187,7 +21424,7 @@ SUA TAREFA PRINCIPAL não é resumir cada filial isoladamente — é ENCONTRAR C
 IMPORTANTE SOBRE DATAS: sempre que citar saldo, semana crítica ou projeção, diga a qual filial e a qual período se refere.
 
 REFERÊNCIAS DE MERCADO PARA CLASSIFICAR CADA MÉTRICA (diga explicitamente onde cada número se encaixa):
-- Score Executivo (0-100): <40 Crítico | 40-59 Regular | 60-74 Bom | 75-89 Muito Bom | ≥90 Excelente
+- Score Executivo (0-100): {_REGUA_SCORE_COM}
 - WAPE: <10% Excelente | 10-20% Bom | 20-30% Aceitável | >30% Baixa confiabilidade
 - Cobertura de estoque (dias): <15 Enxuta | 15-45 Saudável | 45-90 Alta | >90 Excessiva
 - Giro de estoque (x/ano): <4x Baixo | 4-8x Moderado | 8-15x Bom | >15x Excelente
@@ -21198,7 +21435,7 @@ REFERÊNCIAS DE MERCADO PARA CLASSIFICAR CADA MÉTRICA (diga explicitamente onde
 - Concentração de fornecedor (participação nas compras): <20% Saudável | 20-30% Atenção | >30% Risco de dependência
 
 GLOSSÁRIO — explique estes conceitos de forma educativa quando relevante:
-Score Executivo: nota de 0-100 resumindo a saúde do estoque, considerando Ruptura (fator mais determinante, por afetar receita diretamente), Giro, Cobertura, Capital Parado, WAPE e Lead Time.
+Score Executivo: nota de 0-100 que resume a saúde do estoque em 4 PILARES, combinados por média geométrica (um pilar muito fraco puxa o Score para baixo mesmo que os outros estejam bons): Serviço = risco de ruptura (peso 35%), Eficiência de capital = estoque na medida certa, nem sobrando nem faltando, mais o capital parado (peso 35%), Fornecedor = OTIF ponderado pelo peso nas compras (peso 15%) e Previsão = 100 menos o WAPE (peso 15%). Cada pilar vai de 0 (limite) a 100 (meta). Use as notas dos pilares e as "maiores pressões no Score" fornecidas por filial — não invente outra composição.
 WAPE e Validação às Cegas (Out-of-Sample): o modelo é treinado só com dado até uma data de corte, "prevê" os meses seguintes sem ver o que aconteceu, e comparamos com a realidade já conhecida — garante que o erro medido reflete uma previsão real, sem "colar".
 Como o motor de previsão escolhe modelo: para cada produto, testa vários modelos estatísticos e de Machine Learning diferentes (cada um captura tendência/sazonalidade/ruído de um jeito), e usa automaticamente o que teve menor erro para aquele produto especificamente — produtos diferentes podem usar modelos diferentes.
 Calibrações disponíveis no sistema (capacidades, independente de estarem ativas nesta rodada): Sazonalidade (marcar meses de pico conhecidos), Promoções/Eventos (isolar esse efeito da sazonalidade normal), Exclusão de Outliers, Correção de Preço/Reajustes, Fatores Condicionantes de Mercado (câmbio, crise de fornecimento).
@@ -21212,10 +21449,13 @@ CURVA DE PARETO (concentração de vendas — empresa toda, classificação INDE
 DESEMPENHO DE FORNECEDORES (Prazo/Qualidade/OTIF — avaliação manual, vale para todas as filiais igualmente):
 {forn_txt}
 
+VALOR ENTREGUE PELO MOTOR DE COMPRAS (Validação Econômica — simulação contra o método simples, empresa toda):
+{_valor_motor_txt(st.session_state.cid)}
+
 TAREFA:
 Escreva um parecer executivo em português, rico, profissional e ESPECÍFICO (não genérico), para um Coordenador/Gerente de Controladoria que supervisiona as {len(FILIAIS_PARECER)} filiais. Estruture assim:
 
-**1. Diagnóstico Geral e Comparativo entre Filiais** — explique em 1-2 frases o que é o Score Executivo (métrica composta considerando Ruptura, Giro, Cobertura, Capital Parado, WAPE e Lead Time; Ruptura é o fator mais determinante por impactar receita diretamente). Depois cite o Score de CADA UMA das {len(FILIAIS_PARECER)} filiais individualmente (nunca resuma como "varia entre X e Y" sem nomear cada uma), classificando cada uma pela régua de referência acima. Só afirme que a situação é "semelhante" ou "muito diferente" entre filiais se os números que você já vai citar nas seções seguintes realmente sustentarem essa afirmação — não conclua isso antes de checar. APRENDIZADO CRUZADO (obrigatório): identifique a filial com MELHOR desempenho num indicador-chave (Score, Giro de Classe A, ou Ruptura) e a com PIOR desempenho no mesmo indicador — aponte a diferença numérica entre as duas, e sugira, com base nos dados disponíveis (fornecedor, cobertura, lead time), uma hipótese do que a melhor está fazendo diferente que a pior poderia adotar.
+**1. Diagnóstico Geral e Comparativo entre Filiais** — explique em 1-2 frases o que é o Score Executivo (métrica composta por 4 pilares em média geométrica: Serviço/ruptura 35%, Eficiência de capital 35%, Fornecedor 15% e Previsão 15%; cite o pilar que mais tira pontos de cada filial, conforme as "maiores pressões no Score" fornecidas). Depois cite o Score de CADA UMA das {len(FILIAIS_PARECER)} filiais individualmente (nunca resuma como "varia entre X e Y" sem nomear cada uma), classificando cada uma pela régua de referência acima. Só afirme que a situação é "semelhante" ou "muito diferente" entre filiais se os números que você já vai citar nas seções seguintes realmente sustentarem essa afirmação — não conclua isso antes de checar. APRENDIZADO CRUZADO (obrigatório): identifique a filial com MELHOR desempenho num indicador-chave (Score, Giro de Classe A, ou Ruptura) e a com PIOR desempenho no mesmo indicador — aponte a diferença numérica entre as duas, e sugira, com base nos dados disponíveis (fornecedor, cobertura, lead time), uma hipótese do que a melhor está fazendo diferente que a pior poderia adotar.
 
 **2. Radar de Estoque — Ação Imediata, por Filial** — para cada filial, cite: ruptura iminente/comprar agora (total sugerido), quantidade de produtos em Estoque Excessivo, e o valor de Capital Parado (sem giro). Esses 3 números (ruptura, estoque excessivo, capital parado) estão nos dados de cada filial abaixo — cite todos os 3 aqui, mesmo que só formalmente, porque a Seção 7 vai precisar reusar alguns deles. Se uma filial está bem pior que as outras em algum desses pontos, destaque isso com os números lado a lado.
 
@@ -21223,11 +21463,16 @@ Escreva um parecer executivo em português, rico, profissional e ESPECÍFICO (n�
 
 **4. Confiabilidade da Previsão** — ABRA a seção citando o WAPE (erro médio) de CADA filial, com a classificação da régua de referência acima (ex: "a Loja X está em Y%, classificada como Bom") — o número vem primeiro, antes de qualquer explicação de método. Só depois explique brevemente a validação às cegas e como o motor escolhe modelo por produto. Apresente as calibrações disponíveis como capacidade educativa, depois diga quais estavam ativas em cada filial nesta rodada (sem inventar nenhuma que não foi informada).
 
+**4B. Valor do Motor e Confiabilidade Provada no Tempo** — (a) cite quanto o motor EVITA contra o método simples (bloco "VALOR ENTREGUE PELO MOTOR"), com a decomposição ruptura × capital imobilizado e as ressalvas (simulação, amostra, janela) — nunca como resultado realizado; se o naive teria sido melhor, diga isso com a mesma clareza. (b) Para cada filial cite a linha "Validação da previsão ao longo do tempo": WAPE das previsões já confirmadas, direção do viés (prever acima do real tende a gerar estoque em excesso; prever abaixo tende a gerar ruptura) e o FVA do Ajuste de Consenso (se o julgamento humano ajudou ou piorou). Se a informação não existir para a filial, diga em uma frase que ainda não foi gerada. (c) Conclua em 2-3 frases se esses números sustentam confiar no plano de compras do motor — com base nos números, não em opinião.
+
 **5. Situação de Caixa — Padrão entre Filiais** — para cada filial com semana negativa, você recebeu a lista completa, cronológica, de todas as semanas negativas com seus saldos. NÃO liste as semanas uma por uma no texto — em vez disso, identifique e descreva o PADRÃO: a situação piora progressivamente até um ponto e depois melhora? Há um pico isolado destoante do resto? O problema é concentrado em um período específico (ex: um trimestre) ou espalhado ao longo de todo o horizonte? Cite a semana mais crítica como ponto de referência, mas a narrativa deve ser sobre a tendência, não sobre cada dado individual. Só afirme que as semanas críticas "coincidem" ou "não coincidem" entre filiais se houver pelo menos 2 filiais com semana crítica pra comparar — se só 1 filial tiver, diga apenas que só ela apresentou criticidade, sem tentar comparar padrão.
 
 **6. Fornecedores — Concentração e Risco Cruzado** — identifique fornecedores que aparecem com participação relevante em mais de uma filial (risco de dependência combinado). VERIFICAÇÃO OBRIGATÓRIA: para cada fornecedor citado, compare o valor de compra sugerida com o capital parado que ele já tem — se um fornecedor tem capital parado relevante (produtos dele já parados sem giro) E ao mesmo tempo está recebendo uma sugestão de compra significativa, isso é um alerta específico que precisa ser dito explicitamente (ex: "Fornecedor X tem R$Y parado sem giro, mas ainda assim está recebendo sugestão de compra de R$Z — vale revisar se essa compra nova é realmente necessária antes de aumentar ainda mais o estoque parado desse fornecedor"). Não deixe essa checagem implícita — se ela se aplicar a algum fornecedor, escreva a frase de alerta. Traga também prazo/qualidade/OTIF quando relevante.
 
 **7. Ações Recomendadas** — 6 a 9 ações práticas, cada uma dizendo A QUAL FILIAL (ou "todas") se aplica. ORDENAÇÃO OBRIGATÓRIA: ordene TODAS as ações pelo IMPACTO FINANCEIRO estimado (o valor em R$ que a ação libera, economiza ou protege — reuse os números já citados nas seções 1-6), da maior pra menor — não por "urgência" subjetiva. As 3 primeiras ações da lista devem vir marcadas no início com "🔴 PRIORIDADE MÁXIMA" e trazer entre parênteses o valor em R$ que justifica essa posição (ex: "🔴 PRIORIDADE MÁXIMA — libera R$1.6M em capital parado"). REGRA OBRIGATÓRIA: toda ação deve referenciar um número, filial ou achado JÁ CITADO em uma das seções 1-6 acima — nunca introduza aqui um valor que não apareceu antes no texto. REGRA ANTI-REDUNDÂNCIA: cada ação deve tratar de um PROBLEMA diferente das outras — antes de escrever a lista final, revise se duas ações não estão recomendando a mesma coisa pra mesma filial só com números diferentes (ex: uma ação sobre "capital parado da Loja X" e outra sobre "capital liberável da Loja X" são a mesma recomendação disfarçada, a menos que sejam explicitamente duas ações distintas com objetivos diferentes) — se isso acontecer, funda as duas em uma ação só, mais completa, em vez de listar separadamente.
+
+FORMATO DAS AÇÕES DA SEÇÃO 7 (visão de CEO): cada ação traz, em linhas curtas: **O que fazer**, **Filial**, **Valor em R$** (reuse número já citado), **Se nada for feito** (a consequência concreta, em número quando houver: capital que segue parado, ruptura que segue, caixa que aperta) e **Prazo sugerido** (esta semana / 30 dias / 90 dias). Não invente responsáveis nominais. Pelo menos uma ação deve atacar o pilar que mais tira pontos do Score de cada filial. Se algum alerta de fornecedor do painel citar um fornecedor que pesa 20% ou mais nas compras e é instável, ele precisa virar ação.
+REGRA DA SEÇÃO 8: use também a linha "Evolução numérica" de cada filial (números reais registrados), não só o texto do parecer anterior.
 
 **8. Evolução desde a Última Rodada** — compare com o texto do parecer anterior (fornecido abaixo). Se não houver parecer anterior, escreva apenas uma frase dizendo que esta é a primeira rodada registrada, sem seguir os pontos abaixo. Havendo parecer anterior: (a) diga se o Score de cada filial melhorou, piorou ou ficou estável desde então; (b) aponte qualquer problema citado na rodada anterior que CONTINUA aparecendo agora (sinal de que a ação recomendada não foi tomada, ou não fez efeito); (c) aponte qualquer melhora real conquistada. Seja específico com números das duas rodadas lado a lado, não genérico.
 
@@ -21247,14 +21492,14 @@ Seja específico usando os números e filiais fornecidos. Não invente dados que
                         _debug_resp=None
                         if not st.session_state.api_key.startswith("sk-ant-") and OPENAI_OK:
                             client_ia=OpenAI(api_key=st.session_state.api_key)
-                            resp_ia=client_ia.chat.completions.create(model="gpt-4o",max_tokens=6000,temperature=0.3,
+                            resp_ia=client_ia.chat.completions.create(model="gpt-4o",max_tokens=10000,temperature=0.3,
                                 messages=[{"role":"system","content":"Você é um consultor de Controladoria/FP&A sênior, direto, específico e rico em conexões entre os dados — especialmente entre filiais diferentes. Nunca omita seções ou resuma o conteúdo para economizar espaço — seja completo em todas as 7 seções pedidas."},
                                           {"role":"user","content":prompt_parecer}])
                             texto_parecer=resp_ia.choices[0].message.content.strip()
                             _debug_resp=f"finish_reason={resp_ia.choices[0].finish_reason}"
                         elif ANTHROPIC_OK:
                             client_ia=anthropic.Anthropic(api_key=st.session_state.api_key)
-                            resp_ia=client_ia.messages.create(model="claude-sonnet-4-6",max_tokens=8000,
+                            resp_ia=client_ia.messages.create(model="claude-sonnet-4-6",max_tokens=12000,
                                 system="Você é um consultor de Controladoria/FP&A sênior, direto, específico e rico em conexões entre os dados — especialmente entre filiais diferentes.",
                                 messages=[{"role":"user","content":prompt_parecer}])
                             _tipos_blocos=[getattr(b,"type","?") for b in resp_ia.content]
@@ -21395,6 +21640,8 @@ Lucro Bruto: {fmt(_df_f.get('lucro_bruto',0))} | Lucro Líquido: {fmt(_df_f.get(
 Margem Bruta: {_df_f['margem_bruta_pct']:.1f}% | Margem Líquida: {_df_f['margem_liquida_pct']:.1f}% | Margem Contribuição: {_df_f['margem_contrib_pct']:.1f}% | EBITDA: {_df_f['ebitda_pct']:.1f}%
 PMR: {_df_f['pmr']:.0f}d | PMP: {_df_f['pmp']:.0f}d | PME: {_df_f['pme']:.0f}d | Ciclo de Caixa: {_df_f['ciclo_caixa']:.0f}d | Giro de Estoque: {_df_f.get('giro_estoque',0):.1f}x
 Score de Saúde: {_df_f['score_saude']:.0f}/100
+Tendência (série da base): {_tendencia_txt(_df_f)}
+Dashboard Financeiro desta filial: {_dashfin_txt(st.session_state.cid,_fil_f)}
 Alertas já classificados (referências de mercado já aplicadas): {_alertas_txt if _alertas_txt else 'nenhum alerta'}
 """)
                         bloco_fin_todas="\n".join(blocos_fin)
@@ -21404,7 +21651,9 @@ Alertas já classificados (referências de mercado já aplicadas): {_alertas_txt
 === EMPRESA TODA — "(Todas as filiais)" (período: {fin_consolidado.get('periodo','—') if fin_consolidado else '—'}) ===
 Estas métricas usam contas do Balanço Patrimonial (Capital Social, Empréstimos, Patrimônio Líquido) que NÃO são segregadas por filial — por isso só existem no nível consolidado, nunca compare-as entre as lojas.
 Liquidez Corrente: {fin_consolidado['liquidez_corrente']:.2f}x | Liquidez Imediata: {fin_consolidado['liquidez_imediata']:.2f}x
-Kanitz: {fin_consolidado['kanitz']:.2f} | ROE: {fin_consolidado['roe']:.1f}% | ICD: {fin_consolidado.get('icd',0):.1f}%
+Kanitz: {fin_consolidado['kanitz']:.2f} | ROE: {fin_consolidado['roe']:.1f}% no mês (≈ {(_roe_anualizado(fin_consolidado['roe']) if _roe_anualizado(fin_consolidado['roe']) is not None else 0):.1f}% ao ano; compare com taxas anuais usando este valor) | ICD: {fin_consolidado.get('icd',0):.1f}%
+Tendência consolidada (série da base): {_tendencia_txt(fin_consolidado)}
+Dashboard Financeiro consolidado: {_dashfin_txt(st.session_state.cid,'(Todas as filiais)')}
 Ativo Total: {fmt(fin_consolidado.get('ativo_total',0))} | Passivo Total: {fmt(fin_consolidado.get('passivo_total',0))} | Patrimônio Líquido: {fmt(fin_consolidado.get('patrimonio_liquido',0))}
 Alertas já classificados: {_alertas_cons_txt if _alertas_cons_txt else 'nenhum alerta'}
 """ if fin_consolidado else "Não disponível."
@@ -21424,7 +21673,7 @@ Os alertas fornecidos abaixo JÁ FORAM CLASSIFICADOS usando faixas de referênci
 
 ═══════════════════════════════════════════
 CHECKLIST OBRIGATÓRIO — confira cada item abaixo DEPOIS de escrever o parecer, antes de considerar finalizado. Se algum item não aparecer no texto, volte e adicione antes de responder:
-☐ Toda vez que citar um Score de Saúde, veio junto a classificação da régua (Crítico/Regular/Bom/Muito Bom/Excelente)?
+☐ Toda vez que citar um Score de Saúde, veio junto a classificação da régua acima (Baixo Risco/Risco Moderado/Alto Risco/Risco Crítico/Insolvência Iminente)?
 ☐ A Seção 2 abre citando a Receita Bruta e Líquida de CADA filial, antes de qualquer margem?
 ☐ A Seção 2 tem uma conta em R$ de quanto a filial mais fraca ganharia se atingisse a margem da mais forte?
 ☐ Na PRIMEIRA vez que "ICD" aparece no texto, veio junto, na mesma frase, a explicação "(mede quanto do EBITDA cobre a dívida financeira líquida — quanto maior, mais folga pra pagar dívida com a própria geração de caixa)"?
@@ -21434,10 +21683,10 @@ CHECKLIST OBRIGATÓRIO — confira cada item abaixo DEPOIS de escrever o parecer
 ☐ As ações estão ordenadas da maior pra menor pelo valor em R$ de impacto (não por ordem de seção)?
 ═══════════════════════════════════════════
 
-RÉGUA DE REFERÊNCIA PARA O SCORE DE SAÚDE (0-100, diga onde cada filial se encaixa): <40 Crítico | 40-59 Regular | 60-74 Bom | 75-89 Muito Bom | ≥90 Excelente
+RÉGUA DE REFERÊNCIA PARA O SCORE DE SAÚDE (0-100, a MESMA do Dashboard Financeiro; diga onde cada filial se encaixa): {_REGUA_SCORE_FIN}. O Score é a média de 4 indicadores com peso igual de 25% (Kanitz, Liquidez imediata, EBITDA % e Margem líquida, cada um normalizado) — não invente outra composição.
 
 GLOSSÁRIO — explique brevemente quando citar pela primeira vez:
-ICD (Índice de Cobertura da Dívida): mede quanto do EBITDA cobre a dívida financeira líquida (dívida financeira menos caixa disponível) — quanto maior, mais folga a empresa tem pra pagar suas dívidas com a própria geração de caixa operacional. Valor negativo ou muito baixo é sinal de alerta.
+ICD (Índice de Cobertura da Dívida): mede quanto do EBITDA cobre a dívida financeira líquida (dívida financeira menos caixa disponível) — quanto maior, mais folga a empresa tem pra pagar suas dívidas com a própria geração de caixa operacional. ATENÇÃO AO SINAL: valor NEGATIVO pode significar (a) caixa líquido — as disponibilidades superam a dívida financeira, com EBITDA positivo — o que é FAVORÁVEL, ou (b) EBITDA negativo com dívida líquida — o que é grave. Confira o sinal do EBITDA e a posição de dívida/caixa antes de classificar; valor positivo e baixo é que indica pouca folga.
 Kanitz: índice que combina liquidez, endividamento e rentabilidade numa única nota, pra classificar a empresa em zona de insolvência (<-3), penumbra (-3 a 0) ou solvência (>0).
 
 DESCONFIANÇA DE DADOS: se algum indicador (ex: Giro de Estoque, PME, PMP) vier EXATAMENTE IGUAL ou muito próximo entre 2 ou mais filiais, mencione isso como um ponto a validar com a operação (pode ser coincidência real ou pode ser sinal de dado desatualizado/repetido) — não trate como uma coincidência normal sem comentário.
@@ -21457,9 +21706,13 @@ Escreva um parecer executivo em português, rico, específico e SEM repetir a me
 
 **3. Ciclo Operacional e Prazos, por Filial** — compare PMR/PMP/PME/Ciclo de Caixa e Giro de Estoque entre as filiais. Cite o que um ciclo de caixa maior ou giro de estoque menor significam em termos de capital de giro.
 
+**3B. Caixa e Impacto do Plano de Compras** — use as linhas "Dashboard Financeiro" (desta filial e do consolidado): diga quanto entra e quanto sai de caixa por causa da seleção trabalhada no Motor de Compras, o resultado, o mês mais pesado e o menor resultado acumulado. Deixe claro, numa frase, que isso é SOMENTE fluxo de caixa (prazos configurados no Fluxo Comercial), e não mede ganho ou perda de estoque. Se houver SENSIBILIDADE, diga quanto o resultado muda caso os prazos reais sejam os do balanço — e se isso piora o caixa, recomende um acerto de prazo com o valor em R$. Se a linha não existir, diga em uma frase qual página gera. Use também a "Tendência" de cada filial: o que melhora ou piora em relação aos 3 meses anteriores e ao mesmo mês do ano passado.
+
 **4. Saúde Patrimonial da Empresa** — Liquidez Corrente/Imediata, Kanitz, ROE e ICD, no nível consolidado, junto com Ativo Total, Passivo Total e Patrimônio Líquido para dar contexto de tamanho. Ao citar Kanitz pela primeira vez, explique em 1 frase o que ele representa (combina liquidez, endividamento e rentabilidade numa nota, classificando a zona de insolvência/penumbra/solvência). Ao citar ICD pela primeira vez, explique em 1 frase o que ele mede (quanto do EBITDA cobre a dívida financeira líquida — quanto maior, mais folga pra pagar dívida com a própria geração de caixa).
 
 **5. Ações Recomendadas** — 5 a 8 ações práticas, cada uma dizendo a qual filial se aplica (ou "empresa toda" para as ações relacionadas a Liquidez/Kanitz/ROE). ORDENAÇÃO OBRIGATÓRIA: ordene as ações pelo IMPACTO FINANCEIRO estimado (valor em R$ que a ação recupera, economiza ou libera — reuse números já citados nas seções 1-4, incluindo a estimativa do aprendizado cruzado da Seção 2), da maior pra menor. Marque com "🔴 PRIORIDADE MÁXIMA" APENAS as ações onde você conseguir CALCULAR um valor em R$ real a partir dos dados fornecidos, colocando esse valor entre parênteses — nunca escreva "significativo", "relevante" ou "potencial" no lugar de um número; se não der pra calcular um valor real pra uma ação, não marque como prioridade máxima, apenas posicione ela mais abaixo na lista, sem o selo. REGRA: toda ação deve referenciar um número já citado nas seções 1-4 acima. REGRA ANTI-REDUNDÂNCIA: cada ação trata de um problema diferente — não recomende a mesma coisa duas vezes com números diferentes. REGRA DE CONSISTÊNCIA ENTRE FILIAIS: se duas ou mais filiais têm o MESMO valor (ou valor muito próximo) num indicador problemático, todas elas devem receber o mesmo tratamento na recomendação — ou você inclui todas as filiais afetadas na mesma ação, ou explica explicitamente por que só uma delas está sendo priorizada apesar do número ser igual nas outras. Nunca destaque só 1 filial silenciosamente quando o dado mostra que outra(s) têm o problema igual. REGRA DE COERÊNCIA DE CAUSA: se a Seção 2 já concluiu que a causa da rentabilidade fraca de uma filial é ESTRUTURA DE DESPESA (conversão Bruto→Líquido baixa) ou é ORIGEM/VENDA (Margem Bruta baixa), nenhuma ação sobre essa mesma filial pode sugerir investigar a causa oposta — a ação precisa ser consistente com o diagnóstico já dado, nunca contradizê-lo. A taxa de conversão Bruto→Líquido é o sinal PRINCIPAL de causa — "essa filial tem a Margem Bruta mais baixa entre as 3" não é motivo suficiente para recomendar ação de origem/venda se a diferença for pequena (poucos pontos percentuais) e a conversão já tiver apontado estrutura de despesa como causa principal; só recomende ação de origem/venda se a Margem Bruta estiver em faixa realmente baixa em termos absolutos (abaixo de 20%, conforme referência de mercado), não apenas relativamente mais baixa que as outras filiais.
+
+FORMATO DAS AÇÕES DA SEÇÃO 5 (visão de CEO): cada ação traz em linhas curtas: **O que fazer**, **Filial** (ou empresa toda), **Valor em R$** (reuse número já citado), **Se nada for feito** (consequência concreta, em número quando houver) e **Prazo sugerido** (esta semana / 30 dias / 90 dias). Não invente responsáveis nominais.
 
 **6. Evolução desde a Última Rodada** — compare com o parecer anterior (abaixo). Se não houver, escreva uma frase dizendo que é a primeira rodada, sem seguir os itens abaixo. Havendo parecer anterior: diga se o Score de cada filial e a rentabilidade melhoraram, pioraram ou ficaram estáveis; aponte problemas que persistem desde a rodada passada; aponte melhorias reais. Seja específico com números lado a lado.
 
@@ -21472,13 +21725,13 @@ Seja específico. Não invente dados que não foram fornecidos."""
                             texto_fin=""
                             if not st.session_state.api_key.startswith("sk-ant-") and OPENAI_OK:
                                 client_fin=OpenAI(api_key=st.session_state.api_key)
-                                resp_fin=client_fin.chat.completions.create(model="gpt-4o",max_tokens=5000,temperature=0.3,
+                                resp_fin=client_fin.chat.completions.create(model="gpt-4o",max_tokens=8000,temperature=0.3,
                                     messages=[{"role":"system","content":"Você é um consultor de Controladoria/FP&A sênior, direto e específico. Nunca atribua Liquidez, Kanitz ou ROE a uma filial individual — essas métricas só existem no nível consolidado."},
                                               {"role":"user","content":prompt_fin}])
                                 texto_fin=resp_fin.choices[0].message.content.strip()
                             elif ANTHROPIC_OK:
                                 client_fin=anthropic.Anthropic(api_key=st.session_state.api_key)
-                                resp_fin=client_fin.messages.create(model="claude-sonnet-4-6",max_tokens=3500,
+                                resp_fin=client_fin.messages.create(model="claude-sonnet-4-6",max_tokens=8000,
                                     system="Você é um consultor de Controladoria/FP&A sênior, direto e específico. Nunca atribua Liquidez, Kanitz ou ROE a uma filial individual — essas métricas só existem no nível consolidado.",
                                     messages=[{"role":"user","content":prompt_fin}])
                                 texto_fin=resp_fin.content[0].text.strip()
@@ -21589,6 +21842,7 @@ Seja específico. Não invente dados que não foram fornecidos."""
                     else:
                         _texto_consolidado_anterior="Não há parecer consolidado anterior salvo — esta é a primeira rodada."
 
+                    _ficha_num_final=_ficha_cruzada_txt(st.session_state.cid,FILIAIS_PARECER,list(globals().get("FILIAIS_FIN") or FILIAIS_PARECER),globals().get("fin_consolidado"))
                     prompt_final=f"""Você é um consultor sênior de Controladoria/FP&A. Você já recebeu, prontos e validados, dois relatórios separados sobre a mesma empresa: um do MÓDULO COMERCIAL (Motor de Compras, Estoque, ML de demanda, Fornecedores) e outro do MÓDULO FINANCEIRO (DRE, Margens, Liquidez, Ciclo de Caixa).
 
 SUA TAREFA não é repetir os dois relatórios um atrás do outro — é ENCONTRAR CONEXÕES REAIS entre eles. Por exemplo (só exemplos, use os achados reais dos relatórios abaixo, não invente):
@@ -21619,6 +21873,9 @@ RELATÓRIO COMERCIAL (já gerado, validado):
 RELATÓRIO FINANCEIRO (já gerado, validado):
 {_texto_fin_final}
 
+FICHA NUMÉRICA CALCULADA EM CÓDIGO (fonte da verdade para números; os cruzamentos entre Comercial e Financeiro já estão feitos aqui). Se algum número dos relatórios acima divergir desta ficha, prevalece a ficha — cite a divergência em uma linha:
+{_ficha_num_final}
+
 TAREFA — estruture o parecer consolidado assim:
 
 **1. Visão Executiva Consolidada** — 4-6 frases resumindo a saúde geral da empresa, cruzando as duas fontes, para um leitor que só vai ler esse resumo.
@@ -21628,6 +21885,8 @@ TAREFA — estruture o parecer consolidado assim:
 **3. Panorama por Filial** — para cada filial, uma síntese curta cruzando a situação comercial e financeira dela juntas (é a loja com melhor ou pior desempenho geral? Por quê, considerando os dois lados?).
 
 **4. Prioridades Finais da Empresa** — 6 a 10 ações finais, fundindo as recomendações dos dois relatórios originais. PRESERVAÇÃO DE NÚMEROS (obrigatório, siga este processo passo a passo): para CADA ação que você escrever aqui, primeiro procure nos dois relatórios-fonte (acima) se esse mesmo tema já tinha um valor em R$ calculado — se tinha, COPIE esse valor literalmente pra dentro da ação (ex: se o relatório Financeiro já calculou "R$201K" pra estrutura de despesa da Loja Centro, a ação sobre esse tema aqui tem que trazer "R$201K" explicitamente, não pode virar uma frase genérica sem número). ORDENAÇÃO OBRIGATÓRIA — siga este processo em 2 etapas, nessa ordem exata: ETAPA 1: separe todas as ações em dois grupos — Grupo A (ações que têm um valor em R$ real) e Grupo B (ações sem valor em R$). ETAPA 2: liste primeiro TODO o Grupo A, ordenado do maior R$ pro menor R$, e só DEPOIS de esgotar o Grupo A liste o Grupo B — nenhuma ação do Grupo B pode aparecer entre ou antes de ações do Grupo A, mesmo que pareça urgente ou importante. O selo "🔴 PRIORIDADE MÁXIMA" só pode ir nas 3 primeiras posições da lista final, e só se estiverem no Grupo A (com valor em R$) — se uma ação do Grupo B estiver entre as 3 primeiras por engano, ela não recebe o selo e precisa ser movida pra depois de todo o Grupo A. Remova duplicatas, junte ações relacionadas dos dois lados numa só quando fizer sentido, e diga a qual filial (ou "empresa toda") cada uma se aplica. Toda ação deve ter origem rastreável em um dos dois relatórios acima — não invente ação nova sem base neles.
+
+**4B. Decisões que o CEO precisa tomar agora** — no máximo 3 decisões, cada uma em formato de pergunta que só o CEO pode responder (ex: priorizar caixa ou estoque, renegociar prazo, concentrar compras). Para cada uma traga: a decisão, o valor em R$ envolvido (da ficha numérica ou dos relatórios), **o que acontece se nada for feito**, e a opção recomendada com o motivo. Use os cruzamentos da FICHA NUMÉRICA (capital parado ÷ patrimônio líquido, liberável × déficit de caixa, valor do motor, impacto de caixa da seleção). Não invente número fora da ficha e dos relatórios.
 
 **5. Evolução desde a Última Rodada** — compare com o parecer consolidado anterior (abaixo). Se não houver, escreva uma frase dizendo que é a primeira rodada consolidada, sem seguir os itens abaixo. Havendo anterior: diga o que melhorou, o que persiste como problema, e se a ordem de prioridade das ações mudou desde então.
 
@@ -21640,13 +21899,13 @@ Seja específico, use os números e filiais já citados nos dois relatórios. N�
                         texto_final=""
                         if not st.session_state.api_key.startswith("sk-ant-") and OPENAI_OK:
                             client_final=OpenAI(api_key=st.session_state.api_key)
-                            resp_final=client_final.chat.completions.create(model="gpt-4o",max_tokens=6000,temperature=0.3,
+                            resp_final=client_final.chat.completions.create(model="gpt-4o",max_tokens=8000,temperature=0.3,
                                 messages=[{"role":"system","content":"Você é um consultor de Controladoria/FP&A sênior, especialista em conectar achados operacionais e financeiros. Nunca force uma correlação que os dados não sustentam."},
                                           {"role":"user","content":prompt_final}])
                             texto_final=resp_final.choices[0].message.content.strip()
                         elif ANTHROPIC_OK:
                             client_final=anthropic.Anthropic(api_key=st.session_state.api_key)
-                            resp_final=client_final.messages.create(model="claude-sonnet-4-6",max_tokens=4500,
+                            resp_final=client_final.messages.create(model="claude-sonnet-4-6",max_tokens=8000,
                                 system="Você é um consultor de Controladoria/FP&A sênior, especialista em conectar achados operacionais e financeiros. Nunca force uma correlação que os dados não sustentam.",
                                 messages=[{"role":"user","content":prompt_final}])
                             texto_final=resp_final.content[0].text.strip()
@@ -22635,6 +22894,20 @@ elif pg=="gestao_estoque":
 <div style="font-size:.7rem;color:{_tx_eco};opacity:.85;margin-top:8px">últimos {_meses_econ_ge} meses · estimativa em simulação, não resultado realizado</div></div>''', unsafe_allow_html=True)
         st.markdown(f'''<div style="font-size:.66rem;color:#9A7B2F;line-height:1.5;padding:8px 4px 0 4px">Janela de <b>{_meses_econ_ge} meses</b> (a mesma escolhida na Validação Econômica do Compras), proporcional à simulação de 18 meses · Amostra: <b>{_n_prod_econ_ge}</b> produtos testados · {_aviso_esc_ge}</div>''', unsafe_allow_html=True)
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+
+    # ── Registra no snapshot os pilares/pressões do Score e os alertas de fornecedor (usados pelo Parecer IA) ──
+    try:
+        _snp_up=dict(st.session_state.get("painel_snapshot") or {})
+        _snp_up["pilares"]=[{"nome":_n,"nota":(None if _s is None else round(float(_s),1)),"peso":_w0} for _n,_s,_w0 in _pil_ge]
+        _snp_up["pressoes"]=[{"nome":_n,"nota":round(float(_s),1),"pontos_perdidos":round(float(_x),1)} for _n,_s,_x in _pr_ge[:3]]
+        _snp_up["score_faixa_pesos_alt"]=[_sc_min,_sc_max]
+        _snp_up["pct_ruptura_valor_demanda"]=round(float(_pct_rup_score),1)
+        _snp_up["desvio_capital_pct"]=(None if _desv_cap is None else round(float(_desv_cap),1))
+        _snp_up["otif_medio_ponderado"]=(None if _otif_med is None else round(float(_otif_med),1))
+        _snp_up["alertas_fornecedor"]=[re.sub(r"<[^>]+>","",str(_a)) for _a in (globals().get("_alertas_forn") or [])][:6]
+        st.session_state["painel_snapshot"]=_snp_up
+        if st.session_state.cid: save_snap(st.session_state.cid,"painel",_snp_up,filial=filial_sel_ge)
+    except Exception: pass
 
     # ── Atalho final para o Parecer Comercial da IA ──
     st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
