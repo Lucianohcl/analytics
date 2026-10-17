@@ -5577,6 +5577,15 @@ def _ficha_cruzada_txt(cid,fil_com,fil_fin,fin_cons):
         L.append(f"(ficha parcial: {_e_fc})")
     return "\n".join(L) if L else "ficha indisponível"
 
+def _hora_local_br(s):
+    # Os registros "gerado_em" são gravados com a hora do servidor (UTC na nuvem). Aqui converte para Brasília só na exibição.
+    try:
+        t=pd.to_datetime(str(s)[:16])
+        _off=datetime.now().astimezone().utcoffset()
+        if _off is not None and _off.total_seconds()==0: t=t-pd.Timedelta(hours=3)
+        return t.strftime("%d/%m/%Y %H:%M")
+    except Exception: return "—"
+
 def save_parecer_ia(cid,parecer_dict,tipo="comercial"):
     hist=load_parecer_ia_historico(cid,tipo)
     hist.insert(0,parecer_dict)
@@ -21249,7 +21258,7 @@ elif pg=="parecer_ia":
         _ok_mlconfig="✅" if dados_par[_fil_p]["mlconfig"] else "⚪ opcional"
         linhas_check.append({"Filial":_fil_p,"Painel de Indicadores":_ok_painel,"Fluxo Comercial Projetado":_ok_fluxo,
                               "Simulador de Cenário":_ok_classe,"Config. ML":_ok_mlconfig,
-                              "Painel atualizado em":str((dados_par[_fil_p]["painel"] or {}).get("gerado_em","—"))[:16],"Fluxo atualizado em":str((dados_par[_fil_p]["fluxo"] or {}).get("gerado_em","—"))[:16]})
+                              "Painel atualizado em":_hora_local_br((dados_par[_fil_p]["painel"] or {}).get("gerado_em")),"Fluxo atualizado em":_hora_local_br((dados_par[_fil_p]["fluxo"] or {}).get("gerado_em"))})
         if not dados_par[_fil_p]["painel"]:
             faltando_par.append(f"{_fil_p}: abra o 📊 Dashboard Executivo")
         if not dados_par[_fil_p]["fluxo"]:
@@ -21260,7 +21269,7 @@ elif pg=="parecer_ia":
         for _fil_p in FILIAIS_PARECER:
             for _k,_rot in (("painel","Painel"),("fluxo","Fluxo")):
                 _g=(dados_par[_fil_p][_k] or {}).get("gerado_em")
-                if _g and (datetime.now()-pd.to_datetime(str(_g)[:16])).days>7: _vel.append(f"{_fil_p} · {_rot} ({str(_g)[:10]})")
+                if _g and (datetime.now()-pd.to_datetime(str(_g)[:16])).days>7: _vel.append(f"{_fil_p} · {_rot} ({_hora_local_br(_g)[:10]})")
         if _vel: st.markdown('<div class="al-w">🕒 Dados salvos há mais de 7 dias: '+"; ".join(_vel)+'. O parecer usa o que está salvo — reabra a página correspondente se os dados mudaram.</div>',unsafe_allow_html=True)
     except Exception: pass
 
