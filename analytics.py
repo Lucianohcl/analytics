@@ -5471,6 +5471,28 @@ def _valor_motor_txt(cid):
             f"capital imobilizado em excesso — naive {fmt(r['cp_naive'])} contra modelo {fmt(r['cp_modelo'])}.")
     return t+" É estimativa em simulação, não resultado realizado, e vale só para os produtos testados."
 
+def _gmroi_txt(cid,fil):
+    # Lê o GMROI JÁ calculado na Pareto & GMROI (arquivo da filial). Não recalcula nada aqui.
+    try:
+        g=load_gmroi_snap(cid,fil)
+        if g is None or g.empty or "Quadrante" not in g.columns:
+            return "GMROI ainda não calculado para esta filial (rode 📐 Pareto & GMROI com esta filial selecionada)"
+        cap=float(g["EstoqueMedioCusto"].sum()); mb=float(g["MargemBruta_R$"].sum())
+        t=(f"{len(g)} produtos analisados, estoque a custo {fmt(cap)}; GMROI do conjunto {mb/cap:.2f} (retorno de margem bruta sobre o estoque, no período da janela, sem anualizar)" if cap>0 else f"{len(g)} produtos analisados")
+        q=[]
+        for nm in ["⚠️ Candidato a Corte","💎 Joia","💵 Gerador de Caixa","⭐ Estrela"]:
+            sub=g[g["Quadrante"]==nm]
+            if len(sub)==0: continue
+            c=float(sub["EstoqueMedioCusto"].sum())
+            q.append(f"{nm.split(' ',1)[1]}: {len(sub)} produtos, {fmt(c)} em estoque ({c/cap*100:.0f}%)")
+        if q: t+=" | "+"; ".join(q)
+        cort=g[g["Quadrante"]=="⚠️ Candidato a Corte"].sort_values("EstoqueMedioCusto",ascending=False).head(3)
+        if len(cort)>0:
+            t+=" | Maiores Candidatos a Corte (baixo giro e baixa margem): "+"; ".join(f"{r['Produto']} ({fmt(float(r['EstoqueMedioCusto']))}, GMROI {float(r['GMROI']):.2f})" for _,r in cort.iterrows())
+        if "EscopoGMROI" in g.columns: t+=f" | Escopo: {str(g['EscopoGMROI'].iloc[0])}"
+        return t
+    except Exception: return "GMROI indisponível"
+
 def _validacao_txt(cid,fil):
     partes=[]
     try:
@@ -21273,6 +21295,18 @@ elif pg=="parecer_ia":
         if _vel: st.markdown('<div class="al-w">🕒 Dados salvos há mais de 7 dias: '+"; ".join(_vel)+'. O parecer usa o que está salvo — reabra a página correspondente se os dados mudaram.</div>',unsafe_allow_html=True)
     except Exception: pass
 
+    try:
+        _vel_dado=[]
+        for _fil_p in FILIAIS_PARECER:
+            _lac=[]
+            if not (dados_par[_fil_p]["painel"] or {}).get("pilares"): _lac.append("Score sem os 4 pilares (reabra o 📊 Dashboard Comercial)")
+            if load_snap(st.session_state.cid,"acuracia",_fil_p) is None: _lac.append("sem Acurácia das Previsões (Validação)")
+            _gm_chk=load_gmroi_snap(st.session_state.cid,_fil_p)
+            if _gm_chk is None or _gm_chk.empty: _lac.append("sem GMROI (📐 Pareto & GMROI)")
+            if _lac: _vel_dado.append(f"<b>{_fil_p}</b>: "+"; ".join(_lac))
+        if _vel_dado: st.markdown('<div class="al-w">🔄 Dados desta pasta ainda sem os campos novos. O parecer sai, mas sem essas partes:<br>'+"<br>".join(_vel_dado)+'<br>Se você roda local e sobe a pasta, confirme que o analytics.py local é o mesmo do GitHub antes de reabrir as páginas.</div>',unsafe_allow_html=True)
+    except Exception: pass
+
     if faltando_par:
         st.markdown('<div class="al-w">⚠️ Ainda falta dado obrigatório pra gerar o parecer:<br>'+"<br>".join(faltando_par)+'</div>',unsafe_allow_html=True)
 
@@ -21392,6 +21426,7 @@ elif pg=="parecer_ia":
                         _alertas_forn_p=" || ".join(_sp.get("alertas_fornecedor") or []) or "nenhum alerta registrado (ou reabra o Dashboard Comercial desta filial para registrar)"
                         _pilares_p=_pilares_txt(_sp)
                         _validacao_p=_validacao_txt(st.session_state.cid,_fil_p)
+                        _gmroi_p=_gmroi_txt(st.session_state.cid,_fil_p)
                         _evolucao_p=_evolucao_painel_txt(st.session_state.cid,_fil_p)
                         blocos_filiais.append(f"""
 === FILIAL: {_fil_p} ===
@@ -21407,6 +21442,7 @@ Fluxo de Caixa Comercial Projetado: saldo final {fmt(_sf['saldo_final_real']) if
 Fornecedores desta filial (participação e capital parado, calculado das compras sugeridas): {_forn_txt_p}
 Alertas de fornecedor do painel (peso nas compras × estabilidade de entrega): {_alertas_forn_p}
 Pilares do Score: {_pilares_p}
+GMROI (retorno do capital em estoque, da Pareto & GMROI): {_gmroi_p}
 Validação da previsão ao longo do tempo: {_validacao_p}
 Evolução numérica dos indicadores desta filial (primeiro registro guardado → atual): {_evolucao_p}
 """)
@@ -21480,6 +21516,10 @@ Escreva um parecer executivo em português, rico, profissional e ESPECÍFICO (n�
 
 **7. Ações Recomendadas** — 6 a 9 ações práticas, cada uma dizendo A QUAL FILIAL (ou "todas") se aplica. ORDENAÇÃO OBRIGATÓRIA: ordene TODAS as ações pelo IMPACTO FINANCEIRO estimado (o valor em R$ que a ação libera, economiza ou protege — reuse os números já citados nas seções 1-6), da maior pra menor — não por "urgência" subjetiva. As 3 primeiras ações da lista devem vir marcadas no início com "🔴 PRIORIDADE MÁXIMA" e trazer entre parênteses o valor em R$ que justifica essa posição (ex: "🔴 PRIORIDADE MÁXIMA — libera R$1.6M em capital parado"). REGRA OBRIGATÓRIA: toda ação deve referenciar um número, filial ou achado JÁ CITADO em uma das seções 1-6 acima — nunca introduza aqui um valor que não apareceu antes no texto. REGRA ANTI-REDUNDÂNCIA: cada ação deve tratar de um PROBLEMA diferente das outras — antes de escrever a lista final, revise se duas ações não estão recomendando a mesma coisa pra mesma filial só com números diferentes (ex: uma ação sobre "capital parado da Loja X" e outra sobre "capital liberável da Loja X" são a mesma recomendação disfarçada, a menos que sejam explicitamente duas ações distintas com objetivos diferentes) — se isso acontecer, funda as duas em uma ação só, mais completa, em vez de listar separadamente.
 
+GMROI: para cada filial, use a linha "GMROI" dos dados. Diga quanto do estoque está em Candidato a Corte (baixo giro e baixa margem) e em Joia (margem boa, estoque excessivo), cite os maiores Candidatos a Corte pelo nome e diga se o capital parado neles justifica a permanência no catálogo. Se a linha disser que o GMROI não foi calculado, escreva só isso em uma frase, sem estimar. Pelo menos uma ação da seção 7 deve tratar o GMROI quando houver Candidato a Corte relevante.
+REGRA DO VALOR: toda ação precisa de um número em R$. É PROIBIDO escrever "Não aplicável". Se a ação for de processo, use o valor em jogo mais próximo dos dados (capital da Classe A, compra sugerida, capital parado, ruptura iminente, caixa da semana crítica) e diga qual é.
+REGRA DO SCORE: use exatamente o Score e a linha "Pilares do Score" dos dados; a maior pressão é a que a linha indica, não a que você inferir. Se a linha disser "não disponível", avise que o Score está sem a quebra por pilar.
+REGRA DA DECOMPOSIÇÃO DO MOTOR: nunca cite um número de ruptura ou de capital do bloco "VALOR ENTREGUE PELO MOTOR" sozinho. Sempre naive contra modelo (ex.: "capital em excesso de R$ X no naive contra R$ Y no modelo"). Números do naive não são capital real da empresa.
 FORMATO DAS AÇÕES DA SEÇÃO 7 (visão de CEO): cada ação traz, em linhas curtas: **O que fazer**, **Filial**, **Valor em R$** (reuse número já citado), **Se nada for feito** (a consequência concreta, em número quando houver: capital que segue parado, ruptura que segue, caixa que aperta) e **Prazo sugerido** (esta semana / 30 dias / 90 dias). Não invente responsáveis nominais. Pelo menos uma ação deve atacar o pilar que mais tira pontos do Score de cada filial. Se algum alerta de fornecedor do painel citar um fornecedor que pesa 20% ou mais nas compras e é instável, ele precisa virar ação.
 REGRA DA SEÇÃO 8: use também a linha "Evolução numérica" de cada filial (números reais registrados), não só o texto do parecer anterior.
 
