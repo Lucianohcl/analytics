@@ -21560,6 +21560,8 @@ Seja específico usando os números e filiais fornecidos. Não invente dados que
 
                         if texto_parecer:
                             st.session_state["parecer_atual"]=texto_parecer
+                            st.session_state["parecer_prompt_dbg"]=prompt_parecer
+                            st.session_state["parecer_gerado_agora"]=datetime.now().strftime("%H:%M:%S")+" (UTC)"
                             _score_medio=sum(dados_par[f]["painel"]["score_final"] for f in FILIAIS_PARECER)/len(FILIAIS_PARECER)
                             _saldo_total=sum((dados_par[f]["fluxo"] or {}).get("saldo_final_real",0) for f in FILIAIS_PARECER)
                             parecer_salvo={
@@ -21578,6 +21580,11 @@ Seja específico usando os números e filiais fornecidos. Não invente dados que
                         st.markdown(f'<div class="al-d">❌ Erro ao chamar a IA: {e}</div>',unsafe_allow_html=True)
     else:
         st.button("🚀 Gerar Parecer Estratégico",key="btn_gerar_parecer_desabilitado",use_container_width=True,disabled=True)
+
+    if st.session_state.get("parecer_prompt_dbg"):
+        with st.expander(f"🔍 Ver os dados que foram enviados à IA (geração das {st.session_state.get('parecer_gerado_agora','—')})"):
+            st.caption("Confira aqui se 'Pilares do Score' e 'GMROI' estão preenchidos. O que a IA escreveu vem só disto.")
+            st.text_area("Dados enviados",value=st.session_state["parecer_prompt_dbg"],height=420,key="ver_prompt_dbg_com")
 
     if st.session_state.get("parecer_atual"):
         sec("📋 Parecer Gerado")
