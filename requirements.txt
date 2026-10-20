@@ -10,3 +10,5 @@ pdfplumber
 requests
 openai
 anthropic
+lightgbm
+prophet
