@@ -21523,7 +21523,7 @@ REGRA DO VALOR: toda ação precisa de um número em R$. É PROIBIDO escrever "N
 REGRA DO SCORE: use exatamente o Score e a linha "Pilares do Score" dos dados; a maior pressão é a que a linha indica, não a que você inferir. Se a linha disser "não disponível", avise que o Score está sem a quebra por pilar.
 REGRA DA DECOMPOSIÇÃO DO MOTOR: nunca cite um número de ruptura ou de capital do bloco "VALOR ENTREGUE PELO MOTOR" sozinho. Sempre naive contra modelo (ex.: "capital em excesso de R$ X no naive contra R$ Y no modelo"). Números do naive não são capital real da empresa.
 FORMATO DAS AÇÕES DA SEÇÃO 7 (visão de CEO): cada ação traz, em linhas curtas: **O que fazer**, **Filial**, **Valor em R$** (reuse número já citado), **Se nada for feito** (a consequência concreta, em número quando houver: capital que segue parado, ruptura que segue, caixa que aperta) e **Prazo sugerido** (esta semana / 30 dias / 90 dias). Não invente responsáveis nominais. Pelo menos uma ação deve atacar o pilar que mais tira pontos do Score de cada filial. Se algum alerta de fornecedor do painel citar um fornecedor que pesa 20% ou mais nas compras e é instável, ele precisa virar ação.
-REGRA DA SEÇÃO 8: use também a linha "Evolução numérica" de cada filial (números reais registrados), não só o texto do parecer anterior. Se o bloco "PARECER DA RODADA ANTERIOR" trouxer um texto, ele EXISTE: compare os Scores de cada filial lado a lado e avise que o Score anterior usava outra fórmula (sem os 4 pilares), então a comparação é só indicativa. Só escreva "primeira rodada" se o bloco disser que não há parecer anterior salvo.
+REGRA DA SEÇÃO 8: use também a linha "Evolução numérica" de cada filial (números reais registrados), não só o texto do parecer anterior. Se o bloco "PARECER DA RODADA ANTERIOR" trouxer um texto, ele EXISTE: compare os Scores de cada filial lado a lado, com a diferença em pontos. Só avise que a fórmula era outra se o texto anterior não trouxer a quebra por pilares; se trouxer, a comparação é direta. Só escreva "primeira rodada" se o bloco disser que não há parecer anterior salvo.
 
 **8. Evolução desde a Última Rodada** — compare com o texto do parecer anterior (fornecido abaixo). Se não houver parecer anterior, escreva apenas uma frase dizendo que esta é a primeira rodada registrada, sem seguir os pontos abaixo. Havendo parecer anterior: (a) diga se o Score de cada filial melhorou, piorou ou ficou estável desde então; (b) aponte qualquer problema citado na rodada anterior que CONTINUA aparecendo agora (sinal de que a ação recomendada não foi tomada, ou não fez efeito); (c) aponte qualquer melhora real conquistada. Seja específico com números das duas rodadas lado a lado, não genérico.
 
@@ -22532,7 +22532,7 @@ elif pg=="gestao_estoque":
     </div>''', unsafe_allow_html=True)
 
     # ── Maiores pressões no Score (pontos perdidos = peso × (100 − nota do componente)) ──
-    _pr_ge=sorted([(_n,_s,_w0*(100-_s)) for _n,_s,_w0 in _pil_ge if _s is not None],key=lambda x:-x[2])
+    _pr_ge=sorted([(_n,_s,_w0*(100-_s)/100) for _n,_s,_w0 in _pil_ge if _s is not None],key=lambda x:-x[2])
     _pr_txt=" · ".join(f"{_n} (nota {_s:.0f}/100)" for _n,_s,_x in _pr_ge[:3] if _s<80)
     if _pr_txt:
         with st.expander(f"🎯 Maiores pressões no Score {score_final}/100: {_pr_txt}. Clique para entender cada pilar.",expanded=False):
