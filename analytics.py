@@ -5721,7 +5721,7 @@ def save_snap(cid,nome,dados,filial=None):
 
 _COLS_HIST_PAINEL=["gerado_em","score_final","val_estoque","pct_ruptura","giro_ano","cob_media","cap_parado","mape_ml"]
 
-def path_hist_painel(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_hist_painel_v2__{_sufixo_filial(filial)}.csv")
+def path_hist_painel(cid,filial=None): return os.path.join(PASTA,f"{gid(cid)}_hist_painel_v3__{_sufixo_filial(filial)}.csv")
 
 def save_hist_painel(cid,dados,filial=None):
     # Histórico do Dashboard Executivo: acrescenta uma linha só quando algum indicador mudou em relação à última linha
@@ -21521,6 +21521,9 @@ Escreva um parecer executivo em português, rico, profissional e ESPECÍFICO (n�
 GMROI: para cada filial, use a linha "GMROI" dos dados. Diga quanto do estoque está em Candidato a Corte (baixo giro e baixa margem) e em Joia (margem boa, estoque excessivo), cite os maiores Candidatos a Corte pelo nome e diga se o capital parado neles justifica a permanência no catálogo. Se a linha disser que o GMROI não foi calculado, escreva só isso em uma frase, sem estimar. Pelo menos uma ação da seção 7 deve tratar o GMROI quando houver Candidato a Corte relevante.
 REGRA DO VALOR: toda ação precisa de um número em R$. É PROIBIDO escrever "Não aplicável" ou variações como "Não aplicável diretamente". Para a ação de monitorar caixa, use o maior déficit semanal já citado (valor e data). Se a ação for de processo, use o valor em jogo mais próximo dos dados (capital da Classe A, compra sugerida, capital parado, ruptura iminente, caixa da semana crítica) e diga qual é.
 REGRA DO SCORE: use exatamente o Score e a linha "Pilares do Score" dos dados; a maior pressão é a que a linha indica, não a que você inferir. Se a linha disser "não disponível", avise que o Score está sem a quebra por pilar.
+REGRA DO FORNECEDOR: o capital parado de um fornecedor é só o que a linha DELE informa ("capital parado R$ X"); nunca atribua o capital parado de um fornecedor a outro. Ao cruzar compra sugerida com capital parado, cite o mesmo fornecedor nos dois números.
+REGRA DA HIPÓTESE (Seção 1): antes de afirmar que uma filial tem "menor" ou "maior" cobertura, giro ou lead time, compare os números reais das duas filiais; se os números não sustentarem, não use esse argumento.
+REGRA DO CAMPO VALOR: o campo "Valor em R$" começa sempre com "R$" e um número. É PROIBIDO "Impacto indireto", "a definir", "N/D" ou qualquer texto sem número. Ordene as ações do maior para o menor valor em R$. Inclua uma ação de GMROI com o capital em Candidato a Corte da filial pior (valor em R$).
 REGRA DA DECOMPOSIÇÃO DO MOTOR: nunca cite um número de ruptura ou de capital do bloco "VALOR ENTREGUE PELO MOTOR" sozinho. Sempre naive contra modelo (ex.: "capital em excesso de R$ X no naive contra R$ Y no modelo"). Números do naive não são capital real da empresa.
 FORMATO DAS AÇÕES DA SEÇÃO 7 (visão de CEO): cada ação traz, em linhas curtas: **O que fazer**, **Filial**, **Valor em R$** (reuse número já citado), **Se nada for feito** (a consequência concreta, em número quando houver: capital que segue parado, ruptura que segue, caixa que aperta) e **Prazo sugerido** (esta semana / 30 dias / 90 dias). Não invente responsáveis nominais. Pelo menos uma ação deve atacar o pilar que mais tira pontos do Score de cada filial. Se algum alerta de fornecedor do painel citar um fornecedor que pesa 20% ou mais nas compras e é instável, ele precisa virar ação.
 REGRA DA SEÇÃO 8: use também a linha "Evolução numérica" de cada filial (números reais registrados), não só o texto do parecer anterior. Se o bloco "PARECER DA RODADA ANTERIOR" trouxer um texto, ele EXISTE: compare os Scores de cada filial lado a lado, com a diferença em pontos. Só avise que a fórmula era outra se o texto anterior não trouxer a quebra por pilares; se trouxer, a comparação é direta. Só escreva "primeira rodada" se o bloco disser que não há parecer anterior salvo.
@@ -21532,6 +21535,7 @@ PARECER DA RODADA ANTERIOR PARA COMPARAÇÃO:
 
 ANTES DE FINALIZAR, REVISE VOCÊ MESMO O TEXTO E CORRIJA SE PRECISAR:
 - A seção 4C (GMROI) foi escrita para as 3 filiais, com os nomes dos Candidatos a Corte?
+- A seção 4B (a) cita as DUAS partes da economia (ruptura e capital imobilizado), sem atribuir o total só a uma delas? As ações da Seção 7 estão em ordem decrescente de R$ e existe uma de GMROI?
 - Todo número usado na Seção 7 apareceu em alguma seção anterior?
 - Toda comparação entre filiais ("semelhante", "diferente", "coincide") tem pelo menos 2 valores reais sendo comparados?
 - Toda filial citada tem seu nome formatado como "Loja Centro", "Loja Norte", "Loja Sul" (nunca "loja_centro" ou variações em minúsculo/underscore)?
