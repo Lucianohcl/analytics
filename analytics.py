@@ -6895,8 +6895,61 @@ if pg=="boas_vindas":
         st.markdown(f'''<div style="display:flex;justify-content:center;margin-bottom:16px">
 <div class="wc-logo"><div class="wc-logo-in"><img src="data:image/png;base64,{logo_b64}"/></div></div>
 </div>''',unsafe_allow_html=True)
+        # ── Cérebro flutuante (boas-vindas) ──
+    import math, random
+    def _cerebro_svg():
+        rnd=random.Random(11)
+        def r_cer(t): return 1+0.022*math.sin(15*t)+0.018*math.sin(7*t+1)
+        def dentro(x,y):
+            dx,dy=(x-300)/235,(y-175)/(150 if y<175 else 108)
+            t=math.atan2(dy,dx)
+            if math.hypot(dx,dy)<=r_cer(t): return True
+            if ((x-418)/78)**2+((y-292)/40)**2<=1: return True
+            if 322<=x<=364 and 262<=y<=372 and ((x-343)/20)**2+((y-318)/52)**2<=1.1: return True
+            return False
+        pts=[]
+        tries=0
+        while len(pts)<85 and tries<20000:
+            tries+=1
+            x,y=rnd.uniform(60,540),rnd.uniform(30,390)
+            if dentro(x,y) and all((x-a)**2+(y-b)**2>26**2 for a,b in pts): pts.append((x,y))
+        ln=[];nd=[]
+        for i,(x,y) in enumerate(pts):
+            for (a,b) in pts[i+1:]:
+                d=math.hypot(x-a,y-b)
+                if d<62: ln.append(f'<line x1="{x:.0f}" y1="{y:.0f}" x2="{a:.0f}" y2="{b:.0f}" stroke-opacity="{.55*(1-d/62):.2f}"/>')
+        for i,(x,y) in enumerate(pts):
+            c="#E3B94F" if i%7==0 else "#2fd3a8"
+            nd.append(f'<circle class="nb" style="animation-delay:{(i*0.37)%3.1:.2f}s" cx="{x:.0f}" cy="{y:.0f}" r="{3.2 if i%7==0 else 2.4}" fill="{c}"/>')
+        # contorno do cerebro
+        ct=" ".join(f"{300+235*r_cer(t)*math.cos(t):.1f},{175+(150 if math.sin(t)<0 else 108)*r_cer(t)*math.sin(t):.1f}" for t in [k*math.pi/90 for k in range(180)])
+        sulcos=""
+        for k in range(6):
+            y0=80+k*34
+            sulcos+=f'<path d="M{120+k*10},{y0+10} C{210},{y0-30} {310},{y0+26} {480-k*14},{y0-4}" />'
+        _svg=f'''<svg viewBox="0 0 560 400" class="nx-brain-svg" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="nxg" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#2fd3a8" stop-opacity=".30"/><stop offset="1" stop-color="#2fd3a8" stop-opacity="0"/></radialGradient>
+    <filter id="nxf"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <ellipse cx="300" cy="195" rx="270" ry="185" fill="url(#nxg)"/>
+    <g filter="url(#nxf)"><polygon points="{ct}" fill="rgba(47,211,168,.07)" stroke="#2fd3a8" stroke-width="2.2"/>
+    <ellipse cx="418" cy="292" rx="78" ry="40" fill="rgba(227,185,79,.07)" stroke="#E3B94F" stroke-width="1.8"/><g stroke="#E3B94F" stroke-width="1" opacity=".45" fill="none"><path d="M350,282 Q418,270 484,282"/><path d="M346,294 Q418,284 488,294"/><path d="M352,306 Q418,298 482,306"/></g>
+    <path d="M326,262 C322,305 330,350 340,380 L368,380 C362,345 360,300 358,262" fill="rgba(47,211,168,.07)" stroke="#2fd3a8" stroke-width="1.6"/></g>
+    <g stroke="#2fd3a8" stroke-width="1.3" fill="none" opacity=".35">{sulcos}</g><path d="M200,210 C260,200 300,230 360,205" stroke="#2fd3a8" stroke-width="2" fill="none" opacity=".55"/>
+    <g stroke="#2fd3a8" stroke-width="1">{"".join(ln)}</g>
+    <g filter="url(#nxf)">{"".join(nd)}</g></svg>'''
+        return _svg.replace("\n","")
+    CSS=('''<style>
+    .nx-brain{display:flex;justify-content:center;margin:-6px 0 -18px 0;animation:nxfloat 5.5s ease-in-out infinite}
+    .nx-brain-svg{width:min(430px,78vw);height:auto;filter:drop-shadow(0 0 26px rgba(47,211,168,.38))}
+    .nx-brain-svg .nb{animation:nxpulse 3.1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+    @keyframes nxfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    @keyframes nxpulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.5)}}
+    </style>''').replace("\n","")
+    st.markdown(CSS+'<div class="nx-brain">'+_cerebro_svg()+'</div>',unsafe_allow_html=True)
+    
     if st.session_state.get("cid"):
         _cli_bv=load_cli(st.session_state.cid)
+
         _nome_bv=_cli_bv.get("nome","sua empresa") if _cli_bv else "sua empresa"
         st.markdown(f"""<div class="wc-back">
           <div class="wc-back-emoji">👋</div>
