@@ -6939,13 +6939,16 @@ if pg=="boas_vindas":
     <g filter="url(#nxf)">{"".join(nd)}</g></svg>'''
         return _svg.replace("\n","")
     CSS=('''<style>
-    .nx-brain{display:flex;justify-content:center;margin:-6px 0 -18px 0;animation:nxfloat 5.5s ease-in-out infinite}
-    .nx-brain-svg{width:min(430px,78vw);height:auto;filter:drop-shadow(0 0 26px rgba(47,211,168,.38))}
+    div[data-testid="stElementContainer"]:has(.nx-brain){position:absolute;height:0;margin:0}
+    .nx-brain{position:fixed;left:0;top:0;width:170px;z-index:50;pointer-events:none;opacity:.9;animation:nxroam 70s ease-in-out infinite}
+    .nx-in{animation:nxfloat 5.5s ease-in-out infinite}
+    .nx-brain-svg{width:100%;height:auto;filter:drop-shadow(0 0 16px rgba(47,211,168,.45))}
     .nx-brain-svg .nb{animation:nxpulse 3.1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-    @keyframes nxfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    @keyframes nxroam{0%{transform:translate(4vw,14vh) rotate(-4deg)}20%{transform:translate(68vw,9vh) rotate(5deg)}40%{transform:translate(80vw,56vh) rotate(-3deg)}60%{transform:translate(38vw,68vh) rotate(4deg)}80%{transform:translate(6vw,46vh) rotate(-5deg)}100%{transform:translate(4vw,14vh) rotate(-4deg)}}
+    @keyframes nxfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
     @keyframes nxpulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.5)}}
     </style>''').replace("\n","")
-    st.markdown(CSS+'<div class="nx-brain">'+_cerebro_svg()+'</div>',unsafe_allow_html=True)
+    st.markdown(CSS+'<div class="nx-brain"><div class="nx-in">'+_cerebro_svg()+'</div></div>',unsafe_allow_html=True)
     
     if st.session_state.get("cid"):
         _cli_bv=load_cli(st.session_state.cid)
