@@ -21510,9 +21510,13 @@ Evolução numérica dos indicadores desta filial (primeiro registro guardado �
                     # Busca o parecer imediatamente anterior (mesmo tipo) pra permitir comparação de tendência
                     _hist_anterior_p=load_parecer_ia_historico(st.session_state.cid,"comercial") if st.session_state.cid else []
                     if _hist_anterior_p:
+                        _t_ant_p=_hist_anterior_p[0].get('texto','') or ''
+                        _m1_ant=re.search(r"\*\*1\..*?(?=\*\*2\.)",_t_ant_p,re.S)
+                        _m7_ant=re.findall(r"^\s*\d+\.\s+\*\*(.+?)\*\*",_t_ant_p,re.M)
+                        _resumo_ant_p=(_m1_ant.group(0).strip() if _m1_ant else _t_ant_p[:1500])+"\n\nAções recomendadas na rodada anterior: "+" | ".join(_m7_ant[:9])
                         _texto_rodada_anterior_p=(f"PARECER DA RODADA ANTERIOR (gerado em {_hist_anterior_p[0].get('data','—')}, "
-                            f"score médio {_hist_anterior_p[0].get('score','—')}), PARA COMPARAÇÃO DE TENDÊNCIA:\n"
-                            f"{_hist_anterior_p[0].get('texto','')}")
+                            f"score médio {_hist_anterior_p[0].get('score','—')}), RESUMO SÓ PARA COMPARAÇÃO DE TENDÊNCIA (não copie nada daqui):\n"
+                            f"{_resumo_ant_p}")
                     else:
                         _texto_rodada_anterior_p="Não há parecer anterior salvo — esta é a primeira rodada, sem base de comparação."
 
@@ -21578,6 +21582,7 @@ Escreva um parecer executivo em português, rico, profissional e ESPECÍFICO (n�
 
 GMROI: para cada filial, use a linha "GMROI" dos dados. Diga quanto do estoque está em Candidato a Corte (baixo giro e baixa margem) e em Joia (margem boa, estoque excessivo), cite os maiores Candidatos a Corte pelo nome e diga se o capital parado neles justifica a permanência no catálogo. Se a linha disser que o GMROI não foi calculado, escreva só isso em uma frase, sem estimar. Pelo menos uma ação da seção 7 deve tratar o GMROI quando houver Candidato a Corte relevante.
 REGRA DO VALOR: toda ação precisa de um número em R$. É PROIBIDO escrever "Não aplicável" ou variações como "Não aplicável diretamente". Para a ação de monitorar caixa, use o maior déficit semanal já citado (valor e data). Se a ação for de processo, use o valor em jogo mais próximo dos dados (capital da Classe A, compra sugerida, capital parado, ruptura iminente, caixa da semana crítica) e diga qual é.
+REGRA ANTI-CÓPIA: o bloco da rodada anterior é só referência para a Seção 8. É PROIBIDO copiar ou reaproveitar frases dele nas outras seções: escreva o parecer INTEIRO do zero, a partir de "DADOS POR FILIAL".
 REGRA DO SCORE: use exatamente o Score e a linha "Pilares do Score" dos dados; a maior pressão é a que a linha indica, não a que você inferir. Se a linha disser "não disponível", avise que o Score está sem a quebra por pilar.
 REGRA DO FORNECEDOR: na Seção 6 e nas ações, use a frase "CRUZAMENTO PRONTO" de cada filial exatamente como está, sem trocar o fornecedor. O capital parado de um fornecedor é só o que a linha DELE informa ("capital parado R$ X"); nunca atribua o capital parado de um fornecedor a outro. Ao cruzar compra sugerida com capital parado, cite o mesmo fornecedor nos dois números.
 REGRA DA HIPÓTESE (Seção 1): antes de afirmar que uma filial tem "menor" ou "maior" cobertura, giro ou lead time, compare os números reais das duas filiais; se os números não sustentarem, não use esse argumento.
