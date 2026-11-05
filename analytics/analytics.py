@@ -21768,6 +21768,7 @@ PMR: {_df_f['pmr']:.0f}d | PMP: {_df_f['pmp']:.0f}d | PME: {_df_f['pme']:.0f}d |
 Score de Saúde: {_df_f['score_saude']:.0f}/100
 Tendência (série da base): {_tendencia_txt(_df_f)}
 Dashboard Financeiro desta filial: {_dashfin_txt(st.session_state.cid,_fil_f)}
+GMROI do estoque desta filial (Pareto & GMROI): {_gmroi_txt(st.session_state.cid,_fil_f)}
 Alertas já classificados (referências de mercado já aplicadas): {_alertas_txt if _alertas_txt else 'nenhum alerta'}
 """)
                         bloco_fin_todas="\n".join(blocos_fin)
@@ -21786,8 +21787,11 @@ Alertas já classificados: {_alertas_cons_txt if _alertas_cons_txt else 'nenhum 
 
                         _hist_anterior_fin=load_parecer_ia_historico(st.session_state.cid,"financeiro") if st.session_state.cid else []
                         if _hist_anterior_fin:
+                            _t_ant_f=_hist_anterior_fin[0].get('texto','') or ''
+                            _m1_antf=re.search(r"\*\*1\..*?(?=\*\*2\.)",_t_ant_f,re.S)
+                            _resumo_ant_f=(_m1_antf.group(0).strip() if _m1_antf else _t_ant_f[:1500])
                             _texto_rodada_anterior_fin=(f"PARECER DA RODADA ANTERIOR (gerado em {_hist_anterior_fin[0].get('data','—')}), "
-                                f"PARA COMPARAÇÃO DE TENDÊNCIA:\n{_hist_anterior_fin[0].get('texto','')}")
+                                f"RESUMO SÓ PARA COMPARAÇÃO DE TENDÊNCIA (não copie nada daqui):\n{_resumo_ant_f}")
                         else:
                             _texto_rodada_anterior_fin="Não há parecer anterior salvo — esta é a primeira rodada, sem base de comparação."
 
@@ -21838,6 +21842,9 @@ Escreva um parecer executivo em português, rico, específico e SEM repetir a me
 
 **5. Ações Recomendadas** — 5 a 8 ações práticas, cada uma dizendo a qual filial se aplica (ou "empresa toda" para as ações relacionadas a Liquidez/Kanitz/ROE). ORDENAÇÃO OBRIGATÓRIA: ordene as ações pelo IMPACTO FINANCEIRO estimado (valor em R$ que a ação recupera, economiza ou libera — reuse números já citados nas seções 1-4, incluindo a estimativa do aprendizado cruzado da Seção 2), da maior pra menor. Marque com "🔴 PRIORIDADE MÁXIMA" APENAS as ações onde você conseguir CALCULAR um valor em R$ real a partir dos dados fornecidos, colocando esse valor entre parênteses — nunca escreva "significativo", "relevante" ou "potencial" no lugar de um número; se não der pra calcular um valor real pra uma ação, não marque como prioridade máxima, apenas posicione ela mais abaixo na lista, sem o selo. REGRA: toda ação deve referenciar um número já citado nas seções 1-4 acima. REGRA ANTI-REDUNDÂNCIA: cada ação trata de um problema diferente — não recomende a mesma coisa duas vezes com números diferentes. REGRA DE CONSISTÊNCIA ENTRE FILIAIS: se duas ou mais filiais têm o MESMO valor (ou valor muito próximo) num indicador problemático, todas elas devem receber o mesmo tratamento na recomendação — ou você inclui todas as filiais afetadas na mesma ação, ou explica explicitamente por que só uma delas está sendo priorizada apesar do número ser igual nas outras. Nunca destaque só 1 filial silenciosamente quando o dado mostra que outra(s) têm o problema igual. REGRA DE COERÊNCIA DE CAUSA: se a Seção 2 já concluiu que a causa da rentabilidade fraca de uma filial é ESTRUTURA DE DESPESA (conversão Bruto→Líquido baixa) ou é ORIGEM/VENDA (Margem Bruta baixa), nenhuma ação sobre essa mesma filial pode sugerir investigar a causa oposta — a ação precisa ser consistente com o diagnóstico já dado, nunca contradizê-lo. A taxa de conversão Bruto→Líquido é o sinal PRINCIPAL de causa — "essa filial tem a Margem Bruta mais baixa entre as 3" não é motivo suficiente para recomendar ação de origem/venda se a diferença for pequena (poucos pontos percentuais) e a conversão já tiver apontado estrutura de despesa como causa principal; só recomende ação de origem/venda se a Margem Bruta estiver em faixa realmente baixa em termos absolutos (abaixo de 20%, conforme referência de mercado), não apenas relativamente mais baixa que as outras filiais.
 
+REGRA ANTI-CÓPIA: o bloco da rodada anterior é só referência para a Seção 6. É PROIBIDO copiar ou reaproveitar frases dele nas outras seções: escreva o parecer INTEIRO do zero, a partir dos dados.
+REGRA DO CAMPO VALOR: o campo "Valor em R$" de TODA ação começa com "R$" e um número completo (ex.: "R$ 201K"), nunca texto como "significativo" ou "a definir". Se a ação for de processo, use o valor em jogo mais próximo dos dados (Patrimônio Líquido, Lucro Bruto, EBITDA) e diga qual é. Não afirme "problema de estrutura de despesa" sem citar o número que sustenta (conversão Bruto→Líquido).
+REGRA DO GMROI (financeiro × estoque): use a linha "GMROI do estoque" de cada filial. Na Seção 3, ligue o ciclo de caixa e o giro baixo ao capital que não rende: cite o GMROI de cada filial e quanto do estoque (R$ e %) está em Candidato a Corte, e diga que liberar esse capital melhora o ciclo de caixa e o ROE. Pelo menos uma ação da Seção 5 deve tratar o GMROI com o capital em Candidato a Corte (valor em R$) da filial pior. Se a linha disser que o GMROI não foi calculado, diga isso em uma frase, sem estimar.
 FORMATO DAS AÇÕES DA SEÇÃO 5 (visão de CEO): cada ação traz em linhas curtas: **O que fazer**, **Filial** (ou empresa toda), **Valor em R$** (reuse número já citado), **Se nada for feito** (consequência concreta, em número quando houver) e **Prazo sugerido** (esta semana / 30 dias / 90 dias). Não invente responsáveis nominais.
 
 **6. Evolução desde a Última Rodada** — compare com o parecer anterior (abaixo). Se não houver, escreva uma frase dizendo que é a primeira rodada, sem seguir os itens abaixo. Havendo parecer anterior: diga se o Score de cada filial e a rentabilidade melhoraram, pioraram ou ficaram estáveis; aponte problemas que persistem desde a rodada passada; aponte melhorias reais. Seja específico com números lado a lado.
