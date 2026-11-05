@@ -21348,7 +21348,7 @@ elif pg=="parecer_ia":
             for _k,_rot in (("painel","Painel"),("fluxo","Fluxo")):
                 _g=(dados_par[_fil_p][_k] or {}).get("gerado_em")
                 if _g and (datetime.now()-pd.to_datetime(str(_g)[:16])).days>7: _vel.append(f"{_fil_p} · {_rot} ({_hora_local_br(_g)[:10]})")
-        if _vel: st.markdown('<div class="al-w">🕒 Dados salvos há mais de 7 dias: '+"; ".join(_vel)+'. O parecer usa o que está salvo — reabra a página correspondente se os dados mudaram.</div>',unsafe_allow_html=True)
+        if _vel: st.markdown('<div class="al-w">🕒 Dados salvos há mais de 7 dias: '+"; ".join(_vel)+'. Se os dados mudaram, reabra a página correspondente antes de gerar o parecer.</div>',unsafe_allow_html=True)
     except Exception: pass
 
     try:
@@ -21360,7 +21360,7 @@ elif pg=="parecer_ia":
             _gm_chk=load_gmroi_snap(st.session_state.cid,_fil_p)
             if _gm_chk is None or _gm_chk.empty: _lac.append("sem GMROI (📐 Pareto & GMROI)")
             if _lac: _vel_dado.append(f"<b>{_fil_p}</b>: "+"; ".join(_lac))
-        if _vel_dado: st.markdown('<div class="al-w">🔄 Dados desta pasta ainda sem os campos novos. O parecer sai, mas sem essas partes:<br>'+"<br>".join(_vel_dado)+'<br>Se você roda local e sobe a pasta, confirme que o analytics.py local é o mesmo do GitHub antes de reabrir as páginas.</div>',unsafe_allow_html=True)
+        if _vel_dado: st.markdown('<div class="al-w">🔄 Dados desta pasta ainda sem os campos novos. O parecer sai, mas sem essas partes:<br>'+"<br>".join(_vel_dado)+'<br>Abra a página indicada em cada filial para completar esses dados.</div>',unsafe_allow_html=True)
     except Exception: pass
 
     if faltando_par:
