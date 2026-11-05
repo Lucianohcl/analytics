@@ -5493,6 +5493,41 @@ def _gmroi_txt(cid,fil):
         return t
     except Exception: return "GMROI indisponível"
 
+def _ordenar_acoes_por_valor(texto,ini,fim):
+    # Reordena (por código) as ações da seção entre os cabeçalhos ini e fim, do maior para o menor "Valor em R$".
+    try:
+        i=texto.find(ini)
+        if i<0: return texto
+        i=texto.find("\n",i)+1
+        j=texto.find(fim,i)
+        if j<0: j=len(texto)
+        corpo=texto[i:j]
+        blocos=[b for b in re.split(r"\n\s*\n",corpo.strip("\n")) if b.strip()]
+        def _val(b):
+            m=re.search(r"Valor em R\$\**\s*:?\**\s*(?:R\$\s*)?([\d][\d\.,]*)\s*([KkMm]?)",b)
+            if not m: return None
+            n=m.group(1).replace(",",".")
+            try: v=float(n)
+            except Exception:
+                try: v=float(n.replace(".",""))
+                except Exception: return None
+            return v*{"k":1e3,"m":1e6}.get(m.group(2).lower(),1)
+        acoes=[(b,_val(b)) for b in blocos if "Valor em R$" in b]
+        if len(acoes)<2: return texto
+        outros=[b for b in blocos if "Valor em R$" not in b]
+        acoes.sort(key=lambda x:-(x[1] if x[1] is not None else -1))
+        novos=[]
+        for n,(b,_v) in enumerate(acoes,1):
+            b=re.sub(r"🔴\s*PRIORIDADE MÁXIMA\s*[—:\-]*\s*","",b)
+            b=re.sub(r"^(\s*)\d+\.\s+",lambda m:f"{m.group(1)}{n}. ",b,count=1)
+            if n<=3 and _v:
+                m=re.match(r"^(\s*(?:\d+\.\s+)?(?:\*\*)?)",b)
+                b=m.group(1)+"🔴 PRIORIDADE MÁXIMA — "+b[len(m.group(1)):]
+            novos.append(b)
+        return texto[:i]+"\n"+"\n\n".join(outros+novos)+"\n\n"+texto[j:]
+    except Exception:
+        return texto
+
 def _validacao_txt(cid,fil):
     partes=[]
     try:
@@ -21587,6 +21622,9 @@ REGRA DO SCORE: use exatamente o Score e a linha "Pilares do Score" dos dados; a
 REGRA DO FORNECEDOR: na Seção 6 e nas ações, use o conteúdo do CRUZAMENTO PRONTO de cada filial (a frase depois dos dois pontos) exatamente como está, sem trocar o fornecedor e SEM escrever a expressão "CRUZAMENTO PRONTO" no texto. O capital parado de um fornecedor é só o que a linha DELE informa ("capital parado R$ X"); nunca atribua o capital parado de um fornecedor a outro. Ao cruzar compra sugerida com capital parado, cite o mesmo fornecedor nos dois números.
 REGRA DA HIPÓTESE (Seção 1): antes de afirmar que uma filial tem "menor" ou "maior" cobertura, giro ou lead time, compare os números reais das duas filiais; se os números não sustentarem, não use esse argumento.
 REGRA DO CAMPO VALOR: o campo "Valor em R$" começa sempre com "R$" e um número completo (ex.: "R$ 1.6M", "R$ 20K", "R$ 746K"), um único valor por ação, sem filial entre parênteses. É PROIBIDO "Impacto indireto", "a definir", "N/D" ou qualquer texto sem número. Ordene as ações do maior para o menor valor em R$. Inclua uma ação de GMROI com o capital em Candidato a Corte da filial pior (valor em R$).
+REGRA DO TOTAL EVITADO (4B): o total que o motor evita é a SOMA de duas diferenças: (ruptura do naive − ruptura do modelo) + (capital do naive − capital do modelo). Escreva as duas diferenças em R$ e nunca atribua o total só a capital imobilizado nem só a ruptura. O valor "do modelo" sozinho (ex.: R$ 361K) é o que sobra de ruptura COM o motor, não é economia.
+REGRA DOS TOTAIS: ao citar o capital liberável "total" ou "de todas as filiais", SOME as 3 filiais; nunca use o valor de uma filial como total. Todo valor de uma ação deve ser o número exato citado antes, com a filial a que pertence.
+REGRA DAS AÇÕES OBRIGATÓRIAS: (a) para cada filial cujo maior pilar de pressão é Serviço, inclua uma ação de reposição (comprar agora) com o "Total Sugerido Compra Imediata" dessa filial; (b) todo fornecedor com 20% ou mais das compras de uma filial e OTIF abaixo de 85% (inclusive o Fornecedor Beta na filial onde pesa 34% e o Fornecedor Gamma) precisa de uma ação com o valor de compra sugerida dele, sem fundir tudo numa ação genérica.
 REGRA DA DECOMPOSIÇÃO DO MOTOR: nunca cite um número de ruptura ou de capital do bloco "VALOR ENTREGUE PELO MOTOR" sozinho. Sempre naive contra modelo (ex.: "capital em excesso de R$ X no naive contra R$ Y no modelo"). Números do naive não são capital real da empresa.
 FORMATO DAS AÇÕES DA SEÇÃO 7 (visão de CEO): cada ação traz, em linhas curtas: **O que fazer**, **Filial**, **Valor em R$** (reuse número já citado), **Se nada for feito** (a consequência concreta, em número quando houver: capital que segue parado, ruptura que segue, caixa que aperta) e **Prazo sugerido** (esta semana / 30 dias / 90 dias). Não invente responsáveis nominais. Pelo menos uma ação deve atacar o pilar que mais tira pontos do Score de cada filial. Se algum alerta de fornecedor do painel citar um fornecedor que pesa 20% ou mais nas compras e é instável, ele precisa virar ação.
 REGRA DA SEÇÃO 8: use também a linha "Evolução numérica" de cada filial (números reais registrados), não só o texto do parecer anterior. Se o bloco "PARECER DA RODADA ANTERIOR" trouxer um texto, ele EXISTE: compare os Scores de cada filial lado a lado, com a diferença em pontos. Só avise que a fórmula era outra se o texto anterior não trouxer a quebra por pilares; se trouxer, a comparação é direta. Só escreva "primeira rodada" se o bloco disser que não há parecer anterior salvo.
@@ -21629,6 +21667,7 @@ Seja específico usando os números e filiais fornecidos. Não invente dados que
                                     break
 
                         if texto_parecer:
+                            texto_parecer=_ordenar_acoes_por_valor(texto_parecer,"**7. Ações","**8.")
                             st.session_state["parecer_atual"]=texto_parecer
                             st.session_state["parecer_prompt_dbg"]=prompt_parecer
                             st.session_state["parecer_gerado_agora"]=datetime.now().strftime("%H:%M:%S")+" (UTC)"
@@ -21871,6 +21910,7 @@ Seja específico. Não invente dados que não foram fornecidos."""
                                 texto_fin=resp_fin.content[0].text.strip()
 
                             if texto_fin:
+                                texto_fin=_ordenar_acoes_por_valor(texto_fin,"**5. Ações","**6.")
                                 st.session_state["parecer_fin_atual"]=texto_fin
                                 parecer_fin_salvo={
                                     "data":datetime.now().strftime("%Y-%m-%d %H:%M"),
