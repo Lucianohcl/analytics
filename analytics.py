@@ -21651,7 +21651,7 @@ Seja específico usando os números e filiais fornecidos. Não invente dados que
     else:
         st.button("🚀 Gerar Parecer Estratégico",key="btn_gerar_parecer_desabilitado",use_container_width=True,disabled=True)
 
-    if st.session_state.get("parecer_prompt_dbg"):
+    if st.session_state.get("parecer_prompt_dbg") and st.session_state.get("parecer_dbg_visivel",True):
         with st.expander(f"🔍 Ver os dados que foram enviados à IA (geração das {st.session_state.get('parecer_gerado_agora','—')})"):
             st.caption("Confira aqui se 'Pilares do Score' e 'GMROI' estão preenchidos. O que a IA escreveu vem só disto.")
             st.text_area("Dados enviados",value=st.session_state["parecer_prompt_dbg"],height=420,key="ver_prompt_dbg_com")
